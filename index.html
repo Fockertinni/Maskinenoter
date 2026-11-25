@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Noter og interaktive simulationer til maskinmesteruddannelsen, samlet efter semester og fag.">
+<meta name="description" content="Noter, modeller, simulatorer og tests til maskinmesteruddannelsen, samlet efter semester og fag.">
 <title>Maskinenoter.dk</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,700;125,800&family=Barlow+Semi+Condensed:wght@500;600;700;800&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -11,7 +11,7 @@
 body{margin:0}
 [hidden]{display:none!important}
 img{max-width:100%}
-/* Layout: tre niveauer. Forside (landing page med mørkt kontrolpanel-hero og semesterkort) -> semester (fagkort) -> fag (noter og simulationer). Fag er farvekodet efter fagområde. */
+/* Layout: tre niveauer. Forside (landing page med mørkt kontrolpanel-hero og semesterkort) -> semester (fagkort) -> fag (laboratorieøvelser og noter). Fag er farvekodet efter fagområde. */
 :root {
   --bg: #eef1f4; --surface: #ffffff; --surface2: #f5f7f9; --fg: #121b24; --muted: #586776; --line: #d5dce3;
   --hero: #0c1822; --hero2: #16304a; --hero-fg: #e8eef3; --hero-muted: #9db0c2; --hero-line: rgba(255,255,255,.07);
@@ -163,6 +163,16 @@ main .wrap { padding-block: 2.5rem 3.5rem; display: grid; gap: 3rem; }
 .mat .go { font: 700 .95rem var(--display); letter-spacing: .04em; color: var(--accent); }
 .mat .where { font: 500 .74rem var(--mono); color: var(--muted); }
 .mat.overview { border-style: dashed; }
+.mat { position: relative; cursor: pointer; }
+.mat h3 a { text-decoration: none; color: inherit; }
+.mat h3 a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+.mat h3 a:focus-visible { outline: none; }
+.mat:has(h3 a:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
+.parts { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: .35rem; border-top: 1px dashed var(--line); padding-top: .65rem; }
+.parts a { font: 600 .8rem var(--body); text-decoration: none; padding: .2rem .6rem; border-radius: 999px; background: var(--cs); color: var(--fg); border: 1px solid transparent; }
+.parts a:hover { border-color: var(--c); }
+.intro-lab { margin: 0 0 1rem; display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; color: var(--muted); font-size: .95rem; }
+.intro-lab b { font-weight: 600; color: var(--fg); }
 .empty { background: var(--surface); border: 1px dashed var(--line); border-radius: 14px; padding: 1.75rem 1.25rem; color: var(--muted); display: grid; gap: .25rem; }
 .empty b { color: var(--fg); font: 700 1.1rem var(--display); }
 
@@ -264,15 +274,15 @@ const SEMS = [
 ];
 /* type: "note" eller "sim" */
 const MAT = [
-  { type: "sim", nr: "EL2", t: "Alle EL2-laboratoriesimulatorer", fag: "el2", url: "modeller/el2/index.html", d: "Startside med alle otte øvelser fra stærkstrømslaboratoriet.", tags: ["Oversigt"], ov: true },
-  { type: "sim", nr: "01", t: "Symmetrisk og usymmetrisk 3-faset belastning", fag: "el2", url: "modeller/el2/lab1.html", d: "Sæt ledninger på bænken, mål med wattmetre og tang, og se stjernepunktet flytte sig når nullen fjernes.", tags: ["Y / Δ","Millman","Aron","KCL"] },
-  { type: "sim", nr: "02", t: "AC-generatorundersøgelse", fag: "el2", url: "modeller/el2/lab2.html", d: "Remanens, magnetiserings- og belastningskarakteristik samt spændingens forvrængning.", tags: ["Synkrongenerator","Magnetisering","THDu"] },
-  { type: "sim", nr: "03", t: "Trefaset asynkronmotor", fag: "el2", url: "modeller/el2/lab3.html", d: "Viklingsmodstand, effektforhold, tabsmetoder og fasekompensering med kondensatorer.", tags: ["Slip","Tab","cos φ","Kompensering"] },
-  { type: "sim", nr: "04", t: "Jordelektrodens overgangsmodstand", fag: "el2", url: "modeller/el2/lab4.html", d: "Måling med Metrel Eurotest, 55/60/65 %-kravet og potentialebjerge omkring spydene.", tags: ["Jordspyd","3-pol måling","Potentiale"] },
-  { type: "sim", nr: "05", t: "Transformer: tomgangs- og kortslutningsforsøg", fag: "el2", url: "modeller/el2/lab5.html", d: "Tomgang og kortslutning med Aron-kobling, og spændingsfald beregnet efter tre metoder.", tags: ["P₀ / Pk","uk %","Spændingsfald"] },
-  { type: "sim", nr: "06", t: "Koblingsciffer og kortslutningsstrømme", fag: "el2", url: "modeller/el2/lab6.html", d: "Kortslutningsstrømme bag Dyn, koblingsciffer med cirkelslag og paralleldrift af to transformere.", tags: ["Dyn5/Dyn11","Ik","Paralleldrift"] },
-  { type: "sim", nr: "07", t: "Synkronisering og paralleldrift", fag: "el2", url: "modeller/el2/lab7.html", d: "Levende synkronoskop, fordeling af P og Q mellem generatorer og frekvensstatik ved afkobling.", tags: ["Synkronoskop","Statik","P/Q-deling"] },
-  { type: "sim", nr: "08", t: "Frekvensomformer med reluktansmotor", fag: "el2", url: "modeller/el2/lab8.html", d: "ABB-frekvensomformer, strømmens harmoniske og virkningsgrader ved forskellig last og hastighed.", tags: ["THDi","Harmoniske","Virkningsgrad"] },
+  { type: "ov", nr: "EL2", t: "Alle EL2-laboratorieøvelser", fag: "el2", url: "modeller/el2/index.html", d: "Startside med alle otte øvelser fra stærkstrømslaboratoriet.", tags: ["Oversigt"], ov: true },
+  { type: "lab", nr: "01", t: "Symmetrisk og usymmetrisk 3-faset belastning", fag: "el2", url: "modeller/el2/lab1.html", d: "Sæt ledninger på bænken, mål med wattmetre og tang, og se stjernepunktet flytte sig når nullen fjernes.", tags: ["Y / Δ","Millman","Aron","KCL"] },
+  { type: "lab", nr: "02", t: "AC-generatorundersøgelse", fag: "el2", url: "modeller/el2/lab2.html", d: "Remanens, magnetiserings- og belastningskarakteristik samt spændingens forvrængning.", tags: ["Synkrongenerator","Magnetisering","THDu"] },
+  { type: "lab", nr: "03", t: "Trefaset asynkronmotor", fag: "el2", url: "modeller/el2/lab3.html", d: "Viklingsmodstand, effektforhold, tabsmetoder og fasekompensering med kondensatorer.", tags: ["Slip","Tab","cos φ","Kompensering"] },
+  { type: "lab", nr: "04", t: "Jordelektrodens overgangsmodstand", fag: "el2", url: "modeller/el2/lab4.html", d: "Måling med Metrel Eurotest, 55/60/65 %-kravet og potentialebjerge omkring spydene.", tags: ["Jordspyd","3-pol måling","Potentiale"] },
+  { type: "lab", nr: "05", t: "Transformer: tomgangs- og kortslutningsforsøg", fag: "el2", url: "modeller/el2/lab5.html", d: "Tomgang og kortslutning med Aron-kobling, og spændingsfald beregnet efter tre metoder.", tags: ["P₀ / Pk","uk %","Spændingsfald"] },
+  { type: "lab", nr: "06", t: "Koblingsciffer og kortslutningsstrømme", fag: "el2", url: "modeller/el2/lab6.html", d: "Kortslutningsstrømme bag Dyn, koblingsciffer med cirkelslag og paralleldrift af to transformere.", tags: ["Dyn5/Dyn11","Ik","Paralleldrift"] },
+  { type: "lab", nr: "07", t: "Synkronisering og paralleldrift", fag: "el2", url: "modeller/el2/lab7.html", d: "Levende synkronoskop, fordeling af P og Q mellem generatorer og frekvensstatik ved afkobling.", tags: ["Synkronoskop","Statik","P/Q-deling"] },
+  { type: "lab", nr: "08", t: "Frekvensomformer med reluktansmotor", fag: "el2", url: "modeller/el2/lab8.html", d: "ABB-frekvensomformer, strømmens harmoniske og virkningsgrader ved forskellig last og hastighed.", tags: ["THDi","Harmoniske","Virkningsgrad"] },
 ];
 const ALLE = SEMS.flatMap(s => s.fag.map(([id, navn, ects, area, lm]) => ({ id, navn, ects, area, lm, sem: s.n })));
 const fagInfo = id => ALLE.find(f => f.id === id);
@@ -282,14 +292,18 @@ const svg = a => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 const $ = s => document.querySelector(s);
 const crumbs = items => `<nav class="crumbs" aria-label="Brødkrummer">${items.map((c, i) => i < items.length - 1 ? `<a href="#${c[1]}">${c[0]}</a><span class="sep">/</span>` : `<span class="here">${c[0]}</span>`).join("")}</nav>`;
 
+const DELE = [["sim","Simulator"],["noter","Noter"],["modeller","Modeller"],["forstaa","Forståelse"],["test","Test dig selv"]];
 function matKort(m, visFag) {
   const f = fagInfo(m.fag);
-  return `<a class="mat a-${f.area}${m.ov ? " overview" : ""}" href="${m.url}" target="_blank" rel="noopener">
-    <span class="row1"><span class="num">${m.nr}</span><span class="kind">${m.type === "sim" ? "Simulation" : "Note"}</span></span>
-    <h3>${m.t}</h3><p>${m.d}</p>
+  const kind = m.type === "lab" ? "Labøvelse" : m.type === "ov" ? "Oversigt" : "Note";
+  const go = m.type === "lab" ? "Åbn øvelsen →" : m.type === "ov" ? "Åbn oversigten →" : "Læs noten →";
+  return `<div class="mat a-${f.area}${m.type === "ov" ? " overview" : ""}">
+    <span class="row1"><span class="num">${m.nr}</span><span class="kind">${kind}</span></span>
+    <h3><a href="${m.url}" target="_blank" rel="noopener">${m.t}</a></h3><p>${m.d}</p>
     <span class="tags">${m.tags.map(t => `<span>${t}</span>`).join("")}</span>
+    ${m.type === "lab" ? `<span class="parts" aria-label="Indhold">${DELE.map(([h, navn]) => `<a href="${m.url}#${h}" target="_blank" rel="noopener">${navn}</a>`).join("")}</span>` : ""}
     ${visFag ? `<span class="where">M${f.sem} · ${f.navn}</span>` : ""}
-    <span class="go">${m.type === "sim" ? "Åbn simulation →" : "Læs note →"}</span></a>`;
+    <span class="go">${go}</span></div>`;
 }
 
 /* ---------- Forside ---------- */
@@ -336,18 +350,18 @@ function forside(scrollTil) {
         <a class="cell logo" href="#start"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="13" stroke="#f28a33" stroke-width="3"/><path d="M16 7v4M16 21v4M7 16h4M21 16h4" stroke="#f28a33" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="16" r="3.5" fill="#f28a33"/></svg>Maskinenoter</a>
         <span class="spacer"></span>
         <a class="cell txt" href="#semestre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9h18M8 4v16"/></svg>Vælg semester</a>
-        <a class="cell txt" href="#m${NU}-el2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg>EL2-simulationer</a>
+        <a class="cell txt" href="#m${NU}-el2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg>EL2-labøvelser</a>
         <a class="cell" href="#om" aria-label="Om siden"><span class="burger"><i></i><i></i></span></a>
       </nav>
       <div class="ship">${shipSVG()}</div>
       <div class="stars">${Array.from({ length: 16 }, () => `<i style="left:${(r() * 96 + 2).toFixed(1)}%;top:${(r() * 86 + 10).toFixed(1)}%"></i>`).join("")}</div>
       <h1 class="big"><span class="l1">Forstå</span><span class="l2">maskinen.</span><span class="l3">Bestå</span><span class="l4">eksamen.</span></h1>
       <div class="pfoot">
-        <div class="left"><p>Noter og interaktive laboratoriesimulationer til maskinmesteruddannelsen. Gratis, og samlet efter semester og fag.</p>
+        <div class="left"><p>Noter, modeller, simulatorer og tests til maskinmesteruddannelsen. Gratis, og samlet efter semester og fag.</p>
           <div class="cta"><a class="btn primary" href="#m${NU}">Gå til M${NU} →</a><a class="btn ghost" href="#semestre">Alle semestre</a></div></div>
         <label class="search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4" stroke-linecap="round"/></svg>
-          <input id="q" type="search" placeholder="Søg fx “asynkronmotor” eller “transformer”" aria-label="Søg i noter og simulationer">
+          <input id="q" type="search" placeholder="Søg fx “asynkronmotor” eller “transformer”" aria-label="Søg i noter og øvelser">
         </label>
       </div>
     </div>
@@ -356,7 +370,7 @@ function forside(scrollTil) {
   $("#main").innerHTML = `
     <section id="soeg" hidden><div class="sec-head"><div><h2 id="soegTitel"></h2><p>Resultater fra alle semestre.</p></div></div><div class="mats" id="soegListe"></div></section>
     <section id="semestre">
-      <div class="sec-head"><div><h2>Vælg semester</h2><p>Hvert semester har sine egne fag. Vælg et semester, og derefter det fag du vil se noter eller simulationer fra.</p></div></div>
+      <div class="sec-head"><div><h2>Vælg semester</h2><p>Hvert semester har sine egne fag. Vælg et semester, og derefter det fag du vil se materiale fra.</p></div></div>
       <div class="semGrid">${SEMS.map(s => {
         const [cls, txt] = status(s.n); const n = s.fag.reduce((a, f) => a + antal(f[0]), 0);
         return `<a class="sem ${cls}" href="#m${s.n}" id="sem-m${s.n}">
@@ -379,7 +393,7 @@ function soeg() {
 }
 function omSektion() {
   return `<section class="about" id="om">
-    <div><h3>Hvem står bag?</h3><p>Jeg læser til maskinmester og deler de noter og simulationer, jeg selv bruger til at forstå stoffet. Materialet er et supplement til undervisningen, ikke en erstatning for pensum.</p></div>
+    <div><h3>Hvem står bag?</h3><p>Jeg læser til maskinmester og deler de noter, modeller og tests, jeg selv bruger til at forstå stoffet. Materialet er et supplement til undervisningen, ikke en erstatning for pensum.</p></div>
     <div><h3>Fundet en fejl?</h3><p>Skriv til mig, så retter jeg den. Kontaktoplysninger kommer her.</p></div>
     <div><h3>Bruger du siden?</h3><p>Del den gerne med dit hold. Der kommer løbende nyt materiale, efterhånden som semestrene skrider frem.</p></div></section>`;
 }
@@ -391,7 +405,7 @@ function semesterSide(n) {
   const ects = s.fag.reduce((a, f) => a + f[2], 0);
   $("#topContent").innerHTML = `${crumbs([["Forside", "start"], [`M${n}`]])}
     <div class="page-head"><div class="kicker">${txt}</div><h1>${n}. semester</h1>
-    <p>${n === NU ? "Det semester jeg er i gang med lige nu. Vælg et fag for at se noter og simulationer." : n < NU ? "Bestået semester. Vælg et fag for at se noter og simulationer." : "Kommende semester. Her kommer materiale, når jeg når dertil."}</p>
+    <p>${n === NU ? "Det semester jeg er i gang med lige nu. Vælg et fag for at se noter og øvelser." : n < NU ? "Bestået semester. Vælg et fag for at se noter og øvelser." : "Kommende semester. Her kommer materiale, når jeg når dertil."}</p>
     <div class="chips"><span class="chip">${s.fag.length} fag</span><span class="chip">${ects} ECTS</span></div></div>`;
   $("#main").innerHTML = `<section>
       <div class="sec-head"><div><h2>Vælg fag</h2></div></div>
@@ -412,16 +426,17 @@ function fagSide(n, id) {
   const f = fagInfo(id);
   if (!f || f.sem !== n) return semesterSide(n);
   const noter = MAT.filter(m => m.fag === id && m.type === "note");
-  const sims = MAT.filter(m => m.fag === id && m.type === "sim");
+  const labs = MAT.filter(m => m.fag === id && (m.type === "lab" || m.type === "ov"));
+  const nLab = labs.filter(m => m.type === "lab").length;
   $("#topContent").innerHTML = `${crumbs([["Forside", "start"], [`M${n}`, `m${n}`], [f.navn]])}
     <div class="page-head a-${f.area}"><div class="kicker">${AREA[f.area]} · M${n}</div><h1>${f.navn}</h1>
-    <div class="chips"><span class="chip">${f.ects} ECTS</span><span class="chip">${noter.length} noter</span><span class="chip">${sims.length} simulationer</span>${f.lm ? `<a class="chip" href="${f.lm}" target="_blank" rel="noopener">Læringsmål ↗</a>` : ""}</div></div>`;
-  const tom = (hvad) => `<div class="empty"><b>Ingen ${hvad} endnu</b>Der kommer ${hvad} her, når de er klar.</div>`;
+    <div class="chips"><span class="chip">${f.ects} ECTS</span>${nLab ? `<span class="chip">${nLab} labøvelser</span>` : ""}${noter.length ? `<span class="chip">${noter.length} noter</span>` : ""}${f.lm ? `<a class="chip" href="${f.lm}" target="_blank" rel="noopener">Læringsmål ↗</a>` : ""}</div></div>`;
   $("#main").innerHTML = `
-    <section><div class="sec-head"><div><h2>Noter</h2><p>Gennemgang af stoffet, formler og eksempler.</p></div></div>
-      ${noter.length ? `<div class="mats">${noter.map(m => matKort(m)).join("")}</div>` : tom("noter")}</section>
-    <section><div class="sec-head"><div><h2>Simulationer</h2><p>Interaktive modeller, du kan bruge i browseren til at forberede dig eller forstå forsøget bagefter.</p></div></div>
-      ${sims.length ? `<div class="mats">${sims.map(m => matKort(m)).join("")}</div>` : tom("simulationer")}</section>
+    ${labs.length ? `<section><div class="sec-head"><div><h2>Laboratorieøvelser</h2><p>Hver øvelse er en samlet pakke, du åbner i browseren. Hop direkte til den del, du har brug for.</p></div></div>
+      <p class="intro-lab">Hver øvelse indeholder: <b>Simulator</b> · <b>Noter</b> · <b>Modeller</b> · <b>Forståelse</b> · <b>Test dig selv</b></p>
+      <div class="mats">${labs.map(m => matKort(m)).join("")}</div></section>` : ""}
+    ${noter.length ? `<section><div class="sec-head"><div><h2>Noter</h2></div></div><div class="mats">${noter.map(m => matKort(m)).join("")}</div></section>` : ""}
+    ${!labs.length && !noter.length ? `<div class="empty"><b>Intet materiale endnu</b>Der kommer noter, modeller og tests her, når de er klar.</div>` : ""}
     <a class="back" href="#m${n}">← Tilbage til M${n}</a>`;
 }
 
