@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Noter og interaktive modeller til maskinmesteruddannelsen, samlet efter semester og fag.">
+<title>Maskinenoter.dk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+*{box-sizing:border-box}
+body{margin:0}
+
+/* Layout: maskinrums-skilt i toppen, semester-faner M4-M9, fag som kort med ECTS, materialeliste under */
+:root {
+  --bg: #f3f5f6; --surface: #ffffff; --fg: #16212b; --muted: #5a6875; --line: #d6dde2;
+  --accent: #c9620f; --accent-fg: #ffffff; --steel: #1f3a52; --steel-fg: #eef3f7; --chip: #e7ecf0;
+  --display: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f161c; --surface: #17212a; --fg: #e4eaef; --muted: #93a2af; --line: #2a3742;
+  --accent: #f08a35; --accent-fg: #1a0f05; --steel: #142838; --steel-fg: #e4eaef; --chip: #22303b; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f161c; --surface: #17212a; --fg: #e4eaef; --muted: #93a2af; --line: #2a3742;
+  --accent: #f08a35; --accent-fg: #1a0f05; --steel: #142838; --steel-fg: #e4eaef; --chip: #22303b; color-scheme: dark }
+
+body { background: var(--bg); color: var(--fg); font: 16px/1.55 var(--body); }
+.wrap { max-width: 1040px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+header.plate { background: var(--steel); color: var(--steel-fg); margin-top: calc(-1 * env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); }
+header.plate .wrap { padding-block: 2.2rem 2rem; display: grid; gap: 1rem; }
+.brand { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
+.brand h1 { font: 700 clamp(2rem, 5vw, 3rem)/1 var(--display); letter-spacing: .01em; margin: 0; }
+.brand h1 span { color: #f08a35; }
+.tag { font: 500 .75rem var(--mono); letter-spacing: .08em; text-transform: uppercase; opacity: .75; }
+header p { margin: 0; max-width: 60ch; opacity: .9; }
+.search input { width: 100%; max-width: 560px; font: inherit; padding: .7rem .9rem; border-radius: 6px; border: 2px solid transparent; background: var(--surface); color: var(--fg); }
+.search input:focus { outline: none; border-color: #f08a35; }
+
+main .wrap { padding-block: 1.75rem 3rem; display: grid; gap: 2.25rem; }
+h2 { font: 600 1.45rem/1.2 var(--display); margin: 0 0 .25rem; text-wrap: balance; }
+.sub { color: var(--muted); margin: 0 0 1rem; max-width: 65ch; }
+
+.tabs { display: flex; gap: .35rem; flex-wrap: wrap; }
+.tabs button { font: 600 1rem var(--display); letter-spacing: .03em; padding: .45rem .95rem; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; display: flex; gap: .4rem; align-items: center; }
+.tabs button[aria-pressed="true"] { background: var(--steel); border-color: var(--steel); color: var(--steel-fg); }
+.tabs .now { font: 500 .65rem var(--mono); text-transform: uppercase; letter-spacing: .06em; background: var(--accent); color: var(--accent-fg); padding: .05rem .35rem; border-radius: 3px; }
+.tabs button:focus-visible, .fag:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.early { font-size: .88rem; color: var(--muted); margin: .6rem 0 0; }
+
+.fagGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .75rem; margin-top: 1rem; }
+.fag { text-align: left; font: inherit; color: inherit; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: .9rem 1rem; cursor: pointer; display: grid; gap: .3rem; }
+.fag:hover { border-color: var(--accent); }
+.fag[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.fag b { font: 600 1.12rem/1.2 var(--display); }
+.fag .row { display: flex; justify-content: space-between; gap: .5rem; font: 500 .78rem var(--mono); color: var(--muted); }
+.fag .has { color: var(--accent); }
+.valgfag { margin-top: 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: .9rem 1rem; }
+.valgfag ul { margin: .3rem 0 0; padding-left: 1.1rem; color: var(--muted); }
+
+.notes { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.note { display: grid; grid-template-columns: 1fr auto; gap: .3rem 1rem; padding: .9rem 1rem; border-top: 1px solid var(--line); align-items: center; }
+.note:first-child { border-top: 0; }
+.note h3 { margin: 0; font: 600 1.02rem/1.3 var(--body); min-width: 0; }
+.note p { margin: 0; grid-column: 1; color: var(--muted); font-size: .93rem; max-width: 70ch; }
+.meta { grid-column: 1; display: flex; gap: .35rem; flex-wrap: wrap; font: 400 .76rem var(--mono); color: var(--muted); }
+.meta span { background: var(--chip); padding: .1rem .45rem; border-radius: 4px; }
+.meta .kind { background: var(--accent); color: var(--accent-fg); }
+.note a { grid-row: 1 / span 3; grid-column: 2; font-weight: 600; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.note a:hover { text-decoration: underline; }
+.lm { color: var(--accent); font-weight: 600; text-decoration: none; }
+.lm:hover { text-decoration: underline; }
+.empty { padding: 1.5rem 1rem; color: var(--muted); }
+
+.about { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+.about p { margin: 0; color: var(--muted); max-width: 60ch; }
+footer { border-top: 1px solid var(--line); }
+footer .wrap { padding-block: 1.25rem; font-size: .85rem; color: var(--muted); }
+@media (max-width: 520px) { .note { grid-template-columns: 1fr; } .note a { grid-row: auto; grid-column: 1; } }
+</style>
+</head>
+<body>
+
+
+<header class="plate">
+  <div class="wrap">
+    <div class="brand"><h1>Maskine<span>noter</span>.dk</h1><span class="tag">Noter og modeller til maskinmesterstudiet</span></div>
+    <p>Mine noter og interaktive modeller fra maskinmesteruddannelsen, samlet efter semester og fag. Brug dem når du læser op, forbereder dig til laboratoriet eller sidder fast i en opgave.</p>
+    <div class="search"><input id="q" type="search" placeholder="Søg fx “asynkronmotor”, “synkronoskop” eller “transformer”" aria-label="Søg i noter og modeller"></div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <section>
+      <h2>Semester</h2>
+      <div class="tabs" id="tabs" role="group" aria-label="Vælg semester"></div>
+      <p class="early">M1 til M3 er værkstedsskole og virksomhedspraktik, så der er ingen noter derfra.</p>
+      <div class="fagGrid" id="fagGrid"></div>
+      <div class="valgfag" id="valgfag" hidden>
+        <b>Valgfag på M8 (20 ECTS)</b>
+        <ul><li>Industry Technology (IT)</li><li>Technical Facility Management (TFM)</li><li>Den Grønne Energis Cyklus (GEC)</li><li>Marine Engineering And Management (MEM)</li></ul>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="listTitle">Materiale</h2>
+      <p class="sub"><span id="listSub"></span> <a id="lm" class="lm" target="_blank" rel="noopener" hidden>Se fagets læringsmål ↗</a></p>
+      <div class="notes" id="notes" aria-live="polite"></div>
+    </section>
+
+    <section class="about">
+      <div><h2>Om siden</h2><p>Materialet er lavet af en studerende på maskinmesteruddannelsen. Det er ment som hjælp og supplement, ikke som erstatning for undervisningen og pensum.</p></div>
+      <div><h2>Fundet en fejl?</h2><p>Skriv til mig, så retter jeg den. Kontaktoplysninger kommer her.</p></div>
+    </section>
+  </div>
+</main>
+<footer><div class="wrap">© 2026 Maskinenoter.dk</div></footer>
+
+<script>
+const NU = "M5";
+const SEM = {
+  M4: [["el1","Elektroteknik 1",15],["term","Grundlæggende termodynamik",10],["stud","Studiekompetence & metode",5]],
+  M5: [["el2","Elektroteknik 2",10,"https://www.teknikaqms.dk/showpage.php?pageid=485818"],["pa1","Procesanalyse & automation 1",5,"https://www.teknikaqms.dk/showpage.php?pageid=485841"],["forb","Forbrændingsmotoranlæg",10,"https://www.teknikaqms.dk/showpage.php?pageid=485875"],["drift","Driftsøkonomi",5,"https://www.teknikaqms.dk/showpage.php?pageid=485877"]],
+  M6: [["elaut1","El-autorisation 1",10],["pa2","Procesanalyse & automation 2",5],["energi","Energiforsyningsanlæg",10],["org","Organisation",5]],
+  M7: [["elaut2","El-autorisation 2",10],["pa3","Procesanalyse & automation 3",5],["koel","Køle- & indeklimaanlæg",10],["ledsys","Ledelsessystemer",5]],
+  M8: [["valg","Valgfag",20],["projled","Projektledelse",5],["persled","Personaleledelse",5]],
+  M9: [["prof","Professionspraktik",15],["bach","Bachelorprojekt",15]],
+};
+const MAT = [
+  { t: "Oversigt: alle EL2-laboratoriesimulatorer", fag: "el2", sem: "M5", kind: "Simulator", url: "modeller/el2/index.html", d: "Startside med alle otte øvelser fra stærkstrømslaboratoriet.", tags: [] },
+  { t: "Øvelse 1: Symmetrisk og usymmetrisk 3-faset belastning", fag: "el2", sem: "M5", kind: "Simulator", url: "modeller/el2/lab1.html", d: "Sæt ledninger på bænken, mål med wattmetre og tang, og se stjernepunktet flytte sig når nullen fjernes.", tags: ["Y / Δ","Millman","Aron","KCL"] },
+  { t: "Øvelse 2: AC-generatorundersøgelse", fag: "el2", sem: "M5", kind: "Simulator", url: "modeller/el2/lab2.html", d: "Remanens, magnetiserings- og belastningskarakteristik samt spændingens forvrængning.", tags: ["Synkrongenerator","Magnetisering","THDu"] },
+  { t: "Øvelse 3: Trefaset asynkronmotor", fag: "el2", sem: "M5", kind: "Simulator", url: "modeller/el2/lab3.html", d: "Viklingsmodstand, effektforhold, tabsmetoder og fasekompensering med kondensatorer.", tags: ["Slip","Tab","cos φ","Kompensering"] },
+  { t: "Øvelse 4: Jordelektrodens overgangsmodstand", fag: "el2", sem: "M5", kind: "Simulator", url: "modeller/el2/lab4.html", d: "Måling med Metrel Eurotest, 55/60/65 %-kravet og potentialebjerge omkring spydene.", tags: ["Jordspyd","3-pol måling","Potentiale"] },
+  { t: "Øvelse 5: Transformer, tomgangs- og kortslutningsforsøg", fag: "el2", sem: "M5", kind: "Simulator", url: "modeller/el2/lab5.html", d: "Tomgang og kortslutning med Aron-kobling, og spændingsfald beregnet efter tre metoder.", tags: ["P₀ / Pk","uk %","Spændingsfald"] },
+  { t: "Øvelse 6: Koblingsciffer og kortslutningsstrømme", fag: "el2", sem: "M5", kind: "Simulator", url: "modeller/el2/lab6.html", d: "Kortslutningsstrømme bag Dyn, koblingsciffer med cirkelslag og paralleldrift af to transformere.", tags: ["Dyn5/Dyn11","Ik","Paralleldrift"] },
+  { t: "Øvelse 7: Synkronisering og paralleldrift", fag: "el2", sem: "M5", kind: "Simulator", url: "modeller/el2/lab7.html", d: "Levende synkronoskop, fordeling af P og Q mellem generatorer og frekvensstatik ved afkobling.", tags: ["Synkronoskop","Statik","P/Q-deling"] },
+  { t: "Øvelse 8: Frekvensomformer med reluktansmotor", fag: "el2", sem: "M5", kind: "Simulator", url: "modeller/el2/lab8.html", d: "ABB-frekvensomformer, strømmens harmoniske og virkningsgrader ved forskellig last og hastighed.", tags: ["THDi","Harmoniske","Virkningsgrad"] },
+];
+let sem = NU, fag = null;
+const $ = s => document.querySelector(s);
+const fagInfo = id => Object.entries(SEM).flatMap(([s, l]) => l.map(f => ({ id: f[0], navn: f[1], ects: f[2], lm: f[3], sem: s }))).find(f => f.id === id);
+
+function tegnTabs() {
+  $("#tabs").innerHTML = Object.keys(SEM).map(s =>
+    `<button id="tab-${s}" data-sem="${s}" aria-pressed="${s === sem}">${s}${s === NU ? '<span class="now">nu</span>' : ""}</button>`).join("");
+}
+function tegnFag() {
+  $("#fagGrid").innerHTML = SEM[sem].map(([id, navn, ects]) => {
+    const n = MAT.filter(m => m.fag === id).length;
+    return `<button class="fag" id="fag-${id}" data-fag="${id}" aria-pressed="${fag === id}"><b>${navn}</b>
+      <span class="row"><span>${ects} ECTS</span><span class="${n ? "has" : ""}">${n ? n + " materialer" : "Kommer senere"}</span></span></button>`;
+  }).join("");
+  $("#valgfag").hidden = sem !== "M8";
+}
+function tegnListe() {
+  const q = $("#q").value.trim().toLowerCase();
+  let liste, titel, sub;
+  if (q) {
+    liste = MAT.filter(m => (m.t + " " + m.d + " " + m.tags.join(" ") + " " + fagInfo(m.fag).navn).toLowerCase().includes(q));
+    titel = "Søgeresultater"; sub = `${liste.length} resultat${liste.length === 1 ? "" : "er"} på tværs af alle semestre.`;
+  } else if (fag) {
+    liste = MAT.filter(m => m.fag === fag);
+    const f = fagInfo(fag); titel = f.navn; sub = `${f.sem} · ${f.ects} ECTS. Tryk på faget igen for at se hele semestret.`;
+  } else {
+    liste = MAT.filter(m => m.sem === sem);
+    titel = `Materiale fra ${sem}`; sub = "Vælg et fag ovenfor for kun at se det fag.";
+  }
+  $("#listTitle").textContent = titel; $("#listSub").textContent = sub;
+  const lm = !q && fag ? fagInfo(fag).lm : null; $("#lm").hidden = !lm; if (lm) $("#lm").href = lm;
+  $("#notes").innerHTML = liste.length ? liste.map(m => `
+    <div class="note"><h3>${m.t}</h3><p>${m.d}</p>
+      <div class="meta"><span class="kind">${m.kind}</span><span>${fagInfo(m.fag).navn}</span><span>${m.sem}</span>${m.tags.map(t => `<span>${t}</span>`).join("")}</div>
+      <a href="${m.url}" target="_blank" rel="noopener">Åbn →</a></div>`).join("")
+    : `<div class="empty">${q ? "Intet matcher din søgning. Prøv et andet ord." : "Der er ikke lagt noget op her endnu."}</div>`;
+}
+function alt() { tegnTabs(); tegnFag(); tegnListe(); }
+$("#tabs").addEventListener("click", e => { const b = e.target.closest("[data-sem]"); if (!b) return; sem = b.dataset.sem; fag = null; alt(); });
+$("#fagGrid").addEventListener("click", e => { const b = e.target.closest("[data-fag]"); if (!b) return; fag = fag === b.dataset.fag ? null : b.dataset.fag; alt(); });
+$("#q").addEventListener("input", tegnListe);
+alt();
+</script>
+
+</body>
+</html>

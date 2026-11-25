@@ -1,0 +1,935 @@
+<!doctype html><html lang="da"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body><a href="index.html" id="el2-back" style="position:fixed;z-index:9999;right:max(12px,env(safe-area-inset-right));bottom:calc(12px + env(safe-area-inset-bottom,0px));font:600 14px/1 system-ui,sans-serif;background:#0d6c78;color:#fff;text-decoration:none;padding:9px 13px;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.25)">← Alle øvelser</a>
+<title>EL2 Lab 8 Simulator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: laboratoriebænk — topbar med faner, simulator (bænk + instrumentsøjle), derefter læsesider i én kolonne */
+:root{
+  --bg:#e9edf0; --panel:#ffffff; --panel2:#f4f6f8; --ink:#1a2227; --muted:#5a6770; --line:#cdd5da; --grid:#e1e6e9;
+  --accent:#0d6c78; --accent-soft:#d6ecee; --ok:#2c7a34; --warn:#a85b06; --bad:#bf2630; --warn-soft:#fbefdc; --bad-soft:#f8e1e2; --ok-soft:#e0f0e1;
+  --bench:#d7dde1; --bench-line:#c4ccd1;
+  --dev-steel:#bcc4c9; --dev-steel-ink:#1d2529; --dev-blue:#2d5ca6; --dev-yellow:#e1b42a; --dev-inst:#343b41; --dev-green:#86bd45;
+  --lcd:#c4d3ab; --lcd-ink:#18200f; --wire-halo:rgba(255,255,255,.75);
+  --c-l1:#8b5a2b; --c-l2:#1d1d1d; --c-l3:#7f8a90; --c-n:#2b6cd4; --c-disp:#bf2630;
+  --f-display:'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --f-body:'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+  --f-mono:'JetBrains Mono', ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#12171a; --panel:#1b2226; --panel2:#20282d; --ink:#e2e8eb; --muted:#97a5ad; --line:#2f3a40; --grid:#273036;
+  --accent:#4bb2bf; --accent-soft:#16363b; --ok:#6cc274; --warn:#e3a14b; --bad:#ef6b72; --warn-soft:#3a2c17; --bad-soft:#3b1c1f; --ok-soft:#1b3320;
+  --bench:#262e33; --bench-line:#313b41;
+  --dev-steel:#69747a; --dev-steel-ink:#eef2f4; --dev-blue:#2b558f; --dev-yellow:#d3a723; --dev-inst:#40484f; --dev-green:#76a83c;
+  --lcd:#b9c99e; --lcd-ink:#18200f; --wire-halo:rgba(255,255,255,.28);
+  --c-l1:#c58a4f; --c-l2:#e2e8eb; --c-l3:#9aa6ac; --c-n:#5d95f0; --c-disp:#ef6b72; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#12171a; --panel:#1b2226; --panel2:#20282d; --ink:#e2e8eb; --muted:#97a5ad; --line:#2f3a40; --grid:#273036;
+  --accent:#4bb2bf; --accent-soft:#16363b; --ok:#6cc274; --warn:#e3a14b; --bad:#ef6b72; --warn-soft:#3a2c17; --bad-soft:#3b1c1f; --ok-soft:#1b3320;
+  --bench:#262e33; --bench-line:#313b41;
+  --dev-steel:#69747a; --dev-steel-ink:#eef2f4; --dev-blue:#2b558f; --dev-yellow:#d3a723; --dev-inst:#40484f; --dev-green:#76a83c;
+  --lcd:#b9c99e; --lcd-ink:#18200f; --wire-halo:rgba(255,255,255,.28);
+  --c-l1:#c58a4f; --c-l2:#e2e8eb; --c-l3:#9aa6ac; --c-n:#5d95f0; --c-disp:#ef6b72; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1500px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 48px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-block:20px 12px;border-bottom:1px solid var(--line)}
+.brand .eyebrow{font-family:var(--f-display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-size:13px;font-weight:600}
+.brand h1{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,4vw,38px);line-height:1.05;margin:2px 0 0;text-wrap:balance}
+.brand h1 span{color:var(--accent)}
+nav.tabs{display:flex;flex-wrap:wrap;gap:4px}
+nav.tabs button{font-family:var(--f-display);font-size:16px;font-weight:600;letter-spacing:.04em;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:7px 14px;border-radius:6px;cursor:pointer}
+nav.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+nav.tabs button:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section.page{padding-top:18px}
+h2{font-family:var(--f-display);font-size:28px;font-weight:700;margin:6px 0 10px;text-wrap:balance}
+h3{font-family:var(--f-display);font-size:21px;font-weight:600;margin:0 0 6px;text-wrap:balance}
+h4{font-size:15px;margin:14px 0 4px}
+p{margin:0 0 10px}
+.lead{color:var(--muted);max-width:75ch}
+.small{font-size:13px;color:var(--muted)}
+.mono,.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* ---------- simulator ---------- */
+.sim{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}
+@media (max-width:1100px){.sim{grid-template-columns:minmax(0,1fr)}}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.btn{font-family:var(--f-body);font-weight:600;font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:7px 12px;border-radius:6px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.power{font-family:var(--f-display);font-size:17px;letter-spacing:.05em;min-width:150px}
+.btn.power.on{background:var(--ok);border-color:var(--ok);color:var(--bg)}
+.btn.estop{background:var(--bad);border-color:var(--bad);color:#fff;font-family:var(--f-display);font-size:17px;letter-spacing:.05em}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.statusbar{display:flex;gap:10px;align-items:center;padding:8px 12px;border-radius:6px;border:1px solid var(--line);background:var(--panel);margin-bottom:10px;font-weight:600}
+.statusbar .dot{width:12px;height:12px;border-radius:50%;flex:none;background:var(--muted)}
+.statusbar.on .dot{background:var(--ok);box-shadow:0 0 0 4px var(--ok-soft)}
+.statusbar.trip{border-color:var(--bad);background:var(--bad-soft)}
+.statusbar.trip .dot{background:var(--bad)}
+.benchbox{border:1px solid var(--line);border-radius:8px;overflow-x:auto;background:var(--bench);touch-action:none}
+#bench{display:block;width:100%;min-width:880px;height:auto;user-select:none;-webkit-user-select:none}
+.hint{font-size:13px;color:var(--muted);margin-top:6px}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;min-width:0}
+.card h3{font-size:18px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.card h3 small{font-family:var(--f-body);font-size:12px;color:var(--muted);font-weight:400}
+.actsel{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:6px 0 8px}
+.actsel button{font-family:var(--f-display);font-weight:600;font-size:15px;padding:5px 0;border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:5px;cursor:pointer}
+.actsel button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.checklist{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:13.5px}
+.checklist li{display:grid;grid-template-columns:20px 1fr;gap:6px;align-items:start}
+.checklist .mk{font-weight:700;text-align:center;border-radius:4px;line-height:18px;font-size:12px}
+.checklist .y .mk{background:var(--ok-soft);color:var(--ok)}
+.checklist .n .mk{background:var(--bad-soft);color:var(--bad)}
+.verdict{margin-top:8px;padding:6px 10px;border-radius:5px;font-weight:600;font-size:13.5px}
+.verdict.y{background:var(--ok-soft);color:var(--ok)} .verdict.n{background:var(--warn-soft);color:var(--warn)}
+.warnlist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px;font-size:13.5px}
+.warnlist li{padding:5px 8px;border-radius:5px;background:var(--warn-soft);color:var(--warn);border-left:3px solid var(--warn)}
+.warnlist li.bad{background:var(--bad-soft);color:var(--bad);border-left-color:var(--bad)}
+.warnlist li.none{background:var(--ok-soft);color:var(--ok);border-left-color:var(--ok)}
+.clampsel{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.clampsel label{display:flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:5px;padding:3px 8px;font-weight:600;cursor:pointer;font-size:14px}
+.clampsel label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.combo{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.combo button{font-size:12px;padding:3px 7px;border:1px solid var(--line);border-radius:4px;background:var(--panel2);color:var(--ink);cursor:pointer;font-family:var(--f-mono)}
+.lcdbox{font-family:var(--f-mono);background:var(--lcd);color:var(--lcd-ink);padding:6px 10px;border-radius:4px;font-size:22px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.setrow{display:grid;grid-template-columns:110px 1fr 70px;gap:8px;align-items:center;font-size:14px;margin:4px 0}
+.setrow output{font-family:var(--f-mono);text-align:right;font-size:13px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+select,input[type=number]{font:inherit;font-size:14px;padding:3px 6px;border:1px solid var(--line);border-radius:4px;background:var(--panel2);color:var(--ink)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:5px 6px;border-bottom:1px solid var(--grid);text-align:left;vertical-align:top}
+th{font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.03em;color:var(--muted)}
+td.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.dev.ok{color:var(--ok)} td.dev.warn{color:var(--warn)} td.dev.bad{color:var(--bad);font-weight:600}
+.phasorbox svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:4px}
+.conti{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom, 0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:6px;font-weight:600;font-size:14px;max-width:min(90vw,520px);z-index:20;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+
+/* ---------- læsesider ---------- */
+.prose{max-width:900px}
+.notes{display:grid;gap:14px;max-width:960px}
+.note{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 18px;min-width:0}
+.note ul{margin:4px 0 8px;padding-left:20px}
+.note li{margin:2px 0}
+.note .term{font-weight:600}
+.flag{border-left:4px solid var(--warn);background:var(--warn-soft);padding:8px 12px;border-radius:0 6px 6px 0;margin:8px 0;font-size:14px}
+.flag b.tag,.tagchip{font-family:var(--f-display);font-weight:700;letter-spacing:.08em;font-size:12px;text-transform:uppercase;color:var(--warn);margin-right:6px}
+.tagchip.err{color:var(--bad)}
+.flag.err{border-left-color:var(--bad);background:var(--bad-soft)}
+.formula-inline{font-family:var(--f-mono);background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:13px;white-space:nowrap}
+.toc{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 14px}
+.toc a{font-size:13px;color:var(--accent);text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:2px 8px;background:var(--panel)}
+
+.models{display:grid;gap:16px}
+.model{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;min-width:0}
+.model>p{color:var(--muted);max-width:80ch}
+.mgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr);gap:16px;align-items:start;margin-top:8px}
+@media (max-width:1100px){.mgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+@media (max-width:700px){.mgrid{grid-template-columns:minmax(0,1fr)}}
+.inputs{display:flex;flex-direction:column;gap:8px;min-width:0}
+.inp{display:grid;grid-template-columns:1fr 84px;gap:2px 8px;align-items:center;font-size:14px}
+.inp .lab{grid-column:1 / -1;display:flex;justify-content:space-between;color:var(--muted);font-size:13px}
+.inp input[type=number]{width:84px;text-align:right;font-family:var(--f-mono)}
+.inp.tog{grid-template-columns:auto 1fr;font-size:14px}
+.formula{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:10px 12px;font-family:var(--f-mono);font-size:13px;line-height:1.75;min-width:0;overflow-x:auto}
+.formula .c{color:var(--muted);font-family:var(--f-body);font-size:12.5px;display:block;line-height:1.4;margin-top:4px}
+.res{display:flex;flex-direction:column;gap:2px;min-width:0}
+.res .r{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--grid);padding:3px 0;font-size:14px}
+.res .r b{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.res .r.hl b{color:var(--accent)}
+.res .r.bad b{color:var(--bad)}
+.res .r.okc b{color:var(--ok)}
+.plot svg{width:100%;height:auto;display:block}
+
+.understand{display:grid;gap:14px;max-width:960px}
+.keylist{counter-reset:k;list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.keylist li{counter-increment:k;display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:start}
+.keylist li::before{content:counter(k);font-family:var(--f-display);font-weight:700;font-size:20px;color:var(--accent);text-align:center;line-height:1.2}
+.ex{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.ex .note h4{margin-top:0}
+
+.quiz{display:grid;gap:12px;max-width:900px}
+.q{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 16px}
+.q .qh{display:flex;gap:8px;align-items:baseline;justify-content:space-between}
+.q .lvl{font-family:var(--f-display);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.opts{display:grid;gap:6px;margin-top:8px}
+.opts button{text-align:left;font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--ink);cursor:pointer}
+.opts button.right{border-color:var(--ok);background:var(--ok-soft)}
+.opts button.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.q .expl{margin-top:8px;font-size:14px;color:var(--muted)}
+.score{font-family:var(--f-display);font-size:20px;font-weight:600}
+details.step{border:1px solid var(--line);border-radius:6px;padding:6px 12px;margin:6px 0;background:var(--panel2)}
+details.step summary{cursor:pointer;font-weight:600}
+details.step[open]{background:var(--panel)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- tilføjelser til labs 2–8 ---------- */
+.actsel{grid-template-columns:repeat(auto-fit,minmax(72px,1fr))}
+.actsel button{font-size:14px;padding:5px 4px;line-height:1.15}
+.ctl{display:grid;grid-template-columns:118px minmax(0,1fr) 78px;gap:6px 8px;align-items:center;font-size:14px;margin:5px 0}
+.ctl output{font-family:var(--f-mono);text-align:right;font-size:13px;font-variant-numeric:tabular-nums}
+.ctl .btnrow{grid-column:2 / -1;display:flex;flex-wrap:wrap;gap:4px}
+.btnrow button,.minibtn{font:600 13px var(--f-body);padding:4px 9px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);color:var(--ink);cursor:pointer}
+.btnrow button[aria-pressed="true"],.minibtn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.btnrow button:hover,.minibtn:hover{border-color:var(--accent)}
+.readout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:6px}
+.readout div{background:var(--lcd);color:var(--lcd-ink);border-radius:4px;padding:4px 8px;font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:14px;display:flex;justify-content:space-between;gap:6px}
+.readout div span{opacity:.7;font-size:12px}
+.loghead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.livebox svg{width:100%;height:auto;display:block}
+.pill{display:inline-block;font:700 11px var(--f-display);letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:10px;background:var(--accent-soft);color:var(--accent)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)} .pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.warn{background:var(--warn-soft);color:var(--warn)}
+.diagram{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:8px;overflow-x:auto}
+.diagram svg{display:block;max-width:100%;height:auto;margin:0 auto}
+[hidden]:not([hidden=until-found i]){display:none!important}
+
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="brand">
+    <div class="eyebrow">M5 Elektroteknik 2 · Labøvelse 8</div>
+    <h1>Frekvensomformer med <span>reluktansmotor</span></h1>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Sider">
+    <button role="tab" data-tab="sim" aria-selected="true">Simulator</button>
+    <button role="tab" data-tab="noter" aria-selected="false">Noter</button>
+    <button role="tab" data-tab="modeller" aria-selected="false">Modeller</button>
+    <button role="tab" data-tab="forstaa" aria-selected="false">Forståelse</button>
+    <button role="tab" data-tab="test" aria-selected="false">Test dig selv</button>
+  </nav>
+</header>
+
+<section class="page" id="p-sim">
+  <div class="toolbar">
+    <button class="btn power" id="btnPower">TÆND</button>
+    <button class="btn estop" id="btnStop">NØDSTOP</button>
+    <span style="flex:1"></span>
+    <button class="btn" id="btnDel" disabled>Fjern valgt ledning</button>
+    <button class="btn" id="btnClear">Fjern alle ledninger</button>
+  </div>
+  <div class="statusbar" id="status"><span class="dot"></span><span id="statusTxt">Spændingsløs</span></div>
+  <div class="sim">
+    <div style="min-width:0">
+      <div class="benchbox"><svg id="bench" viewBox="0 0 1180 800" role="img" aria-label="Laboratoriebænk med bordtavle, ABB ACS880, power-analysator C.A 8335, momentbænk MV1040, SynRM-motor og modstandskasse"></svg></div>
+      <p class="hint">Træk ledninger mellem stikkene. Frekvensomformerens panel betjenes med Loc/Rem, Start, Stop og pilene (shift-klik: ±100 o/min). Klik på analysatorens W/A/V/harm for at skifte side, og på tangfeltet for at flytte tangen før eller efter omformeren. Lasten indstilles med EXCITATION på momentbænken.</p>
+
+      <div class="card" style="margin-top:12px">
+        <h3>Måleskema <small id="msAct">Aktivitet 1</small></h3>
+        <p class="small">"Beregnet" er forberedelsen ud fra vejledningens værdier. "Målt" er hvad instrumenterne viser i din opstilling. Kopiér tabellen ind i Excel som verificeringsark.</p>
+        <div class="tablewrap"><table id="msTable"></table></div>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn" id="btnCopy">Kopiér til Excel</button><span class="small" id="copyMsg"></span></div>
+      </div>
+
+      <div class="card" style="margin-top:12px" id="logCard">
+        <h3>Målelog <small>dine egne målepunkter</small></h3>
+        <p class="small" id="logHint"></p>
+        <div class="tablewrap"><table id="logTable"></table></div>
+        <div class="loghead"><button class="btn" id="btnLog">Gem målepunkt</button><button class="btn" id="btnLogUndo">Fortryd sidste</button><button class="btn" id="btnLogClear">Ryd log</button><button class="btn" id="btnLogCopy">Kopiér log til Excel</button><span class="small" id="logMsg"></span></div>
+      </div>
+    </div>
+
+    <aside class="side">
+      <div class="card">
+        <h3>Aktivitet <small>vælg øvelse</small></h3>
+        <div class="actsel" id="actsel"></div>
+        <div class="small" id="actDesc"></div>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+          <button class="btn" id="btnPreset">Indlæs korrekt opstilling</button>
+          <button class="btn" id="btnSetVals">Indstil kun værdier</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Underviser-tjek <small>før tænd</small></h3>
+        <ul class="checklist" id="checklist"></ul>
+        <div class="verdict" id="verdict"></div>
+        <div class="conti" id="conti">
+          <svg viewBox="0 0 60 90" width="44" height="66" aria-hidden="true"><rect x="4" y="4" width="52" height="82" rx="10" fill="#7fd34a"/><rect x="10" y="10" width="40" height="56" rx="4" fill="#232527"/><circle id="contiLamp" cx="30" cy="26" r="9" fill="#666" stroke="#aaa" stroke-width="2"/><circle cx="22" cy="52" r="3.5" fill="#666"/><circle id="contiOk" cx="38" cy="52" r="3.5" fill="#666"/><text x="30" y="78" font-size="7" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" fill="#123">CONTI</text></svg>
+          <div style="min-width:0"><b>Elma Conti Light · 200 mA</b><div class="small" id="contiTxt">Træk først kun de grøn/gule PE-ledninger, og mål gennemgangen fra tavlen til stel på hvert stykke udstyr.</div><button class="btn" id="btnConti" style="margin-top:6px">Mål gennemgang</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Advarsler</h3>
+        <ul class="warnlist" id="warnings"></ul>
+      </div>
+
+<div class="card">
+        <h3>Frekvensomformer <small>ABB ACS880, lokal styring</small></h3>
+        <div class="btnrow"><button id="c8Loc">Local</button><button id="c8Run">Start</button></div>
+        <div class="ctl"><label for="c8R">Reference</label><input type="range" id="c8R" min="0" max="1800" step="10" value="1500"><output id="c8RO"></output></div>
+        <div class="btnrow" id="c8Sp"><button data-n="1500">1500 o/min</button><button data-n="1000">1000 o/min</button></div>
+      </div>
+      <div class="card">
+        <h3>Momentbænk <small>Terco MV1040</small></h3>
+        <div class="ctl"><label for="c8E">Felt (MIN–MAX)</label><input type="range" id="c8E" min="0" max="1" step="0.005" value="0"><output id="c8EO"></output></div>
+        <div class="btnrow" id="c8Load"><button data-f="0">Tomgang</button><button data-f="0.3333">1/3</button><button data-f="0.6667">2/3</button><button data-f="1">1/1</button></div>
+        <div class="btnrow" style="margin-top:6px"><button id="c8Zero">ZERO (kalibrér i tomgang)</button></div>
+        <div class="readout" id="c8Read"></div>
+      </div>
+      <div class="card">
+        <h3>Strømtang <small>C.A 8335</small></h3>
+        <div class="btnrow" id="c8Cl"><button data-c="før">Før frekvensomformeren (L1)</button><button data-c="efter">Efter (motor U)</button></div>
+      </div>
+
+      <div class="card livebox">
+        <h3>Live-graf <small>skifter med aktiviteten</small></h3>
+        <svg id="live" viewBox="0 0 320 320"></svg>
+        <div class="legend" id="liveLegend"></div>
+      </div>
+
+      <div class="card">
+        <h3>Indstillinger</h3>
+        <div class="setrow"><label for="setFree">Fri eksperimentering</label><input type="checkbox" id="setFree" style="justify-self:start"><output>uden godkendelse</output></div>
+        <div class="setrow"><label for="setNoise">Måleusikkerhed</label><input type="checkbox" id="setNoise" style="justify-self:start"><output>±0,5 %</output></div>
+
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="page" id="p-noter" hidden>
+<h2>Noter til labøvelse 8</h2>
+  <p class="lead">Opsummering af øvelsesvejledningen opdelt i emner og koblet til læringsmålene om frekvensomformerens opbygning, THD<sub>i</sub> og hastighedskontrol af reluktansmaskinen. Gule bokse er uklarheder, røde er fejl.</p>
+  <div class="toc"><a href="#n8-f">Formål</a><a href="#n8-fo">Frekvensomformeren</a><a href="#n8-syn">Reluktansmotoren</a><a href="#n8-a1">Akt. 1</a><a href="#n8-a2">Akt. 2</a><a href="#n8-a3">Akt. 3 THD</a><a href="#n8-a4">Akt. 4</a><a href="#n8-flag">Uklarheder</a></div>
+  <div class="notes">
+    <article class="note" id="n8-f"><h3>Formål og forberedelse</h3><ul>
+      <li>Forstå reluktansmotorens virkemåde, undersøg kvaliteten af omformerens strømoptag (THD<sub>i</sub>), og bestem effektoptag og virkningsgrad.</li>
+      <li>Design et Excel-skema med n, M, P<sub>1</sub>, S, Q, Q<sub>D</sub>, THD<sub>i</sub>, omformerens udgangseffekt og de tre virkningsgrader.</li></ul></article>
+    <article class="note" id="n8-fo"><h3>Frekvensomformerens opbygning</h3><ul>
+      <li><b>Ensretter</b> (6-puls diodebro): laver net-AC om til DC. Leder kun når netspændingen er over mellemkredsspændingen → pulsformet strøm.</li>
+      <li><b>Mellemkreds</b>: kondensator (og ofte DC-spole, som i ACS880) der udglatter spændingen og lagrer energi. Den reaktive effekt til motoren pendler her.</li>
+      <li><b>Vekselretter</b> (IGBT, PWM): laver en variabel frekvens og spænding (U/f) til motoren.</li>
+      <li>Netsiden ser næsten ren virkeeffekt (cos φ<sub>1</sub> ≈ 0,95–0,98) men en forvrænget strøm med 5., 7., 11., 13. … harmoniske.</li>
+      <li><span class="formula-inline">S² = P² + Q² + Q<sub>D</sub>²</span>, <span class="formula-inline">λ = P/S = cos φ<sub>1</sub>/√(1 + THD<sub>i</sub>²)</span>.</li></ul></article>
+    <article class="note" id="n8-syn"><h3>Reluktansmotoren (SynRM)</h3><ul>
+      <li>Stator som en asynkronmotor. Rotoren har ingen viklinger eller magneter, kun udstansede fluxbarrierer der giver lav reluktans i d-aksen og høj i q-aksen.</li>
+      <li>Rotoren drejer synkront (intet slip) fordi den søger stillingen med mindst reluktans. Moment ∝ (L<sub>d</sub> − L<sub>q</sub>)·I<sub>d</sub>·I<sub>q</sub>.</li>
+      <li>Ingen rotortab → højere virkningsgrad (IE4/IE5) end asynkronmotoren, men lavere cos φ. Kræver frekvensomformer (kan ikke starte direkte).</li></ul>
+      <div class="flag"><b class="tag">Mangler</b>Vejledningen har ingen mærkeplade for reluktansmotoren eller momentbænken. "Nominelt moment" i aktivitet 4 kan derfor ikke bestemmes ud fra vejledningen. Simulatoren antager 1,5 kW, 1500 o/min, 9,55 Nm, 3,6 A, cos φ 0,72. Aflæs mærkepladen i laboratoriet.</div></article>
+    <article class="note" id="n8-a1"><h3>Aktivitet 1</h3><ul>
+      <li>Forbind omformeren til net og motor (Harting), momentbænken til modstandskassen, og sæt 1500 o/min.</li>
+      <li>C.A 8335 måler U<sub>f</sub>, I<sub>n,RMS</sub>, P, Q og cos φ før omformeren. Pilen på tangen mod omformeren (forbrugeren).</li>
+      <li>Mål I<sub>RMS</sub> før og efter omformeren i tomgang. Efter: motorens magnetiseringsstrøm (ca. 2 A). Før: kun tabene (ca. 0,3 A).</li></ul>
+      <div class="flag"><b class="tag">Tastefejl</b>"Frekvensomformen", "frekvensomformenrens", "diargam", "diaram", "i forklar" (og forklar).</div></article>
+    <article class="note" id="n8-a2"><h3>Aktivitet 2: Belastning</h3><ul>
+      <li>Tomgang, 1/3, 2/3 og 1/1 last. Mål S, P, Q, Q<sub>D</sub>, n og THD<sub>i</sub> før omformeren.</li>
+      <li><span class="formula-inline">η<sub>FO</sub> = P<sub>m1</sub>/P<sub>1</sub></span> (P<sub>m1</sub> fra omformerens display), <span class="formula-inline">η<sub>M</sub> = P<sub>2</sub>/P<sub>m1</sub></span>, <span class="formula-inline">η = P<sub>2</sub>/P<sub>1</sub></span>.</li>
+      <li>THD<sub>i</sub> er højest ved lav last, men den absolutte harmoniske strøm er størst ved fuld last.</li></ul>
+      <div class="flag"><b class="tag">Uklart</b>Vejledningen siger ikke hvordan motorens optagne effekt måles. Der er ingen analysator efter omformeren i diagram A, så P<sub>m1</sub> må tages fra omformerens display ("Udgangseffekt"). Det er en beregnet værdi med usikkerhed.</div></article>
+    <article class="note" id="n8-a3"><h3>Aktivitet 3: Harmoniske</h3><ul>
+      <li>Vælg en typisk belastningsgrad (fx 2/3: pumper og ventilatorer kører sjældent ved fuld last) og argumentér.</li>
+      <li>Mål I<sub>5</sub>, I<sub>7</sub>, I<sub>11</sub>, I<sub>13</sub> … og regn <span class="formula-inline">THD<sub>i</sub> = √(ΣI<sub>h</sub>²)/I<sub>1</sub></span>. Sammenlign med instrumentets.</li>
+      <li><span class="formula-inline">P<sub>1</sub> = √3·U·I<sub>1</sub>·cos φ<sub>1</sub></span>: kun grundtonen giver virkeeffekt når spændingen er (næsten) sinusformet.</li></ul>
+      <div class="flag"><b class="tag">Uklart</b>"Beregn ud fra målingerne den samlede THDi i % af grundfrekvensen" betyder i % af grundtonens strøm I<sub>1</sub>, ikke af frekvensen.</div></article>
+    <article class="note" id="n8-a4"><h3>Aktivitet 4: Lavere hastighed</h3><ul>
+      <li>1000 o/min og 2/3 M<sub>N</sub>. Omformeren sænker f til 33,3 Hz og U til ca. 267 V (U/f).</li>
+      <li>P<sub>2</sub> falder med n, mens kobbertabet (moment) er det samme. Motorens η falder derfor lidt.</li></ul></article>
+    <article class="note" id="n8-flag"><h3>Samlet liste over uklarheder</h3><ul>
+      <li><span class="tagchip">Mangler</span>Mærkeplade for motor og momentbænk.</li>
+      <li><span class="tagchip">Uklart</span>Hvordan P<sub>m1</sub> (motorens optagne effekt) måles.</li>
+      <li><span class="tagchip">Uklart</span>"THDi i % af grundfrekvensen".</li>
+      <li><span class="tagchip">Uklart</span>Diagram A viser analysatoren med spænding på L1, men ikke om der måles 3-faset (3 tænger) eller 1-faset ×3.</li>
+      <li><span class="tagchip err">Tastefejl</span>Flere stavefejl (se aktivitet 1).</li></ul></article>
+  </div>
+</section>
+
+<section class="page" id="p-modeller" hidden>
+  <h2>Interaktive modeller</h2>
+  <p class="lead">Hver model har formlen ved siden af. Standardværdierne er øvelsens. Skift tal og se hvad der sker. Simulatoren bruger de samme beregninger.</p>
+  <div class="toc" id="modelToc"></div>
+  <div class="models" id="models"></div>
+</section>
+
+<section class="page" id="p-forstaa" hidden>
+<h2>Forståelse</h2>
+  <div class="understand">
+    <article class="note"><h3>De 8 vigtigste ting at huske</h3><ol class="keylist">
+      <li><div><b>Ensretter → mellemkreds → vekselretter.</b> Netsiden er diodebro, motorsiden PWM.</div></li>
+      <li><div><b>Netsiden ser kun virkeeffekt</b> (plus harmoniske). Motorens reaktive strøm bliver i mellemkredsen.</div></li>
+      <li><div><b>6-puls: h = 6k ± 1.</b> 5. og 7. dominerer.</div></li>
+      <li><div><b>THD<sub>i</sub> = √(ΣI<sub>h</sub>²)/I<sub>1</sub>.</b> I<sub>RMS</sub> = I<sub>1</sub>√(1 + THD²).</div></li>
+      <li><div><b>S² = P² + Q² + Q<sub>D</sub>².</b> λ = P/S er lavere end cos φ<sub>1</sub>.</div></li>
+      <li><div><b>η = η<sub>FO</sub> · η<sub>M</sub>.</b> Faste tab dominerer ved lav last.</div></li>
+      <li><div><b>SynRM: synkron, intet slip, ingen rotortab.</b> Kræver frekvensomformer.</div></li>
+      <li><div><b>U/f konstant</b> giver konstant flux ved lavere hastighed.</div></li></ol></article>
+    <h3 style="margin-top:6px">Praktiske eksempler fra virkeligheden</h3>
+    <div class="ex">
+      <article class="note"><h4>Pumper og ventilatorer</h4><p>Effekten går med n³. En søvandspumpe på 80 % hastighed bruger ca. halvdelen af effekten. Derfor sidder der frekvensomformere på næsten alle store pumper og ventilatorer.</p></article>
+      <article class="note"><h4>Harmoniske på skibe</h4><p>Mange omformere på en lille generator forvrænger spændingen. Klasseregler kræver typisk THD<sub>u</sub> ≤ 8 %. Løsninger: 12-puls, aktive front-ends eller harmoniske filtre.</p></article>
+      <article class="note"><h4>Nulleder og transformere</h4><p>Harmoniske strømme varmer kabler og transformere ekstra op, fordi tabene går med I<sub>RMS</sub>² og hvirvelstrømstab stiger med frekvensen.</p></article>
+      <article class="note"><h4>IE5-motorer</h4><p>Reluktansmotorer (fx ABB SynRM) bruges til pumper og ventilatorer for at nå IE4/IE5 uden sjældne jordarter. De leveres altid sammen med en frekvensomformer.</p></article>
+    </div>
+    <article class="note"><h3>Typiske fejl og misforståelser</h3><ul>
+      <li><b>Tror omformeren har lav cos φ fordi motoren har:</b> netsiden har høj cos φ<sub>1</sub>.</li>
+      <li><b>Måler effekt efter omformeren med almindeligt instrument:</b> PWM-spændingen giver forkerte værdier.</li>
+      <li><b>Bruger I<sub>RMS</sub> i P = √3·U·I·cos φ:</b> brug I<sub>1</sub> og cos φ<sub>1</sub>, eller mål P direkte.</li>
+      <li><b>THD<sub>i</sub> ved tomgang overfortolkes:</b> procenten er høj, men strømmen er lille.</li>
+      <li><b>Tangens pil vendt:</b> negativ P.</li></ul></article>
+  </div>
+</section>
+
+<section class="page" id="p-test" hidden>
+  <h2>Test dig selv</h2>
+  <div style="display:flex;gap:16px;align-items:baseline;flex-wrap:wrap"><h3 id="quizN">Quiz</h3><span class="score" id="score">0 / 10</span><button class="btn" id="quizReset">Start forfra</button></div>
+  <div class="quiz" id="quiz"></div>
+  <h3 style="margin-top:28px">Regneopgaver med trin-for-trin løsning</h3>
+  <div class="quiz" id="exercises"></div>
+</section>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+"use strict";
+/* ============ hjælpere ============ */
+const $=(s,e=document)=>e.querySelector(s), $$=(s,e=document)=>[...e.querySelectorAll(s)];
+const NS='http://www.w3.org/2000/svg';
+function sv(tag,attrs,parent){const e=document.createElementNS(NS,tag);if(attrs)for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+function txt(parent,x,y,s,attrs){const t=sv('text',Object.assign({x,y},attrs||{}),parent);t.textContent=s;return t;}
+const cx={a:(p,q)=>[p[0]+q[0],p[1]+q[1]],s:(p,q)=>[p[0]-q[0],p[1]-q[1]],m:(p,q)=>[p[0]*q[0]-p[1]*q[1],p[0]*q[1]+p[1]*q[0]],
+  d:(p,q)=>{const n=q[0]*q[0]+q[1]*q[1];return[(p[0]*q[0]+p[1]*q[1])/n,(p[1]*q[0]-p[0]*q[1])/n]},abs:p=>Math.hypot(p[0],p[1]),
+  arg:p=>Math.atan2(p[1],p[0])*180/Math.PI,pol:(r,d)=>[r*Math.cos(d*Math.PI/180),r*Math.sin(d*Math.PI/180)],conj:p=>[p[0],-p[1]],k:(p,k)=>[p[0]*k,p[1]*k]};
+const fmt=(v,d=2)=>(isFinite(v)?(+v).toFixed(d):'∞').replace('.',',').replace(/^-(0,?0*)$/,'$1');
+const SQ3=Math.sqrt(3), PI=Math.PI, DEG=Math.PI/180;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const par=(sw,vals)=>{let g=0;sw.forEach((on,i)=>{if(on)g+=1/vals[i]});return g?1/g:Infinity;};
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,3600);}
+const F_DISP='Barlow Condensed, sans-serif', F_MONO='JetBrains Mono, monospace';
+const LBLCOL={L1:'#8b5a2b',L2:'#1b1b1b',L3:'#8a9399',N:'#2b6cd4',PE:'#e2c000'};
+const SOCKCOL={L1:'#8b5a2b',L2:'#1b1b1b',L3:'#8a9399',N:'#2b6cd4',PE:'#e2c000',red:'#c62828',black:'#1b1b1b',blue:'#2b6cd4',grey:'#8a9399',brown:'#8b5a2b',yellow:'#e2c000',white:'#e9ecee'};
+const WIRECOL={l1:'#8b5a2b',l2:'#1b1b1b',l3:'#8a9399',n:'#2b6cd4',pe:'#e2c000',red:'#c62828',black:'#2a2a2a'};
+
+/* ============ faner ============ */
+const TABS=['sim','noter','modeller','forstaa','test'];
+function showTab(id){$$('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===id));$$('section.page').forEach(s=>s.hidden=s.id!=='p-'+id);try{history.replaceState(null,'','#'+id)}catch(e){}}
+$$('nav.tabs button').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+{const h=(location.hash||'').slice(1);if(TABS.includes(h))showTab(h);}
+
+/* ============ terminaler og tilstand ============ */
+const T={};
+function term(id,x,y,kind,label,comp,o){T[id]=Object.assign({id,x,y,kind,label,comp,lp:'above',lc:null},o||{});}
+let SUP={};
+const S={wires:[],on:false,trip:null,act:1,sel:-1,free:false,noise:false,contiSet:new Set(),log:{}};
+let wid=1;
+
+/* ============ topologi ============ */
+function finder(extra){const p={};for(const id in T)p[id]=id;const f=x=>{while(p[x]!==x){p[x]=p[p[x]];x=p[x];}return x;};const u=(a,b)=>{if(!(a in p)||!(b in p))return;a=f(a);b=f(b);if(a!==b)p[a]=b;};
+  S.wires.forEach(w=>u(w.a,w.b));(extra||[]).forEach(([a,b])=>u(a,b));if(LAB.internal)LAB.internal().forEach(([a,b])=>u(a,b));return f;}
+function labelMap(f){const m={};for(const t in SUP){const r=f(t);(m[r]=m[r]||new Set()).add(SUP[t]);}return m;}
+let TPC=null;
+function topo(){if(TPC)return TPC;const f=finder([]),fe=finder(LAB.through?LAB.through():[]),lm=labelMap(f),le=labelMap(fe);
+  const one=s=>{if(!s)return null;const a=[...s].filter(x=>x!=='PE');if(a.length===1)return a[0];if(a.length===0&&s.has('PE'))return 'PE';return a.length?'X':null;};
+  const wiredSet=new Set();S.wires.forEach(w=>{wiredSet.add(w.a);wiredSet.add(w.b);});
+  TPC={f,fe,lm,le,dir:t=>one(lm[f(t)]),eff:t=>one(le[fe(t)]),set:t=>le[fe(t)]||new Set(),wired:t=>wiredSet.has(t),same:(a,b)=>f(a)===f(b),sameE:(a,b)=>fe(a)===fe(b),
+    // alle terminaler i samme net (direkte)
+    members:t=>{const r=f(t);return Object.keys(T).filter(x=>f(x)===r);}};
+  return TPC;}
+/* standard kortslutningstjek: net med flere spændingsførende mærker */
+function shortCheck(tp,groups){for(const r in tp.le){const s=tp.le[r];
+  for(const g of groups){const L=[...s].filter(x=>g.live.includes(x));
+    if(L.length>1)return g.msg?g.msg(L):`Kortslutning ${L.join('–')}. Sikringen er brændt.`;
+    if(L.length&&g.n&&s.has(g.n))return `Kortslutning ${L[0]}–${g.n}. Sikringen er brændt.`;
+    if(L.length&&s.has('PE'))return `Jordfejl ${L[0]}–PE. RCD type B har slået fra.`;}
+  const all=[...s];const gs=groups.filter(g=>all.some(x=>g.live.includes(x)));
+  if(gs.length>1)return `Forbindelse mellem to forskellige forsyninger (${all.join(', ')}). Det er en kortslutning mellem systemerne.`;}
+  return null;}
+
+/* ============ knudepunktsmetoden ============ */
+function linsolve(A,b){const n=b.length;for(let i=0;i<n;i++){let p=i,best=cx.abs(A[i][i]);for(let r=i+1;r<n;r++){const v=cx.abs(A[r][i]);if(v>best){best=v;p=r;}}
+  [A[i],A[p]]=[A[p],A[i]];[b[i],b[p]]=[b[p],b[i]];const piv=A[i][i];if(cx.abs(piv)<1e-300)continue;
+  for(let r=i+1;r<n;r++){const fct=cx.d(A[r][i],piv);if(fct[0]===0&&fct[1]===0)continue;for(let c=i;c<n;c++)A[r][c]=cx.s(A[r][c],cx.m(fct,A[i][c]));b[r]=cx.s(b[r],cx.m(fct,b[i]));}}
+  const x=new Array(n).fill(0).map(()=>[0,0]);for(let i=n-1;i>=0;i--){let s=b[i];for(let c=i+1;c<n;c++)s=cx.s(s,cx.m(A[i][c],x[c]));x[i]=cx.abs(A[i][i])<1e-300?[0,0]:cx.d(s,A[i][i]);}return x;}
+/* E: [{id,a,b,z:[R,X]}]; srcV: mærke → kompleks spænding. Returnerer spænding pr. terminal og strøm pr. element (a→b). */
+function nodal(E,srcV){const tp=topo(),f=tp.f,lm=tp.lm;const Vt={},Ie={};
+  const roots=new Set(Object.keys(T).map(t=>f(t))),fixed={},idx={};let n=0;
+  roots.forEach(r=>{const l=lm[r]?[...lm[r]].find(x=>x in srcV):null;if(l)fixed[r]=srcV[l];else idx[r]=n++;});
+  const A=[...Array(n)].map(()=>[...Array(n)].map(()=>[0,0])),b=[...Array(n)].map(()=>[0,0]);
+  for(let i=0;i<n;i++)A[i][i]=[1e-9,0];
+  E.forEach(e=>{const ra=f(e.a),rb=f(e.b);if(ra===rb)return;const y=cx.d([1,0],e.z);const ia=idx[ra],ib=idx[rb];
+    if(ia!==undefined){A[ia][ia]=cx.a(A[ia][ia],y);if(ib!==undefined)A[ia][ib]=cx.s(A[ia][ib],y);else b[ia]=cx.a(b[ia],cx.m(y,fixed[rb]));}
+    if(ib!==undefined){A[ib][ib]=cx.a(A[ib][ib],y);if(ia!==undefined)A[ib][ia]=cx.s(A[ib][ia],y);else b[ib]=cx.a(b[ib],cx.m(y,fixed[ra]));}});
+  const x=n?linsolve(A,b):[];const Vn=r=>fixed[r]!==undefined?fixed[r]:x[idx[r]];
+  for(const t in T)Vt[t]=Vn(f(t));E.forEach(e=>{const ra=f(e.a),rb=f(e.b);Ie[e.id]=ra===rb?[0,0]:cx.d(cx.s(Vn(ra),Vn(rb)),e.z);});
+  // strøm ud af hver kilde-terminal
+  const src={};for(const t in SUP){const r=f(t);let I=[0,0];E.forEach(e=>{const ra=f(e.a),rb=f(e.b);if(ra===rb)return;if(ra===r)I=cx.a(I,Ie[e.id]);if(rb===r)I=cx.s(I,Ie[e.id]);});src[SUP[t]]=I;}
+  return{Vt,Ie,src};}
+const V3=(U,a0=0)=>[cx.pol(U,a0),cx.pol(U,a0-120),cx.pol(U,a0+120)];
+/* ============ ledninger ============ */
+function wireClass(w,tp){if(T[w.a].kind==='PE'||T[w.b].kind==='PE')return 'pe';
+  const l=tp.eff(w.a)||tp.eff(w.b);if(LAB.wireClass){const c=LAB.wireClass(l,w,tp);if(c)return c;}
+  return {L1:'l1',L2:'l2',L3:'l3',N:'n',PE:'pe'}[l]||(T[w.a].kind==='black'&&T[w.b].kind==='black'?'black':'red');}
+function addWire(a,b){if(a===b)return false;if(S.wires.some(w=>(w.a===a&&w.b===b)||(w.a===b&&w.b===a)))return false;S.wires.push({id:wid++,a,b});TPC=null;return true;}
+function removeWire(id){const rw=S.wires.find(w=>w.id===id);if(rw&&wiringLocked(rw.a,rw.b)){toast(LAB.lockMsg||'Sluk for spændingen før du fjerner ledninger.');return;}S.wires=S.wires.filter(w=>w.id!==id);S.sel=-1;TPC=null;if(rw&&(T[rw.a].kind==='PE'||T[rw.b].kind==='PE'))contiPrune();update();}
+function loadPreset(n){S.on=false;S.trip=null;S.wires=[];S.sel=-1;TPC=null;if(LAB.reset)LAB.reset();const A=LAB.acts[n];if(A.vals)A.vals();(A.wires||[]).forEach(([a,b])=>addWire(a,b));}
+
+/* ============ conti ============ */
+function contiUsed(tp){if(!LAB.conti)return[];return Object.keys(LAB.conti).filter(c=>Object.values(T).some(t=>t.comp===c&&t.kind!=='PE'&&tp.wired(t.id)));}
+function contiPrune(){if(!LAB.conti)return;const tp=topo();for(const c of [...S.contiSet])if(tp.eff(c+'.PE')!=='PE')S.contiSet.delete(c);if(!S.contiSet.size)contiShow(false,'En PE-ledning er fjernet. Mål gennemgangen igen.');}
+function contiShow(ok,msg){const l=$('#contiLamp');if(!l)return;l.setAttribute('fill',ok?'#fffbd0':'#666');$('#contiOk').setAttribute('fill',ok?'#4c4':'#666');$('#contiTxt').textContent=msg;}
+function contiAll(){S.contiSet=new Set(contiUsed(topo()));}
+
+/* ============ tjek ============ */
+function allChecks(){TPC=null;const tp=topo();const out=LAB.checks(tp)||[];
+  const save=S.on;S.on=true;S.checking=true;let r0;try{r0=LAB.solve();}finally{S.on=save;S.checking=false;}
+  if(!LAB.noShortCheck)out.push(['Ingen kortslutning eller jordfejl',!r0.fault]);
+  if(LAB.conti){const u=contiUsed(tp);const miss=u.filter(c=>!S.contiSet.has(c));out.push([miss.length?`Gennemgangstest af PE mangler på ${miss.map(c=>LAB.conti[c]).join(', ')}`:(u.length?'Gennemgangstest af PE udført med Conti Light (200 mA)':'Intet udstyr med jordklemme i brug (ingen gennemgangstest nødvendig)'),!miss.length]);}
+  return out;}
+
+/* ============ bænk ============ */
+const svg=$('#bench');
+function wirePath(a,b){const dx=Math.abs(b.x-a.x),dy=Math.abs(b.y-a.y);const sag=30+Math.min(150,(dx+dy)*0.2);return `M${a.x},${a.y} C${a.x},${a.y+sag} ${b.x},${b.y+sag} ${b.x},${b.y}`;}
+function lcd(g,x,y,w,h,val,dim,fs,anchor){sv('rect',{x,y,width:w,height:h,rx:3,fill:'var(--lcd)',stroke:'#00000040'},g);txt(g,anchor==='middle'?x+w/2:x+w-8,y+h/2+(fs||(h>40?22:19))*0.36,val,{'text-anchor':anchor||'end','font-family':F_MONO,'font-size':fs||(h>40?22:19),'font-weight':600,fill:'var(--lcd-ink)',opacity:dim?.35:1});}
+function seg7(g,x,y,w,h,val,col,bg,fs){sv('rect',{x,y,width:w,height:h,rx:2,fill:bg||'#1a0606',stroke:'#000'},g);txt(g,x+w/2,y+h*0.72,val,{'text-anchor':'middle','font-family':F_MONO,'font-size':fs||h*0.62,'font-weight':600,fill:col||'#ff3a2a'});}
+function label(g,x,y,s,o){return txt(g,x,y,s,Object.assign({'font-family':F_DISP,'font-weight':700,'font-size':15,fill:'#17140c'},o||{}));}
+function knobG(g,x,y,r,ang,col,ctl){const k=sv('g',ctl?{'data-ctl':ctl,style:'cursor:pointer'}:{},g);sv('circle',{cx:x,cy:y,r:r+2,fill:'#00000030'},k);sv('circle',{cx:x,cy:y,r,fill:col||'#161616',stroke:'#000'},k);
+  const kg=sv('g',{transform:`rotate(${ang} ${x} ${y})`},k);sv('rect',{x:x-r*0.1,y:y-r*0.92,width:r*0.2,height:r*0.55,rx:1,fill:'#eee'},kg);return k;}
+function rotaryG(g,x,y,max,pos,size,ctl,labels){const k=sv('g',ctl?{'data-ctl':ctl,style:'cursor:pointer'}:{},g);sv('rect',{x:x-size/2,y:y-size/2,width:size,height:size,rx:3,fill:'#c9ccd0',stroke:'#8f959a'},k);
+  const ang=i=>-135+270*(max?i/max:0);for(let i=0;i<=max;i++){const a=(ang(i)-90)*DEG,R=size*0.4;txt(k,x+Math.cos(a)*R,y+Math.sin(a)*R+3.5,labels?labels[i]:i,{'text-anchor':'middle','font-size':8.5,'font-family':F_MONO,'font-weight':i===pos?700:400,fill:'#111'});}
+  const kg=sv('g',{transform:`rotate(${ang(pos)} ${x} ${y})`},k);sv('rect',{x:x-6,y:y-size*0.26,width:12,height:size*0.52,rx:3,fill:'#151515'},kg);sv('rect',{x:x-1.5,y:y-size*0.25,width:3,height:size*0.13,fill:'#eee'},kg);return k;}
+function toggleG(g,x,y,on,ctl,over){const sg=sv('g',{'data-ctl':ctl,style:'cursor:pointer'},g);
+  sv('rect',{x:x-44,y:y-10,width:22,height:20,rx:1,fill:'#f4f4f2'},sg);txt(sg,x-33,y-2,'ON',{'text-anchor':'middle','font-size':6.5,'font-family':F_MONO,fill:on?'#000':'#999','font-weight':700});txt(sg,x-33,y+7,'OFF',{'text-anchor':'middle','font-size':6.5,'font-family':F_MONO,fill:on?'#999':'#000','font-weight':700});
+  sv('rect',{x:x-46,y:y-18,width:72,height:36,rx:5,fill:'#00000000'},sg);
+  sv('rect',{x:x-11,y:y-15,width:22,height:30,rx:4,fill:'#2a2f33',stroke:over?'var(--bad)':'#00000050','stroke-width':over?3:1},sg);
+  sv('rect',{x:x-4,y:on?y-15:y,width:8,height:15,rx:3,fill:on?'#f2f2f2':'#8d969b'},sg);
+  sv('circle',{cx:x+20,cy:y-8,r:3.5,fill:on?'#f2b01e':'#00000040'},sg);return sg;}
+function btnG(g,x,y,w,h,fill,lab,ctl,lit){const b=sv('g',{'data-ctl':ctl,style:'cursor:pointer'},g);sv('rect',{x,y,width:w,height:h,rx:3,fill:'#222'},b);sv('rect',{x:x+3,y:y+3,width:w-6,height:h-6,rx:2,fill,opacity:lit===false?.45:1,stroke:lit?'#fff':'none','stroke-width':lit?2:0},b);if(lab)txt(b,x+w/2,y+h/2+4,lab,{'text-anchor':'middle','font-size':10,'font-weight':700,fill:'#111','font-family':F_DISP});return b;}
+function inductorPath(x,y,n,s,horiz){let d=`M${x},${y}`;for(let i=0;i<n;i++)d+=horiz?` a${s/2},${s/2} 0 0 1 ${s},0`:` a${s/2},${s/2} 0 0 1 0,${s}`;return d;}
+function px120(g,x0,y0,id,val,on,lus,ctl){sv('rect',{x:x0,y:y0,width:150,height:172,rx:16,fill:'#2357c4'},g);sv('rect',{x:x0+6,y:y0+5,width:138,height:162,rx:11,fill:'#121314'},g);
+  txt(g,x0+14,y0+22,'metrix PX 120',{'font-family':F_DISP,'font-weight':600,'font-size':14,fill:'#d5dadd'});txt(g,x0+136,y0+22,id,{'text-anchor':'end','font-family':F_DISP,'font-weight':700,'font-size':16,fill:'#fff'});
+  lcd(g,x0+12,y0+30,126,40,on?val:'---- W',!on);
+  if(ctl){const lb=sv('g',{'data-ctl':ctl,style:'cursor:pointer'},g);sv('rect',{x:x0+12,y:y0+76,width:126,height:20,rx:4,fill:lus?'#f2b01e':'#ffffff18',stroke:'#ffffff40'},lb);
+    txt(lb,x0+75,y0+90,lus?'LUS PÅ (strømspole kortsluttet)':'Lus over strømspole: af',{'text-anchor':'middle','font-size':10,fill:lus?'#1b1b1b':'#d5dadd','font-weight':600});}
+  txt(g,x0+43,y0+113,'10A max',{'text-anchor':'middle','font-size':9.5,fill:'#b8c0c5'});txt(g,x0+110,y0+113,'600V max',{'text-anchor':'middle','font-size':9.5,fill:'#b8c0c5'});
+  sv('line',{x1:x0+77,y1:y0+102,x2:x0+77,y2:y0+164,stroke:'#ffffff30'},g);}
+function bm251(g,x0,y0,id,val,on,mode){sv('rect',{x:x0,y:y0,width:106,height:172,rx:14,fill:'#7fd34a'},g);sv('rect',{x:x0+6,y:y0+6,width:94,height:160,rx:10,fill:'#1d1f21'},g);
+  txt(g,x0+14,y0+24,'elma',{'font-family':F_DISP,'font-weight':700,'font-size':14,fill:'#ddd'});txt(g,x0+92,y0+24,'BM251s',{'text-anchor':'end','font-size':10,'font-weight':600,fill:'#ddd'});
+  lcd(g,x0+12,y0+32,82,36,on?val:'---',!on,16);
+  sv('circle',{cx:x0+53,cy:y0+104,r:20,fill:'#141414',stroke:'#333'},g);sv('rect',{x:x0+50,y:y0+84,width:6,height:22,rx:3,fill:'#ccc',transform:`rotate(${mode==='Ω'?-40:-112} ${x0+53} ${y0+104})`},g);
+  txt(g,x0+22,y0+92,mode||'V~',{'text-anchor':'middle','font-size':11,'font-weight':700,fill:'#7fd34a'});txt(g,x0+86,y0+92,id,{'text-anchor':'middle','font-size':11,'font-weight':700,fill:'#ddd'});}
+function clampG(g,x0,y0,val,on,sub){sv('path',{d:`M${x0+12},${y0+48} C${x0+2},${y0-6} ${x0+94},${y0-6} ${x0+84},${y0+48}`,fill:'none',stroke:'#7fd34a','stroke-width':13},g);
+  sv('rect',{x:x0,y:y0+44,width:96,height:128,rx:12,fill:'#1d1f21'},g);sv('rect',{x:x0+8,y:y0+50,width:80,height:18,rx:6,fill:'#7fd34a'},g);
+  txt(g,x0+48,y0+63,'ELMA 9400',{'text-anchor':'middle','font-family':F_DISP,'font-weight':700,'font-size':12,fill:'#123'});
+  lcd(g,x0+10,y0+76,76,34,on?val:'-- A',!on,15);txt(g,x0+48,y0+128,'A~',{'text-anchor':'middle','font-size':12,'font-weight':700,fill:'#7fd34a'});
+  txt(g,x0+48,y0+148,sub||'',{'text-anchor':'middle','font-size':10.5,fill:'#c8d0d4'});}
+function bordtavle(g,x0,y0,on,tripTxt,o){o=o||{};sv('rect',{x:x0,y:y0,width:210,height:o.h||300,rx:6,fill:'#e9e9e4',stroke:'#9aa0a3','stroke-width':2},g);
+  sv('rect',{x:x0+104,y:y0+8,width:96,height:20,fill:'#f4f4f2',stroke:'#999'},g);txt(g,x0+152,y0+23,'AB-5.11',{'text-anchor':'middle','font-family':F_DISP,'font-weight':700,'font-size':14,fill:'#17140c'});
+  sv('rect',{x:x0+104,y:y0+32,width:96,height:14,fill:'#f4f4f2',stroke:'#bbb'},g);txt(g,x0+152,y0+43,'400V boks',{'text-anchor':'middle','font-size':10,fill:'#333'});
+  const mb=sv('g',{'data-main':'1',style:'cursor:pointer'},g);sv('rect',{x:x0+14,y:y0+14,width:60,height:60,rx:5,fill:'#141414'},mb);
+  const hg=sv('g',{transform:`rotate(${on?0:-90} ${x0+44} ${y0+44})`},mb);sv('rect',{x:x0+11,y:y0+38,width:66,height:12,rx:4,fill:'#2a2a2a',stroke:'#000'},hg);
+  txt(g,x0+44,y0+88,on?'On':'Off',{'text-anchor':'middle','font-size':12,'font-weight':700,fill:'#17140c'});
+  const es=sv('g',{'data-estop':'1',style:'cursor:pointer'},g);sv('rect',{x:x0+90,y:y0+54,width:44,height:40,rx:4,fill:'#f1d21a',stroke:'#a08c10'},es);sv('circle',{cx:x0+112,cy:y0+74,r:14,fill:'#c42a22',stroke:'#7a1712','stroke-width':2},es);txt(g,x0+112,y0+106,'NØDSTOP',{'text-anchor':'middle','font-size':9,'font-weight':700,fill:'#7a1712'});
+  [0,1,2].forEach(i=>{const y=y0+134+i*44;sv('circle',{cx:x0+44,cy:y,r:17,fill:'#1a1a1a'},g);sv('circle',{cx:x0+44,cy:y,r:12,fill:tripTxt&&/Diazed|Overstrøm|Kortslutning|kortslutning|Sikring/.test(tripTxt)?'#c42a22':'#f4f4f2',stroke:'#bbb'},g);sv('circle',{cx:x0+44,cy:y,r:4.5,fill:'#ddd'},g);
+    txt(g,x0+72,y+4,'L'+(i+1),{'font-size':11,'font-weight':700,fill:'#333'});sv('circle',{cx:x0+96,cy:y,r:5,fill:on?'#f2b01e':'#6b5a2a55',stroke:'#00000040'},g);});
+  txt(g,x0+24,y0+(o.h||300)-26,'10 A gG Diazed',{'font-size':10,fill:'#333','font-family':F_MONO});txt(g,x0+24,y0+(o.h||300)-12,'RCD type B',{'font-size':10,fill:tripTxt&&/RCD/.test(tripTxt)?'#c42a22':'#333','font-family':F_MONO,'font-weight':tripTxt&&/RCD/.test(tripTxt)?700:400});
+  (o.labels||['L1','L2','L3','N','PE']).forEach((l,i)=>{const y=y0+76+46*i;txt(g,x0+160,y+5,l,{'text-anchor':'end','font-weight':700,'font-size':14,fill:'#17140c'});});}
+function socket(g,t){const col=SOCKCOL[t.kind]||t.kind;
+  const grp=sv('g',{'data-term':t.id,style:'cursor:crosshair'},g);const r=t.r||9;
+  sv('circle',{cx:t.x,cy:t.y,r:r+2,fill:'#11151799'},grp);sv('circle',{cx:t.x,cy:t.y,r,fill:col,stroke:t.kind==='PE'?'#2e9e44':'#00000080','stroke-width':t.kind==='PE'?3:1},grp);
+  sv('circle',{cx:t.x,cy:t.y,r:r*0.38,fill:'#0b0d0e'},grp);
+  if(dragFrom&&dragFrom!==t.id)sv('circle',{cx:t.x,cy:t.y,r:r+5,fill:'none',stroke:'var(--accent)','stroke-width':1.5,'stroke-dasharray':'3 3',opacity:.7},grp);}
+let dragFrom=null,dragPt=null,lastR=null;
+function drawBench(R){svg.innerHTML='';const g=sv('g',null,svg);const [W,H]=LAB.view;
+  sv('rect',{x:0,y:0,width:W,height:H,fill:'var(--bench)'},g);
+  for(let x=20;x<W;x+=40)sv('line',{x1:x,y1:0,x2:x,y2:H,stroke:'var(--bench-line)','stroke-width':1},g);
+  LAB.drawBench(g,R);
+  for(const id in T){const t=T[id];if(t.lp==='none'||t.hidden)continue;const dy=t.lp==='below'?(t.r||9)+15:-((t.r||9)+7);txt(g,t.x+(t.lx||0),t.y+dy,t.label,{'text-anchor':'middle','font-size':t.fs||10.5,'font-weight':700,fill:t.lc||'var(--dev-steel-ink)'});}
+  const tp=topo();const wg=sv('g',null,svg);
+  S.wires.forEach(w=>{const d=wirePath(T[w.a],T[w.b]);const selc=S.sel===w.id;const c=wireClass(w,tp);
+    sv('path',{d,fill:'none',stroke:selc?'var(--accent)':'var(--wire-halo)','stroke-width':selc?10:7,'stroke-linecap':'round'},wg);
+    sv('path',{d,fill:'none',stroke:WIRECOL[c]||c,'stroke-width':4.5,'stroke-linecap':'round'},wg);
+    if(c==='pe')sv('path',{d,fill:'none',stroke:'#2e9e44','stroke-width':4.5,'stroke-dasharray':'9 9'},wg);
+    sv('path',{d,fill:'none',stroke:'transparent','stroke-width':16,'data-wire':w.id,style:'cursor:pointer'},wg);});
+  const tg=sv('g',null,svg);for(const id in T)if(!T[id].hidden)socket(tg,T[id]);
+  if(LAB.drawOver)LAB.drawOver(sv('g',null,svg),R);
+  if(dragFrom&&dragPt){const a=T[dragFrom];sv('path',{d:wirePath(a,dragPt),fill:'none',stroke:'var(--accent)','stroke-width':4,'stroke-dasharray':'6 5','pointer-events':'none'},svg);}}
+
+/* ============ pointer ============ */
+function svgPt(ev){const p=svg.createSVGPoint();p.x=ev.clientX;p.y=ev.clientY;return p.matrixTransform(svg.getScreenCTM().inverse());}
+function nearestTerm(pt){let best=null,bd=22;for(const id in T){const t=T[id];if(t.hidden)continue;const d=Math.hypot(t.x-pt.x,t.y-pt.y);if(d<bd){bd=d;best=id;}}return best;}
+const wiringLocked=(...ts)=>S.on&&!LAB.noPower&&!(LAB.liveWiring&&ts.length&&ts.every(t=>LAB.liveWiring(t)));
+svg.addEventListener('pointerdown',ev=>{const tEl=ev.target.closest('[data-term]');
+  if(tEl){if(wiringLocked(tEl.dataset.term)){toast(LAB.lockMsg||'Sluk for spændingen før du ændrer opstillingen.');return;}dragFrom=tEl.dataset.term;dragPt=svgPt(ev);svg.setPointerCapture(ev.pointerId);ev.preventDefault();render();return;}
+  const c=ev.target.closest('[data-ctl]');if(c){const [n,...a]=c.dataset.ctl.split(':');LAB.ctl(n,a,ev);update();return;}
+  if(ev.target.closest('[data-main]')){$('#btnPower').click();return;}
+  if(ev.target.closest('[data-estop]')){$('#btnStop').click();return;}
+  const wEl=ev.target.closest('[data-wire]');if(wEl){const id=+wEl.dataset.wire;if(S.sel===id){removeWire(id);}else{S.sel=id;render();}return;}
+  if(S.sel!==-1){S.sel=-1;render();}});
+svg.addEventListener('pointermove',ev=>{if(!dragFrom)return;dragPt=svgPt(ev);render();});
+svg.addEventListener('pointerup',ev=>{if(!dragFrom)return;const to=nearestTerm(svgPt(ev));const from=dragFrom;dragFrom=null;dragPt=null;
+  if(to&&to!==from){if(wiringLocked(from,to))toast(LAB.lockMsg||'Sluk for spændingen før du ændrer opstillingen.');else if(!addWire(from,to))toast('Den ledning findes allerede.');}update();});
+svg.addEventListener('pointercancel',()=>{dragFrom=null;dragPt=null;render();});
+document.addEventListener('keydown',e=>{if((e.key==='Delete'||e.key==='Backspace')&&S.sel!==-1&&!/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();removeWire(S.sel);}});
+
+/* ============ knapper ============ */
+$('#btnPower').addEventListener('click',()=>{if(S.on){S.on=false;if(LAB.onPower)LAB.onPower(false);update();return;}
+  const miss=allChecks().filter(c=>!c[1]);
+  if(!S.free&&miss.length){toast(`Underviseren godkender ikke endnu: ${miss[0][0]}${miss.length>1?` (+${miss.length-1} mere)`:''}.`);return;}
+  S.trip=null;S.on=true;if(LAB.onPower)LAB.onPower(true);update();});
+$('#btnStop').addEventListener('click',()=>{S.on=false;if(LAB.onPower)LAB.onPower(false);update();toast('Nødstop aktiveret. Opstillingen er spændingsløs.');});
+$('#btnClear').addEventListener('click',()=>{if(wiringLocked()){toast('Sluk for spændingen først.');return;}S.wires=[];S.sel=-1;TPC=null;S.contiSet=new Set();contiShow(false,'Alle ledninger fjernet. Mål gennemgangen igen.');update();});
+$('#btnDel').addEventListener('click',()=>{if(S.sel!==-1)removeWire(S.sel);});
+$('#setFree').addEventListener('change',e=>{S.free=e.target.checked;update();});
+$('#setNoise').addEventListener('change',e=>{S.noise=e.target.checked;update();});
+if($('#btnConti'))$('#btnConti').addEventListener('click',()=>{if(S.on){toast('Gennemgangstest må kun laves spændingsløst. Sluk først.');return;}
+  TPC=null;const tp=topo();const cand=Object.keys(LAB.conti).filter(c=>tp.wired(c+'.PE')||contiUsed(tp).includes(c));
+  if(!cand.length){S.contiSet=new Set();contiShow(false,'Intet udstyr er tilsluttet. Træk en grøn/gul ledning fra PE i forsyningen til ⏚ på udstyret, og mål igen.');update();return;}
+  const ok=cand.filter(c=>tp.eff(c+'.PE')==='PE'),bad=cand.filter(c=>!ok.includes(c));
+  ok.forEach(c=>S.contiSet.add(c));bad.forEach(c=>S.contiSet.delete(c));
+  contiShow(!bad.length,(ok.length?`Gennemgang OK (under 0,5 Ω): ${ok.map(c=>LAB.conti[c]).join(', ')}. `:'')+(bad.length?`Ingen gennemgang på ${bad.map(c=>LAB.conti[c]).join(', ')}: sæt en grøn/gul ledning fra ⏚ til PE.`:'Testen gælder, så længe PE-ledningerne bliver siddende.'));update();});
+function buildActsel(){const box=$('#actsel');box.innerHTML='';Object.keys(LAB.acts).forEach(k=>{const b=document.createElement('button');b.dataset.act=k;b.innerHTML=LAB.acts[k].name;b.addEventListener('click',()=>{S.act=+k;if(LAB.onAct)LAB.onAct(+k);update();});box.appendChild(b);});}
+$('#btnPreset').addEventListener('click',()=>{loadPreset(S.act);contiShow(false,'Ny opstilling. Mål gennemgangen af PE før du tænder.');update();toast(LAB.presetMsg?LAB.presetMsg(S.act):`Opstilling til aktivitet ${S.act} indlæst. Lav gennemgangstesten, og tryk ${LAB.powerOn||'TÆND'}.`);});
+$('#btnSetVals').addEventListener('click',()=>{const A=LAB.acts[S.act];if(A.vals)A.vals();update();toast('Indstillinger sat til vejledningens værdier.');});
+
+/* ============ måleskema og log ============ */
+let noiseSeed=1;function rnd(){noiseSeed=(noiseSeed*16807)%2147483647;return noiseSeed/2147483647;}
+function noisy(v,rel){return S.noise&&(S.on||LAB.noPower)&&v?v*(1+(rnd()-0.5)*(rel||0.01)):v;}
+function devPct(r){if(r.c===undefined||isNaN(r.c)||isNaN(r.m)||!(S.on||LAB.noPower))return '';if(Math.abs(r.c)<1e-6)return Math.abs(r.m)<0.01?'0':'—';return fmt((r.m-r.c)/Math.abs(r.c)*100,1);}
+function cell(v,d){return (v===undefined||v===null||(typeof v==='number'&&isNaN(v)))?'–':(typeof v==='string'?v:fmt(v,d));}
+function copyText(s,msgEl){const done=()=>{msgEl.textContent='Kopieret. Indsæt i Excel med Ctrl+V.';};
+  try{navigator.clipboard.writeText(s).then(done,()=>fallbackCopy(s,done,msgEl));}catch(e){fallbackCopy(s,done,msgEl);}}
+function fallbackCopy(s,done,msgEl){const ta=document.createElement('textarea');ta.value=s;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){msgEl.textContent='Markér tabellen og kopiér manuelt.';}ta.remove();}
+$('#btnCopy').addEventListener('click',()=>{const rows=LAB.sheet(lastR);const tsv=['Størrelse\tEnhed\tBeregnet\tMålt\tAfvigelse %',...rows.map(r=>[r.l,r.u,cell(r.c,r.d),cell(r.m,r.d),devPct(r)].join('\t'))].join('\n');copyText(tsv,$('#copyMsg'));});
+function logCols(){return LAB.logCols?LAB.logCols(S.act):null;}
+$('#btnLog').addEventListener('click',()=>{const cols=logCols();if(!cols)return;if(!S.on&&!LAB.noPower){toast('Tænd først. Instrumenterne viser ingenting.');return;}
+  const row=LAB.logRow(lastR);if(!row){toast(LAB.logRefuse||'Der er ingen gyldig måling at gemme endnu.');return;}
+  const L=(S.log[S.act]=S.log[S.act]||[]);const o=Object.assign({},row);cols.forEach(c=>{const v=row[c.k];o[c.k]=typeof v==='number'&&!LAB.noPower?noisy(v,c.noise):v;});L.push(o);update();toast('Målepunkt gemt i loggen.');});
+$('#btnLogClear').addEventListener('click',()=>{S.log[S.act]=[];update();});
+$('#btnLogUndo').addEventListener('click',()=>{(S.log[S.act]||[]).pop();update();});
+$('#btnLogCopy').addEventListener('click',()=>{const cols=logCols();const L=S.log[S.act]||[];const tsv=[cols.map(c=>c.l+(c.u?` [${c.u}]`:'')).join('\t'),...L.map(o=>cols.map(c=>cell(o[c.k],c.d)).join('\t'))].join('\n');copyText(tsv,$('#logMsg'));});
+function renderLog(){const cols=logCols();const card=$('#logCard');card.hidden=!cols;if(!cols)return;
+  $('#logHint').innerHTML=LAB.logHint?LAB.logHint(S.act):'';const L=S.log[S.act]||[];
+  $('#logTable').innerHTML='<tr><th>#</th>'+cols.map(c=>`<th style="text-align:right">${c.l}${c.u?` <span class="small">[${c.u}]</span>`:''}</th>`).join('')+'</tr>'+
+    (L.length?L.map((o,i)=>`<tr><td>${i+1}</td>${cols.map(c=>`<td class="n">${cell(o[c.k],c.d)}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${cols.length+1}" class="small">Ingen målepunkter endnu. Indstil, aflæs, og tryk "Gem målepunkt".</td></tr>`);}
+
+/* ============ opdatering ============ */
+function update(){TPC=null;if(LAB.step)LAB.step();let R=LAB.solve();
+  if(S.on&&R.fault){S.on=false;S.trip=R.fault;if(LAB.onPower)LAB.onPower(false);R=LAB.solve();}
+  noiseSeed=1+Math.floor(Math.random()*1e6);lastR=R;render();}
+function render(){const R=lastR||LAB.solve();drawBench(R);
+  if(!LAB.noPower){const st=$('#status');st.className='statusbar'+(S.trip?' trip':(S.on?' on':''));
+    $('#statusTxt').textContent=S.trip?'Udløst: '+S.trip+' Ret fejlen og tænd igen.':(S.on?(LAB.onTxt||'Under spænding. Kun afprøvning og målinger.'):'Spændingsløs. Du kan ændre opstillingen.');
+    const pb=$('#btnPower');pb.textContent=S.on?(LAB.powerOff||'SLUK'):(LAB.powerOn||'TÆND');pb.classList.toggle('on',S.on);}
+  else if(LAB.statusTxt){const st=$('#status');st.className='statusbar'+(R.statusCls?' '+R.statusCls:'');$('#statusTxt').textContent=LAB.statusTxt(R);}
+  $('#btnDel').disabled=S.sel===-1;$('#btnClear').disabled=wiringLocked();
+  $$('#actsel button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.act===S.act));
+  $('#actDesc').innerHTML=LAB.acts[S.act].desc;$('#msAct').textContent='Aktivitet '+S.act;
+  const ch=allChecks();$('#checklist').innerHTML=ch.map(([t,o])=>`<li class="${o?'y':'n'}"><span class="mk">${o?'✓':'✗'}</span><span>${t}</span></li>`).join('');
+  const allOk=ch.every(c=>c[1]);const v=$('#verdict');v.className='verdict '+(allOk?'y':'n');
+  v.textContent=allOk?(LAB.okTxt||'Opstillingen er godkendt. Du må tænde.'):(S.free?'Fri eksperimentering: du kan tænde uden godkendelse.':`${ch.filter(c=>!c[1]).length} punkt(er) mangler før godkendelse.${LAB.noPower?'':' TÆND er spærret.'}`);
+  const W=LAB.warnings(R,topo());$('#warnings').innerHTML=W.length?W.map(w=>`<li class="${w[0]}">${w[1]}</li>`).join(''):'<li class="none">Ingen advarsler.</li>';
+  const rows=LAB.sheet(R);$('#msTable').innerHTML='<tr><th>Størrelse</th><th>Enhed</th><th style="text-align:right">Beregnet</th><th style="text-align:right">Målt</th><th style="text-align:right">Afv. %</th></tr>'+
+    rows.map(r=>{const dv=devPct(r);const a=Math.abs(parseFloat((dv||'').replace(',','.')));const cls=dv===''?'':(dv==='—'?'bad':(a<2?'ok':(a<8?'warn':'bad')));
+      const live=S.on||LAB.noPower;return `<tr><td>${r.l}</td><td>${r.u}</td><td class="n">${cell(r.c,r.d)}</td><td class="n">${live?cell(typeof r.m==='number'?noisy(r.m):r.m,r.d):'–'}</td><td class="n dev ${cls}">${dv}</td></tr>`;}).join('');
+  if(LAB.renderSide)LAB.renderSide(R);
+  if(LAB.live)LAB.live($('#live'),R);renderLog();}
+
+/* ============ vektordiagram og grafer ============ */
+function arrow(g,x1,y1,x2,y2,color,dash,w){sv('line',{x1,y1,x2,y2,stroke:color,'stroke-width':w||2.2,'stroke-dasharray':dash||'','stroke-linecap':'round'},g);
+  const L=Math.hypot(x2-x1,y2-y1);if(L<4)return;const a=Math.atan2(y2-y1,x2-x1),h=8;
+  sv('polygon',{points:`${x2},${y2} ${x2-h*Math.cos(a-0.38)},${y2-h*Math.sin(a-0.38)} ${x2-h*Math.cos(a+0.38)},${y2-h*Math.sin(a+0.38)}`,fill:color},g);}
+function phasorPlot(el,items,{size=320,uMax=240,iMax=1,uUnit='V',iUnit='A',noScale}={}){el.innerHTML='';const c=size/2,R=size/2-34;const g=sv('g',null,el);
+  sv('circle',{cx:c,cy:c,r:R,fill:'none',stroke:'var(--grid)'},g);sv('line',{x1:c-R,y1:c,x2:c+R,y2:c,stroke:'var(--grid)'},g);sv('line',{x1:c,y1:c-R,x2:c,y2:c+R,stroke:'var(--grid)'},g);
+  const su=R/uMax,si=R*0.8/(iMax||1);
+  items.forEach(it=>{const s=it.kind==='I'?si:su;const o=it.from||[0,0],t=it.to;const x1=c+o[0]*s,y1=c-o[1]*s,x2=c+t[0]*s,y2=c-t[1]*s;
+    if(it.circle){sv('circle',{cx:x1,cy:y1,r:Math.abs(it.circle*s),fill:'none',stroke:it.color,'stroke-dasharray':'4 4','stroke-width':1.2},g);return;}
+    if(it.dot){sv('circle',{cx:x2,cy:y2,r:4.5,fill:it.color},g);}else arrow(g,x1,y1,x2,y2,it.color,it.dash,it.w);
+    if(it.label){const a=Math.atan2(y2-y1,x2-x1);const lx=x2+Math.cos(a)*12,ly=y2+Math.sin(a)*12+4;txt(g,lx,ly,it.label,{'text-anchor':'middle','font-size':11.5,'font-weight':700,fill:it.color,style:'paint-order:stroke',stroke:'var(--panel)','stroke-width':3});}});
+  if(!noScale)txt(g,8,size-8,`U: ${fmt(uMax,0)} ${uUnit}${iMax?`  ·  I: ${fmt(iMax,2)} ${iUnit}`:''} pr. radius`,{'font-size':10,fill:'var(--muted)'});}
+function niceTicks(a,c,n=5){if(!(c>a))return[a];const st0=(c-a)/n,mag=10**Math.floor(Math.log10(st0)),e=st0/mag,st=(e>=7.5?10:e>=3.5?5:e>=1.5?2:1)*mag;const out=[];for(let v=Math.ceil(a/st)*st;v<=c+1e-9;v+=st)out.push(+v.toFixed(10));return out;}
+function plotLines(el,{x0,x1,y0,y1,series,xl,yl,mark,W=320,H=220,y2}){el.innerHTML='';const l=46,r=y2?44:12,t=14,b=36;const g=sv('g',null,el);el.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const sx=x=>l+(x-x0)/(x1-x0)*(W-l-r),sy=y=>H-b-(y-y0)/(y1-y0)*(H-t-b);
+  const tl=v=>Math.abs(v)>=10000?fmt(v/1000,0)+'k':Math.abs(v)>=1000?fmt(v/1000,1)+'k':fmt(v,Math.abs(v)<10&&v%1?(Math.abs(v)<1?2:1):0);
+  niceTicks(y0,y1).forEach(v=>{sv('line',{x1:l,y1:sy(v),x2:W-r,y2:sy(v),stroke:'var(--grid)'},g);txt(g,l-5,sy(v)+3.5,tl(v),{'text-anchor':'end','font-size':9.5,fill:'var(--muted)'});});
+  niceTicks(x0,x1,6).forEach(v=>{sv('line',{x1:sx(v),y1:H-b,x2:sx(v),y2:H-b+4,stroke:'var(--muted)'},g);txt(g,sx(v),H-b+15,tl(v),{'text-anchor':'middle','font-size':9.5,fill:'var(--muted)'});});
+  sv('line',{x1:l,y1:H-b,x2:W-r,y2:H-b,stroke:'var(--muted)'},g);if(y0<0&&y1>0)sv('line',{x1:l,y1:sy(0),x2:W-r,y2:sy(0),stroke:'var(--muted)','stroke-dasharray':'3 3'},g);
+  txt(g,(l+W-r)/2,H-4,xl,{'text-anchor':'middle','font-size':10.5,fill:'var(--muted)'});txt(g,12,(t+H-b)/2,yl,{'text-anchor':'middle','font-size':10.5,fill:'var(--muted)',transform:`rotate(-90 12 ${(t+H-b)/2})`});
+  let sy2=null;if(y2){sy2=y=>H-b-(y-y2.y0)/(y2.y1-y2.y0)*(H-t-b);niceTicks(y2.y0,y2.y1).forEach(v=>txt(g,W-r+5,sy2(v)+3.5,tl(v),{'font-size':9.5,fill:y2.color||'var(--muted)'}));txt(g,W-8,(t+H-b)/2,y2.label,{'text-anchor':'middle','font-size':10.5,fill:y2.color||'var(--muted)',transform:`rotate(90 ${W-8} ${(t+H-b)/2})`});}
+  let li=0;series.forEach(s=>{const Y=s.axis2?sy2:sy,lo=s.axis2?y2.y0:y0,hi=s.axis2?y2.y1:y1;
+    if(s.pts&&s.pts.length){const d=s.pts.map((p,i)=>(i?'L':'M')+sx(p[0]).toFixed(1)+','+Y(clamp(p[1],lo,hi)).toFixed(1)).join(' ');sv('path',{d,fill:'none',stroke:s.color,'stroke-width':s.w||2.2,'stroke-dasharray':s.dash||''},g);}
+    (s.dots||[]).forEach(p=>{if(p[0]<x0||p[0]>x1)return;sv(s.square?'rect':'circle',s.square?{x:sx(p[0])-4,y:Y(clamp(p[1],lo,hi))-4,width:8,height:8,fill:s.color,stroke:'var(--panel)','stroke-width':1.5}:{cx:sx(p[0]),cy:Y(clamp(p[1],lo,hi)),r:4,fill:s.color,stroke:'var(--panel)','stroke-width':1.5},g);});
+    if(s.name){txt(g,W-r-4,t+12+li*13,s.name,{'text-anchor':'end','font-size':10.5,'font-weight':700,fill:s.color});li++;}});
+  if(mark){sv('line',{x1:sx(mark.x),y1:t,x2:sx(mark.x),y2:H-b,stroke:'var(--muted)','stroke-dasharray':'3 3'},g);(mark.ys||[]).forEach(m=>{sv('circle',{cx:sx(mark.x),cy:(m[2]?sy2:sy)(m[0]),r:4.5,fill:m[1],stroke:'var(--panel)','stroke-width':2},g);});}
+  return {sx,sy,g};}
+function barPlot(el,{bars,yl,ymax,W=320,H=200,unit}){el.innerHTML='';el.setAttribute('viewBox',`0 0 ${W} ${H}`);const l=40,r=8,t=12,b=30;const g=sv('g',null,el);
+  const sy=y=>H-b-y/ymax*(H-t-b);const bw=(W-l-r)/bars.length;
+  niceTicks(0,ymax).forEach(v=>{sv('line',{x1:l,y1:sy(v),x2:W-r,y2:sy(v),stroke:'var(--grid)'},g);txt(g,l-5,sy(v)+3.5,fmt(v,v%1?1:0),{'text-anchor':'end','font-size':9.5,fill:'var(--muted)'});});
+  bars.forEach((bb,i)=>{const x=l+i*bw+bw*0.15;sv('rect',{x,y:sy(Math.min(ymax,bb.v)),width:bw*0.7,height:Math.max(0,sy(0)-sy(Math.min(ymax,bb.v))),fill:bb.color||'var(--accent)',rx:2},g);
+    txt(g,x+bw*0.35,H-b+14,bb.l,{'text-anchor':'middle','font-size':9.5,fill:'var(--muted)'});if(bb.show)txt(g,x+bw*0.35,sy(Math.min(ymax,bb.v))-4,bb.show,{'text-anchor':'middle','font-size':9,fill:'var(--ink)'});});
+  sv('line',{x1:l,y1:sy(0),x2:W-r,y2:sy(0),stroke:'var(--muted)'},g);txt(g,12,(t+H-b)/2,yl,{'text-anchor':'middle','font-size':10.5,fill:'var(--muted)',transform:`rotate(-90 12 ${(t+H-b)/2})`});}
+
+/* ============ MODELLER ============ */
+const MODELS={};
+function buildModel(cfg){const el=document.createElement('article');el.className='model';el.id='m-'+cfg.id;
+  el.innerHTML=`<h3>${cfg.title}</h3><p>${cfg.lead}</p><div class="mgrid"><div class="inputs"></div><div class="formula">${cfg.formula}</div><div><div class="res"></div>${cfg.plot?'<div class="plot" style="margin-top:8px"><svg viewBox="0 0 320 '+(cfg.plotH||220)+'"></svg></div>':''}</div></div>`;
+  $('#models').appendChild(el);const a=document.createElement('a');a.href='#m-'+cfg.id;a.textContent=cfg.short;a.addEventListener('click',e=>{e.preventDefault();el.scrollIntoView({behavior:'smooth'});});$('#modelToc').appendChild(a);
+  const v={};const box=$('.inputs',el);
+  cfg.inputs.forEach(inp=>{v[inp.id]=inp.val;const w=document.createElement('div');
+    if(inp.type==='tog'){w.className='inp tog';w.innerHTML=`<input type="checkbox" id="${cfg.id}-${inp.id}" ${inp.val?'checked':''}><label for="${cfg.id}-${inp.id}">${inp.label}</label>`;box.appendChild(w);
+      $('input',w).addEventListener('change',e=>{v[inp.id]=e.target.checked;run();});return;}
+    if(inp.type==='sel'){w.className='inp';w.innerHTML=`<label class="lab" for="${cfg.id}-${inp.id}"><span>${inp.label}</span></label><select id="${cfg.id}-${inp.id}" style="grid-column:1/-1">${inp.opts.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select>`;box.appendChild(w);
+      const s=$('select',w);s.value=inp.val;s.addEventListener('change',e=>{v[inp.id]=e.target.value;run();});return;}
+    w.className='inp';w.innerHTML=`<label class="lab" for="${cfg.id}-${inp.id}"><span>${inp.label}</span><span>${inp.unit||''}</span></label><input type="range" id="${cfg.id}-${inp.id}" min="${inp.min}" max="${inp.max}" step="${inp.step}" value="${inp.val}" aria-label="${inp.label}"><input type="number" id="${cfg.id}-${inp.id}-n" min="${inp.min}" max="${inp.max}" step="${inp.step}" value="${inp.val}" aria-label="${inp.label} (tal)">`;box.appendChild(w);
+    const rg=$('input[type=range]',w),nm=$('input[type=number]',w);
+    rg.addEventListener('input',()=>{v[inp.id]=+rg.value;nm.value=rg.value;run();});
+    nm.addEventListener('input',()=>{const x=parseFloat(nm.value);if(!isNaN(x)){v[inp.id]=x;rg.value=x;run();}});});
+  const res=$('.res',el),plot=cfg.plot?$('.plot svg',el):null;
+  function run(){const out=cfg.calc(v);res.innerHTML=out.rows.map(r=>`<div class="r ${r[4]||''}"><span>${r[0]}</span><b>${typeof r[1]==='string'?r[1]:fmt(r[1],r[3]??2)} ${r[2]||''}</b></div>`).join('')+(out.html||'');if(plot)cfg.plot(v,out,plot);}
+  MODELS[cfg.id]={set(vals){Object.assign(v,vals);for(const k in vals){const r=$(`#${cfg.id}-${k}`);if(!r)continue;if(r.type==='checkbox')r.checked=vals[k];else r.value=vals[k];const n=$(`#${cfg.id}-${k}-n`);if(n)n.value=vals[k];}run();el.scrollIntoView({behavior:'smooth'});}};
+  run();}
+
+/* ============ QUIZ og opgaver ============ */
+let quizState=[];
+function renderQuiz(QUIZ){const qz=$('#quiz');qz.innerHTML='';quizState=QUIZ.map(()=>null);$('#quizN').textContent=`Quiz · ${QUIZ.length} spørgsmål`;
+  QUIZ.forEach((q,i)=>{const d=document.createElement('div');d.className='q';d.innerHTML=`<div class="qh"><b>${i+1}. ${q.q}</b><span class="lvl">${q.l}</span></div><div class="opts">${q.o.map((o,j)=>`<button data-j="${j}">${o}</button>`).join('')}</div><div class="expl" hidden></div>`;qz.appendChild(d);
+    $$('.opts button',d).forEach(b=>b.addEventListener('click',()=>{if(quizState[i]!==null)return;const j=+b.dataset.j;quizState[i]=j===q.a;b.classList.add(j===q.a?'right':'wrong');$$('.opts button',d)[q.a].classList.add('right');
+      const ex=$('.expl',d);ex.hidden=false;ex.innerHTML=`<b style="color:var(${j===q.a?'--ok':'--bad'})">${j===q.a?'Rigtigt.':'Ikke helt.'}</b> ${q.e}`;$('#score').textContent=`${quizState.filter(x=>x).length} / ${QUIZ.length}`;}));});
+  $('#score').textContent=`0 / ${QUIZ.length}`;}
+function renderEx(EX){const box=$('#exercises');box.innerHTML='';EX.forEach((x,i)=>{const d=document.createElement('div');d.className='q';
+  d.innerHTML=`<h3>${x.t}</h3><p>${x.q}</p>${x.steps.map((s,j)=>`<details class="step"><summary>Trin ${j+1}: ${s[0]}</summary><div style="margin-top:6px">${s[1]}</div></details>`).join('')}<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn" data-open>Vis alle trin</button>${x.model?'<button class="btn" data-model>Åbn i modellen</button>':''}${x.sim?'<button class="btn" data-sim>Afprøv i simulatoren</button>':''}</div>`;box.appendChild(d);
+  $('[data-open]',d).addEventListener('click',()=>$$('details',d).forEach(e=>e.open=true));
+  if(x.model)$('[data-model]',d).addEventListener('click',()=>{showTab('modeller');MODELS[x.model[0]].set(x.model[1]);});
+  if(x.sim)$('[data-sim]',d).addEventListener('click',()=>{S.act=x.sim;loadPreset(x.sim);contiAll();contiShow(true,'Gennemgang OK (indlæst opstilling).');if(LAB.acts[x.sim].test)LAB.acts[x.sim].test();if(x.setup)x.setup();if(!LAB.noPower){S.on=true;if(LAB.onPower)LAB.onPower(true);}showTab('sim');update();window.scrollTo({top:0,behavior:'smooth'});});});}
+
+/* ============ start ============ */
+function boot(){if(LAB.noPower){$('#btnPower').hidden=true;$('#btnStop').hidden=true;if(!LAB.statusTxt)$('#status').hidden=true;}
+  if(!LAB.conti&&$('#conti'))$('#conti').hidden=true;
+  buildActsel();if(LAB.initUI)LAB.initUI();renderQuiz(QUIZ);renderEx(EX);$('#quizReset').addEventListener('click',()=>renderQuiz(QUIZ));
+  loadPreset(LAB.startAct||1);S.act=LAB.startAct||1;contiAll();contiShow(true,'Gennemgang OK (eksempelopstilling). Fjerner du en PE-ledning, skal testen laves igen.');
+  if(LAB.boot)LAB.boot();if(!LAB.noPower&&!LAB.startOff){S.on=true;if(LAB.onPower)LAB.onPower(true);}update();}
+
+/* ============ fælles udstyr: Terco L/C og blå Danotherm ============ */
+const VALS_DB=[57.5,115,230,460],LBL_DB=['57R5','115R','230R','460R'];
+const XL_TAP=[0,...Array.from({length:11},(_,i)=>230*11/(3.8*(i+1)))];
+const C_TAP=55.7/12;
+function tercoTerms(pre,x0,y0,wIn,wOut){for(let k=1;k<=3;k++){const y=y0+60+(k-1)*50;term(`${pre}.L${k}i`,x0+wIn,y,'black','L'+k,pre,{lp:'none'});term(`${pre}.L${k}o`,x0+wOut,y,'black','L'+k,pre,{lp:'none'});}term(pre+'.PE',x0+316,y0+26,'PE','⏚',pre,{lc:'#1d1d1d',r:7});}
+function drawTercoL(g,x0,y0,pre,step,fuses){sv('rect',{x:x0,y:y0,width:334,height:206,rx:6,fill:'#26272a'},g);sv('rect',{x:x0+6,y:y0+6,width:322,height:194,rx:3,fill:'#f2b116'},g);
+  label(g,x0+14,y0+24,'TERCO',{'font-size':15});label(g,x0+66,y0+24,'LOAD REACTOR MV1101',{'font-size':12,'font-weight':600});txt(g,x0+14,y0+38,'400 V Y · 230 V Δ · maks. 3,8 A pr. spole',{'font-size':9,fill:'#1d1d1d'});
+  [1,2,3].forEach(k=>{const y=y0+60+(k-1)*50;sv('line',{x1:x0+22,y1:y,x2:x0+238,y2:y,stroke:'#1d1d1d','stroke-width':2},g);txt(g,x0+8,y+4,'L'+k,{'font-size':10,'font-weight':700,fill:'#1d1d1d'});
+    const bl=fuses[k-1];const fg=sv('g',{'data-ctl':pre+'f:'+(k-1),style:'cursor:pointer'},g);sv('rect',{x:x0+44,y:y-10,width:40,height:20,rx:4,fill:bl?'var(--bad)':'#2a2a2a'},fg);txt(fg,x0+64,y+4,bl?'BRÆNDT':'6,3 A',{'text-anchor':'middle','font-size':9,'font-weight':700,fill:'#fff'});
+    sv('path',{d:inductorPath(x0+100,y,5,20,true),fill:'var(--dev-yellow)',stroke:'#1d1d1d','stroke-width':2.2},g);sv('line',{x1:x0+108,y1:y+12,x2:x0+196,y2:y-18,stroke:'#1d1d1d','stroke-width':1.2},g);});
+  rotaryG(g,x0+290,y0+110,11,step,60,pre+'step');txt(g,x0+290,y0+158,step?`X ≈ ${fmt(XL_TAP[step],0)} Ω`:'fra',{'text-anchor':'middle','font-family':F_MONO,'font-size':11,'font-weight':600,fill:'#1d1d1d'});
+  txt(g,x0+14,y0+196,'ind',{'font-size':9,fill:'#1d1d1d'});txt(g,x0+230,y0+196,'ud (stjernepunkt)',{'text-anchor':'end','font-size':9,fill:'#1d1d1d'});}
+function drawTercoC(g,x0,y0,pre,a,b,fuses){sv('rect',{x:x0,y:y0,width:334,height:206,rx:6,fill:'#26272a'},g);sv('rect',{x:x0+6,y:y0+6,width:322,height:194,rx:3,fill:'#f2b116'},g);
+  label(g,x0+14,y0+24,'TERCO',{'font-size':15});label(g,x0+66,y0+24,'LOAD CAPACITOR MV1102',{'font-size':12,'font-weight':600});txt(g,x0+14,y0+38,'400 V Y · 230 V Δ · 2,8 kvar · maks. 8 A (Δ)',{'font-size':9,fill:'#1d1d1d'});
+  [1,2,3].forEach(k=>{const y=y0+60+(k-1)*50;sv('line',{x1:x0+22,y1:y,x2:x0+132,y2:y,stroke:'#1d1d1d','stroke-width':2},g);sv('line',{x1:x0+148,y1:y,x2:x0+222,y2:y,stroke:'#1d1d1d','stroke-width':2},g);
+    txt(g,x0+8,y+4,'L'+k,{'font-size':10,'font-weight':700,fill:'#1d1d1d'});
+    const bl=fuses[k-1];const fg=sv('g',{'data-ctl':pre+'f:'+(k-1),style:'cursor:pointer'},g);sv('rect',{x:x0+44,y:y-10,width:40,height:20,rx:4,fill:bl?'var(--bad)':'#2a2a2a'},fg);txt(fg,x0+64,y+4,bl?'BRÆNDT':'6,3 A',{'text-anchor':'middle','font-size':9,'font-weight':700,fill:'#fff'});
+    sv('line',{x1:x0+134,y1:y-12,x2:x0+134,y2:y+12,stroke:'#1d1d1d','stroke-width':3},g);sv('line',{x1:x0+146,y1:y-12,x2:x0+146,y2:y+12,stroke:'#1d1d1d','stroke-width':3},g);});
+  rotaryG(g,x0+274,y0+82,6,a,50,pre+'a');rotaryG(g,x0+274,y0+146,1,b,50,pre+'b');
+  const C=(a+6*b)*C_TAP;txt(g,x0+274,y0+190,C?`C ≈ ${fmt(C,1)} µF`:'fra',{'text-anchor':'middle','font-family':F_MONO,'font-size':11,'font-weight':600,fill:'#1d1d1d'});}
+function danoTerms(pre,x0,y0){[['R1',28],['R2',76],['R3',124],['Rn',172]].forEach(([l,dx])=>term(`${pre}.${l}`,x0+dx,y0+58,'black',l,pre,{lc:'#f2f5f7'}));term(pre+'.PE',x0+220,y0+58,'PE','⏚',pre,{lc:'#f2f5f7'});}
+function drawDano(g,x0,y0,pre,sw){sv('rect',{x:x0,y:y0,width:546,height:224,rx:6,fill:'var(--dev-blue)'},g);
+  txt(g,x0+14,y0+20,'DANOTHERM · blå modstandsbank ZRF 55',{'font-family':F_DISP,'font-weight':700,'font-size':15,fill:'#f2f5f7'});
+  txt(g,x0+14,y0+214,'R1–R3 internt stjernekoblet til Rn · 3500 W · 600 V · 1 kW pr. modstand',{'font-size':10,fill:'#dfe7f2'});
+  [0,1,2].forEach(k=>{const cxk=x0+336+k*80;txt(g,cxk-10,y0+44,'R'+(k+1),{'text-anchor':'middle','font-weight':700,'font-size':12,fill:'#f2f5f7'});
+    VALS_DB.forEach((v,i)=>toggleG(g,cxk,y0+72+i*35,sw[k][i],`${pre}sw:${k}:${i}`));
+    const r=par(sw[k],VALS_DB);txt(g,cxk-10,y0+200,isFinite(r)?fmt(r,1)+' Ω':'åben',{'text-anchor':'middle','font-family':F_MONO,'font-weight':600,'font-size':12,fill:'#f2f5f7'});});
+  LBL_DB.forEach((l,i)=>txt(g,x0+290,y0+76+i*35,l,{'text-anchor':'end','font-size':11,'font-weight':700,fill:'#f2f5f7'}));}
+/* modstand mellem to terminaler gennem resistive elementer (ohmmeter) */
+function ohmBetween(E,a,b){const tp=topo(),f=tp.f;const ra=f(a),rb=f(b);if(ra===rb)return 0;
+  const nodes=[...new Set(E.flatMap(e=>[f(e.a),f(e.b)]).concat([ra,rb]))];const idx={};let n=0;nodes.forEach(r=>{if(r!==rb)idx[r]=n++;});
+  const A=[...Array(n)].map(()=>[...Array(n)].map(()=>[0,0])),B=[...Array(n)].map(()=>[0,0]);for(let i=0;i<n;i++)A[i][i]=[1e-12,0];
+  E.forEach(e=>{const x=f(e.a),y=f(e.b);if(x===y)return;const g=1/e.r;const i=idx[x],j=idx[y];if(i!==undefined){A[i][i][0]+=g;if(j!==undefined)A[i][j][0]-=g;}if(j!==undefined){A[j][j][0]+=g;if(i!==undefined)A[j][i][0]-=g;}});
+  B[idx[ra]]=[1,0];const x=linsolve(A,B);const V=x[idx[ra]][0];return V>1e8?Infinity:V;}
+
+/* =================== LAB 8 · FREKVENSOMFORMER MED RELUKTANSMOTOR =================== */
+// SynRM-data er et estimat (vejledningen har ingen mærkeplade): 1,5 kW, 400 V, 1500 o/min, 3,6 A, cos φ 0,72
+const SM={PN:1500,nN:1500,IN:3.6,Id:2.2,R:3.0,PfeN:45,Pfr:20,kT:9.55/Math.sqrt(3.6**2-2.2**2),Ra:2.0,kmax:2.0,Pdc:15};
+const MN8=SM.PN/(SM.nN*PI/30);
+const HO=[5,7,11,13,17,19,23,25];
+term('S.L1',196,92,'L1','L1','S',{lp:'none'});term('S.L2',196,138,'L2','L2','S',{lp:'none'});term('S.L3',196,184,'L3','L3','S',{lp:'none'});term('S.N',196,230,'N','N','S',{lp:'none'});term('S.PE',196,276,'PE','PE','S',{lp:'none'});
+[['FO.L1',270,'L1'],['FO.L2',310,'L2'],['FO.L3',350,'L3']].forEach(([i,x,l])=>term(i,x,80,'black',l,'FO',{lc:'#333'}));term('FO.PE',400,80,'PE','⏚','FO',{lc:'#333'});
+[['FO.U',270,'U'],['FO.V',310,'V'],['FO.W',350,'W']].forEach(([i,x,l])=>term(i,x,294,'black',l,'FO',{lc:'#e8ecee',lp:'above'}));term('FO.PE2',400,294,'PE','⏚','FO',{lc:'#e8ecee'});
+term('CA.V1',560,296,'red','V1','CA',{lp:'none'});term('CA.N',640,296,'blue','N','CA',{lp:'none'});
+term('T.A1',1060,262,'black','A1','T',{lc:'#17140c'});term('T.A2',1110,262,'black','A2','T',{lc:'#17140c'});term('T.PE',1010,262,'PE','⏚','T',{lc:'#17140c'});
+[['M.U',60,'U'],['M.V',110,'V'],['M.W',160,'W']].forEach(([i,x,l])=>term(i,x,512,'black',l,'M',{lc:'#17140c'}));term('M.PE',210,512,'PE','⏚','M',{lc:'#17140c'});
+danoTerms('D',16,566);
+SUP={'S.L1':'L1','S.L2':'L2','S.L3':'L3','S.N':'N','S.PE':'PE','FO.U':'FU','FO.V':'FV','FO.W':'FW','T.A1':'DA1','T.A2':'DA2'};
+S.f={loc:true,run:false,ref:1500,ex:0,zero:0,page:'W',clamp:'før'};S.dsw=[[1,1,1,1],[1,1,1,1],[1,1,1,1]].map(r=>r.map(Boolean));
+const LAB={view:[1180,800],conti:{FO:'frekvensomformer',M:'motor',T:'momentbænk',D:'modstandskasse'},acts:{},startAct:2,internal:()=>[['FO.PE','FO.PE2']],
+  wireClass(l){if(l==='FU')return 'l1';if(l==='FV')return 'l2';if(l==='FW')return 'l3';if(l==='DA1'||l==='DA2')return 'black';return null;}};
+function inOK(tp){const ph=['FO.L1','FO.L2','FO.L3'].map(t=>tp.dir(t));return new Set(ph).size===3&&ph.every(p=>['L1','L2','L3'].includes(p))&&tp.eff('FO.PE')==='PE';}
+function outOK(tp){const m=['M.U','M.V','M.W'].map(t=>tp.dir(t));return new Set(m).size===3&&m.every(p=>['FU','FV','FW'].includes(p));}
+function rLoad(){const E=[];for(let k=0;k<3;k++){const r=par(S.dsw[k],VALS_DB);if(isFinite(r))E.push({a:`D.R${k+1}`,b:'D.Rn',r});}return ohmBetween(E,'T.A1','T.A2');}
+function harm(L){const x=Math.pow(clamp(1-L,0,1),1.5);return{5:0.33+0.48*x,7:0.10+0.42*x,11:0.075+0.14*x,13:0.05+0.11*x,17:0.035+0.03*x,19:0.03+0.025*x,23:0.022+0.02*x,25:0.02+0.018*x};}
+function opAt(n,T,Rl){// driftspunkt ved hastighed n og lastmoment T (motoraksel)
+  const w=n*PI/30,f=n/30;const P2=T*w;const Iq=Math.max(0,T)/SM.kT;const Im=Math.hypot(SM.Id,Iq);const Pcu=3*Im*Im*SM.R,Pfe=SM.PfeN*Math.pow(f/50,1.5),Pfr=SM.Pfr*n/1500;
+  const Pm1=P2+Pcu+Pfe+Pfr;const Um=400*Math.max(f,2)/50;const cosM=Pm1/(SQ3*Um*Im);
+  const Pfo=25+0.012*Pm1+0.9*Im*Im;const Pin=Pm1+Pfo;const L=Pin/1800;const h=harm(L);const thd=Math.sqrt(HO.reduce((s,k)=>s+h[k]*h[k],0));
+  const dpf=0.985-0.02*Math.pow(clamp(1-L,0,1),2);const I1=Pin/(SQ3*400*dpf);const Irms=I1*Math.sqrt(1+thd*thd);const Q=Pin*Math.tan(Math.acos(dpf));const S_=SQ3*400*Irms;const D=Math.sqrt(Math.max(0,S_*S_-Pin*Pin-Q*Q));
+  return{n,f,T,P2,Im,Um,Pm1,cosM,Pfo,Pin,h,thd,dpf,I1,Irms,Q,S:S_,D,PF:Pin/S_,etaFO:Pm1/Pin,etaM:P2/Pm1,eta:P2/Pin,Pcu,Pfe,Pfr};}
+LAB.solve=function(){const tp=topo();const R={fault:null};R.fault=shortCheck(tp,[{live:['L1','L2','L3'],n:'N'},{live:['FU','FV','FW']}]);
+  if(!R.fault){for(const t of ['M.U','M.V','M.W']){const ls=tp.lm[tp.f(t)];if(ls&&[...ls].some(x=>['L1','L2','L3'].includes(x))){R.fault='Reluktansmotoren er sluttet direkte til nettet. En SynRM uden startbur kan ikke starte direkte: den står stille og trækker kortslutningslignende strøm.';break;}}
+    const ls=tp.lm[tp.f('T.A1')];if(ls&&[...ls].some(x=>['L1','L2','L3','N','FU','FV','FW'].includes(x)))R.fault='Momentbænkens DC-udgang er forbundet til AC. Kortslutning.';}
+  R.in=S.on&&inOK(tp);R.out=outOK(tp);R.Rl=rLoad();const f=S.f;
+  R.running=R.in&&R.out&&f.run;const n=R.running?f.ref:0;const w=n*PI/30;const kp=SM.kmax*f.ex;
+  R.Tdc=isFinite(R.Rl)&&w?kp*kp*w/(SM.Ra+R.Rl):0;R.Tsh=w?R.Tdc+SM.Pdc/w:0;R.Tread=w?R.Tsh-f.zero:0;R.Ia=isFinite(R.Rl)&&w?kp*w/(SM.Ra+R.Rl):0;R.IF=0.55*f.ex;
+  R.op=R.in?opAt(Math.max(n,0),R.Tsh,R.Rl):null;if(R.op&&!R.running){Object.assign(R.op,{P2:0,Im:0,Pm1:0,Pfo:18,Pin:18});const o=R.op;o.I1=18/(SQ3*400*0.5);o.Irms=o.I1*1.6;o.thd=1.25;o.Q=12;o.S=SQ3*400*o.Irms;o.D=Math.sqrt(Math.max(0,o.S**2-18**2-12**2));o.PF=18/o.S;o.dpf=0.83;o.h=harm(0);o.etaFO=0;o.etaM=0;o.eta=0;}
+  R.n=n;R.T=R.Tread;
+  if(S.on&&!R.fault&&R.running&&R.op.Im>SM.IN*1.6)R.fault=`Frekvensomformeren udløste på overstrøm (motorstrøm ${fmt(R.op.Im,1)} A). Lasten er for stor.`;
+  return R;};
+LAB.onPower=on=>{if(!on)S.f.run=false;};
+LAB.reset=()=>{S.f.run=false;S.f.loc=true;S.f.ref=1500;S.f.ex=0;};
+function setLoad(frac){const save=S.on,ck=S.checking;S.on=true;S.checking=true;try{const target=frac*MN8;const n=S.f.ref,w=n*PI/30;TPC=null;const Rl=rLoad();if(!isFinite(Rl)||!w)return;const Tel=Math.max(0,target);S.f.ex=clamp(Math.sqrt(Tel*(SM.Ra+Rl)/(SM.kmax**2*w)),0,1);}finally{S.on=save;S.checking=ck;TPC=null;}}
+
+/* ---------- aktiviteter ---------- */
+const W_ALL=[['S.L1','FO.L1'],['S.L2','FO.L2'],['S.L3','FO.L3'],['S.PE','FO.PE'],['FO.U','M.U'],['FO.V','M.V'],['FO.W','M.W'],['FO.PE2','M.PE'],['T.A1','D.R1'],['T.A2','D.R2'],['D.R2','D.R3'],['M.PE','T.PE'],['T.PE','D.PE'],['CA.V1','S.L1'],['CA.N','S.N']];
+const go=(n,fr)=>{S.f.loc=true;S.f.run=true;S.f.ref=n;S.f.zero=SM.Pdc/(n*PI/30);setLoad(fr);};
+LAB.acts={
+ 1:{name:'1 · Tomgang',desc:'Forbind frekvensomformeren til nettet og til reluktansmotoren (Harting-stik), og momentbænken til modstandskassen. Local, sætpunkt 1500 o/min, Start. Mål U<sub>f</sub>, I<sub>n,RMS</sub>, P, Q og cos φ før frekvensomformeren. Flyt tangen og mål I<sub>RMS</sub> efter frekvensomformeren i tomgang.',wires:W_ALL,vals(){S.f.ref=1500;S.f.ex=0;},test(){go(1500,0);}},
+ 2:{name:'2 · Last 0–1/1',desc:'Belast med tomgang, 1/3, 2/3 og 1/1 af M<sub>N</sub> (felt på momentbænken). Mål S, P, Q, Q<sub>D</sub>, n og THD<sub>i</sub> før frekvensomformeren. Beregn η for frekvensomformer, motor og samlet.',wires:W_ALL,vals(){S.f.ref=1500;},test(){go(1500,1);}},
+ 3:{name:'3 · Harmoniske',desc:'Vælg den belastning frekvensomformeren oftest kører med (argumentér). Mål de ulige harmoniske strømme og den samlede THD<sub>i</sub>. Beregn THD<sub>i</sub> ud fra harmoniske og P<sub>1</sub>, og sammenlign med de målte.',wires:W_ALL,vals(){S.f.ref=1500;},test(){go(1500,0.6667);S.f.page='H';}},
+ 4:{name:'4 · 1000 o/min',desc:'Sæt omdrejningerne til 1000 o/min og belast med 2/3 M<sub>N</sub>. Mål og beregn η for frekvensomformer, motor og samlet.',wires:W_ALL,vals(){S.f.ref=1000;},test(){go(1000,0.6667);}}};
+
+/* ---------- tjek ---------- */
+LAB.checks=function(tp){const out=[];const ok=(t,c)=>out.push([t,!!c]);
+  ok('Frekvensomformer på L1, L2, L3 og PE',inOK(tp));ok('Motor på frekvensomformerens U, V, W (Harting-stik)',outOK(tp));ok('Motorens PE til frekvensomformerens PE',tp.eff('M.PE')==='PE');
+  ok('Modstandskassen på momentbænkens A1–A2',tp.same('T.A1','D.R1')&&tp.same('T.A2','D.R2')&&tp.same('D.R2','D.R3')||tp.same('T.A1','D.R2')&&tp.same('T.A2','D.R1')&&tp.same('D.R2','D.R3'));
+  ok('Momentbænk og modstandskasse jordet',tp.eff('T.PE')==='PE'&&tp.eff('D.PE')==='PE');ok('Power-analysator: spænding på L1 og N før frekvensomformeren',tp.dir('CA.V1')==='L1'&&tp.dir('CA.N')==='N');
+  return out;};
+
+/* ---------- målinger ---------- */
+function caRead(R){const o=R.op;if(!S.on||!o)return null;const tp=topo();const vok=tp.dir('CA.V1')&&tp.dir('CA.N')==='N';const Uf=vok?230.94:0;
+  if(S.f.clamp==='før')return{where:'før FO',Uf,I:o.Irms,I1:o.I1,P:vok?o.Pin:0,Q:vok?o.Q:0,S:vok?o.S:0,D:vok?o.D:0,PF:o.PF,DPF:o.dpf,thd:o.thd,h:o.h};
+  return{where:'efter FO',Uf,I:R.running?o.Im*1.01:0,I1:R.running?o.Im:0,P:NaN,Q:NaN,S:NaN,D:NaN,PF:NaN,DPF:NaN,thd:R.running?0.045:0,h:{5:0.025,7:0.02,11:0.015,13:0.012,17:0.008,19:0.006,23:0.004,25:0.003}};}
+LAB.sheet=function(R){const A=S.act,rows=[];const r=(l,u,c,m,d=2)=>rows.push({l,u,c,m,d});const o=R.op;const c=caRead(R)||{};const kp=R.running&&o?o.Pm1:NaN;
+  r('Omdrejninger (sætpunkt / momentbænk)','o/min',S.f.ref,R.n,0);r('Moment M','Nm',NaN,R.T,2);r('Belastning M/M<sub>N</sub>','%',NaN,R.T/MN8*100,0);
+  if(A===1){r('U<sub>f</sub> før FO','V',230.9,c.Uf,1);r('I<sub>n,RMS</sub> før FO','A',NaN,o&&S.f.clamp==='før'?o.Irms:NaN,3);r('I<sub>RMS</sub> efter FO (motorstrøm)','A',NaN,o&&S.f.clamp==='efter'?o.Im:NaN,3);r('Motorstrøm (FO-display)','A',NaN,o?o.Im:NaN,2);
+    r('P før FO','W',NaN,c.P,0);r('Q før FO','var',NaN,c.Q,0);r('cos φ (DPF) før FO','',NaN,c.DPF,3);r('λ = P/S (effektfaktor) før FO','',NaN,c.PF,3);}
+  if(A===2||A===4){r('S før FO','VA',NaN,c.S,0);r('P<sub>1</sub> før FO','W',NaN,c.P,0);r('Q før FO','var',NaN,c.Q,0);r('Q<sub>D</sub> (forvrængningseffekt)','var',NaN,c.D,0);r('THD<sub>i</sub> før FO','%',NaN,c.thd*100,1);
+    r('FO udgangseffekt (display) = P<sub>m1</sub>','W',NaN,kp,0);r('P<sub>2</sub> = M · ω','W',R.T*R.n*PI/30,NaN,0);
+    r('η<sub>FO</sub> = P<sub>m1</sub>/P<sub>1</sub>','%',c.P?kp/c.P*100:NaN,NaN,1);r('η<sub>motor</sub> = P<sub>2</sub>/P<sub>m1</sub>','%',kp?R.T*R.n*PI/30/kp*100:NaN,NaN,1);r('η<sub>samlet</sub> = P<sub>2</sub>/P<sub>1</sub>','%',c.P?R.T*R.n*PI/30/c.P*100:NaN,NaN,1);}
+  if(A===3){const h=c.h||{};const I1=c.I1||0;HO.forEach(k=>r(`I<sub>${k}</sub>`,'A',NaN,I1*(h[k]||0),3));const sum=Math.sqrt(HO.reduce((s,k)=>s+(h[k]||0)**2,0));
+    r('I<sub>1</sub> (grundtone)','A',NaN,I1,3);r('THD<sub>i</sub> = √(ΣI<sub>h</sub>²)/I<sub>1</sub>','%',sum*100,c.thd*100,1);r('P<sub>1</sub> = √3·U·I<sub>1</sub>·cos φ<sub>1</sub>','W',SQ3*400*I1*(c.DPF||0),c.P,0);r('I<sub>RMS</sub> = I<sub>1</sub>·√(1 + THD²)','A',I1*Math.sqrt(1+sum*sum),c.I,3);}
+  return rows;};
+LAB.warnings=function(R,tp){const W=[];if(!S.on&&!S.trip)W.push(['','Spændingen er slukket.']);
+  if(S.on&&!S.f.loc)W.push(['','Frekvensomformeren står i Remote. Tryk Loc/Rem og vælg Local.']);
+  if(S.on&&R.in&&R.out&&!S.f.run)W.push(['','Tryk Start på frekvensomformerens panel.']);
+  if(R.running&&Math.abs(S.f.zero)<0.01)W.push(['','Momentet er ikke kalibreret til 0 i tomgang (ZERO).']);
+  if(R.running&&R.T>MN8*1.15)W.push(['bad',`Moment ${fmt(R.T,1)} Nm over M<sub>N</sub>.`]);
+  if(R.running&&R.op&&R.op.Im>SM.IN*1.05)W.push(['bad',`Motorstrøm ${fmt(R.op.Im,2)} A over I<sub>N</sub> ≈ 3,6 A (estimat).`]);
+  if(S.f.clamp==='efter')W.push(['','Tangen sidder efter frekvensomformeren. Effektmålingen der er ikke meningsfuld med denne opkobling (PWM-spænding). P, Q og THD måles før.']);
+  W.push(['','Momentbænkens DC-generator er ikke beskyttet mod overbelastning eller kortslutning og kører isoleret uden overvågning.']);return W;};
+LAB.logCols=a=>({1:[{k:'w',l:'Måling',d:0},{k:'I',l:'I<sub>RMS</sub>',u:'A',d:3},{k:'P',l:'P',u:'W',d:0},{k:'PF',l:'λ',d:3}],
+  2:[{k:'fr',l:'Last',d:0},{k:'n',l:'n',u:'o/min',d:0},{k:'T',l:'M',u:'Nm',d:2},{k:'S',l:'S',u:'VA',d:0},{k:'P',l:'P₁',u:'W',d:0},{k:'Q',l:'Q',u:'var',d:0},{k:'D',l:'Q<sub>D</sub>',u:'var',d:0},{k:'thd',l:'THD<sub>i</sub>',u:'%',d:1},{k:'Pm',l:'P<sub>m1</sub>',u:'W',d:0},{k:'P2',l:'P₂',u:'W',d:0},{k:'eF',l:'η<sub>FO</sub>',u:'%',d:1},{k:'eM',l:'η<sub>M</sub>',u:'%',d:1},{k:'eT',l:'η',u:'%',d:1}],
+  3:[{k:'h',l:'Orden',d:0},{k:'I',l:'I<sub>h</sub>',u:'A',d:3},{k:'p',l:'% af I₁',u:'%',d:1}],
+  4:[{k:'n',l:'n',u:'o/min',d:0},{k:'T',l:'M',u:'Nm',d:2},{k:'P',l:'P₁',u:'W',d:0},{k:'Pm',l:'P<sub>m1</sub>',u:'W',d:0},{k:'P2',l:'P₂',u:'W',d:0},{k:'eF',l:'η<sub>FO</sub>',u:'%',d:1},{k:'eM',l:'η<sub>M</sub>',u:'%',d:1},{k:'eT',l:'η',u:'%',d:1}]}[a]);
+LAB.logRow=function(R){const A=S.act,o=R.op,c=caRead(R);if(!c||!o)return null;const P2=R.T*R.n*PI/30,Pm=R.running?o.Pm1:0;
+  if(A===1)return{w:c.where,I:c.I,P:c.P,PF:c.PF};
+  if(A===3){const L=S.log[3]||[];const idx=L.length%HO.length;const k=HO[idx];return{h:k,I:c.I1*c.h[k],p:c.h[k]*100};}
+  const fr=R.T/MN8;const base={n:R.n,T:R.T,P:c.P,Pm,P2,eF:c.P?Pm/c.P*100:0,eM:Pm?P2/Pm*100:0,eT:c.P?P2/c.P*100:0};
+  if(A===2)return Object.assign(base,{fr:fr<0.12?'tomgang':fr<0.5?'1/3':fr<0.83?'2/3':'1/1',S:c.S,Q:c.Q,D:c.D,thd:c.thd*100});return base;};
+LAB.logHint=a=>({1:'Gem én måling med tangen før FO og én efter.',2:'Gem tomgang, 1/3, 2/3 og 1/1. Kurverne til højre viser modellen og dine punkter.',3:'Tryk "Gem målepunkt" én gang pr. harmonisk: 5., 7., 11., 13., 17., 19., 23., 25. (gemmes i rækkefølge).',4:'Gem ved 1000 o/min og 2/3 M<sub>N</sub>.'}[a]);
+
+/* ---------- tegning ---------- */
+LAB.drawBench=function(g,R){const on=S.on,f=S.f,o=R.op;bordtavle(g,16,16,on,S.trip);
+  {const x0=240,y0=16;sv('rect',{x:x0,y:y0,width:260,height:300,rx:8,fill:'#f2f2ef',stroke:'#bbb'},g);label(g,x0+14,y0+24,'ABB ACS880 frekvensomformer',{'font-size':13});txt(g,x0+200,y0+92,'net (Harting)',{'font-size':9,fill:'#555'});txt(g,x0+14,y0+262,'motor (Harting)',{'font-size':9,fill:'#555'});
+    sv('rect',{x:x0+40,y:y0+100,width:180,height:150,rx:10,fill:'#3a3d41'},g);sv('rect',{x:x0+50,y:y0+108,width:160,height:74,rx:3,fill:'#9cc4e4'},g);
+    const L=[[`${f.loc?'Lokal':'Fjern'}  ${f.run?'↻':'■'}  ref ${fmt(f.ref,0)} o/min`,9.5],[`Hastighed  ${R.running?fmt(noisy(R.n,0.0005),1):'0,0'} o/min`,10.5],[`Motorstrøm  ${R.running?fmt(o.Im,2):'0,00'} A`,10.5],[`Udgangseffekt  ${R.running?fmt(o.Pm1/1000,3):'0,000'} kW`,10.5]];
+    L.forEach(([t,fs],i)=>txt(g,x0+56,y0+122+i*17,t,{'font-size':fs,'font-family':F_MONO,fill:'#122'}));
+    btnG(g,x0+52,y0+190,40,24,'#e33','Stop','fo:stop');btnG(g,x0+100,y0+190,60,24,f.loc?'#ddd':'#fc6','Loc/Rem','fo:loc',!f.loc);btnG(g,x0+168,y0+190,40,24,'#3c3','Start','fo:start',f.run);
+    btnG(g,x0+100,y0+218,28,24,'#ddd','▼','fo:dn');btnG(g,x0+132,y0+218,28,24,'#ddd','▲','fo:up');}
+  {const x0=516,y0=16;sv('rect',{x:x0,y:y0,width:200,height:300,rx:16,fill:'#f2c200'},g);sv('rect',{x:x0+12,y:y0+12,width:176,height:190,rx:6,fill:'#1d2228'},g);
+    const c=caRead(R);const pg=f.page;const T_=(i,a,b)=>{txt(g,x0+20,y0+36+i*20,a,{'font-size':11,'font-family':F_MONO,fill:'#9cf'});txt(g,x0+180,y0+36+i*20,b,{'text-anchor':'end','font-size':11,'font-family':F_MONO,fill:'#eef'});};
+    txt(g,x0+100,y0+196,`C.A 8335 · ${pg==='W'?'effekt':pg==='H'?'harmoniske':pg==='U'?'spænding':'strøm'} · tang ${f.clamp} FO`,{'text-anchor':'middle','font-size':8.5,fill:'#bbb'});
+    if(!c){T_(0,'---','');}
+    else if(pg==='W'){T_(0,'P',fmt(c.P,0)+' W');T_(1,'Q',fmt(c.Q,0)+' var');T_(2,'S',fmt(c.S,0)+' VA');T_(3,'D',fmt(c.D,0)+' var');T_(4,'PF λ',fmt(c.PF,3));T_(5,'DPF',fmt(c.DPF,3));T_(6,'THDi',fmt(c.thd*100,1)+' %');T_(7,'I rms',fmt(c.I,3)+' A');}
+    else if(pg==='U'){T_(0,'V1',fmt(c.Uf,1)+' V');T_(1,'f','50,00 Hz');T_(2,'THDu','1,8 %');}
+    else if(pg==='A'){T_(0,'A rms',fmt(c.I,3)+' A');T_(1,'A h1',fmt(c.I1,3)+' A');T_(2,'THDi',fmt(c.thd*100,1)+' %');T_(3,'CF',fmt(1.41+1.2*Math.min(1,c.thd),2));}
+    else{const mx=Math.max(0.05,...HO.map(k=>c.h[k]));HO.forEach((k,i)=>{const hh=c.h[k]/mx*110;sv('rect',{x:x0+22+i*20,y:y0+160-hh,width:13,height:hh,fill:'#7cf'},g);txt(g,x0+28+i*20,y0+176,k,{'text-anchor':'middle','font-size':8,fill:'#ccc'});});txt(g,x0+20,y0+32,'Ih % af I1',{'font-size':10,fill:'#9cf'});}
+    ['W','A','U','H'].forEach((p,i)=>btnG(g,x0+16+i*44,y0+208,40,24,p===pg?'#fff':'#ccc',{W:'W',A:'A',U:'V',H:'harm'}[p],'pg:'+p,p===pg));
+    txt(g,x0+58,y0+284,'V1',{'font-size':10,'font-weight':700,fill:'#222'});txt(g,x0+138,y0+284,'N',{'font-size':10,'font-weight':700,fill:'#222'});const cg=sv('g',{'data-ctl':'clampw',style:'cursor:pointer'},g);sv('rect',{x:x0+16,y:y0+240,width:168,height:22,rx:4,fill:'#fff8',stroke:'#0004'},cg);txt(cg,x0+100,y0+255,`strømtang: ${f.clamp} FO (klik)`,{'text-anchor':'middle','font-size':10,'font-weight':700,fill:'#222'});}
+  {const x0=732,y0=16;sv('rect',{x:x0,y:y0,width:432,height:300,rx:6,fill:'#343538'},g);sv('rect',{x:x0+10,y:y0+10,width:412,height:280,rx:3,fill:'#e8862b'},g);
+    label(g,x0+24,y0+36,'TERCO MV1040',{'font-size':16});txt(g,x0+160,y0+34,'momentbænk med DC-generator',{'font-size':10.5,'font-weight':700,fill:'#17140c'});
+    const gauge=(cx0,lab,val)=>{sv('rect',{x:cx0-80,y:y0+48,width:160,height:100,rx:3,fill:'#1b1414'},g);txt(g,cx0,y0+68,lab,{'text-anchor':'middle','font-size':10,fill:'#eee','font-weight':700});seg7(g,cx0-56,y0+78,112,42,val,'#ff3a2a','#1b1414',22);};
+    gauge(x0+110,'TORQUE Nm',on?fmt(noisy(R.T),2):'0,00');gauge(x0+310,'RPM',on?fmt(noisy(R.n,0.0005),0):'0');
+    txt(g,x0+40,y0+180,'EXCITATION',{'font-size':9,'font-weight':700,fill:'#17140c'});knobG(g,x0+70,y0+212,18,-130+260*f.ex,'#161616','ex');btnG(g,x0+120,y0+196,58,30,'#ddd','ZERO','zero');
+    seg7(g,x0+204,y0+190,72,30,on&&R.running?fmt(R.IF,2):'0,00','#ff3a2a','#2a0b07',16);txt(g,x0+240,y0+184,'I_F',{'text-anchor':'middle','font-size':10,'font-weight':700,fill:'#17140c'});
+    txt(g,x0+300,y0+214,`R_last = ${isFinite(R.Rl)?fmt(R.Rl,1)+' Ω':'åben'}`,{'font-size':10.5,'font-family':F_MONO,fill:'#17140c'});}
+  {const x0=16,y0=336;sv('rect',{x:x0,y:y0,width:760,height:206,rx:8,fill:'#dfe3e6',stroke:'#b9c0c4'},g);
+    sv('rect',{x:x0+10,y:y0+140,width:230,height:58,rx:5,fill:'#c5ccd1',stroke:'#99a2a8'},g);
+    sv('rect',{x:x0+30,y:y0+36,width:220,height:96,rx:12,fill:'#5a86b8'},g);for(let i=0;i<7;i++)sv('rect',{x:x0+44,y:y0+46+i*12,width:180,height:4,fill:'#456e9a'},g);label(g,x0+30,y0+28,'SynRM-motor (reluktans)',{'font-size':12});
+    txt(g,x0+140,y0+92,R.running?fmt(R.n,0)+' o/min':'stille',{'text-anchor':'middle','font-family':F_MONO,'font-size':14,'font-weight':600,fill:'#fff'});
+    sv('rect',{x:x0+250,y:y0+70,width:60,height:22,fill:'#555'},g);sv('rect',{x:x0+316,y:y0+36,width:250,height:110,rx:22,fill:'#e8862b'},g);txt(g,x0+440,y0+92,'DC-generator',{'text-anchor':'middle','font-size':13,'font-weight':700,fill:'#222'});
+    sv('rect',{x:x0+590,y:y0+20,width:160,height:170,rx:6,fill:'var(--panel)',stroke:'var(--line)'},g);txt(g,x0+600,y0+40,'Motordata (estimat)',{'font-size':11.5,'font-weight':700,fill:'var(--ink)'});
+    ['1,5 kW · 400 V','1500 o/min · 9,55 Nm','I_N ≈ 3,6 A','cos φ ≈ 0,72','Tjek mærkepladen!'].forEach((t,i)=>txt(g,x0+600,y0+64+i*22,t,{'font-size':10.5,'font-family':F_MONO,fill:i===4?'var(--bad)':'var(--muted)'}));}
+  {const x0=792,y0=336;sv('rect',{x:x0,y:y0,width:372,height:206,rx:6,fill:'var(--panel)',stroke:'var(--line)'},g);txt(g,x0+14,y0+24,'Strømkurve før og efter frekvensomformeren',{'font-family':F_DISP,'font-weight':700,'font-size':14,fill:'var(--ink)'});
+    if(on&&o){const W_=340,H_=70;const draw=(yb,fn,col,lab)=>{let d='';for(let i=0;i<=200;i++){const t=i/200*2*PI;const v=fn(t);d+=(i?'L':'M')+(x0+16+i/200*W_)+','+(yb-v*H_/2);}sv('path',{d,fill:'none',stroke:col,'stroke-width':1.8},g);txt(g,x0+16,yb-H_/2-2,lab,{'font-size':10,fill:col,'font-weight':700});};
+      const h=o.h;const sgn={5:-1,7:1,11:-1,13:1,17:-1,19:1,23:-1,25:1};const fin=t=>{let v=Math.sin(t);HO.forEach(k=>v+=sgn[k]*h[k]*Math.sin(k*t));return v/(1+h[5]+h[7]);};
+      draw(y0+80,fin,'var(--accent)',`før FO: I_rms ${fmt(o.Irms,2)} A, THDi ${fmt(o.thd*100,0)} %`);draw(y0+165,t=>R.running?Math.sin(t-1.2)*(o.Im/Math.max(o.Im,o.Irms)):0,'var(--warn)',`efter FO: I_rms ${fmt(R.running?o.Im:0,2)} A, ${fmt(R.n/30,1)} Hz`);}
+    else txt(g,x0+186,y0+110,'Tænd for at se kurverne',{'text-anchor':'middle','font-size':12,fill:'var(--muted)'});}
+  drawDano(g,16,566,'D',S.dsw);
+  {const x0=578,y0=566;sv('rect',{x:x0,y:y0,width:586,height:224,rx:6,fill:'var(--panel)',stroke:'var(--line)'},g);txt(g,x0+14,y0+24,'Effektflow',{'font-family':F_DISP,'font-weight':700,'font-size':15,fill:'var(--ink)'});
+    if(o&&on){const box=(x,lab,val,col)=>{sv('rect',{x:x0+x,y:y0+60,width:120,height:70,rx:6,fill:'var(--panel2)',stroke:col,'stroke-width':2},g);txt(g,x0+x+60,y0+86,lab,{'text-anchor':'middle','font-size':11,fill:'var(--muted)'});txt(g,x0+x+60,y0+112,val,{'text-anchor':'middle','font-size':15,'font-weight':700,'font-family':F_MONO,fill:'var(--ink)'});};
+      const P2=R.T*R.n*PI/30;box(14,'P₁ fra net',fmt(o.Pin,0)+' W','var(--accent)');box(160,'P_m1 til motor',fmt(R.running?o.Pm1:0,0)+' W','var(--warn)');box(306,'P₂ på akslen',fmt(P2,0)+' W','var(--ok)');box(452,'P_DC i last',fmt(R.Tdc*R.n*PI/30,0)+' W','var(--muted)');
+      [134,280,426].forEach(x=>arrow(g,x0+x,y0+95,x0+x+24,y0+95,'var(--muted)','',2));
+      txt(g,x0+14,y0+160,`η_FO = ${fmt(o.Pin?(R.running?o.Pm1:0)/o.Pin*100:0,1)} %   η_motor = ${fmt(R.running&&o.Pm1?P2/o.Pm1*100:0,1)} %   η_samlet = ${fmt(o.Pin?P2/o.Pin*100:0,1)} %`,{'font-size':12,'font-family':F_MONO,fill:'var(--ink)'});
+      txt(g,x0+14,y0+190,`Tab: FO ${fmt(o.Pfo,0)} W · Cu ${fmt(R.running?o.Pcu:0,0)} W · Fe ${fmt(R.running?o.Pfe:0,0)} W · friktion ${fmt(R.running?o.Pfr:0,0)} W`,{'font-size':11,'font-family':F_MONO,fill:'var(--muted)'});}}
+};
+LAB.ctl=function(n,a,ev){const d=ev&&ev.shiftKey?10:1;const f=S.f;
+  if(n==='fo'){const k=a[0];if(k==='loc')f.loc=!f.loc;if(k==='start'){if(!f.loc){toast('Panelet står i Remote. Tryk Loc/Rem og vælg Local.');return;}if(!S.on){toast('Tænd først.');return;}f.run=true;}if(k==='stop')f.run=false;if(k==='up')f.ref=clamp(f.ref+10*d,0,1800);if(k==='dn')f.ref=clamp(f.ref-10*d,0,1800);}
+  if(n==='ex')f.ex=clamp(Math.round((f.ex+0.05*(ev&&ev.shiftKey?-1:1))*100)/100,0,1);
+  if(n==='zero'){if(!S.on){toast('Tænd og kør i tomgang før ZERO.');return;}TPC=null;const R=LAB.solve();f.zero=R.Tsh;toast(f.ex>0.02?'Kalibreret med feltet tændt. Kalibrér i tomgang.':'Momentet er kalibreret til 0 Nm i tomgang.');}
+  if(n==='pg')f.page=a[0];if(n==='clampw')f.clamp=f.clamp==='før'?'efter':'før';if(n==='Dsw')S.dsw[+a[0]][+a[1]]=!S.dsw[+a[0]][+a[1]];syncUI();};
+function syncUI(){const f=S.f;$('#c8R').value=f.ref;$('#c8RO').textContent=fmt(f.ref,0)+' o/min';$('#c8E').value=f.ex;$('#c8EO').textContent=fmt(f.ex*100,0)+' %';$$('#c8Cl button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.c===f.clamp));$('#c8Run').textContent=f.run?'Stop':'Start';$('#c8Loc').textContent=f.loc?'Local':'Remote';}
+LAB.initUI=function(){$('#c8R').addEventListener('input',e=>{S.f.ref=+e.target.value;syncUI();update();});$('#c8E').addEventListener('input',e=>{S.f.ex=+e.target.value;syncUI();update();});
+  $$('#c8Load button').forEach(b=>b.addEventListener('click',()=>{setLoad(+b.dataset.f);syncUI();update();}));$$('#c8Cl button').forEach(b=>b.addEventListener('click',()=>{S.f.clamp=b.dataset.c;syncUI();update();}));
+  $('#c8Run').addEventListener('click',()=>{LAB.ctl('fo',[S.f.run?'stop':'start'],{});update();});$('#c8Loc').addEventListener('click',()=>{LAB.ctl('fo',['loc'],{});update();});$('#c8Zero').addEventListener('click',()=>{LAB.ctl('zero',[],{});update();});
+  $$('#c8Sp button').forEach(b=>b.addEventListener('click',()=>{S.f.ref=+b.dataset.n;syncUI();update();}));syncUI();};
+LAB.renderSide=R=>{syncUI();const o=R.op;$('#c8Read').innerHTML=o?`<div><span>M/M<sub>N</sub></span>${fmt(R.T/MN8*100,0)} %</div><div><span>P₁</span>${fmt(o.Pin,0)} W</div><div><span>THD<sub>i</sub></span>${fmt(o.thd*100,0)} %</div><div><span>η</span>${fmt(o.Pin?R.T*R.n*PI/30/o.Pin*100:0,1)} %</div>`:'';};
+LAB.boot=()=>{go(1500,1);};
+
+/* ---------- live ---------- */
+LAB.live=function(el,R){const A=S.act,lg=$('#liveLegend');el.setAttribute('viewBox','0 0 320 320');
+  if(A===3||A===1){const c=caRead(R);if(!c){el.innerHTML='';txt(el,160,160,'Tænd for at se spektret',{'text-anchor':'middle','font-size':12.5,fill:'var(--muted)'});lg.innerHTML='';return;}
+    barPlot(el,{bars:HO.map(k=>({l:k+'.',v:c.h[k]*100,show:fmt(c.h[k]*100,0)})),yl:'I_h i % af I₁',ymax:Math.max(20,...HO.map(k=>c.h[k]*100))*1.15,H:240});lg.innerHTML=`<span>THD<sub>i</sub> ${fmt(c.thd*100,1)} % (tang ${c.where})</span><span>6-puls ensretter: h = 6k ± 1</span>`;return;}
+  const n=S.f.ref;const pts=[];for(let fr=0;fr<=1.15;fr+=0.025){const T=fr*MN8+SM.Pdc/(n*PI/30);const o=opAt(n,T,46);pts.push([fr*100,o]);}
+  const L=(S.log[A]||[]);plotLines(el,{x0:0,x1:115,y0:0,y1:1,H:300,series:[{name:'η samlet',color:'var(--accent)',pts:pts.map(p=>[p[0],p[1].eta]),dots:L.map(o=>[o.T/MN8*100,o.eT/100])},{name:'η motor',color:'var(--ok)',pts:pts.map(p=>[p[0],p[1].etaM]),dash:'5 3'},{name:'η FO',color:'var(--muted)',pts:pts.map(p=>[p[0],p[1].etaFO]),dash:'2 3'},{name:'THDi',color:'var(--bad)',axis2:true,pts:pts.map(p=>[p[0],p[1].thd*100]),dots:L.filter(o=>o.thd!==undefined).map(o=>[o.T/MN8*100,o.thd])}],
+    y2:{y0:0,y1:150,label:'THD_i [%]',color:'var(--bad)'},xl:'M/M_N [%] ved '+fmt(n,0)+' o/min',yl:'η',mark:S.on&&R.running?{x:R.T/MN8*100,ys:[[R.op.eta,'var(--accent)']]}:null});lg.innerHTML='<span>Kurver = model, prikker = dine punkter</span>';};
+
+/* ---------- MODELLER ---------- */
+buildModel({id:'thd',short:'THDi',title:'THD<sub>i</sub> ud fra de harmoniske strømme',lead:'En 6-puls diodeensretter trækker strøm i pulser. Strømmen indeholder harmoniske af orden 6k ± 1 (5, 7, 11, 13 …). THD<sub>i</sub> er forholdet mellem de harmoniskes samlede RMS og grundtonen.',plotH:220,
+  inputs:[{id:'I1',label:'I₁ (grundtone)',unit:'A',min:0.1,max:10,step:0.01,val:2.0},{id:'h5',label:'I₅',unit:'% af I₁',min:0,max:100,step:0.5,val:38},{id:'h7',label:'I₇',unit:'%',min:0,max:100,step:0.5,val:15},{id:'h11',label:'I₁₁',unit:'%',min:0,max:40,step:0.5,val:8},{id:'h13',label:'I₁₃',unit:'%',min:0,max:40,step:0.5,val:6},{id:'hr',label:'17.–25. samlet',unit:'%',min:0,max:20,step:0.5,val:5}],
+  formula:`THD<sub>i</sub> = √(I<sub>5</sub>² + I<sub>7</sub>² + …) / I<sub>1</sub><br>I<sub>RMS</sub> = I<sub>1</sub> · √(1 + THD<sub>i</sub>²)<br>Effektfaktor λ = P/S = cos φ<sub>1</sub> / √(1 + THD<sub>i</sub>²)<br>Q<sub>D</sub> = √(S² − P² − Q²)`,
+  calc(v){const t=Math.hypot(v.h5,v.h7,v.h11,v.h13,v.hr)/100;const Irms=v.I1*Math.sqrt(1+t*t);return{rows:[['THD_i',t*100,'%',1,'hl'],['I_RMS',Irms,'A',3],['Forhold I_RMS/I₁',Math.sqrt(1+t*t),'',3],['λ ved cos φ₁ = 0,98',0.98/Math.sqrt(1+t*t),'',3],['Q_D ved 400 V',SQ3*400*v.I1*t,'var',0]]};},
+  plot(v,o,el){const h={5:v.h5,7:v.h7,11:v.h11,13:v.h13};const sgn={5:-1,7:1,11:-1,13:1};const pts=[],p1=[];for(let i=0;i<=200;i++){const t=i/200*2*PI;let y=Math.sin(t);for(const k in h)y+=sgn[k]*h[k]/100*Math.sin(k*t);pts.push([i/200*20,y*v.I1*SQ3/1.2]);p1.push([i/200*20,Math.sin(t)*v.I1*SQ3/1.2]);}
+    plotLines(el,{x0:0,x1:20,y0:-v.I1*2.2,y1:v.I1*2.2,H:220,series:[{name:'i(t)',color:'var(--accent)',pts},{name:'grundtone',color:'var(--muted)',pts:p1,dash:'4 4'}],xl:'t [ms]',yl:'i [A]'});}});
+buildModel({id:'eta',short:'Virkningsgrader',title:'Virkningsgrad for frekvensomformer, motor og samlet',lead:'Den samlede virkningsgrad er produktet af de to. Ved lav last dominerer de faste tab (omformerens elektronik og ventilator, motorens jerntab og friktion), og η falder.',plotH:220,
+  inputs:[{id:'n',label:'Hastighed',unit:'o/min',min:300,max:1800,step:10,val:1500},{id:'fr',label:'Last M/M_N',unit:'%',min:0,max:120,step:1,val:67}],
+  formula:`P<sub>2</sub> = M · ω<br>P<sub>m1</sub> = P<sub>2</sub> + P<sub>Cu</sub> + P<sub>Fe</sub> + P<sub>fr</sub><br>P<sub>1</sub> = P<sub>m1</sub> + P<sub>FO</sub><br>η<sub>FO</sub> = P<sub>m1</sub>/P<sub>1</sub>, η<sub>M</sub> = P<sub>2</sub>/P<sub>m1</sub><br>η = η<sub>FO</sub> · η<sub>M</sub> = P<sub>2</sub>/P<sub>1</sub><span class="c">Modellens tab er estimater. P<sub>Fe</sub> ∝ f<sup>1,5</sup>, P<sub>Cu</sub> ∝ I² og I² = I<sub>d</sub>² + I<sub>q</sub>².</span>`,
+  calc(v){const o=opAt(v.n,v.fr/100*MN8,46);return{rows:[['P₂',o.P2,'W',0],['P_m1',o.Pm1,'W',0],['P₁',o.Pin,'W',0],['η_FO',o.etaFO*100,'%',1],['η_motor',o.etaM*100,'%',1],['η samlet',o.eta*100,'%',1,'hl'],['Motorstrøm',o.Im,'A',2],['Motorspænding (U/f)',o.Um,'V',0],['THD_i før FO',o.thd*100,'%',0]]};},
+  plot(v,o,el){const a=[],b=[];for(let fr=2;fr<=120;fr+=2){const x=opAt(v.n,fr/100*MN8,46);a.push([fr,x.eta*100]);b.push([fr,x.etaM*100]);}plotLines(el,{x0:0,x1:120,y0:0,y1:100,H:220,series:[{name:'η samlet',color:'var(--accent)',pts:a},{name:'η motor',color:'var(--ok)',pts:b,dash:'5 3'}],xl:'M/M_N [%]',yl:'η [%]',mark:{x:v.fr,ys:[[o.rows[5][1],'var(--accent)']]}});}});
+buildModel({id:'uf',short:'U/f og reluktans',title:'U/f-styring og reluktansmomentet',lead:'Frekvensomformeren holder U/f konstant, så fluxen er konstant. Reluktansmotorens moment kommer af at rotoren søger stillingen med mindst magnetisk modstand (d-aksen). Momentet er proportionalt med L<sub>d</sub> − L<sub>q</sub>.',
+  inputs:[{id:'n',label:'Hastighed',unit:'o/min',min:0,max:1800,step:10,val:1000},{id:'Ld',label:'L_d',unit:'mH',min:50,max:600,step:5,val:400},{id:'Lq',label:'L_q',unit:'mH',min:20,max:300,step:5,val:90},{id:'Id',label:'I_d',unit:'A',min:0.5,max:4,step:0.1,val:2.2},{id:'Iq',label:'I_q',unit:'A',min:0,max:5,step:0.1,val:2.8}],
+  formula:`f = n · p/60 (4-polet: p = 2)<br>U ≈ 400 · f/50<br>M = 3/2 · p · (L<sub>d</sub> − L<sub>q</sub>) · I<sub>d</sub> · I<sub>q</sub>  (amplitudeværdier)<br>Ingen rotorstrøm → ingen rotortab (ingen slip)`,
+  calc(v){const f=v.n/30;const T=1.5*2*(v.Ld-v.Lq)/1000*v.Id*SQ3/1.2*v.Iq*SQ3/1.2;return{rows:[['f',f,'Hz',1],['U (U/f)',400*f/50,'V',0],['Moment (model)',T,'Nm',2,'hl'],['Saliensforhold L_d/L_q',v.Ld/v.Lq,'',1],['Slip',0,'%',0]]};}});
+
+/* ---------- QUIZ ---------- */
+const QUIZ=[
+ {l:'Let',q:'Hvorfor er strømmen før frekvensomformeren meget mindre end motorstrømmen i tomgang?',o:['Fordi omformeren lagrer strømmen','Motorens magnetiseringsstrøm er reaktiv og cirkulerer mellem mellemkreds og motor. Nettet leverer kun virkeeffekten (tabene)','Fordi tangen måler forkert','Fordi spændingen er højere før'],a:1,e:'Diodeensretteren kan kun levere virkeeffekt. Den reaktive magnetiseringsstrøm forsynes af mellemkredsens kondensator.'},
+ {l:'Let',q:'Hvilke harmoniske dominerer i en 6-puls ensretter?',o:['2., 4., 6.','3., 9., 15.','5., 7., 11., 13.','Kun 3.'],a:2,e:'6-puls: h = 6k ± 1. Triplen (3., 9.) mangler i et symmetrisk 3-leder system.'},
+ {l:'Let',q:'Hvorfor skal pilen på strømtangen pege mod frekvensomformeren?',o:['Så P vises positiv (forbruger)','For at måle THD','Fordi frekvensomformeren kræver det','Det er ligegyldigt for alle målinger'],a:0,e:'Pilen skal pege mod forbrugeren. Vendt forkert giver negativ P og Q.'},
+ {l:'Mellem',q:'Hvordan defineres THD<sub>i</sub>?',o:['I<sub>RMS</sub>/I<sub>1</sub>','√(ΣI<sub>h</sub>²)/I<sub>1</sub> for h ≥ 2','I<sub>5</sub>/I<sub>1</sub>','(I<sub>RMS</sub> − I<sub>1</sub>)/I<sub>1</sub>'],a:1,e:'De harmoniskes samlede RMS divideret med grundtonens RMS.'},
+ {l:'Mellem',q:'THD<sub>i</sub> = 40 %. Hvor meget større er I<sub>RMS</sub> end I<sub>1</sub>?',o:['40 %','16 %','7,7 %','4 %'],a:2,e:'√(1 + 0,4²) = 1,077, altså 7,7 %. Kabler og sikringer dimensioneres efter I<sub>RMS</sub>.'},
+ {l:'Mellem',q:'Hvorfor stiger THD<sub>i</sub> ved lav last?',o:['Fordi motoren mættes','Ensretterens strøm bliver mere pulsformet (kortere ledeintervaller) når mellemkredsen næsten ikke aflades','Fordi frekvensen falder','Det gør den ikke'],a:1,e:'Ved lav last lader kondensatoren kun op i korte spidser omkring spændingstoppen. Pulserne er smalle og harmonikindholdet højt (men den absolutte strøm er lille).'},
+ {l:'Mellem',q:'Hvad er Q<sub>D</sub>?',o:['Reaktiv effekt fra grundtonen','Forvrængningseffekt fra harmoniske strømme: S² = P² + Q² + Q<sub>D</sub>²','Effekt i DC-mellemkredsen','Tab i dioderne'],a:1,e:'Med harmoniske er S større end √(P² + Q²). Resten kaldes forvrængnings- (distortion-) effekt.'},
+ {l:'Svær',q:'Hvorfor har en reluktansmotor ingen rotorkobbertab?',o:['Rotoren er af aluminium','Rotoren har ingen viklinger eller bur og kører synkront uden slip','Fordi den køles bedre','Den har samme tab som en asynkronmotor'],a:1,e:'Momentet skyldes forskellen i reluktans mellem d- og q-aksen. Uden slip induceres ingen rotorstrømme.'},
+ {l:'Svær',q:'Hvorfor kan en SynRM uden startbur ikke startes direkte på nettet?',o:['Den har for høj modstand','Rotoren kan ikke følge et felt der roterer med 1500 o/min fra stilstand. Den kræver en frekvensomformer der starter fra 0 Hz','Den er for tung','Den kan godt'],a:1,e:'Uden bur er der intet asynkront startmoment. Omformeren rampes op fra lav frekvens.'},
+ {l:'Svær',q:'Ved 1000 o/min og 2/3 M<sub>N</sub>: hvad sker der typisk med η i forhold til 1500 o/min ved samme moment?',o:['η stiger','η falder lidt, fordi P<sub>2</sub> falder med n, mens kobbertabet (∝ moment²) er uændret','η er uændret','η falder til 0'],a:1,e:'P<sub>2</sub> = M·ω falder med ⅓. Kobbertabet afhænger af strømmen (momentet) og ændres ikke, jerntabet falder lidt.'}];
+const EX=[
+ {t:'Opgave 1 · THD<sub>i</sub> fra målte harmoniske',q:'Før frekvensomformeren måles I<sub>1</sub> = 1,95 A, I<sub>5</sub> = 0,74 A, I<sub>7</sub> = 0,28 A, I<sub>11</sub> = 0,16 A, I<sub>13</sub> = 0,11 A og resten (17.–25.) ca. 0,10 A samlet. cos φ<sub>1</sub> = 0,98. Find THD<sub>i</sub>, I<sub>RMS</sub>, P<sub>1</sub> og λ.',
+  steps:[['Harmoniske','√(0,74² + 0,28² + 0,16² + 0,11² + 0,10²) = √(0,5476 + 0,0784 + 0,0256 + 0,0121 + 0,01) = √0,674 = <b>0,821 A</b>'],['THD_i','0,821/1,95 = <b>42,1 %</b>'],['I_RMS','1,95·√(1 + 0,421²) = <b>2,12 A</b>'],['P₁','√3·400·1,95·0,98 = <b>1324 W</b> (kun grundtonen giver virkeeffekt ved sinusformet spænding)'],['Effektfaktor','λ = 0,98/√(1 + 0,421²) = <b>0,90</b>. cos φ<sub>1</sub> er højt, men λ er lavere på grund af harmoniske.']],model:['thd',{I1:1.95,h5:38,h7:14.4,h11:8.2,h13:5.6,hr:5.1}],sim:3},
+ {t:'Opgave 2 · Virkningsgrader ved fuld last',q:'Ved 1500 o/min og M = 9,55 Nm viser analysatoren P<sub>1</sub> = 1760 W og frekvensomformerens display 1,70 kW. Find η for omformer, motor og samlet.',
+  steps:[['P₂','P<sub>2</sub> = 9,55·2π·1500/60 = <b>1500 W</b>'],['η_FO','1700/1760 = <b>96,6 %</b>'],['η_motor','1500/1700 = <b>88,2 %</b>'],['η samlet','1500/1760 = <b>85,2 %</b> = 0,966·0,882'],['Fejlkilder','Omformerens udgangseffekt er en beregnet værdi i omformeren, ikke en måling. Den er typisk ±2–3 %.']],model:['eta',{n:1500,fr:100}],sim:2},
+ {t:'Opgave 3 · Strøm før og efter i tomgang',q:'I tomgang ved 1500 o/min viser displayet motorstrøm 2,2 A, mens tangen før omformeren viser 0,30 A. Forklar forskellen.',
+  steps:[['Motorsiden','Motorstrømmen er næsten ren magnetiseringsstrøm (reaktiv). cos φ<sub>motor</sub> er lav.'],['Mellemkredsen','Den reaktive effekt pendler mellem motoren og mellemkredsens kondensator gennem vekselretteren. Den passerer ikke ensretteren.'],['Netsiden','Nettet leverer kun tabene (ca. 150 W): I<sub>1</sub> = 150/(√3·400·0,96) ≈ 0,23 A. Med høj THD<sub>i</sub> ved lav last bliver I<sub>RMS</sub> ca. 0,3 A.'],['Konsekvens','En frekvensomformer "fasekompenserer" motoren: nettet ser cos φ<sub>1</sub> ≈ 0,95–0,98, men til gengæld harmoniske.']],model:['thd',{I1:0.23,h5:70,h7:45,h11:18,h13:14,hr:6}],sim:1}];
+
+boot();
+
+</script>
+
+</body></html>

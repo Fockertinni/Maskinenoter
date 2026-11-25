@@ -1,0 +1,1083 @@
+<!doctype html><html lang="da"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body><a href="index.html" id="el2-back" style="position:fixed;z-index:9999;right:max(12px,env(safe-area-inset-right));bottom:calc(12px + env(safe-area-inset-bottom,0px));font:600 14px/1 system-ui,sans-serif;background:#0d6c78;color:#fff;text-decoration:none;padding:9px 13px;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.25)">← Alle øvelser</a>
+<title>EL2 Lab 1 Simulator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: laboratoriebænk — topbar med faner, simulator (bænk + instrumentsøjle), derefter læsesider i én kolonne */
+:root{
+  --bg:#e9edf0; --panel:#ffffff; --panel2:#f4f6f8; --ink:#1a2227; --muted:#5a6770; --line:#cdd5da; --grid:#e1e6e9;
+  --accent:#0d6c78; --accent-soft:#d6ecee; --ok:#2c7a34; --warn:#a85b06; --bad:#bf2630; --warn-soft:#fbefdc; --bad-soft:#f8e1e2; --ok-soft:#e0f0e1;
+  --bench:#d7dde1; --bench-line:#c4ccd1;
+  --dev-steel:#bcc4c9; --dev-steel-ink:#1d2529; --dev-blue:#2d5ca6; --dev-yellow:#e1b42a; --dev-inst:#343b41; --dev-green:#86bd45;
+  --lcd:#c4d3ab; --lcd-ink:#18200f; --wire-halo:rgba(255,255,255,.75);
+  --c-l1:#8b5a2b; --c-l2:#1d1d1d; --c-l3:#7f8a90; --c-n:#2b6cd4; --c-disp:#bf2630;
+  --f-display:'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --f-body:'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+  --f-mono:'JetBrains Mono', ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#12171a; --panel:#1b2226; --panel2:#20282d; --ink:#e2e8eb; --muted:#97a5ad; --line:#2f3a40; --grid:#273036;
+  --accent:#4bb2bf; --accent-soft:#16363b; --ok:#6cc274; --warn:#e3a14b; --bad:#ef6b72; --warn-soft:#3a2c17; --bad-soft:#3b1c1f; --ok-soft:#1b3320;
+  --bench:#262e33; --bench-line:#313b41;
+  --dev-steel:#69747a; --dev-steel-ink:#eef2f4; --dev-blue:#2b558f; --dev-yellow:#d3a723; --dev-inst:#40484f; --dev-green:#76a83c;
+  --lcd:#b9c99e; --lcd-ink:#18200f; --wire-halo:rgba(255,255,255,.28);
+  --c-l1:#c58a4f; --c-l2:#e2e8eb; --c-l3:#9aa6ac; --c-n:#5d95f0; --c-disp:#ef6b72; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#12171a; --panel:#1b2226; --panel2:#20282d; --ink:#e2e8eb; --muted:#97a5ad; --line:#2f3a40; --grid:#273036;
+  --accent:#4bb2bf; --accent-soft:#16363b; --ok:#6cc274; --warn:#e3a14b; --bad:#ef6b72; --warn-soft:#3a2c17; --bad-soft:#3b1c1f; --ok-soft:#1b3320;
+  --bench:#262e33; --bench-line:#313b41;
+  --dev-steel:#69747a; --dev-steel-ink:#eef2f4; --dev-blue:#2b558f; --dev-yellow:#d3a723; --dev-inst:#40484f; --dev-green:#76a83c;
+  --lcd:#b9c99e; --lcd-ink:#18200f; --wire-halo:rgba(255,255,255,.28);
+  --c-l1:#c58a4f; --c-l2:#e2e8eb; --c-l3:#9aa6ac; --c-n:#5d95f0; --c-disp:#ef6b72; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1500px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 48px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-block:20px 12px;border-bottom:1px solid var(--line)}
+.brand .eyebrow{font-family:var(--f-display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-size:13px;font-weight:600}
+.brand h1{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,4vw,38px);line-height:1.05;margin:2px 0 0;text-wrap:balance}
+.brand h1 span{color:var(--accent)}
+nav.tabs{display:flex;flex-wrap:wrap;gap:4px}
+nav.tabs button{font-family:var(--f-display);font-size:16px;font-weight:600;letter-spacing:.04em;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:7px 14px;border-radius:6px;cursor:pointer}
+nav.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+nav.tabs button:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section.page{padding-top:18px}
+h2{font-family:var(--f-display);font-size:28px;font-weight:700;margin:6px 0 10px;text-wrap:balance}
+h3{font-family:var(--f-display);font-size:21px;font-weight:600;margin:0 0 6px;text-wrap:balance}
+h4{font-size:15px;margin:14px 0 4px}
+p{margin:0 0 10px}
+.lead{color:var(--muted);max-width:75ch}
+.small{font-size:13px;color:var(--muted)}
+.mono,.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* ---------- simulator ---------- */
+.sim{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}
+@media (max-width:1100px){.sim{grid-template-columns:minmax(0,1fr)}}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.btn{font-family:var(--f-body);font-weight:600;font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:7px 12px;border-radius:6px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.power{font-family:var(--f-display);font-size:17px;letter-spacing:.05em;min-width:150px}
+.btn.power.on{background:var(--ok);border-color:var(--ok);color:var(--bg)}
+.btn.estop{background:var(--bad);border-color:var(--bad);color:#fff;font-family:var(--f-display);font-size:17px;letter-spacing:.05em}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.statusbar{display:flex;gap:10px;align-items:center;padding:8px 12px;border-radius:6px;border:1px solid var(--line);background:var(--panel);margin-bottom:10px;font-weight:600}
+.statusbar .dot{width:12px;height:12px;border-radius:50%;flex:none;background:var(--muted)}
+.statusbar.on .dot{background:var(--ok);box-shadow:0 0 0 4px var(--ok-soft)}
+.statusbar.trip{border-color:var(--bad);background:var(--bad-soft)}
+.statusbar.trip .dot{background:var(--bad)}
+.benchbox{border:1px solid var(--line);border-radius:8px;overflow-x:auto;background:var(--bench);touch-action:none}
+#bench{display:block;width:100%;min-width:880px;height:auto;user-select:none;-webkit-user-select:none}
+.hint{font-size:13px;color:var(--muted);margin-top:6px}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;min-width:0}
+.card h3{font-size:18px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.card h3 small{font-family:var(--f-body);font-size:12px;color:var(--muted);font-weight:400}
+.actsel{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:6px 0 8px}
+.actsel button{font-family:var(--f-display);font-weight:600;font-size:15px;padding:5px 0;border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:5px;cursor:pointer}
+.actsel button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.checklist{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:13.5px}
+.checklist li{display:grid;grid-template-columns:20px 1fr;gap:6px;align-items:start}
+.checklist .mk{font-weight:700;text-align:center;border-radius:4px;line-height:18px;font-size:12px}
+.checklist .y .mk{background:var(--ok-soft);color:var(--ok)}
+.checklist .n .mk{background:var(--bad-soft);color:var(--bad)}
+.verdict{margin-top:8px;padding:6px 10px;border-radius:5px;font-weight:600;font-size:13.5px}
+.verdict.y{background:var(--ok-soft);color:var(--ok)} .verdict.n{background:var(--warn-soft);color:var(--warn)}
+.warnlist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px;font-size:13.5px}
+.warnlist li{padding:5px 8px;border-radius:5px;background:var(--warn-soft);color:var(--warn);border-left:3px solid var(--warn)}
+.warnlist li.bad{background:var(--bad-soft);color:var(--bad);border-left-color:var(--bad)}
+.warnlist li.none{background:var(--ok-soft);color:var(--ok);border-left-color:var(--ok)}
+.clampsel{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.clampsel label{display:flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:5px;padding:3px 8px;font-weight:600;cursor:pointer;font-size:14px}
+.clampsel label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.combo{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.combo button{font-size:12px;padding:3px 7px;border:1px solid var(--line);border-radius:4px;background:var(--panel2);color:var(--ink);cursor:pointer;font-family:var(--f-mono)}
+.lcdbox{font-family:var(--f-mono);background:var(--lcd);color:var(--lcd-ink);padding:6px 10px;border-radius:4px;font-size:22px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.setrow{display:grid;grid-template-columns:110px 1fr 70px;gap:8px;align-items:center;font-size:14px;margin:4px 0}
+.setrow output{font-family:var(--f-mono);text-align:right;font-size:13px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+select,input[type=number]{font:inherit;font-size:14px;padding:3px 6px;border:1px solid var(--line);border-radius:4px;background:var(--panel2);color:var(--ink)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:5px 6px;border-bottom:1px solid var(--grid);text-align:left;vertical-align:top}
+th{font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.03em;color:var(--muted)}
+td.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.dev.ok{color:var(--ok)} td.dev.warn{color:var(--warn)} td.dev.bad{color:var(--bad);font-weight:600}
+.phasorbox svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:4px}
+.conti{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom, 0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:6px;font-weight:600;font-size:14px;max-width:min(90vw,520px);z-index:20;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+
+/* ---------- læsesider ---------- */
+.prose{max-width:900px}
+.notes{display:grid;gap:14px;max-width:960px}
+.note{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 18px;min-width:0}
+.note ul{margin:4px 0 8px;padding-left:20px}
+.note li{margin:2px 0}
+.note .term{font-weight:600}
+.flag{border-left:4px solid var(--warn);background:var(--warn-soft);padding:8px 12px;border-radius:0 6px 6px 0;margin:8px 0;font-size:14px}
+.flag b.tag,.tagchip{font-family:var(--f-display);font-weight:700;letter-spacing:.08em;font-size:12px;text-transform:uppercase;color:var(--warn);margin-right:6px}
+.tagchip.err{color:var(--bad)}
+.flag.err{border-left-color:var(--bad);background:var(--bad-soft)}
+.formula-inline{font-family:var(--f-mono);background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:13px;white-space:nowrap}
+.toc{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 14px}
+.toc a{font-size:13px;color:var(--accent);text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:2px 8px;background:var(--panel)}
+
+.models{display:grid;gap:16px}
+.model{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;min-width:0}
+.model>p{color:var(--muted);max-width:80ch}
+.mgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr);gap:16px;align-items:start;margin-top:8px}
+@media (max-width:1100px){.mgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+@media (max-width:700px){.mgrid{grid-template-columns:minmax(0,1fr)}}
+.inputs{display:flex;flex-direction:column;gap:8px;min-width:0}
+.inp{display:grid;grid-template-columns:1fr 84px;gap:2px 8px;align-items:center;font-size:14px}
+.inp .lab{grid-column:1 / -1;display:flex;justify-content:space-between;color:var(--muted);font-size:13px}
+.inp input[type=number]{width:84px;text-align:right;font-family:var(--f-mono)}
+.inp.tog{grid-template-columns:auto 1fr;font-size:14px}
+.formula{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:10px 12px;font-family:var(--f-mono);font-size:13px;line-height:1.75;min-width:0;overflow-x:auto}
+.formula .c{color:var(--muted);font-family:var(--f-body);font-size:12.5px;display:block;line-height:1.4;margin-top:4px}
+.res{display:flex;flex-direction:column;gap:2px;min-width:0}
+.res .r{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--grid);padding:3px 0;font-size:14px}
+.res .r b{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.res .r.hl b{color:var(--accent)}
+.res .r.bad b{color:var(--bad)}
+.res .r.okc b{color:var(--ok)}
+.plot svg{width:100%;height:auto;display:block}
+
+.understand{display:grid;gap:14px;max-width:960px}
+.keylist{counter-reset:k;list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.keylist li{counter-increment:k;display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:start}
+.keylist li::before{content:counter(k);font-family:var(--f-display);font-weight:700;font-size:20px;color:var(--accent);text-align:center;line-height:1.2}
+.ex{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.ex .note h4{margin-top:0}
+
+.quiz{display:grid;gap:12px;max-width:900px}
+.q{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 16px}
+.q .qh{display:flex;gap:8px;align-items:baseline;justify-content:space-between}
+.q .lvl{font-family:var(--f-display);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.opts{display:grid;gap:6px;margin-top:8px}
+.opts button{text-align:left;font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--ink);cursor:pointer}
+.opts button.right{border-color:var(--ok);background:var(--ok-soft)}
+.opts button.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.q .expl{margin-top:8px;font-size:14px;color:var(--muted)}
+.score{font-family:var(--f-display);font-size:20px;font-weight:600}
+details.step{border:1px solid var(--line);border-radius:6px;padding:6px 12px;margin:6px 0;background:var(--panel2)}
+details.step summary{cursor:pointer;font-weight:600}
+details.step[open]{background:var(--panel)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="brand">
+    <div class="eyebrow">M5 Elektroteknik 2 · Labøvelse 1</div>
+    <h1>Symmetrisk og usymmetrisk <span>3-faset belastning</span></h1>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Sider">
+    <button role="tab" data-tab="sim" aria-selected="true">Simulator</button>
+    <button role="tab" data-tab="noter" aria-selected="false">Noter</button>
+    <button role="tab" data-tab="modeller" aria-selected="false">Modeller</button>
+    <button role="tab" data-tab="forstaa" aria-selected="false">Forståelse</button>
+    <button role="tab" data-tab="test" aria-selected="false">Test dig selv</button>
+  </nav>
+</header>
+
+<!-- ================= SIMULATOR ================= -->
+<section class="page" id="p-sim">
+  <div class="toolbar">
+    <button class="btn power" id="btnPower">TÆND</button>
+    <button class="btn estop" id="btnStop">NØDSTOP</button>
+    <span style="flex:1"></span>
+    <button class="btn" id="btnDel" disabled>Fjern valgt ledning</button>
+    <button class="btn" id="btnClear">Fjern alle ledninger</button>
+  </div>
+  <div class="statusbar" id="status"><span class="dot"></span><span id="statusTxt">Spændingsløs</span></div>
+  <div class="sim">
+    <div style="min-width:0">
+      <div class="benchbox"><svg id="bench" viewBox="0 0 1180 740" role="img" aria-label="Laboratoriebænk med forsyning, wattmetre, voltmetre, tang, modstandsbanke og spolebank"></svg></div>
+      <p class="hint">Træk fra et stik til et andet for at sætte en sikkerhedsledning. Klik på en ledning for at vælge den, klik igen eller brug knappen for at fjerne den. Klik på vippekontakterne for at vælge modstande, og klik på drejeknappen på spolebanken for at skifte trin. Ledninger kan kun ændres når der er slukket, ligesom i laboratoriet.</p>
+
+      <div class="card" style="margin-top:12px">
+        <h3>Måleskema <small id="msAct">Aktivitet 1</small></h3>
+        <p class="small">"Beregnet" er forberedelsen ud fra PDF'ens værdier ved den valgte netspænding. "Målt" er hvad instrumenterne viser i din opstilling. Kopiér tabellen og indsæt den i Excel som dit verificeringsark.</p>
+        <div class="tablewrap"><table id="msTable"></table></div>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn" id="btnCopy">Kopiér til Excel</button><span class="small" id="copyMsg"></span></div>
+      </div>
+    </div>
+
+    <aside class="side">
+      <div class="card">
+        <h3>Aktivitet <small>vælg øvelse</small></h3>
+        <div class="actsel" id="actsel">
+          <button data-act="1" aria-pressed="true">1 · Δ-R</button>
+          <button data-act="2" aria-pressed="false">2 · +L</button>
+          <button data-act="3" aria-pressed="false">3 · Y+N</button>
+          <button data-act="4" aria-pressed="false">4 · Y÷N</button>
+        </div>
+        <div class="small" id="actDesc"></div>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+          <button class="btn" id="btnPreset">Indlæs korrekt opstilling</button>
+          <button class="btn" id="btnSetVals">Indstil kun værdier</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Underviser-tjek <small>før tænd</small></h3>
+        <ul class="checklist" id="checklist"></ul>
+        <div class="verdict" id="verdict"></div>
+        <div class="conti" id="conti">
+          <svg viewBox="0 0 60 90" width="44" height="66" aria-hidden="true"><rect x="4" y="4" width="52" height="82" rx="10" fill="#7fd34a"/><rect x="10" y="10" width="40" height="56" rx="4" fill="#232527"/><circle id="contiLamp" cx="30" cy="26" r="9" fill="#666" stroke="#aaa" stroke-width="2"/><circle cx="22" cy="52" r="3.5" fill="#666"/><circle id="contiOk" cx="38" cy="52" r="3.5" fill="#666"/><text x="30" y="78" font-size="7" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" fill="#123">CONTI</text></svg>
+          <div style="min-width:0"><b>Elma Conti Light · 200 mA</b><div class="small" id="contiTxt">Træk først kun de grøn/gule PE-ledninger, og mål gennemgangen fra tavlen til stel på hvert stykke udstyr. Kobl derefter resten.</div><button class="btn" id="btnConti" style="margin-top:6px">Mål gennemgang</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Advarsler</h3>
+        <ul class="warnlist" id="warnings"></ul>
+      </div>
+
+      <div class="card">
+        <h3>Tangamperemeter <small>ledere i kæben</small></h3>
+        <div class="clampsel" id="clampsel">
+          <label><input type="checkbox" value="L1" checked> L1</label>
+          <label><input type="checkbox" value="L2"> L2</label>
+          <label><input type="checkbox" value="L3"> L3</label>
+          <label><input type="checkbox" value="N"> N</label>
+        </div>
+        <div class="lcdbox" id="clampLcd">0.00 A</div>
+        <div class="small" style="margin-top:6px">Hurtigvalg:</div>
+        <div class="combo" id="combos"></div>
+      </div>
+
+      <div class="card phasorbox">
+        <h3>Vektordiagram <small>live</small></h3>
+        <svg id="simPhasor" viewBox="0 0 320 320"></svg>
+        <div class="legend" id="simLegend"></div>
+      </div>
+
+      <div class="card">
+        <h3>Indstillinger</h3>
+        <div class="setrow"><label for="setUf">Fasespænding</label><input type="range" id="setUf" min="220" max="240" step="0.5" value="230"><output id="outUf">230 V</output></div>
+        <div class="setrow"><label for="setXL">Spole X<sub>L</sub></label><select id="setXL"></select><output id="outXL"></output></div>
+        <div class="setrow"><label for="setFree">Fri eksperimentering</label><input type="checkbox" id="setFree" style="justify-self:start"><output>uden godkendelse</output></div>
+        <div class="setrow"><label for="setNoise">Måleusikkerhed</label><input type="checkbox" id="setNoise" style="justify-self:start"><output>±0,5 %</output></div>
+        <p class="small">Netspændingen i laboratoriet ligger sjældent præcis på 230 V. Skru op til fx 233 V og se hvordan målinger og beregninger glider fra hinanden.</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ================= NOTER ================= -->
+<section class="page" id="p-noter" hidden>
+  <h2>Noter til labøvelse 1</h2>
+  <p class="lead">Opsummering af gennemgangen og øvelsesvejledningen opdelt i emner. Gule bokse markerer steder hvor slides er uklare eller mangelfulde, røde bokse markerer fejl.</p>
+  <div class="toc">
+    <a href="#n-formaal">Formål og forberedelse</a><a href="#n-sikkerhed">Sikkerhed</a><a href="#n-udstyr">Udstyr og typeskilte</a><a href="#n-a1">Akt. 1 Δ-symmetrisk</a><a href="#n-a2">Akt. 2 induktiv</a><a href="#n-a3">Akt. 3 Y med nul</a><a href="#n-a4">Akt. 4 Y uden nul</a><a href="#n-watt">Wattmetermetoder</a><a href="#n-maal">Måleteknik</a><a href="#n-rapport">Målerapport</a><a href="#n-flag">Samlet liste over uklarheder</a>
+  </div>
+  <div class="notes">
+    <article class="note" id="n-formaal">
+      <h3>Formål og forberedelse</h3>
+      <ul>
+        <li>Bestem strøm, spænding og effekt i <span class="term">symmetrisk</span> (symmetrical/balanced) og <span class="term">usymmetrisk</span> (unbalanced) 3-faset belastning.</li>
+        <li>Tegn strøm- og spændingsvektordiagrammer (phasor diagrams) for alle fire aktiviteter.</li>
+        <li>Forberedelse: beregn alle strømme på forhånd, og lav et Excel-ark der sammenligner beregnet og målt. Simulatorens måleskema kan kopieres direkte ind som udgangspunkt.</li>
+        <li>Spændingssystem <span class="formula-inline">3 × 400/230 V</span>: netspænding (line voltage) U<sub>L</sub> = 400 V mellem faserne, fasespænding (phase voltage) U<sub>f</sub> = 230 V mellem fase og nul.</li>
+        <li>Uden måleskemaer er der ingen adgang til lab. Uden deltagelse i sikkerhedsinstruktionen må man kun observere.</li>
+      </ul>
+      <div class="flag"><b class="tag">Uklart</b>400/√3 = 230,9 V, ikke 230 V. Regner du med 400 V i nogle formler og 230 V i andre, får du afvigelser på ca. 0,4 % (og 0,8 % på effekt). Vælg én af dem og hold fast i den.</div>
+      <div class="flag"><b class="tag">Uklart</b>"Bestem den maksimale belastningsstrøm" siger ikke om det gælder pr. modstand, pr. bank eller forsyningen. Der er flere grænser: 1 kW pr. modstand, 10 A pr. modstand, 3,5 kW pr. bank, 600 V maks., Terco 3,8 A pr. spole og 10 A Diazed i forsyningen. Brug modellen "Modstandsbank" til at finde den grænse der rammer først.</div>
+    </article>
+
+    <article class="note" id="n-sikkerhed">
+      <h3>Sikkerhed i stærkstrømslaboratoriet (400 VAC)</h3>
+      <ul>
+        <li><span class="term">PE</span> (protective earth): alt udstyr med jordklemme forbindes til forsyningens jord med grøn/gule sikkerhedsprøveledninger.</li>
+        <li><span class="term">Gennemgangstest</span> (continuity test) af jordforbindelsen med Elma Contilight i stilling 200 mA. 200 mA er nok til at afsløre en dårlig forbindelse, som et ohmmeter med få mA kan overse.</li>
+        <li><span class="term">Diazed</span> er en skrue-smeltesikring. Her maks. 10 A, så alle netstrømme skal være under 10 A.</li>
+        <li><span class="term">RCD type B</span> (residual current device, fejlstrømsafbryder) reagerer på AC, pulserende DC og glat DC fejlstrøm. Type B er nødvendig fordi laboratoriet også har frekvensomformere, som kan give glat DC-fejlstrøm, og den ville blinde en type A.</li>
+        <li>Nødstop ved hver prøvestand bryder forsyningen via nødstopsrelæ.</li>
+        <li>Opstillingen skal godkendes af underviser før der tændes. Al tilslutning, ændring og nedtagning sker spændingsløst. Under spænding må man kun afprøve og måle. Simulatoren håndhæver det samme: du kan ikke flytte ledninger når der er tændt.</li>
+      </ul>
+    </article>
+
+    <article class="note" id="n-udstyr">
+      <h3>Udstyr og typeskilte</h3>
+      <h4>Danotherm modstandsbank, grå (aktivitet 1–2)</h4>
+      <ul>
+        <li>Tre separate modstande R1, R2, R3 med hver sine to stik (R1+/R1−). Hver består af 200, 400, 800 og 1600 Ω (1K6) der vælges med vippekontakter og kobles <b>parallelt</b>.</li>
+        <li>320 Ω får du med 400 Ω ∥ 1600 Ω: 1/(1/400 + 1/1600) = 320 Ω.</li>
+        <li>Data: 1 kW pr. modstand, 10 A pr. modstand, 3,5 kW i alt kontinuert, 600 V maks.</li>
+      </ul>
+      <h4>Grå bank i aktivitet 3–4</h4>
+      <ul>
+        <li>Gennemgangen bruger R<sub>10</sub> = 200 Ω, R<sub>20</sub> = 160 Ω og R<sub>30</sub> = 320 Ω. Alle tre kan stilles på den grå bank: 200 Ω = 200R, 160 Ω = 200R ∥ 800R, 320 Ω = 400R ∥ 1K6.</li>
+        <li>Stjernepunktet laver du selv ved at forbinde R1−, R2− og R3−. Med nul (akt. 3) forbindes stjernepunktet til N, uden nul (akt. 4) ikke.</li>
+      </ul>
+      <h4>Danotherm ZRF 55, blå</h4>
+      <ul>
+        <li>R1, R2, R3 er internt <b>stjernekoblet</b> med fælles stjernepunkt på stikket <b>Rn</b>. Hver består af 57,5 (57R5), 115, 230 og 460 Ω parallelt. Den står også på bænken, men øvelsens værdier kræver den grå bank.</li>
+      </ul>
+      <div class="flag"><b class="tag">Uklart</b>"Max current 10 A pr. resistor" er i praksis aldrig grænsen. 1 kW-grænsen rammer først: for 1600 Ω er I<sub>maks</sub> = √(1000/1600) = 0,79 A. "Strøm kontinuert 25 A" på tegningen gælder bananbøsningerne, ikke modstandene.</div>
+      <h4>Terco Load Reactor MV1101 (aktivitet 2)</h4>
+      <ul>
+        <li>Typeskilt: <span class="formula-inline">400 V Y / 230 V Δ</span>. Hver spole er altså bygget til 230 V. I Y på 400 V-net får spolen 230 V, i Δ må den kun bruges på et 230 V-net.</li>
+        <li><span class="formula-inline">2.6/2.2 kVAr 50/60 Hz</span> betyder 2,6 kvar ved 50 Hz og 2,2 kvar ved 60 Hz (X<sub>L</sub> = 2πfL stiger med frekvensen, så Q = U²/X falder).</li>
+        <li><span class="formula-inline">Max current 3.8/6.6 A Y/Δ</span>: spolestrømmen er maks. 3,8 A. I Δ er linjestrømmen √3 · 3,8 = 6,6 A.</li>
+        <li>Kontrol: 3 · 230 V · 3,8 A = 2,62 kvar, som passer med 2,6 kvar. Mindste reaktans er altså X<sub>L</sub> ≈ 230/3,8 ≈ 61 Ω på højeste trin.</li>
+        <li>Hver fase har en 6,3 A sikring på indgangen.</li>
+        <li>Slide 10: <b>"Hvor stor er den maksimale strøm?"</b> 3,8 A pr. spole. <b>"Hvordan holder I øje med den?"</b> Med tangamperemeter på linjeledningen til spolerne (eller wattmeterets strømmåling), og ved at regne ud på forhånd: ved 100 Ω er I = 230/100 = 2,3 A, altså inden for grænsen.</li>
+      </ul>
+      <div class="flag"><b class="tag">Mangler</b>Slides siger ikke hvilken trinstilling på drejeomskifteren der giver 100 Ω. Simulatoren bruger laboratoriemodellernes estimat X<sub>L</sub>(n) = 230·11/(3,8·n), så trin 7 ≈ 95 Ω er nærmest. Derfor afviger spolestrømmen ca. 5 % fra beregningen med 100 Ω. Spørg underviseren eller mål strømmen ved 230 V og regn X<sub>L</sub> = U/I.</div>
+      <div class="flag"><b class="tag">Tastefejl</b>Slide 9–10 skriver "X<sub>L1</sub>=100 Ω" tre gange. Det skal være X<sub>L1</sub>, X<sub>L2</sub>, X<sub>L3</sub> = 100 Ω.</div>
+      <h4>Måleinstrumenter (slide 8)</h4>
+      <ul>
+        <li>Elma Contilight (gennemgangstester), tangamperemeter (clamp meter), digitalt multimeter og Metrix PX 120 effektmåler (power analyzer, måler P, Q, S, cos φ og THD).</li>
+      </ul>
+    </article>
+
+    <article class="note" id="n-a1">
+      <h3>Aktivitet 1: Symmetrisk trekantkoblet resistiv belastning</h3>
+      <ul>
+        <li>R<sub>12</sub> = R<sub>23</sub> = R<sub>31</sub> = 320 Ω i trekant (delta, Δ). Hver modstand ligger direkte over netspændingen 400 V.</li>
+        <li>Fasestrøm (phase current) i modstanden: <span class="formula-inline">I<sub>f</sub> = U<sub>L</sub>/R = 400/320 = 1,25 A</span></li>
+        <li>Linjestrøm (line current): <span class="formula-inline">I<sub>L</sub> = √3 · I<sub>f</sub> = 2,165 A</span>. √3 kommer fra at to fasestrømme 120° forskudt trækkes fra hinanden i hvert knudepunkt.</li>
+        <li>Effekt: <span class="formula-inline">P = 3 · U<sub>L</sub>²/R = 1500 W</span> = √3 · U<sub>L</sub> · I<sub>L</sub> · cos φ (cos φ = 1).</li>
+        <li><span class="term">1-wattmetermetoden</span>: strømspole i L1, spændingsspole L1–N. Måler effekten i én fase af den ækvivalente stjerne: 500 W. Total P = 3 · 500 = 1500 W. Kun gyldig fordi både net og belastning er symmetriske.</li>
+        <li><span class="term">Kirchhoffs 1. lov</span> (KCL, Kirchhoff's current law): summen af strømme ind i et knudepunkt er 0. Tang om L1+L2+L3 viser 0 A, fordi trekanten ikke har nul. Tang om L1+L2 viser |−I<sub>3</sub>| = 2,165 A.</li>
+      </ul>
+      <div class="flag"><b class="tag">Uklart</b>Diagram A viser wattmeterets spændingsspole koblet til N, selvom belastningen ikke har nul. Det er korrekt, men kun fordi målingen af "én fase" er effekten i den ækvivalente Y-kobling. Er belastningen usymmetrisk, giver 3 · W et forkert resultat.</div>
+    </article>
+
+    <article class="note" id="n-a2">
+      <h3>Aktivitet 2: Symmetrisk induktiv belastning</h3>
+      <ul>
+        <li>Terco-spolen kobles i <b>stjerne</b> (Y) parallelt med trekanten fra aktivitet 1. X<sub>L</sub> = 100 Ω pr. fase.</li>
+        <li>Spolestrøm: <span class="formula-inline">I<sub>X</sub> = U<sub>f</sub>/X<sub>L</sub> = 230/100 = 2,30 A</span>, 90° efter (lagging) fasespændingen.</li>
+        <li>Netstrømmen er den <b>vektorielle</b> sum: <span class="formula-inline">I<sub>L</sub> = √(2,165² + 2,30²) = 3,16 A</span>. Ikke 2,165 + 2,30 = 4,47 A.</li>
+        <li>Reaktiv effekt (reactive power): <span class="formula-inline">Q = 3 · U<sub>f</sub>²/X<sub>L</sub> ≈ 1590 var</span>. P er uændret 1500 W, fordi en ideel spole ikke bruger virkeeffekt.</li>
+        <li>S = √(P² + Q²) ≈ 2190 VA, cos φ = P/S ≈ 0,69.</li>
+        <li>Induktans: <span class="formula-inline">L = X<sub>L</sub>/(2πf) = 100/(2π · 50) = 0,318 H</span></li>
+        <li>Samme Q i trekant: spolen får √3 gange spændingen, så X<sub>Δ</sub> skal være 3 gange større: <span class="formula-inline">X<sub>Δ</sub> = 300 Ω, L<sub>Δ</sub> = 0,955 H</span>.</li>
+      </ul>
+      <div class="flag"><b class="tag">Uklart</b>Forberedelsen siger "tilføj netstrømmen til den induktive last". Det kan læses som almindelig plus. Strømmene står 90° på hinanden og skal lægges sammen vektorielt (Pythagoras).</div>
+      <div class="flag err"><b class="tag tagchip err">Pas på</b>Spørgsmålet om L i trekant er kun en regneøvelse. Terco MV1101 må <b>ikke</b> trekantkobles på 400 V-nettet: spolerne får 400 V, men er kun mærket 230 V (typeskilt "230 V Δ"). Simulatoren advarer hvis du prøver.</div>
+    </article>
+
+    <article class="note" id="n-a3">
+      <h3>Aktivitet 3: Usymmetrisk stjernekoblet belastning med nul</h3>
+      <ul>
+        <li>R<sub>10</sub> = 200 Ω, R<sub>20</sub> = 160 Ω, R<sub>30</sub> = 320 Ω i stjerne (star, Y) med nul (neutral, N) forbundet til stjernepunktet.</li>
+        <li>Nul holder stjernepunktet på 0 V, så hver modstand får præcis 230 V: I<sub>1</sub> = 1,15 A, I<sub>2</sub> = 1,44 A, I<sub>3</sub> = 0,72 A.</li>
+        <li>Nulstrøm: <span class="formula-inline">I<sub>N</sub> = I<sub>1</sub> + I<sub>2</sub> + I<sub>3</sub></span> (vektorielt) = |1,15∠0° + 1,44∠−120° + 0,72∠120°| = |0,072 − j0,622| ≈ 0,63 A.</li>
+        <li>P = 264,5 + 330,6 + 165,3 ≈ 760 W.</li>
+        <li><span class="term">3-wattmetermetoden</span>: én wattmeter pr. fase, strømspole i Lx og spændingsspole Lx–N. Virker for enhver belastning i et 4-leder-system.</li>
+        <li>KCL med tang: N = 0,63 A · L1+L2+L3+N = 0 · L1+L2+L3 = |I<sub>N</sub>| = 0,63 A · L1+L2+N = |I<sub>3</sub>| = 0,72 A · L2+L3+N = |I<sub>1</sub>| = 1,15 A · L3+L1+N = |I<sub>2</sub>| = 1,44 A. Altid er tangen = den leder der <i>mangler</i> i kæben.</li>
+      </ul>
+    </article>
+
+    <article class="note" id="n-a4">
+      <h3>Aktivitet 4: Usymmetrisk stjernekoblet belastning uden nul</h3>
+      <ul>
+        <li>Nul-forbindelsen til stjernepunktet fjernes. Nu bestemmer belastningen selv hvor stjernepunktet ligger: <span class="term">forskudt stjernepunkt</span> (neutral point displacement).</li>
+        <li><span class="term">Millmans sætning</span> (Millman's theorem): <span class="formula-inline">U<sub>N'N</sub> = (U<sub>1</sub>/R<sub>1</sub> + U<sub>2</sub>/R<sub>2</sub> + U<sub>3</sub>/R<sub>3</sub>) / (1/R<sub>1</sub> + 1/R<sub>2</sub> + 1/R<sub>3</sub>)</span> = 43,6 V ∠−83°.</li>
+        <li>Stjernepunktet trækkes mod faserne med <b>mindst</b> modstand (L2 og L1) og væk fra L3. Den fase med størst modstand får størst spænding: U<sub>1N'</sub> ≈ 229 V, U<sub>2N'</sub> ≈ 197 V, U<sub>3N'</sub> ≈ 271 V.</li>
+        <li>Alternativ: <span class="term">Y-Δ-transformation</span> (star-delta transform): R<sub>12</sub> = ΣR<sub>i</sub>R<sub>j</sub>/R<sub>3</sub> = 460 Ω, R<sub>23</sub> = 736 Ω, R<sub>31</sub> = 920 Ω. Så regnes som trekant på 400 V.</li>
+        <li>P ≈ 733 W (med 230 V fase, 739 W med 400 V). Lavere end 760 W i aktivitet 3, fordi spændingen flyttes fra de små modstande (der tager mest effekt) over på den store.</li>
+        <li><span class="term">2-wattmetermetoden / Aron-kobling</span>: strømspoler i L1 og L3, spændingsspoler mod L2. P = W<sub>1</sub> + W<sub>2</sub> ≈ 431 + 302 = 733 W. Virker for enhver belastning i et 3-leder-system, fordi I<sub>1</sub> + I<sub>2</sub> + I<sub>3</sub> = 0.</li>
+        <li>Voltmeter mellem N og stjernepunktet måler forskydningen (ca. 44 V).</li>
+      </ul>
+      <div class="flag"><b class="tag">Uklart</b>Forberedelsen nævner "Y-D transformation mv." for aktivitet 4 uden at nævne Millman. Y-Δ giver strømme og effekt, men stjernepunktsspændingen (som skal måles) får du mest direkte med Millman. Brug begge som kontrol af hinanden.</div>
+    </article>
+
+    <article class="note" id="n-watt">
+      <h3>Wattmetermetoder samlet</h3>
+      <div class="tablewrap"><table>
+        <tr><th>Metode</th><th>Net</th><th>Belastning</th><th>Formel</th><th>Brugt i</th></tr>
+        <tr><td>1-wattmeter</td><td>3- eller 4-leder (kræver adgang til N eller kunstigt nulpunkt)</td><td>Kun symmetrisk</td><td>P = 3 · W</td><td>Akt. 1–2</td></tr>
+        <tr><td>2-wattmeter (Aron)</td><td>3-leder uden nul</td><td>Vilkårlig</td><td>P = W<sub>1</sub> + W<sub>2</sub>; ved symmetri Q = √3(W<sub>2</sub> − W<sub>1</sub>)</td><td>Akt. 4</td></tr>
+        <tr><td>3-wattmeter</td><td>4-leder med nul</td><td>Vilkårlig</td><td>P = W<sub>1</sub> + W<sub>2</sub> + W<sub>3</sub></td><td>Akt. 3</td></tr>
+      </table></div>
+      <ul>
+        <li>Aron ved symmetri: W<sub>1</sub> = U<sub>L</sub>I<sub>L</sub>cos(30° + φ) og W<sub>2</sub> = U<sub>L</sub>I<sub>L</sub>cos(30° − φ). Ved cos φ = 0,5 viser W<sub>1</sub> nul, og under 0,5 bliver W<sub>1</sub> negativ. Det er ikke en fejl, men skal medregnes med fortegn.</li>
+        <li><span class="term">Lus over strømspolen</span> (shorting link) ved indkobling: spoler og motorer giver en stor indkoblingsstrøm (inrush). Lusen kortslutter strømspolen så den ikke overbelastes. Fjernes når strømmen er stabil. Prøv det på wattmetrene i simulatoren.</li>
+      </ul>
+    </article>
+
+    <article class="note" id="n-maal">
+      <h3>Måleteknik</h3>
+      <ul>
+        <li><span class="term">Pilen på tangens kæbe</span> viser den positive strømretning (fra forsyning mod belastning). For en ren strømværdi (RMS) betyder retningen intet, men når tangen bruges på en effektmåler (PX 120), bestemmer retningen fortegnet på P. Vendt forkert får du negativ effekt.</li>
+        <li>Tang om flere ledere måler den vektorielle sum af strømmene. Det bruges til at demonstrere KCL.</li>
+        <li><span class="term">Måleusikkerhed</span> (measurement uncertainty) står i databladet som ±(x % af aflæsning + n digits). Eks. ±(1 % + 3 dgt) på 2,165 A med 0,001 A opløsning: ±(0,022 + 0,003) = ±0,025 A.</li>
+        <li>Afvigelser mellem målt og beregnet skyldes typisk: netspænding ≠ 230 V, modstandstolerance, at modstandene bliver varme (R stiger med temperaturen), instrumentusikkerhed og spolens egen kobbermodstand.</li>
+        <li>Wattmeterets fortegn: strømmen skal ind i stjerne-terminalen (I*) og spændingsspolens stjerne (U*) på samme fase. Bytter du om på én af dem, viser instrumentet negativ effekt.</li>
+      </ul>
+    </article>
+
+    <article class="note" id="n-rapport">
+      <h3>Målerapport og aflevering</h3>
+      <ul>
+        <li>2 sider: 1 side med tabeller og grafer, 1 side med besvarelse af spørgsmål og observationer.</li>
+        <li>Navngivning i Wiseflow: GRx-dato-hold-Labx-forfattere. Gruppenavn "Gruppe a/b/c".</li>
+        <li>Plagiat og ukorrekt parafrasering behandles efter Teknikas eksamensregler.</li>
+      </ul>
+      <div class="flag"><b class="tag">Uklart</b>Eksempelrapporten på slide 15 handler om en frekvensomformer, THD og en reluktansmotor, ikke om denne øvelse. Brug den kun som layout-eksempel. Slide 14 er selv mærket "IKKE 100 % opdateret".</div>
+    </article>
+
+    <article class="note" id="n-flag">
+      <h3>Samlet liste over uklarheder og fejl i PDF'en</h3>
+      <ul>
+        <li><span class="tagchip err">Fejl</span>X<sub>L1</sub> skrevet tre gange i stedet for X<sub>L1</sub>, X<sub>L2</sub>, X<sub>L3</sub> (slide 9 og 10).</li>
+        <li><span class="tagchip">Mangler</span>Hvilket trin på Terco-spolen giver 100 Ω.</li>
+        <li><span class="tagchip">Uklart</span>"2.6/2.2 kVAr 50/60 Hz" står lige over "3.8/6.6 A Y/Δ" og læses let som Y/Δ-værdier. Det er 50/60 Hz.</li>
+        <li><span class="tagchip err">Pas på</span>L i trekant (akt. 2) kan ikke afprøves med Terco-spolen på 400 V.</li>
+        <li><span class="tagchip">Uklart</span>"Maksimal belastningsstrøm" uden angivelse af hvilken komponent.</li>
+        <li><span class="tagchip">Uklart</span>"Tilføj netstrømmen" skal være vektoriel addition.</li>
+        <li><span class="tagchip">Uklart</span>Y-Δ nævnt for akt. 4, men Millman er den direkte vej til stjernepunktsspændingen.</li>
+        <li><span class="tagchip">Uklart</span>3 × 400/230 V: 400/√3 = 230,9 V.</li>
+        <li><span class="tagchip">Uklart</span>10 A pr. modstand er aldrig grænsen, det er 1 kW. 25 A gælder bøsningerne.</li>
+        <li><span class="tagchip">Uklart</span>Eksempelrapporten (slide 15) er fra en anden øvelse.</li>
+        <li><span class="tagchip">Mangler</span>Læringsmålene nævner THD-måler, ikke-lineære belastninger og spændingsfald, men øvelsen indeholder ingen opgaver om dem. Spændingsfald har fået en model under Modeller.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<!-- ================= MODELLER ================= -->
+<section class="page" id="p-modeller" hidden>
+  <h2>Interaktive modeller</h2>
+  <p class="lead">Hver model har formlen ved siden af. Standardværdierne er øvelsens. Skift tal og se hvad der sker. Simulatoren ovenfor bruger de samme beregninger, men i et rigtigt kredsløb.</p>
+  <div class="toc" id="modelToc"></div>
+  <div class="models" id="models"></div>
+</section>
+
+<!-- ================= FORSTÅELSE ================= -->
+<section class="page" id="p-forstaa" hidden>
+  <h2>Forståelse</h2>
+  <div class="understand">
+    <article class="note">
+      <h3>De 9 vigtigste ting at huske</h3>
+      <ol class="keylist">
+        <li><div><b>Δ: I<sub>L</sub> = √3 · I<sub>f</sub>, og U<sub>f</sub> = U<sub>L</sub>.</b> Y: U<sub>L</sub> = √3 · U<sub>f</sub>, og I<sub>f</sub> = I<sub>L</sub>.</div></li>
+        <li><div><b>Samme modstande i Δ giver 3 gange så meget effekt som i Y.</b> Det er hele idéen bag Y/Δ-start.</div></li>
+        <li><div><b>Strømme lægges sammen som vektorer.</b> R-strøm og L-strøm står 90° fra hinanden: Pythagoras, aldrig almindelig plus.</div></li>
+        <li><div><b>Kirchhoffs 1. lov med tang:</b> alle ledere i kæben giver 0 A. Mangler én leder, viser tangen netop den lederes strøm.</div></li>
+        <li><div><b>Nul holder stjernepunktet fast.</b> Med nul får hver fase 230 V, og usymmetri giver bare nulstrøm.</div></li>
+        <li><div><b>Uden nul flytter stjernepunktet sig</b> mod fasen med lavest impedans, og den højeste modstand får overspænding (her 271 V i stedet for 230 V).</div></li>
+        <li><div><b>Vælg wattmetermetode efter net og belastning:</b> 1 W kun symmetri, 2 W (Aron) i 3-leder, 3 W i 4-leder.</div></li>
+        <li><div><b>Læs typeskiltet før tilslutning.</b> "400 V Y / 230 V Δ" betyder at viklingen tåler 230 V. Kun Y på 400 V-net.</div></li>
+        <li><div><b>Sikkerhed:</b> PE på alt udstyr, gennemgangstest 200 mA, opstilling godkendt før tænd, kun målinger under spænding.</div></li>
+      </ol>
+    </article>
+
+    <h3 style="margin-top:6px">Praktiske eksempler fra virkeligheden</h3>
+    <div class="ex">
+      <article class="note"><h4>Symmetrisk Δ (akt. 1)</h4><p>Varmelegemer i en kedel eller brændselsolieforvarmer om bord er ofte tre ens elementer i trekant på 400/440 V. Brænder ét element over, bliver belastningen usymmetrisk og to linjestrømme falder. Det kan du se på tangen før det giver alarm.</p></article>
+      <article class="note"><h4>Induktiv belastning (akt. 2)</h4><p>Asynkronmotorer til pumper og blæsere trækker magnetiseringsstrøm som en spole. Det løfter netstrømmen og sænker cos φ på tavlen, og generatoren skal levere mere strøm end virkeeffekten alene kræver. Derfor kompenseres med kondensatorer.</p></article>
+      <article class="note"><h4>Y med nul (akt. 3)</h4><p>En 230 V gruppetavle med lys, stikkontakter og kabyssens enfasede apparater fordelt på L1, L2 og L3. Faserne bliver aldrig ens belastet, og nullen fører differensstrømmen. Med ikke-lineære laster (LED, PC) kan nulstrømmen blive større end fasestrømmene.</p></article>
+      <article class="note"><h4>Y uden nul (akt. 4)</h4><p>Skibsnet er typisk 3-leder IT-net (440 V) uden nul. Et afbrudt nul i en landtavle giver det samme fænomen: stjernepunktet flytter sig, og apparaterne på den let belastede fase får op mod 400 V og brænder af.</p></article>
+      <article class="note"><h4>Aron-kobling</h4><p>Energimålere og effekttransducere i 3-leder tavler bruger to-elementmåling (Aron). Ved tomgangsdrift af en motor (lav cos φ) kan det ene element vise negativ effekt. Det er normalt.</p></article>
+      <article class="note"><h4>Sikkerhed og typeskilte</h4><p>Ved udskiftning af en motor om bord: står der "690 V Y / 400 V Δ", skal den kobles Δ på 400 V-nettet. Står der "400 V Y / 230 V Δ", skal den kobles Y. Forkert kobling giver √3 for høj spænding på viklingen.</p></article>
+    </div>
+
+    <article class="note">
+      <h3>Typiske fejl og misforståelser</h3>
+      <ul>
+        <li><b>Plus i stedet for vektorsum:</b> I = 2,165 + 2,30 = 4,47 A er forkert. Rigtigt: 3,16 A.</li>
+        <li><b>√3 det forkerte sted:</b> i Δ er spændingen den samme og strømmen √3 større. Folk dividerer ofte spændingen med √3 i trekant.</li>
+        <li><b>1-wattmeter på usymmetrisk last:</b> 3 · W giver et forkert resultat, så snart faserne er forskelligt belastet.</li>
+        <li><b>At tro tangen om L1+L2+L3 skal vise noget:</b> i et 3-leder system er summen altid 0. I 4-leder er den lig nulstrømmen.</li>
+        <li><b>At regne akt. 4 med 230 V pr. fase:</b> uden nul gælder det ikke længere. Find stjernepunktet først.</li>
+        <li><b>Negativ wattmeteraflæsning = fejl:</b> ikke nødvendigvis. I Aron-kobling ved cos φ < 0,5, eller fordi strømspolen er vendt.</li>
+        <li><b>Wattmeterets strømspole parallelt:</b> strømspolen har næsten 0 Ω. Parallelt over spændingen er det en kortslutning.</li>
+        <li><b>Glemt PE på modstandsbanken:</b> hus uden jord kan blive spændingsførende ved en isolationsfejl.</li>
+        <li><b>Blande 230 V og 400/√3 = 230,9 V</b> i samme beregning.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<!-- ================= TEST ================= -->
+<section class="page" id="p-test" hidden>
+  <h2>Test dig selv</h2>
+  <div style="display:flex;gap:16px;align-items:baseline;flex-wrap:wrap"><h3>Quiz · 10 spørgsmål</h3><span class="score" id="score">0 / 10</span><button class="btn" id="quizReset">Start forfra</button></div>
+  <div class="quiz" id="quiz"></div>
+
+  <h3 style="margin-top:28px">Regneopgaver med trin-for-trin løsning</h3>
+  <div class="quiz" id="exercises"></div>
+</section>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+"use strict";
+/* ============ hjælpere ============ */
+const $=(s,e=document)=>e.querySelector(s), $$=(s,e=document)=>[...e.querySelectorAll(s)];
+const NS='http://www.w3.org/2000/svg';
+function sv(tag,attrs,parent){const e=document.createElementNS(NS,tag);if(attrs)for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+function txt(parent,x,y,s,attrs){const t=sv('text',Object.assign({x,y},attrs||{}),parent);t.textContent=s;return t;}
+const cx={a:(p,q)=>[p[0]+q[0],p[1]+q[1]],s:(p,q)=>[p[0]-q[0],p[1]-q[1]],m:(p,q)=>[p[0]*q[0]-p[1]*q[1],p[0]*q[1]+p[1]*q[0]],
+  d:(p,q)=>{const n=q[0]*q[0]+q[1]*q[1];return[(p[0]*q[0]+p[1]*q[1])/n,(p[1]*q[0]-p[0]*q[1])/n]},abs:p=>Math.hypot(p[0],p[1]),
+  arg:p=>Math.atan2(p[1],p[0])*180/Math.PI,pol:(r,d)=>[r*Math.cos(d*Math.PI/180),r*Math.sin(d*Math.PI/180)],conj:p=>[p[0],-p[1]],k:(p,k)=>[p[0]*k,p[1]*k]};
+const fmt=(v,d=2)=>(isFinite(v)?v.toFixed(d):'∞').replace('.',',');
+const SQ3=Math.sqrt(3);
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,3200);}
+
+/* ============ faner ============ */
+function showTab(id){$$('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===id));$$('section.page').forEach(s=>s.hidden=s.id!=='p-'+id);try{history.replaceState(null,'','#'+id)}catch(e){}}
+$$('nav.tabs button').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+{const h=(location.hash||'').slice(1);if(['sim','noter','modeller','forstaa','test'].includes(h))showTab(h);}
+
+/* ============ bænk: terminaler ============ */
+const T={};
+function term(id,x,y,kind,label,comp){T[id]={id,x,y,kind,label,comp};}
+term('S.L1',196,92,'L1','L1','S');term('S.L2',196,138,'L2','L2','S');term('S.L3',196,184,'L3','L3','S');term('S.N',196,230,'N','N','S');term('S.PE',196,276,'PE','PE','S');
+for(let k=1;k<=3;k++){const x0=250+170*(k-1);term(`W${k}.Is`,x0+26,166,'red','+ I*','W'+k);term(`W${k}.I`,x0+60,166,'black','COM','W'+k);term(`W${k}.Us`,x0+94,166,'red','+ U*','W'+k);term(`W${k}.U`,x0+126,166,'black','COM','W'+k);}
+for(let k=1;k<=2;k++){const x0=760+120*(k-1);term(`V${k}.a`,x0+30,166,'red','ΩV','V'+k);term(`V${k}.b`,x0+76,166,'black','COM','V'+k);}
+[['A.R1p',46,'R1+'],['A.R1m',86,'R1−'],['A.R2p',146,'R2+'],['A.R2m',186,'R2−'],['A.R3p',246,'R3+'],['A.R3m',286,'R3−']].forEach(([i,x,l])=>term(i,x,412,'black',l,'A'));term('A.PE',346,412,'PE','⏚','A');
+for(let k=1;k<=3;k++){const y=478+(k-1)*62;term(`X.L${k}i`,426,y,'black','L'+k,'X');term(`X.L${k}o`,714,y,'black','L'+k,'X');}
+term('X.PE',726,424,'PE','⏚','X');
+[['B.R1',806,'R1'],['B.R2',856,'R2'],['B.R3',906,'R3'],['B.Rn',956,'Rn']].forEach(([i,x,l])=>term(i,x,412,'black',l,'B'));term('B.PE',1016,412,'PE','⏚','B');
+
+const SUP={'S.L1':'L1','S.L2':'L2','S.L3':'L3','S.N':'N','S.PE':'PE'};
+const VALS_A=[200,400,800,1600],LBL_A=['200R','400R','800R','1K6'];
+const VALS_B=[57.5,115,230,460],LBL_B=['57R5','115R','230R','460R'];
+const XL_TAPS=[0,...Array.from({length:11},(_,i)=>Math.round(230*11/(3.8*(i+1))*10)/10)];
+const XL_100=XL_TAPS[7];
+
+/* ============ tilstand ============ */
+const S={contiSet:new Set(),free:false,wires:[],on:false,trip:null,bankA:[[0,1,0,1],[0,1,0,1],[0,1,0,1]].map(r=>r.map(Boolean)),bankB:[[0,0,1,0],[0,1,0,0],[0,1,1,0]].map(r=>r.map(Boolean)),
+  xl:XL_TAPS[7],xFuse:[false,false,false],lus:[false,false,false],Uf:230,noise:false,clamp:{L1:true,L2:false,L3:false,N:false},act:1,sel:-1};
+let wid=1;
+const par=(sw,vals)=>{let g=0;sw.forEach((on,i)=>{if(on)g+=1/vals[i]});return g?1/g:Infinity;};
+
+/* ============ net-topologi ============ */
+function finder(withCoils){const p={};for(const id in T)p[id]=id;const f=x=>{while(p[x]!==x){p[x]=p[p[x]];x=p[x];}return x;};const u=(a,b)=>{a=f(a);b=f(b);if(a!==b)p[a]=b;};
+  S.wires.forEach(w=>u(w.a,w.b));if(withCoils)for(let k=1;k<=3;k++)u(`W${k}.Is`,`W${k}.I`);return f;}
+function labelMap(f){const m={};for(const t in SUP){const r=f(t);(m[r]=m[r]||new Set()).add(SUP[t]);}return m;}
+function topo(){const f=finder(false),fe=finder(true),lm=labelMap(f),le=labelMap(fe);
+  const one=s=>{if(!s)return null;const a=[...s].filter(x=>x!=='PE');if(a.length===1)return a[0];if(a.length===0&&s.has('PE'))return 'PE';return a.length?'X':null;};
+  return{f,fe,dir:t=>one(lm[f(t)]),eff:t=>one(le[fe(t)]),wired:t=>S.wires.some(w=>w.a===t||w.b===t)};}
+
+/* ============ elementer og løser (knudepunktsmetoden) ============ */
+function elements(){const E=[];
+  for(let k=0;k<3;k++){const r=par(S.bankA[k],VALS_A);if(isFinite(r))E.push({id:'A'+k,a:`A.R${k+1}p`,b:`A.R${k+1}m`,z:[r,0],kind:'R',bank:'A',k});}
+  for(let k=0;k<3;k++){const r=par(S.bankB[k],VALS_B);if(isFinite(r))E.push({id:'B'+k,a:`B.R${k+1}`,b:'B.Rn',z:[r,0],kind:'R',bank:'B',k});}
+  if(S.xl>0)for(let k=0;k<3;k++)if(!S.xFuse[k])E.push({id:'X'+k,a:`X.L${k+1}i`,b:`X.L${k+1}o`,z:[0,S.xl],kind:'X',k});
+  for(let k=1;k<=3;k++)E.push({id:'W'+k,a:`W${k}.Is`,b:`W${k}.I`,z:[0.01,0],kind:'coil',k});
+  return E;}
+function linsolve(A,b){const n=b.length;for(let i=0;i<n;i++){let p=i,best=cx.abs(A[i][i]);for(let r=i+1;r<n;r++){const v=cx.abs(A[r][i]);if(v>best){best=v;p=r;}}
+  [A[i],A[p]]=[A[p],A[i]];[b[i],b[p]]=[b[p],b[i]];const piv=A[i][i];if(cx.abs(piv)<1e-300)continue;
+  for(let r=i+1;r<n;r++){const fct=cx.d(A[r][i],piv);if(fct[0]===0&&fct[1]===0)continue;for(let c=i;c<n;c++)A[r][c]=cx.s(A[r][c],cx.m(fct,A[i][c]));b[r]=cx.s(b[r],cx.m(fct,b[i]));}}
+  const x=new Array(n).fill(0).map(()=>[0,0]);for(let i=n-1;i>=0;i--){let s=b[i];for(let c=i+1;c<n;c++)s=cx.s(s,cx.m(A[i][c],x[c]));x[i]=cx.abs(A[i][i])<1e-300?[0,0]:cx.d(s,A[i][i]);}return x;}
+
+function solve(){const f=finder(false),lm=labelMap(f),E=elements();const R={fault:null,Vt:{},Ie:{},sup:{L1:[0,0],L2:[0,0],L3:[0,0],N:[0,0],PE:[0,0]},E,f};
+  for(const r in lm){const s=lm[r],L=[...s].filter(x=>x[0]==='L');
+    if(L.length>1)R.fault=`Kortslutning ${L.join('–')}. Diazed-sikringen er brændt.`;
+    else if(L.length&&s.has('N'))R.fault=`Kortslutning ${L[0]}–N. Diazed-sikringen er brændt.`;
+    else if(L.length&&s.has('PE'))R.fault=`Jordfejl ${L[0]}–PE. RCD type B har slået fra.`;}
+  for(const t in T)R.Vt[t]=[0,0];
+  if(!S.on||R.fault){E.forEach(e=>R.Ie[e.id]=[0,0]);return R;}
+  const U=S.Uf,fixedV={L1:cx.pol(U,0),L2:cx.pol(U,-120),L3:cx.pol(U,120),N:[0,0],PE:[0,0]};
+  const roots=new Set(Object.keys(T).map(t=>f(t))),fixed={},idx={};let n=0;
+  roots.forEach(r=>{if(lm[r]){const l=[...lm[r]][0];fixed[r]=fixedV[l];}else idx[r]=n++;});
+  const A=[...Array(n)].map(()=>[...Array(n)].map(()=>[0,0])),b=[...Array(n)].map(()=>[0,0]);
+  for(let i=0;i<n;i++)A[i][i]=[1e-9,0];
+  E.forEach(e=>{const ra=f(e.a),rb=f(e.b);if(ra===rb)return;const y=cx.d([1,0],e.z);
+    const ia=idx[ra],ib=idx[rb];
+    if(ia!==undefined){A[ia][ia]=cx.a(A[ia][ia],y);if(ib!==undefined)A[ia][ib]=cx.s(A[ia][ib],y);else b[ia]=cx.a(b[ia],cx.m(y,fixed[rb]));}
+    if(ib!==undefined){A[ib][ib]=cx.a(A[ib][ib],y);if(ia!==undefined)A[ib][ia]=cx.s(A[ib][ia],y);else b[ib]=cx.a(b[ib],cx.m(y,fixed[ra]));}});
+  const x=n?linsolve(A,b):[];const Vn=r=>fixed[r]!==undefined?fixed[r]:x[idx[r]];
+  for(const t in T)R.Vt[t]=Vn(f(t));
+  E.forEach(e=>{const ra=f(e.a),rb=f(e.b);R.Ie[e.id]=ra===rb?[0,0]:cx.d(cx.s(Vn(ra),Vn(rb)),e.z);});
+  for(const t of ['L1','L2','L3','N','PE']){const r=f('S.'+t);let I=[0,0];E.forEach(e=>{const ra=f(e.a),rb=f(e.b);if(ra===rb)return;if(ra===r)I=cx.a(I,R.Ie[e.id]);if(rb===r)I=cx.s(I,R.Ie[e.id]);});R.sup[t]=I;}
+  if(lm[f('S.PE')]&&lm[f('S.PE')].has('N')&&cx.abs(R.sup.N)>0.03)R.fault='Nul og PE er forbundet efter RCD\'en. Nulstrøm løber i PE, og RCD type B har slået fra.';
+  else if(cx.abs(R.sup.PE)>0.03)R.fault='Strøm i PE. RCD type B har slået fra.';
+  for(const l of ['L1','L2','L3'])if(!R.fault&&cx.abs(R.sup[l])>10)R.fault=`Overstrøm i ${l}: ${fmt(cx.abs(R.sup[l]),1)} A > 10 A. Diazed-sikringen er brændt.`;
+  return R;}
+
+/* ============ beregning af det forventede (PDF-værdier) ============ */
+function calcY(Rs,Uf,withN){const V=[cx.pol(Uf,0),cx.pol(Uf,-120),cx.pol(Uf,120)];let Vs=[0,0];
+  if(!withN){let num=[0,0],den=0;V.forEach((v,k)=>{num=cx.a(num,cx.k(v,1/Rs[k]));den+=1/Rs[k];});Vs=cx.k(num,1/den);}
+  const Up=V.map(v=>cx.s(v,Vs)),I=Up.map((u,k)=>cx.k(u,1/Rs[k])),IN=I.reduce(cx.a,[0,0]),P=I.map((i,k)=>cx.abs(i)**2*Rs[k]);
+  const W1=cx.m(cx.s(V[0],V[1]),cx.conj(I[0]))[0],W2=cx.m(cx.s(V[2],V[1]),cx.conj(I[2]))[0];
+  return{V,Vs,Up,I,IN,P,Ptot:P[0]+P[1]+P[2],W1,W2};}
+function calcDelta(R,X,Uf){const V=[cx.pol(Uf,0),cx.pol(Uf,-120),cx.pol(Uf,120)];
+  const I=V.map(v=>{let i=cx.k(v,3/R);if(X)i=cx.a(i,cx.d(v,[0,X]));return i;});
+  const P=3*(SQ3*Uf)**2/R,Q=X?3*Uf*Uf/X:0;return{V,I,If:SQ3*Uf/R,P,Q,S:Math.hypot(P,Q),W:Uf*cx.abs(I[0])*(P/Math.hypot(P,Q))};}
+
+/* ============ aktiviteter ============ */
+const ACTS={
+ 1:{desc:'Symmetrisk Δ-koblet resistiv last. R12 = R23 = R31 = 320 Ω på den grå bank. 1-wattmetermetoden: strømspole i L1, spændingsspole L1–N.',
+    vals(){S.bankA=[[0,1,0,1],[0,1,0,1],[0,1,0,1]].map(r=>r.map(Boolean));},
+    wires:[['S.L1','W1.Is'],['W1.Is','W1.Us'],['W1.U','S.N'],['W1.I','A.R1p'],['A.R1p','A.R3m'],['S.L2','A.R1m'],['A.R1m','A.R2p'],['S.L3','A.R2m'],['A.R2m','A.R3p'],['S.PE','A.PE']],
+    combos:[['L1','L2','L3'],['L1','L2'],['L2','L3'],['L3','L1']]},
+ 2:{desc:'Som aktivitet 1, plus Terco-spolen i Y parallelt (XL = 100 Ω pr. fase). Mål P, netstrømme og spændinger.',
+    vals(){ACTS[1].vals();S.xl=XL_100;},
+    wires:null, combos:[['L1'],['L1','L2','L3'],['L1','L2']]},
+ 3:{desc:'Usymmetrisk Y med nul på den grå bank: R10 = 200 Ω (200R), R20 = 160 Ω (200R + 800R), R30 = 320 Ω (400R + 1K6). R1−, R2− og R3− samles til stjernepunkt og forbindes til N. 3-wattmetermetoden.',
+    vals(){S.bankA=[[1,0,0,0],[1,0,1,0],[0,1,0,1]].map(r=>r.map(Boolean));},
+    wires:[['S.L1','W1.Is'],['W1.Is','W1.Us'],['W1.I','A.R1p'],['S.L2','W2.Is'],['W2.Is','W2.Us'],['W2.I','A.R2p'],['S.L3','W3.Is'],['W3.Is','W3.Us'],['W3.I','A.R3p'],['S.N','W1.U'],['W1.U','W2.U'],['W2.U','W3.U'],['A.R1m','A.R2m'],['A.R2m','A.R3m'],['S.N','A.R1m'],['S.PE','A.PE']],
+    combos:[['N'],['L1','L2','L3','N'],['L1','L2','L3'],['L1','L2','N'],['L2','L3','N'],['L3','L1','N']]},
+ 4:{desc:'Som aktivitet 3, men uden nul til stjernepunktet. 2-wattmetermetoden (Aron): strømspoler i L1 og L3, spændingsspoler mod L2. Voltmeter mellem N og stjernepunktet.',
+    vals(){ACTS[3].vals();},
+    wires:[['S.L1','W1.Is'],['W1.Is','W1.Us'],['W1.I','A.R1p'],['W1.U','S.L2'],['S.L2','A.R2p'],['S.L3','W2.Is'],['W2.Is','W2.Us'],['W2.I','A.R3p'],['W2.U','A.R2p'],['A.R1m','A.R2m'],['A.R2m','A.R3m'],['S.N','V1.a'],['V1.b','A.R1m'],['S.PE','A.PE']],
+    combos:[['L1','L2','L3'],['L1'],['L2'],['L3']]}};
+ACTS[2].wires=[...ACTS[1].wires,['A.R1p','X.L1i'],['A.R2p','X.L2i'],['A.R3p','X.L3i'],['X.L1o','X.L2o'],['X.L2o','X.L3o'],['A.PE','X.PE']];
+
+function wireColor(a,b){const tp=topo();const l=SUP[a]||SUP[b]||tp.eff(a)||tp.eff(b);return{L1:'l1',L2:'l2',L3:'l3',N:'n',PE:'pe'}[l]||'red';}
+function addWire(a,b){if(a===b)return false;if(S.wires.some(w=>(w.a===a&&w.b===b)||(w.a===b&&w.b===a)))return false;
+  if(T[a].kind==='PE'!==(T[b].kind==='PE')&&(T[a].kind==='PE'||T[b].kind==='PE')){}
+  S.wires.push({id:wid++,a,b,c:wireColor(a,b)});return true;}
+function loadPreset(n){S.on=false;S.contiSet=new Set();S.trip=null;S.wires=[];S.xFuse=[false,false,false];S.lus=[false,false,false];ACTS[n].vals();ACTS[n].wires.forEach(([a,b])=>addWire(a,b));S.sel=-1;}
+
+/* ============ underviser-tjek ============ */
+const near=(a,b)=>Math.abs(a-b)/b<0.01;
+function checks(){const tp=topo(),A=S.act,out=[];const ok=(t,c)=>out.push([t,!!c]);
+  const rA=[0,1,2].map(k=>par(S.bankA[k],VALS_A)),rB=[0,1,2].map(k=>par(S.bankB[k],VALS_B));
+  const coilIn=(k,ph)=>tp.dir(`W${k}.Is`)===ph&&tp.dir(`W${k}.I`)==null&&tp.eff(`W${k}.I`)===ph;
+  const wm=(ph,ua,ub)=>[1,2,3].find(k=>coilIn(k,ph)&&tp.eff(`W${k}.Us`)===ua&&tp.eff(`W${k}.U`)===ub);
+  const anyCoil=ph=>[1,2,3].some(k=>coilIn(k,ph));
+  if(A===1||A===2){
+    ok('Grå bank: R1, R2, R3 = 320 Ω (400R + 1K6)',rA.every(r=>near(r,320)));
+    const pairs=[0,1,2].map(k=>[tp.eff(`A.R${k+1}p`),tp.eff(`A.R${k+1}m`)].sort().join('-'));
+    ok('Modstandene sidder i trekant: én over hver netspænding L1–L2, L2–L3, L3–L1',['L1-L2','L2-L3','L1-L3'].every(p=>pairs.includes(p)));
+    ok('Wattmeter: strømspole i serie i L1',anyCoil('L1'));
+    ok('Wattmeter: spændingsspole mellem L1 (U*) og N (U)',!!wm('L1','L1','N'));
+    ok('Grå bank jordet (PE)',tp.eff('A.PE')==='PE');}
+  if(A===2){
+    ok('Spole på trin 7 (X_L ≈ 95 Ω, nærmest de 100 Ω)',S.xl===XL_100);
+    const ins=[1,2,3].map(k=>tp.eff(`X.L${k}i`)).sort().join(',');
+    ok('Spolernes indgange på L1, L2 og L3',ins==='L1,L2,L3');
+    const st=new Set([1,2,3].map(k=>tp.fe(`X.L${k}o`)));
+    ok('Spolernes udgange samlet i ét stjernepunkt (Y), ikke forbundet til nul',st.size===1&&tp.eff('X.L1o')==null&&tp.wired('X.L1o'));
+    ok('Spolebank jordet (PE)',tp.eff('X.PE')==='PE');}
+  if(A===3||A===4){const st=tp.fe('A.R1m');
+    ok('Grå bank: R1 = 200 Ω, R2 = 160 Ω, R3 = 320 Ω',near(rA[0],200)&&near(rA[1],160)&&near(rA[2],320));
+    ok('R1+ på L1, R2+ på L2, R3+ på L3',tp.eff('A.R1p')==='L1'&&tp.eff('A.R2p')==='L2'&&tp.eff('A.R3p')==='L3');
+    ok('R1−, R2− og R3− samlet i ét stjernepunkt',tp.wired('A.R1m')&&tp.fe('A.R2m')===st&&tp.fe('A.R3m')===st);}
+  if(A===3){
+    ok('Stjernepunktet forbundet til N',tp.eff('A.R1m')==='N');
+    ['L1','L2','L3'].forEach(ph=>ok(`Wattmeter i ${ph}: strømspole i ${ph}, spændingsspole ${ph}–N`,!!wm(ph,ph,'N')));
+    ok('Grå bank jordet (PE)',tp.eff('A.PE')==='PE');}
+  if(A===4){
+    ok('Stjernepunktet IKKE forbundet til N',tp.eff('A.R1m')!=='N'&&tp.eff('A.R1m')!=='PE');
+    ok('Aron W-a: strømspole i L1, spændingsspole L1–L2',!!wm('L1','L1','L2'));
+    ok('Aron W-b: strømspole i L3, spændingsspole L3–L2',!!wm('L3','L3','L2'));
+    ok('Voltmeter mellem N og stjernepunktet',[1,2].some(k=>{const a=tp.eff(`V${k}.a`),b=tp.eff(`V${k}.b`);const rn=tp.fe('A.R1m');return (a==='N'&&tp.fe(`V${k}.b`)===rn)||(b==='N'&&tp.fe(`V${k}.a`)===rn);}));
+    ok('Grå bank jordet (PE)',tp.eff('A.PE')==='PE');}
+  const r0=(()=>{const save=S.on;S.on=true;const r=solve();S.on=save;return r;})();
+  ok('Ingen kortslutning eller jordfejl',!r0.fault);
+  {const u=contiUsed(tp);const miss=u.filter(c=>!S.contiSet.has(c));ok(u.length&&miss.length?`Gennemgangstest af PE mangler på ${miss.map(c=>CONTI_NAMES[c]).join(', ')}`:'Gennemgangstest af PE udført med Conti Light (200 mA)',u.length>0&&!miss.length);}
+  return out;}
+
+/* ============ måleskema ============ */
+function wReading(R,k){if(!S.on||S.lus[k-1])return 0;const I=R.Ie['W'+k]||[0,0];const U=cx.s(R.Vt[`W${k}.Us`],R.Vt[`W${k}.U`]);return cx.m(U,cx.conj(I))[0];}
+function vReading(R,k){return S.on?cx.abs(cx.s(R.Vt[`V${k}.a`],R.Vt[`V${k}.b`])):0;}
+function clampSum(R,list){return cx.abs(list.reduce((s,l)=>cx.a(s,R.sup[l]),[0,0]));}
+function activeW(){const tp=topo();return [1,2,3].filter(k=>tp.wired(`W${k}.Is`)&&tp.wired(`W${k}.I`));}
+function sheet(R){const U=S.Uf,A=S.act,rows=[];const r=(l,u,c,m,d=2)=>rows.push({l,u,c,m,d});
+  const sl=l=>cx.abs(R.sup[l]);
+  if(A===1||A===2){const c=calcDelta(320,A===2?100:0,U);const W=activeW();const w0=W.length?wReading(R,W[0]):0;
+    r('U L1–L2','V',SQ3*U,S.on?cx.abs(cx.s(R.Vt['S.L1'],R.Vt['S.L2'])):0,1);
+    r('I fase (R12)','A',c.If,cx.abs(R.Ie.A0||[0,0]),3);
+    ['L1','L2','L3'].forEach((l,i)=>r('I '+l,'A',cx.abs(c.I[i]),sl(l),3));
+    r('Wattmeter (1 fase)','W',c.P/3,w0,1);
+    r('P total = 3 · W','W',c.P,3*w0,0);
+    if(A===2){r('Q total (beregnet)','var',c.Q,NaN,0);const Ii=sl('L1');r('cos φ = P / (√3·U·I)','',c.P/c.S,Ii?3*w0/(3*U*Ii):0,3);}
+    ACTS[A].combos.forEach(cb=>r('Tang '+cb.join('+'),'A',cx.abs(cb.reduce((s,l)=>cx.a(s,c.I[['L1','L2','L3'].indexOf(l)]),[0,0])),clampSum(R,cb),3));}
+  else{const c=calcY([200,160,320],U,A===3);
+    ['L1','L2','L3'].forEach((l,i)=>r('I '+l,'A',cx.abs(c.I[i]),sl(l),3));
+    if(A===3){r('I N','A',cx.abs(c.IN),sl('N'),3);
+      [1,2,3].forEach(k=>r(`W${k} (fase L${k})`,'W',c.P[k-1],wReading(R,k),1));
+      r('P total = W1+W2+W3','W',c.Ptot,wReading(R,1)+wReading(R,2)+wReading(R,3),0);
+      ACTS[3].combos.forEach(cb=>{const vec=cb.reduce((s,l)=>l==='N'?cx.s(s,c.IN):cx.a(s,c.I[['L1','L2','L3'].indexOf(l)]),[0,0]);r('Tang '+cb.join('+'),'A',cx.abs(vec),clampSum(R,cb),3);});}
+    else{r('U N–N\' (forskydning)','V',cx.abs(c.Vs),vReading(R,1),1);
+      [1,2,3].forEach(k=>r(`U R${k} (fase–stjernepkt.)`,'V',cx.abs(c.Up[k-1]),S.on?cx.abs(cx.s(R.Vt[`A.R${k}p`],R.Vt[`A.R${k}m`])):0,1));
+      r('W1 (Aron, L1)','W',c.W1,wReading(R,1),1);r('W2 (Aron, L3)','W',c.W2,wReading(R,2),1);
+      r('P total = W1+W2','W',c.Ptot,wReading(R,1)+wReading(R,2)+wReading(R,3),0);
+      r('Tang L1+L2+L3','A',0,clampSum(R,['L1','L2','L3']),3);}}
+  return rows;}
+let noiseSeed=1;function rnd(){noiseSeed=(noiseSeed*16807)%2147483647;return noiseSeed/2147483647;}
+function noisy(v){return S.noise&&S.on&&v?v*(1+(rnd()-0.5)*0.01):v;}
+
+/* ============ tegning af bænk ============ */
+const svg=$('#bench');
+const WIRE={l1:'var(--c-l1)',l2:'#1b1b1b',l3:'#8a9399',n:'#2b6cd4',pe:'#e2c000',red:'#c62828'};
+function wirePath(a,b){const dx=Math.abs(b.x-a.x),dy=Math.abs(b.y-a.y);const sag=34+Math.min(150,(dx+dy)*0.2);return `M${a.x},${a.y} C${a.x},${a.y+sag} ${b.x},${b.y+sag} ${b.x},${b.y}`;}
+function lcd(g,x,y,w,h,val,dim,fs){sv('rect',{x,y,width:w,height:h,rx:3,fill:'var(--lcd)',stroke:'#00000040'},g);txt(g,x+w-8,y+h/2+8,val,{'text-anchor':'end','font-family':'JetBrains Mono, monospace','font-size':fs||(h>40?22:19),'font-weight':600,fill:'var(--lcd-ink)',opacity:dim?.35:1});}
+function socket(g,t){const col={L1:'#8b5a2b',L2:'#1b1b1b',L3:'#8a9399',N:'#2b6cd4',PE:'#e2c000',red:'#c62828',black:'#1b1b1b'}[t.kind];
+  const grp=sv('g',{'data-term':t.id,style:'cursor:crosshair'},g);
+  sv('circle',{cx:t.x,cy:t.y,r:11,fill:'#11151799'},grp);sv('circle',{cx:t.x,cy:t.y,r:9,fill:col,stroke:t.kind==='PE'?'#2e9e44':'#00000080','stroke-width':t.kind==='PE'?3:1},grp);
+  sv('circle',{cx:t.x,cy:t.y,r:3.4,fill:'#0b0d0e'},grp);
+  if(dragFrom&&dragFrom!==t.id)sv('circle',{cx:t.x,cy:t.y,r:14,fill:'none',stroke:'var(--accent)','stroke-width':1.5,'stroke-dasharray':'3 3',opacity:.7},grp);}
+let dragFrom=null,dragPt=null,lastR=null;
+
+function drawBench(R){svg.innerHTML='';const g=sv('g',null,svg);
+  sv('rect',{x:0,y:0,width:1180,height:740,fill:'var(--bench)'},g);
+  for(let x=20;x<1180;x+=40)sv('line',{x1:x,y1:0,x2:x,y2:740,stroke:'var(--bench-line)','stroke-width':1},g);
+  const on=S.on;
+  // forsyning: bordtavle AB-5.11 (400V boks)
+  {sv('rect',{x:16,y:16,width:210,height:300,rx:6,fill:'#e9e9e4',stroke:'#9aa0a3','stroke-width':2},g);
+    sv('rect',{x:120,y:24,width:96,height:20,fill:'#f4f4f2',stroke:'#999'},g);txt(g,168,39,'AB-5.11',{'text-anchor':'middle','font-family':'Barlow Condensed, sans-serif','font-weight':700,'font-size':14,fill:'#17140c'});
+    sv('rect',{x:120,y:48,width:96,height:14,fill:'#f4f4f2',stroke:'#bbb'},g);txt(g,168,59,'400V boks',{'text-anchor':'middle','font-size':10,fill:'#333'});
+    const mb=sv('g',{'data-main':'1',style:'cursor:pointer'},g);sv('rect',{x:30,y:30,width:60,height:60,rx:5,fill:'#141414'},mb);
+    const hg=sv('g',{transform:`rotate(${on?0:-90} 60 60)`},mb);sv('rect',{x:27,y:54,width:66,height:12,rx:4,fill:'#2a2a2a',stroke:'#000'},hg);
+    txt(g,60,104,on?'On':'Off',{'text-anchor':'middle','font-size':12,'font-weight':700,fill:'#17140c'});
+    const es=sv('g',{'data-estop':'1',style:'cursor:pointer'},g);sv('rect',{x:146,y:70,width:44,height:40,rx:4,fill:'#f1d21a',stroke:'#a08c10'},es);sv('circle',{cx:168,cy:90,r:14,fill:'#c42a22',stroke:'#7a1712','stroke-width':2},es);txt(g,168,122,'NØDSTOP',{'text-anchor':'middle','font-size':9,'font-weight':700,fill:'#7a1712'});
+    [0,1,2].forEach(i=>{const y=150+i*44;sv('circle',{cx:60,cy:y,r:17,fill:'#1a1a1a'},g);sv('circle',{cx:60,cy:y,r:12,fill:S.trip&&/Diazed|Overstrøm|Kortslutning/.test(S.trip)?'#c42a22':'#f4f4f2',stroke:'#bbb'},g);sv('circle',{cx:60,cy:y,r:4.5,fill:'#ddd'},g);
+      txt(g,88,y+4,'L'+(i+1),{'font-size':11,'font-weight':700,fill:'#333'});sv('circle',{cx:112,cy:y,r:5,fill:on?'#f2b01e':'#6b5a2a55',stroke:'#00000040'},g);});
+    txt(g,40,290,'10 A gG Diazed',{'font-size':10,fill:'#333','font-family':'JetBrains Mono, monospace'});txt(g,40,304,'RCD type B',{'font-size':10,fill:S.trip&&/RCD/.test(S.trip)?'#c42a22':'#333','font-family':'JetBrains Mono, monospace','font-weight':S.trip&&/RCD/.test(S.trip)?700:400});
+    ['L1','L2','L3','N','PE'].forEach((l,i)=>{const y=92+46*i;txt(g,176,y+5,l,{'text-anchor':'end','font-weight':700,'font-size':14,fill:'#17140c'});});
+    sv('rect',{x:120,y:250,width:16,height:16,rx:8,fill:S.trip?'#c42a22':(on?'#2c7a34':'#77777755')},g);}
+  // wattmetre: Metrix PX 120
+  for(let k=1;k<=3;k++){const x0=250+170*(k-1),y0=16;sv('rect',{x:x0,y:y0,width:150,height:172,rx:16,fill:'#2357c4'},g);
+    sv('rect',{x:x0+6,y:y0+5,width:138,height:162,rx:11,fill:'#121314'},g);
+    txt(g,x0+14,y0+22,'metrix PX 120',{'font-family':'Barlow Condensed, sans-serif','font-weight':600,'font-size':14,fill:'#d5dadd'});txt(g,x0+136,y0+22,'W'+k,{'text-anchor':'end','font-family':'Barlow Condensed, sans-serif','font-weight':700,'font-size':16,fill:'#fff'});
+    const w=R?wReading(R,k):0;lcd(g,x0+12,y0+30,126,40,on?fmt(noisy(w),1)+' W':'---- W',!on);
+    const lb=sv('g',{'data-lus':k,style:'cursor:pointer'},g);sv('rect',{x:x0+12,y:y0+76,width:126,height:20,rx:4,fill:S.lus[k-1]?'#f2b01e':'#ffffff18',stroke:'#ffffff40'},lb);
+    txt(lb,x0+75,y0+90,S.lus[k-1]?'LUS PÅ (strømspole kortsluttet)':'Lus over strømspole: af',{'text-anchor':'middle','font-size':10,fill:S.lus[k-1]?'#1b1b1b':'#d5dadd','font-weight':600});
+    txt(g,x0+43,y0+113,'10A max',{'text-anchor':'middle','font-size':9.5,fill:'#b8c0c5'});txt(g,x0+110,y0+113,'600V max',{'text-anchor':'middle','font-size':9.5,fill:'#b8c0c5'});
+    sv('line',{x1:x0+77,y1:y0+102,x2:x0+77,y2:y0+164,stroke:'#ffffff30'},g);}
+  // voltmetre: Elma BM251s
+  for(let k=1;k<=2;k++){const x0=760+120*(k-1),y0=16;sv('rect',{x:x0,y:y0,width:106,height:172,rx:14,fill:'#7fd34a'},g);
+    sv('rect',{x:x0+6,y:y0+6,width:94,height:160,rx:10,fill:'#1d1f21'},g);
+    txt(g,x0+14,y0+24,'elma',{'font-family':'Barlow Condensed, sans-serif','font-weight':700,'font-size':14,fill:'#ddd'});txt(g,x0+92,y0+24,'BM251s',{'text-anchor':'end','font-size':10,'font-weight':600,fill:'#ddd'});
+    const v=R?vReading(R,k):0;lcd(g,x0+12,y0+32,82,36,on?fmt(noisy(v),1)+' V':'--- V',!on,17);
+    sv('circle',{cx:x0+53,cy:y0+104,r:20,fill:'#141414',stroke:'#333'},g);sv('rect',{x:x0+50,y:y0+84,width:6,height:22,rx:3,fill:'#ccc',transform:`rotate(-112 ${x0+53} ${y0+104})`},g);
+    txt(g,x0+22,y0+92,'V~',{'text-anchor':'middle','font-size':11,'font-weight':700,fill:'#7fd34a'});txt(g,x0+86,y0+92,'V'+k,{'text-anchor':'middle','font-size':11,'font-weight':700,fill:'#ddd'});}
+  // tang: Elma 9400
+  {const x0=1000,y0=16;sv('path',{d:`M${x0+12},${y0+48} C${x0+2},${y0-6} ${x0+94},${y0-6} ${x0+84},${y0+48}`,fill:'none',stroke:'#7fd34a','stroke-width':13},g);
+    const sel=Object.keys(S.clamp).filter(k=>S.clamp[k]);
+    sel.forEach((c,i)=>{const x=x0+48+(i-(sel.length-1)/2)*12;sv('circle',{cx:x,cy:y0+30,r:5,fill:{L1:'#8b5a2b',L2:'#1b1b1b',L3:'#8a9399',N:'#2b6cd4'}[c],stroke:'#000'},g);});
+    sv('rect',{x:x0,y:y0+44,width:96,height:128,rx:12,fill:'#1d1f21'},g);sv('rect',{x:x0+8,y:y0+50,width:80,height:18,rx:6,fill:'#7fd34a'},g);
+    txt(g,x0+48,y0+63,'ELMA 9400',{'text-anchor':'middle','font-family':'Barlow Condensed, sans-serif','font-weight':700,'font-size':12,fill:'#123'});
+    const v=R?clampSum(R,sel):0;lcd(g,x0+10,y0+76,76,34,on?fmt(noisy(v),2)+' A':'-- A',!on,15);
+    txt(g,x0+48,y0+128,'A~',{'text-anchor':'middle','font-size':12,'font-weight':700,fill:'#7fd34a'});
+    txt(g,x0+48,y0+146,sel.length?sel.join('+'):'tom kæbe',{'text-anchor':'middle','font-size':11,fill:'#c8d0d4'});
+    txt(g,x0+48,y0+162,'(vælg til højre)',{'text-anchor':'middle','font-size':9.5,fill:'#9aa5ab'});}
+  // bank A
+  {const x0=16,y0=360;sv('rect',{x:x0,y:y0,width:360,height:362,rx:6,fill:'var(--dev-steel)',stroke:'#00000030'},g);
+    sv('rect',{x:x0+250,y:y0+8,width:96,height:44,rx:2,fill:'#f4f4f2'},g);txt(g,x0+298,y0+26,'Ω DANOTHERM',{'text-anchor':'middle','font-size':11,'font-weight':700,fill:'#111'});txt(g,x0+298,y0+42,'3 × 4 modst.',{'text-anchor':'middle','font-size':9,fill:'#111'});
+    txt(g,x0+14,y0+22,'Modstandsbank, grå (R1, R2, R3 separate)',{'font-family':'Barlow Condensed, sans-serif','font-weight':700,'font-size':16,fill:'var(--dev-steel-ink)'});
+    txt(g,x0+14,y0+352,'1 kW pr. modstand · 3,5 kW i alt · 600 V maks.',{'font-size':10.5,fill:'var(--dev-steel-ink)',opacity:.75});
+    [0,1,2].forEach(k=>{const cxk=66+k*100;txt(g,cxk,y0+112,'R'+(k+1),{'text-anchor':'middle','font-weight':700,'font-size':13,fill:'var(--dev-steel-ink)'});
+      VALS_A.forEach((v,i)=>drawSwitch(g,cxk,500+i*54,S.bankA[k][i],`A,${k},${i}`,R&&elOver(R,'A',k,v)));
+      const r=par(S.bankA[k],VALS_A);txt(g,cxk,y0+334,isFinite(r)?fmt(r,r<100?1:0)+' Ω':'åben',{'text-anchor':'middle','font-family':'JetBrains Mono, monospace','font-weight':600,'font-size':14,fill:'var(--dev-steel-ink)'});});
+    LBL_A.forEach((l,i)=>txt(g,334,505+i*54,l,{'text-anchor':'middle','font-size':12,'font-weight':700,fill:'var(--dev-steel-ink)'}));}
+  // spolebank
+  {const x0=396,y0=400;sv('rect',{x:x0-8,y:y0-8,width:368,height:278,rx:6,fill:'#26272a'},g);sv('rect',{x:x0,y:y0,width:352,height:262,rx:3,fill:'#f2b116'},g);
+    txt(g,x0+14,y0+20,'TERCO',{'font-family':'Barlow Condensed, sans-serif','font-weight':700,'font-size':17,fill:'#17140c'});txt(g,x0+66,y0+20,'LOAD REACTOR',{'font-family':'Barlow Condensed, sans-serif','font-weight':600,'font-size':14,fill:'#17140c'});txt(g,x0+338,y0+20,'MV1101',{'text-anchor':'end','font-family':'JetBrains Mono, monospace','font-weight':600,'font-size':13,fill:'#17140c'});
+    txt(g,x0+14,y0+38,'400 V Y · 230 V Δ · 2,6 kvar 50 Hz · maks. 3,8 A pr. spole',{'font-size':10,fill:'#1d1d1d'});
+    [1,2,3].forEach(k=>{const y=478+(k-1)*62;sv('line',{x1:440,y1:y,x2:700,y2:y,stroke:'#1d1d1d','stroke-width':2},g);
+      const blown=S.xFuse[k-1];const fg=sv('g',{'data-fuse':k-1,style:blown?'cursor:pointer':''},g);
+      sv('rect',{x:458,y:y-11,width:46,height:22,rx:4,fill:blown?'var(--bad)':'#2a2a2a'},fg);txt(fg,481,y+4,blown?'BRÆNDT':'6,3 A',{'text-anchor':'middle','font-size':10,'font-weight':700,fill:'#fff'});
+      let d=`M528,${y}`;for(let i=0;i<5;i++)d+=` a11,11 0 0 1 22,0`;sv('path',{d,fill:'var(--dev-yellow)',stroke:'#1d1d1d','stroke-width':2.4},g);
+      sv('rect',{x:524,y:y-2,width:120,height:4,fill:'var(--dev-yellow)'},g);
+      d=`M528,${y}`;for(let i=0;i<5;i++)d+=` a11,11 0 0 1 22,0`;sv('path',{d,fill:'none',stroke:'#1d1d1d','stroke-width':2.4},g);
+      sv('line',{x1:540,y1:y+14,x2:640,y2:y-22,stroke:'#1d1d1d','stroke-width':1.4},g);
+      const over=R&&S.on&&(cx.abs(R.Ie['X'+(k-1)]||[0,0])>3.8);if(over)sv('rect',{x:522,y:y-26,width:128,height:40,rx:4,fill:'none',stroke:'var(--bad)','stroke-width':2},g);});
+    const kb=sv('g',{'data-knob':'1',style:'cursor:pointer'},g);sv('rect',{x:668,y:586,width:72,height:72,rx:3,fill:'#c9ccd0',stroke:'#8f959a'},kb);
+    const ti=XL_TAPS.indexOf(S.xl);for(let i=0;i<=11;i++){const a=(-135+270*i/11-90)*Math.PI/180;txt(kb,704+Math.cos(a)*28,622+Math.sin(a)*28+3.5,i,{'text-anchor':'middle','font-size':8.5,'font-family':'JetBrains Mono, monospace','font-weight':i===ti?700:400,fill:'#111'});}
+    const ang=-135+270*ti/11;const kg=sv('g',{transform:`rotate(${ang} 704 622)`},kb);sv('rect',{x:698,y:603,width:12,height:38,rx:3,fill:'#151515'},kg);sv('rect',{x:702.5,y:604,width:3,height:10,fill:'#eee'},kg);
+    txt(g,410,640,S.xl?`X_L ≈ ${fmt(S.xl,1)} Ω pr. fase (trin ${ti})`:'Trin 0: spoler frakoblet',{'font-family':'JetBrains Mono, monospace','font-size':13,'font-weight':600,fill:'#1d1d1d'});}
+  // bank B
+  {const x0=770,y0=360;sv('rect',{x:x0,y:y0,width:394,height:362,rx:6,fill:'var(--dev-blue)'},g);
+    txt(g,x0+14,y0+22,'DANOTHERM · blå modstandsbank',{'font-family':'Barlow Condensed, sans-serif','font-weight':700,'font-size':16,fill:'#f2f5f7'});
+    txt(g,x0+14,y0+352,'ZRF 55 · R1–R3 internt stjernekoblet til Rn · 3500 W · 600 V',{'font-size':10.5,fill:'#dfe7f2'});
+    sv('rect',{x:x0+330,y:y0+70,width:52,height:40,rx:3,fill:'#f1d21a'},g);sv('path',{d:`M${x0+356} ${y0+75} l11 20 h-22z`,fill:'none',stroke:'#111','stroke-width':2},g);txt(g,x0+356,y0+106,'HOT SURFACE',{'text-anchor':'middle','font-size':6.5,'font-weight':700,fill:'#111'});
+    [0,1,2].forEach(k=>{const cxk=830+k*110;txt(g,cxk,y0+112,'R'+(k+1),{'text-anchor':'middle','font-weight':700,'font-size':13,fill:'#f2f5f7'});
+      VALS_B.forEach((v,i)=>drawSwitch(g,cxk,500+i*54,S.bankB[k][i],`B,${k},${i}`,R&&elOver(R,'B',k,v)));
+      const r=par(S.bankB[k],VALS_B);txt(g,cxk,y0+334,isFinite(r)?fmt(r,r<100?1:0)+' Ω':'åben',{'text-anchor':'middle','font-family':'JetBrains Mono, monospace','font-weight':600,'font-size':14,fill:'#f2f5f7'});});
+    LBL_B.forEach((l,i)=>txt(g,1128,505+i*54,l,{'text-anchor':'middle','font-size':12,'font-weight':700,fill:'#f2f5f7'}));}
+  // terminal-labels
+  for(const id in T){const t=T[id];if(t.comp==='S')continue;const below=t.comp[0]==='W'||t.comp[0]==='V';
+    const lab=txt(g,t.x,below?t.y-15:(t.comp==='X'?t.y-15:t.y-16),t.label,{'text-anchor':'middle','font-size':11,'font-weight':700,fill:t.comp==='X'?'#1d1d1d':(t.comp==='B'?'#f2f5f7':(t.comp==='A'?'var(--dev-steel-ink)':'#e8ecee')),'font-size':t.comp[0]==='W'?10:11});
+    if(t.comp==='X'){lab.setAttribute('y',t.y-14);lab.setAttribute('x',t.x+(id.endsWith('i')?0:0));}}
+  // ledninger
+  const wg=sv('g',null,svg);
+  S.wires.forEach((w,i)=>{const d=wirePath(T[w.a],T[w.b]);const selc=S.sel===w.id;
+    sv('path',{d,fill:'none',stroke:selc?'var(--accent)':'var(--wire-halo)','stroke-width':selc?10:7,'stroke-linecap':'round'},wg);
+    sv('path',{d,fill:'none',stroke:WIRE[w.c],'stroke-width':4.5,'stroke-linecap':'round'},wg);
+    if(w.c==='pe')sv('path',{d,fill:'none',stroke:'#2e9e44','stroke-width':4.5,'stroke-dasharray':'9 9'},wg);
+    sv('path',{d,fill:'none',stroke:'transparent','stroke-width':16,'data-wire':w.id,style:'cursor:pointer'},wg);});
+  const tg=sv('g',null,svg);for(const id in T)socket(tg,T[id]);
+  if(dragFrom&&dragPt){const a=T[dragFrom];sv('path',{d:wirePath(a,dragPt),fill:'none',stroke:'var(--accent)','stroke-width':4,'stroke-dasharray':'6 5','pointer-events':'none'},svg);}}
+function drawSwitch(g,x,y,on,key,over){const sg=sv('g',{'data-sw':key,style:'cursor:pointer'},g);
+  sv('rect',{x:x-44,y:y-10,width:22,height:20,rx:1,fill:'#f4f4f2'},sg);txt(sg,x-33,y-2,'ON',{'text-anchor':'middle','font-size':6.5,'font-family':'JetBrains Mono, monospace',fill:on?'#000':'#999','font-weight':700});txt(sg,x-33,y+7,'OFF',{'text-anchor':'middle','font-size':6.5,'font-family':'JetBrains Mono, monospace',fill:on?'#999':'#000','font-weight':700});
+  sv('rect',{x:x-46,y:y-18,width:72,height:36,rx:5,fill:'#00000000'},sg);
+  sv('rect',{x:x-11,y:y-15,width:22,height:30,rx:4,fill:'#2a2f33',stroke:over?'var(--bad)':'#00000050','stroke-width':over?3:1},sg);
+  sv('rect',{x:x-4,y:on?y-15:y,width:8,height:15,rx:3,fill:on?'#f2f2f2':'#8d969b'},sg);
+  sv('circle',{cx:x+20,cy:y-8,r:3.5,fill:on?'#f2b01e':'#00000040'},sg);}
+function elOver(R,bank,k,v){if(!S.on)return false;const e=R.E.find(e=>e.id===bank+k);if(!e)return false;const sw=(bank==='A'?S.bankA:S.bankB)[k][(bank==='A'?VALS_A:VALS_B).indexOf(v)];if(!sw)return false;const U=cx.abs(cx.s(R.Vt[e.a],R.Vt[e.b]));return U*U/v>1000;}
+
+/* ============ pointer-interaktion ============ */
+function svgPt(ev){const p=svg.createSVGPoint();p.x=ev.clientX;p.y=ev.clientY;return p.matrixTransform(svg.getScreenCTM().inverse());}
+function nearestTerm(pt){let best=null,bd=20;for(const id in T){const t=T[id];const d=Math.hypot(t.x-pt.x,t.y-pt.y);if(d<bd){bd=d;best=id;}}return best;}
+svg.addEventListener('pointerdown',ev=>{const tEl=ev.target.closest('[data-term]');
+  if(tEl){if(S.on){toast('Sluk for spændingen før du ændrer opstillingen.');return;}dragFrom=tEl.dataset.term;dragPt=svgPt(ev);svg.setPointerCapture(ev.pointerId);ev.preventDefault();render();return;}
+  const sw=ev.target.closest('[data-sw]');if(sw){const[b,k,i]=sw.dataset.sw.split(',');const arr=b==='A'?S.bankA:S.bankB;arr[+k][+i]=!arr[+k][+i];update();return;}
+  if(ev.target.closest('[data-main]')){$('#btnPower').click();return;}
+  if(ev.target.closest('[data-estop]')){$('#btnStop').click();return;}
+  const lus=ev.target.closest('[data-lus]');if(lus){const k=+lus.dataset.lus-1;S.lus[k]=!S.lus[k];update();return;}
+  const kn=ev.target.closest('[data-knob]');if(kn){cycleTap(ev.shiftKey?-1:1);return;}
+  const fu=ev.target.closest('[data-fuse]');if(fu&&S.xFuse[+fu.dataset.fuse]){if(S.on){toast('Sluk før du skifter sikringen.');return;}S.xFuse[+fu.dataset.fuse]=false;toast('Sikring 6,3 A udskiftet.');update();return;}
+  const wEl=ev.target.closest('[data-wire]');if(wEl){const id=+wEl.dataset.wire;if(S.sel===id){removeWire(id);}else{S.sel=id;render();}return;}
+  if(S.sel!==-1){S.sel=-1;render();}});
+svg.addEventListener('pointermove',ev=>{if(!dragFrom)return;dragPt=svgPt(ev);render();});
+svg.addEventListener('pointerup',ev=>{if(!dragFrom)return;const to=nearestTerm(svgPt(ev));const from=dragFrom;dragFrom=null;dragPt=null;
+  if(to&&to!==from){if(!addWire(from,to))toast('Den ledning findes allerede.');}update();});
+svg.addEventListener('pointercancel',()=>{dragFrom=null;dragPt=null;render();});
+function removeWire(id){if(S.on){toast('Sluk for spændingen før du fjerner ledninger.');return;}const rw=S.wires.find(w=>w.id===id);S.wires=S.wires.filter(w=>w.id!==id);S.sel=-1;if(rw&&(T[rw.a].kind==='PE'||T[rw.b].kind==='PE'||rw.c==='pe')){contiPrune();}update();}
+document.addEventListener('keydown',e=>{if((e.key==='Delete'||e.key==='Backspace')&&S.sel!==-1&&!/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();removeWire(S.sel);}});
+function cycleTap(dir){const i=XL_TAPS.indexOf(S.xl);S.xl=XL_TAPS[(i+dir+XL_TAPS.length)%XL_TAPS.length];$('#setXL').value=S.xl;update();}
+
+/* ============ knapper ============ */
+$('#btnPower').addEventListener('click',()=>{if(S.on){S.on=false;update();return;}
+  const miss=checks().filter(c=>!c[1]);
+  if(!S.free&&miss.length){toast(`Underviseren godkender ikke endnu: ${miss[0][0]}${miss.length>1?` (+${miss.length-1} mere)`:''}.`);return;}
+  S.trip=null;S.on=true;update();});
+$('#setFree').addEventListener('change',e=>{S.free=e.target.checked;update();});
+const CONTI_NAMES={A:'grå modstandsbank',B:'blå modstandsbank',X:'spolebank'};
+function contiUsed(tp){return Object.keys(CONTI_NAMES).filter(c=>Object.values(T).some(t=>t.comp===c&&tp.wired(t.id)));}
+function contiPrune(){const tp=topo();for(const c of [...S.contiSet])if(tp.eff(c+'.PE')!=='PE')S.contiSet.delete(c);if(!S.contiSet.size)contiShow(false,'En PE-ledning er fjernet. Mål gennemgangen igen.');}
+$('#btnConti').addEventListener('click',()=>{if(S.on){toast('Gennemgangstest må kun laves spændingsløst. Sluk først.');return;}
+  const tp=topo();const cand=Object.keys(CONTI_NAMES).filter(c=>tp.wired(c+'.PE')||contiUsed(tp).includes(c));
+  if(!cand.length){S.contiSet=new Set();contiShow(false,'Ingen udstyr er tilsluttet. Træk en grøn/gul ledning fra PE i forsyningen til ⏚ på udstyret, og mål igen.');update();return;}
+  const ok=cand.filter(c=>tp.eff(c+'.PE')==='PE'),bad=cand.filter(c=>!ok.includes(c));
+  ok.forEach(c=>S.contiSet.add(c));bad.forEach(c=>S.contiSet.delete(c));
+  contiShow(!bad.length,(ok.length?`Gennemgang OK (under 0,5 Ω): ${ok.map(c=>CONTI_NAMES[c]).join(', ')}. `:'')+(bad.length?`Ingen gennemgang på ${bad.map(c=>CONTI_NAMES[c]).join(', ')}: sæt en grøn/gul ledning fra ⏚ til PE.`:'Du kan nu koble resten af opstillingen. Testen gælder, så længe PE-ledningerne bliver siddende.'));update();});
+function contiShow(ok,msg){$('#contiLamp').setAttribute('fill',ok?'#fffbd0':'#666');$('#contiOk').setAttribute('fill',ok?'#4c4':'#666');$('#contiTxt').textContent=msg;}
+$('#btnStop').addEventListener('click',()=>{S.on=false;update();toast('Nødstop aktiveret. Opstillingen er spændingsløs.');});
+$('#btnClear').addEventListener('click',()=>{if(S.on){toast('Sluk for spændingen først.');return;}S.wires=[];S.sel=-1;S.contiSet=new Set();contiShow(false,'Alle ledninger fjernet. Mål gennemgangen igen.');update();});
+$('#btnDel').addEventListener('click',()=>{if(S.sel!==-1)removeWire(S.sel);});
+$$('#actsel button').forEach(b=>b.addEventListener('click',()=>{S.act=+b.dataset.act;update();}));
+$('#btnPreset').addEventListener('click',()=>{loadPreset(S.act);$('#setXL').value=S.xl;contiShow(false,'Ny opstilling. Mål gennemgangen af PE før du tænder.');update();toast(`Opstilling til aktivitet ${S.act} indlæst. Lav gennemgangstesten, og tryk TÆND.`);});
+$('#btnSetVals').addEventListener('click',()=>{ACTS[S.act].vals();$('#setXL').value=S.xl;update();toast('Modstande og spole indstillet til PDF\'ens værdier.');});
+$('#setUf').addEventListener('input',e=>{S.Uf=+e.target.value;update();});
+const xs=$('#setXL');XL_TAPS.forEach((v,i)=>{const o=document.createElement('option');o.value=v;o.textContent=v?`Trin ${i}: ${fmt(v,1)} Ω`:'Trin 0: fra';xs.appendChild(o);});xs.value=S.xl;
+xs.addEventListener('change',e=>{S.xl=+e.target.value;update();});
+$('#setNoise').addEventListener('change',e=>{S.noise=e.target.checked;update();});
+$$('#clampsel input').forEach(c=>c.addEventListener('change',()=>{S.clamp[c.value]=c.checked;update();}));
+$('#btnCopy').addEventListener('click',()=>{const rows=sheet(lastR);const tsv=['Størrelse\tEnhed\tBeregnet\tMålt\tAfvigelse %',...rows.map(r=>[r.l,r.u,fmt(r.c,r.d),isNaN(r.m)?'':fmt(r.m,r.d),devPct(r)].join('\t'))].join('\n');
+  const done=()=>{$('#copyMsg').textContent='Kopieret. Indsæt i Excel med Ctrl+V.';};
+  try{navigator.clipboard.writeText(tsv).then(done,()=>fallbackCopy(tsv,done));}catch(e){fallbackCopy(tsv,done);}});
+function fallbackCopy(s,done){const ta=document.createElement('textarea');ta.value=s;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){$('#copyMsg').textContent='Markér tabellen og kopiér manuelt.';}ta.remove();}
+function devPct(r){if(isNaN(r.m)||!S.on)return '';if(Math.abs(r.c)<1e-6)return Math.abs(r.m)<0.01?'0':'—';return fmt((r.m-r.c)/Math.abs(r.c)*100,1);}
+
+/* ============ opdatering ============ */
+function update(){let R=solve();
+  if(S.on&&R.fault){S.on=false;S.trip=R.fault;R=solve();}
+  for(let it=0;it<3&&S.on;it++){let blown=false;for(let k=0;k<3;k++){const I=cx.abs(R.Ie['X'+k]||[0,0]);if(I>6.3&&!S.xFuse[k]){S.xFuse[k]=true;blown=true;toast(`Spolens 6,3 A sikring i L${k+1} er brændt (${fmt(I,1)} A).`);}}if(!blown)break;R=solve();}
+  noiseSeed=1+Math.floor(Math.random()*1e6);lastR=R;render();}
+function render(){const R=lastR||solve();drawBench(R);
+  const st=$('#status');st.className='statusbar'+(S.trip?' trip':(S.on?' on':''));
+  $('#statusTxt').textContent=S.trip?'Udløst: '+S.trip+' Ret fejlen og tænd igen.':(S.on?'Under spænding. Kun afprøvning og målinger.':'Spændingsløs. Du kan ændre opstillingen.');
+  const pb=$('#btnPower');pb.textContent=S.on?'SLUK':'TÆND';pb.classList.toggle('on',S.on);
+  $('#btnDel').disabled=S.sel===-1;$('#btnClear').disabled=S.on;
+  $$('#actsel button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.act===S.act));
+  $('#actDesc').textContent=ACTS[S.act].desc;$('#msAct').textContent='Aktivitet '+S.act;
+  $('#outUf').textContent=fmt(S.Uf,1)+' V';$('#outXL').textContent=S.xl?fmt(S.xl,1)+' Ω':'fra';
+  // tjekliste
+  const ch=checks();$('#checklist').innerHTML=ch.map(([t,o])=>`<li class="${o?'y':'n'}"><span class="mk">${o?'✓':'✗'}</span><span>${t}</span></li>`).join('');
+  const allOk=ch.every(c=>c[1]);const v=$('#verdict');v.className='verdict '+(allOk?'y':'n');v.textContent=allOk?'Opstillingen er godkendt. Du må tænde.':(S.free?'Fri eksperimentering: du kan tænde uden godkendelse.':`${ch.filter(c=>!c[1]).length} punkt(er) mangler før godkendelse. TÆND er spærret.`);
+  // advarsler
+  const W=warnings(R);$('#warnings').innerHTML=W.length?W.map(w=>`<li class="${w[0]}">${w[1]}</li>`).join(''):'<li class="none">Ingen advarsler.</li>';
+  // tang
+  const sel=Object.keys(S.clamp).filter(k=>S.clamp[k]);$('#clampLcd').textContent=S.on?fmt(noisy(clampSum(R,sel)),2)+' A':'-- A';
+  $$('#clampsel input').forEach(c=>c.checked=!!S.clamp[c.value]);
+  $('#combos').innerHTML=ACTS[S.act].combos.map(c=>`<button data-c="${c.join(',')}">${c.join('+')}</button>`).join('');
+  $$('#combos button').forEach(b=>b.addEventListener('click',()=>{const l=b.dataset.c.split(',');for(const k in S.clamp)S.clamp[k]=l.includes(k);update();}));
+  // måleskema
+  const rows=sheet(R);$('#msTable').innerHTML='<tr><th>Størrelse</th><th>Enhed</th><th style="text-align:right">Beregnet</th><th style="text-align:right">Målt</th><th style="text-align:right">Afv. %</th></tr>'+
+    rows.map(r=>{const dv=devPct(r);const a=Math.abs(parseFloat((dv||'').replace(',','.')));const cls=dv===''?'':(dv==='—'?'bad':(a<2?'ok':(a<8?'warn':'bad')));
+      return `<tr><td>${r.l}</td><td>${r.u}</td><td class="n">${fmt(r.c,r.d)}</td><td class="n">${isNaN(r.m)?'–':(S.on?fmt(noisy(r.m),r.d):'–')}</td><td class="n dev ${cls}">${dv}</td></tr>`;}).join('');
+  drawSimPhasor(R);}
+function greyStar(tp){return tp.wired('A.R1m')&&tp.eff('A.R1m')==null&&tp.fe('A.R2m')===tp.fe('A.R1m')&&tp.fe('A.R3m')===tp.fe('A.R1m')&&['A.R1p','A.R2p','A.R3p'].every(t=>tp.wired(t));}
+function warnings(R){const W=[],tp=topo();
+  if(!S.on&&!S.trip)W.push(['','Spændingen er slukket. Instrumenterne viser ingenting.']);
+  [['A','Grå modstandsbank'],['B','Blå modstandsbank'],['X','Spolebanken']].forEach(([c,n])=>{const used=Object.values(T).some(t=>t.comp===c&&t.kind!=='PE'&&tp.wired(t.id));if(used&&tp.eff(c+'.PE')!=='PE')W.push(['bad',`${n} er ikke jordet. Sæt en grøn/gul ledning fra ⏚ til PE.`]);});
+  S.xFuse.forEach((b,k)=>{if(b)W.push(['bad',`Spolens sikring i L${k+1} er brændt. Sluk og klik på sikringen for at skifte den.`]);});
+  S.lus.forEach((l,k)=>{if(l)W.push(['',`Lus på W${k+1}: strømspolen er kortsluttet, så wattmeteret viser 0 W.`]);});
+  if(S.on){let PA=0,PB=0;R.E.filter(e=>e.kind==='R').forEach(e=>{const U=cx.abs(cx.s(R.Vt[e.a],R.Vt[e.b]));const sw=e.bank==='A'?S.bankA[e.k]:S.bankB[e.k];const vals=e.bank==='A'?VALS_A:VALS_B;
+      sw.forEach((on,i)=>{if(!on)return;const P=U*U/vals[i];if(e.bank==='A')PA+=P;else PB+=P;if(P>1000)W.push(['bad',`${e.bank==='A'?'Grå':'Blå'} bank R${e.k+1}, ${(e.bank==='A'?LBL_A:LBL_B)[i]}: ${fmt(P,0)} W > 1 kW. Modstanden overophedes.`]);});
+      if(U>600)W.push(['bad',`Bank ${e.bank} R${e.k+1}: ${fmt(U,0)} V over 600 V maks.`]);});
+    if(PA>3500)W.push(['bad',`Grå bank i alt ${fmt(PA,0)} W > 3,5 kW kontinuert.`]);if(PB>3500)W.push(['bad',`Blå bank i alt ${fmt(PB,0)} W > 3,5 kW kontinuert.`]);
+    R.E.filter(e=>e.kind==='X').forEach(e=>{const U=cx.abs(cx.s(R.Vt[e.a],R.Vt[e.b])),I=cx.abs(R.Ie[e.id]);
+      if(U>253)W.push(['bad',`Spole L${e.k+1} har ${fmt(U,0)} V over sig, men er mærket 230 V. Er den koblet i trekant på 400 V?`]);
+      if(I>3.8)W.push(['bad',`Spole L${e.k+1}: ${fmt(I,2)} A > 3,8 A maks.`]);});
+    [1,2,3].forEach(k=>{if(wReading(R,k)<-5)W.push(['',`W${k} viser negativ effekt. Er strøm- eller spændingsspolen vendt? (Ved Aron og cos φ < 0,5 er det normalt.)`]);
+      const I=cx.abs(R.Ie['W'+k]||[0,0]),U=cx.abs(cx.s(R.Vt[`W${k}.Us`],R.Vt[`W${k}.U`]));if(I>0.05&&U<1&&tp.wired(`W${k}.Us`))W.push(['',`W${k}: strøm men ingen spænding på spændingsspolen.`]);});
+    const gs=greyStar(tp);if(gs&&cx.abs(R.Vt['A.R1m'])>5)W.push(['',`Stjernepunktet på den grå bank er forskudt ${fmt(cx.abs(R.Vt['A.R1m']),1)} V fra nul.`]);
+    if(tp.eff('B.Rn')==null&&tp.wired('B.R1')){const U=cx.abs(R.Vt['B.Rn']);if(U>5)W.push(['',`Stjernepunktet på den blå bank er forskudt ${fmt(U,1)} V fra nul.`]);}}
+  return W;}
+
+/* ============ vektordiagrammer ============ */
+function arrow(g,x1,y1,x2,y2,color,dash,w){sv('line',{x1,y1,x2,y2,stroke:color,'stroke-width':w||2.2,'stroke-dasharray':dash||'','stroke-linecap':'round'},g);
+  const L=Math.hypot(x2-x1,y2-y1);if(L<4)return;const a=Math.atan2(y2-y1,x2-x1),h=8;
+  sv('polygon',{points:`${x2},${y2} ${x2-h*Math.cos(a-0.38)},${y2-h*Math.sin(a-0.38)} ${x2-h*Math.cos(a+0.38)},${y2-h*Math.sin(a+0.38)}`,fill:color},g);}
+function phasorPlot(el,items,{size=320,uMax=240,iMax=1}){el.innerHTML='';const c=size/2,R=size/2-34;const g=sv('g',null,el);
+  sv('circle',{cx:c,cy:c,r:R,fill:'none',stroke:'var(--grid)'},g);sv('line',{x1:c-R,y1:c,x2:c+R,y2:c,stroke:'var(--grid)'},g);sv('line',{x1:c,y1:c-R,x2:c,y2:c+R,stroke:'var(--grid)'},g);
+  const su=R/uMax,si=R*0.8/(iMax||1);
+  items.forEach(it=>{const s=it.kind==='I'?si:su;const o=it.from||[0,0],t=it.to;const x1=c+o[0]*s,y1=c-o[1]*s,x2=c+t[0]*s,y2=c-t[1]*s;
+    if(it.dot){sv('circle',{cx:x2,cy:y2,r:4.5,fill:it.color},g);}else arrow(g,x1,y1,x2,y2,it.color,it.dash,it.w);
+    if(it.label){const a=Math.atan2(y2-y1,x2-x1);const lx=x2+Math.cos(a)*12,ly=y2+Math.sin(a)*12+4;txt(g,lx,ly,it.label,{'text-anchor':'middle','font-size':11.5,'font-weight':700,fill:it.color,style:'paint-order:stroke',stroke:'var(--panel)','stroke-width':3});}});
+  txt(g,8,size-8,`U: ${fmt(uMax,0)} V  ·  I: ${fmt(iMax,2)} A pr. radius`,{'font-size':10,fill:'var(--muted)'});}
+function drawSimPhasor(R){const el=$('#simPhasor');const col=['var(--c-l1)','var(--c-l2)','var(--c-l3)'];
+  if(!S.on){el.innerHTML='';txt(el,160,165,'Tænd for at se vektordiagrammet',{'text-anchor':'middle','font-size':13,fill:'var(--muted)'});$('#simLegend').innerHTML='';return;}
+  const V=[R.Vt['S.L1'],R.Vt['S.L2'],R.Vt['S.L3']];const items=[];
+  V.forEach((v,i)=>items.push({to:v,color:col[i],label:'U'+(i+1)}));
+  const tp=topo();let star=null;
+  if(greyStar(tp))star=R.Vt['A.R1m'];else if(tp.eff('B.Rn')==null&&tp.wired('B.Rn'))star=R.Vt['B.Rn'];else if(tp.eff('B.Rn')==null&&['B.R1','B.R2','B.R3'].some(t=>tp.wired(t)))star=R.Vt['B.Rn'];
+  else if(tp.eff('X.L1o')==null&&tp.wired('X.L1o')){const s=R.Vt['X.L1o'];if(cx.abs(s)>1)star=s;}
+  if(star&&cx.abs(star)>0.5){items.push({to:star,color:'var(--c-disp)',label:"N'",w:2.6});V.forEach((v,i)=>items.push({from:star,to:v,color:col[i],dash:'3 4',w:1.4}));}
+  const Is=['L1','L2','L3'].map(l=>R.sup[l]);const IN=R.sup.N;const iMax=Math.max(0.1,...Is.map(cx.abs),cx.abs(IN));
+  Is.forEach((I,i)=>items.push({to:I,kind:'I',color:col[i],dash:'7 4',label:'I'+(i+1),w:2.4}));
+  if(cx.abs(IN)>0.02)items.push({to:IN,kind:'I',color:'var(--c-n)',dash:'7 4',label:'IN',w:2.4});
+  phasorPlot(el,items,{uMax:Math.max(240,S.Uf+10),iMax});
+  $('#simLegend').innerHTML='<span><i style="background:var(--muted)"></i>fuld linje = spænding</span><span><i style="background:repeating-linear-gradient(90deg,var(--muted) 0 5px,transparent 5px 8px)"></i>stiplet = strøm</span>'+(star?'<span><i style="background:var(--c-disp)"></i>N\' = forskudt stjernepunkt</span>':'');}
+
+/* ============ MODELLER ============ */
+const MODELS={};
+function plotLines(el,{x0,x1,y0,y1,series,xl,yl,mark}){el.innerHTML='';const W=320,H=220,l=46,r=12,t=14,b=36;const g=sv('g',null,el);
+  const sx=x=>l+(x-x0)/(x1-x0)*(W-l-r),sy=y=>H-b-(y-y0)/(y1-y0)*(H-t-b);
+  const nice=(a,c,n=5)=>{const st0=(c-a)/n,mag=10**Math.floor(Math.log10(st0)),e=st0/mag,st=(e>=7.5?10:e>=3.5?5:e>=1.5?2:1)*mag;const out=[];for(let v=Math.ceil(a/st)*st;v<=c+1e-9;v+=st)out.push(+v.toFixed(10));return out;};
+  nice(y0,y1).forEach(v=>{sv('line',{x1:l,y1:sy(v),x2:W-r,y2:sy(v),stroke:'var(--grid)'},g);txt(g,l-5,sy(v)+3.5,(Math.abs(v)>=1000?fmt(v/1000,1)+'k':fmt(v,Math.abs(v)<10&&v%1?1:0)),{'text-anchor':'end','font-size':9.5,fill:'var(--muted)'});});
+  nice(x0,x1,6).forEach(v=>{sv('line',{x1:sx(v),y1:H-b,x2:sx(v),y2:H-b+4,stroke:'var(--muted)'},g);txt(g,sx(v),H-b+15,fmt(v,v%1?1:0),{'text-anchor':'middle','font-size':9.5,fill:'var(--muted)'});});
+  sv('line',{x1:l,y1:H-b,x2:W-r,y2:H-b,stroke:'var(--muted)'},g);if(y0<0&&y1>0)sv('line',{x1:l,y1:sy(0),x2:W-r,y2:sy(0),stroke:'var(--muted)','stroke-dasharray':'3 3'},g);
+  txt(g,(l+W-r)/2,H-4,xl,{'text-anchor':'middle','font-size':10.5,fill:'var(--muted)'});txt(g,12,(t+H-b)/2,yl,{'text-anchor':'middle','font-size':10.5,fill:'var(--muted)',transform:`rotate(-90 12 ${(t+H-b)/2})`});
+  series.forEach((s,si)=>{const d=s.pts.map((p,i)=>(i?'L':'M')+sx(p[0]).toFixed(1)+','+sy(Math.max(y0,Math.min(y1,p[1]))).toFixed(1)).join(' ');sv('path',{d,fill:'none',stroke:s.color,'stroke-width':2.2,'stroke-dasharray':s.dash||''},g);
+    txt(g,W-r-4,t+12+si*13,s.name,{'text-anchor':'end','font-size':10.5,'font-weight':700,fill:s.color});});
+  if(mark){sv('line',{x1:sx(mark.x),y1:t,x2:sx(mark.x),y2:H-b,stroke:'var(--muted)','stroke-dasharray':'3 3'},g);mark.ys.forEach(m=>{sv('circle',{cx:sx(mark.x),cy:sy(m[0]),r:4.5,fill:m[1],stroke:'var(--panel)','stroke-width':2},g);});}}
+
+function buildModel(cfg){const el=document.createElement('article');el.className='model';el.id='m-'+cfg.id;
+  el.innerHTML=`<h3>${cfg.title}</h3><p>${cfg.lead}</p><div class="mgrid"><div class="inputs"></div><div class="formula">${cfg.formula}</div><div><div class="res"></div>${cfg.plot?'<div class="plot" style="margin-top:8px"><svg viewBox="0 0 320 '+(cfg.plotH||220)+'"></svg></div>':''}</div></div>`;
+  $('#models').appendChild(el);const a=document.createElement('a');a.href='#m-'+cfg.id;a.textContent=cfg.short;a.addEventListener('click',e=>{e.preventDefault();el.scrollIntoView({behavior:'smooth'});});$('#modelToc').appendChild(a);
+  const v={};const box=$('.inputs',el);
+  cfg.inputs.forEach(inp=>{v[inp.id]=inp.val;const w=document.createElement('div');
+    if(inp.type==='tog'){w.className='inp tog';w.innerHTML=`<input type="checkbox" id="${cfg.id}-${inp.id}" ${inp.val?'checked':''}><label for="${cfg.id}-${inp.id}">${inp.label}</label>`;box.appendChild(w);
+      $('input',w).addEventListener('change',e=>{v[inp.id]=e.target.checked;run();});return;}
+    if(inp.type==='sel'){w.className='inp';w.innerHTML=`<label class="lab" for="${cfg.id}-${inp.id}"><span>${inp.label}</span></label><select id="${cfg.id}-${inp.id}" style="grid-column:1/-1">${inp.opts.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select>`;box.appendChild(w);
+      const s=$('select',w);s.value=inp.val;s.addEventListener('change',e=>{v[inp.id]=e.target.value;run();});return;}
+    w.className='inp';w.innerHTML=`<label class="lab" for="${cfg.id}-${inp.id}"><span>${inp.label}</span><span>${inp.unit||''}</span></label><input type="range" id="${cfg.id}-${inp.id}" min="${inp.min}" max="${inp.max}" step="${inp.step}" value="${inp.val}" aria-label="${inp.label}"><input type="number" id="${cfg.id}-${inp.id}-n" min="${inp.min}" max="${inp.max}" step="${inp.step}" value="${inp.val}" aria-label="${inp.label} (tal)">`;box.appendChild(w);
+    const rg=$('input[type=range]',w),nm=$('input[type=number]',w);
+    rg.addEventListener('input',()=>{v[inp.id]=+rg.value;nm.value=rg.value;run();});
+    nm.addEventListener('input',()=>{const x=parseFloat(nm.value);if(!isNaN(x)){v[inp.id]=x;rg.value=x;run();}});});
+  const res=$('.res',el),plot=cfg.plot?$('.plot svg',el):null;
+  function run(){const out=cfg.calc(v);res.innerHTML=out.rows.map(r=>`<div class="r ${r[4]||''}"><span>${r[0]}</span><b>${typeof r[1]==='string'?r[1]:fmt(r[1],r[3]??2)} ${r[2]||''}</b></div>`).join('')+(out.html||'');if(plot)cfg.plot(v,out,plot);}
+  MODELS[cfg.id]={set(vals){Object.assign(v,vals);for(const k in vals){const r=$(`#${cfg.id}-${k}`);if(!r)continue;if(r.type==='checkbox')r.checked=vals[k];else r.value=vals[k];const n=$(`#${cfg.id}-${k}-n`);if(n)n.value=vals[k];}run();el.scrollIntoView({behavior:'smooth'});}};
+  run();}
+
+// M1 – Δ symmetrisk
+buildModel({id:'delta',short:'Symmetrisk Δ',title:'Symmetrisk trekantbelastning (aktivitet 1)',lead:'Tre ens modstande i trekant på netspændingen. Sammenlign med samme modstande i stjerne.',
+  inputs:[{id:'U',label:'Netspænding U_L',unit:'V',min:380,max:420,step:1,val:400},{id:'R',label:'Modstand pr. gren R',unit:'Ω',min:50,max:2000,step:10,val:320}],
+  formula:`I<sub>f</sub> = U<sub>L</sub> / R<br>I<sub>L</sub> = √3 · I<sub>f</sub><br>P<sub>Δ</sub> = 3 · U<sub>L</sub>² / R<br>P<sub>Δ</sub> = √3 · U<sub>L</sub> · I<sub>L</sub> · cos φ<br>W (1-wattmeter) = P / 3<br><br>Samme R i Y:<br>P<sub>Y</sub> = U<sub>L</sub>² / R = P<sub>Δ</sub> / 3<span class="c">Grafen viser effekt mod modstand. Prikkerne er dine indstillinger. Kontakterne på den grå bank giver kun bestemte værdier (fx 320 Ω = 400R ∥ 1K6).</span>`,
+  calc(v){const If=v.U/v.R,IL=SQ3*If,P=3*v.U*v.U/v.R;return{rows:[['Fasestrøm I_f',If,'A',3],['Linjestrøm I_L',IL,'A',3,'hl'],['Effekt pr. gren',v.U*v.U/v.R,'W',0],['P total (Δ)',P,'W',0,'hl'],['Wattmeter viser',P/3,'W',0],['P hvis koblet i Y',P/3,'W',0],['I_L hvis koblet i Y',v.U/(SQ3*v.R),'A',3],['Pr. gren > 1 kW?',v.U*v.U/v.R>1000?'Ja, overbelastet':'Nej','',0,v.U*v.U/v.R>1000?'bad':'okc']]};},
+  plot(v,o,el){const pts=[],py=[];for(let R=50;R<=2000;R+=25){pts.push([R,3*v.U*v.U/R]);py.push([R,v.U*v.U/R]);}plotLines(el,{x0:50,x1:2000,y0:0,y1:Math.min(10000,3*v.U*v.U/50),series:[{name:'P Δ',color:'var(--accent)',pts},{name:'P Y',color:'var(--warn)',pts:py,dash:'5 4'}],xl:'R [Ω]',yl:'P [W]',mark:{x:v.R,ys:[[3*v.U*v.U/v.R,'var(--accent)'],[v.U*v.U/v.R,'var(--warn)']]}});}});
+
+// M2 – R-Δ + L-Y
+buildModel({id:'induk',short:'R + L (akt. 2)',title:'Resistiv Δ og induktiv Y parallelt (aktivitet 2)',lead:'Netstrømmen er vektorsummen af den resistive strøm og spolestrømmen, som står 90° på hinanden.',
+  inputs:[{id:'U',label:'Netspænding U_L',unit:'V',min:380,max:420,step:1,val:400},{id:'R',label:'R pr. gren (Δ)',unit:'Ω',min:100,max:2000,step:10,val:320},{id:'X',label:'X_L pr. fase (Y)',unit:'Ω',min:40,max:400,step:1,val:100},{id:'f',label:'Frekvens f',unit:'Hz',min:45,max:65,step:1,val:50}],
+  formula:`U<sub>f</sub> = U<sub>L</sub> / √3<br>I<sub>R</sub> = √3 · U<sub>L</sub> / R  (i fase med U<sub>f</sub>)<br>I<sub>X</sub> = U<sub>f</sub> / X<sub>L</sub>  (90° efter)<br>I<sub>L</sub> = √(I<sub>R</sub>² + I<sub>X</sub>²)<br>P = 3 · U<sub>L</sub>² / R<br>Q = 3 · U<sub>f</sub>² / X<sub>L</sub><br>S = √(P² + Q²),  cos φ = P / S<br>L = X<sub>L</sub> / (2πf)<br>Δ for samme Q: X<sub>Δ</sub> = 3 · X<sub>Y</sub>,  L<sub>Δ</sub> = 3 · L<sub>Y</sub><span class="c">Grafen er strømtrekanten for én fase: vandret = I<sub>R</sub>, lodret ned = I<sub>X</sub>, skrå = I<sub>L</sub>.</span>`,
+  calc(v){const Uf=v.U/SQ3,IR=SQ3*v.U/v.R,IX=Uf/v.X,IL=Math.hypot(IR,IX),P=3*v.U*v.U/v.R,Q=3*Uf*Uf/v.X,S=Math.hypot(P,Q),L=v.X/(2*Math.PI*v.f);
+    return{rows:[['I_R (resistiv linjestrøm)',IR,'A',3],['I_X (spolestrøm)',IX,'A',3,IX>3.8?'bad':''],['I_L (netstrøm)',IL,'A',3,'hl'],['Forkert: I_R + I_X',IR+IX,'A',2],['P',P,'W',0],['Q',Q,'var',0],['S',S,'VA',0],['cos φ',P/S,'',3,'hl'],['φ',Math.atan2(Q,P)*180/Math.PI,'°',1],['L (Y)',L,'H',3,'hl'],['X i Δ for samme Q',3*v.X,'Ω',0],['L i Δ for samme Q',3*L,'H',3],['Spolespænding i Δ',v.U,'V',0,v.U>253?'bad':''],['Terco tåler Δ på dette net?',v.U>253?'Nej (230 V Δ)':'Ja','',0,v.U>253?'bad':'okc']]};},
+  plot(v,o,el){el.innerHTML='';const Uf=v.U/SQ3,IR=SQ3*v.U/v.R,IX=Uf/v.X;const m=Math.max(IR,IX)*1.15,W=320,H=220,ox=40,oy=40,s=Math.min((W-80)/IR,(H-70)/IX)*.95;const g=sv('g',null,el);
+    arrow(g,ox,oy,ox+IR*s,oy,'var(--accent)','',2.6);txt(g,ox+IR*s/2,oy-8,'I_R '+fmt(IR,2)+' A',{'text-anchor':'middle','font-size':11,'font-weight':700,fill:'var(--accent)'});
+    arrow(g,ox+IR*s,oy,ox+IR*s,oy+IX*s,'var(--warn)','',2.6);txt(g,ox+IR*s+6,oy+IX*s/2,'I_X '+fmt(IX,2)+' A',{'font-size':11,'font-weight':700,fill:'var(--warn)'});
+    arrow(g,ox,oy,ox+IR*s,oy+IX*s,'var(--ink)','',2.8);txt(g,ox+IR*s/2-10,oy+IX*s/2+18,'I_L '+fmt(Math.hypot(IR,IX),2)+' A',{'text-anchor':'end','font-size':11,'font-weight':700,fill:'var(--ink)'});
+    txt(g,ox+28,oy+16,'φ',{'font-size':13,'font-weight':700,fill:'var(--muted)'});txt(g,ox,H-8,'U_f ligger vandret (reference)',{'font-size':10,fill:'var(--muted)'});}});
+
+// M3 – Usymmetrisk Y med / uden nul
+buildModel({id:'usym',short:'Usymmetrisk Y',title:'Usymmetrisk stjernebelastning med og uden nul (aktivitet 3 og 4)',lead:'Slå nul til og fra og se stjernepunktet flytte sig. Millmans sætning giver stjernepunktsspændingen.',plotH:300,
+  inputs:[{id:'Uf',label:'Fasespænding U_f',unit:'V',min:220,max:240,step:0.5,val:230},{id:'R1',label:'R1 (L1)',unit:'Ω',min:20,max:1000,step:0.1,val:200},{id:'R2',label:'R2 (L2)',unit:'Ω',min:20,max:1000,step:0.1,val:160},{id:'R3',label:'R3 (L3)',unit:'Ω',min:20,max:1000,step:0.1,val:320},{id:'N',type:'tog',label:'Nul forbundet til stjernepunktet',val:true}],
+  formula:`<b>Med nul:</b> U<sub>N'N</sub> = 0<br>I<sub>k</sub> = U<sub>k</sub> / R<sub>k</sub><br>I<sub>N</sub> = I<sub>1</sub> + I<sub>2</sub> + I<sub>3</sub>  (vektorielt)<br><br><b>Uden nul (Millman):</b><br>U<sub>N'N</sub> = Σ(U<sub>k</sub>/R<sub>k</sub>) / Σ(1/R<sub>k</sub>)<br>U<sub>kN'</sub> = U<sub>k</sub> − U<sub>N'N</sub><br>I<sub>k</sub> = U<sub>kN'</sub> / R<sub>k</sub>,  I<sub>1</sub>+I<sub>2</sub>+I<sub>3</sub> = 0<br><br>P = Σ I<sub>k</sub>² · R<sub>k</sub><br>Aron: W<sub>a</sub> = Re(U<sub>12</sub>·I<sub>1</sub>*), W<sub>b</sub> = Re(U<sub>32</sub>·I<sub>3</sub>*)<span class="c">U<sub>1</sub> = U<sub>f</sub>∠0°, U<sub>2</sub> = U<sub>f</sub>∠−120°, U<sub>3</sub> = U<sub>f</sub>∠120°. Stjerne (*) betyder kompleks konjugeret.</span>`,
+  calc(v){const R=[v.R1,v.R2,v.R3],c=calcY(R,v.Uf,v.N),o=calcY(R,v.Uf,!v.N);const rows=[];
+    rows.push(['U_N\'N (forskydning)',v.N?'0,0':`${fmt(cx.abs(c.Vs),1)} ∠${fmt(cx.arg(c.Vs),0)}°`,'V',1,'hl']);
+    [0,1,2].forEach(k=>rows.push([`U${k+1}N'  /  I${k+1}`,`${fmt(cx.abs(c.Up[k]),1)} V  /  ${fmt(cx.abs(c.I[k]),3)}`,'A',3,cx.abs(c.Up[k])>253?'bad':'']));
+    rows.push(['I_N',cx.abs(c.IN),'A',3]);rows.push(['P total',c.Ptot,'W',0,'hl']);
+    rows.push([v.N?'P hvis nul fjernes':'P hvis nul tilsluttes',o.Ptot,'W',0]);
+    if(!v.N){rows.push(['Aron W_a (L1, mod L2)',c.W1,'W',1]);rows.push(['Aron W_b (L3, mod L2)',c.W2,'W',1]);}
+    return{rows,c};},
+  plot(v,o,el){const c=o.c,col=['var(--c-l1)','var(--c-l2)','var(--c-l3)'];const it=[];c.V.forEach((u,i)=>it.push({to:u,color:col[i],label:'U'+(i+1)}));
+    if(!v.N){it.push({to:c.Vs,color:'var(--c-disp)',label:"N'",w:2.6});c.V.forEach((u,i)=>it.push({from:c.Vs,to:u,color:col[i],dash:'3 4',w:1.3}));}
+    const iMax=Math.max(...c.I.map(cx.abs),cx.abs(c.IN));c.I.forEach((I,i)=>it.push({to:I,kind:'I',color:col[i],dash:'7 4',label:'I'+(i+1),w:2.3}));if(v.N)it.push({to:c.IN,kind:'I',color:'var(--c-n)',dash:'7 4',label:'IN',w:2.3});
+    phasorPlot(el,it,{size:300,uMax:v.Uf*1.3,iMax});}});
+
+// M4 – Y-Δ
+buildModel({id:'ydelta',short:'Y ↔ Δ',title:'Y-Δ-transformation (forberedelse til aktivitet 4)',lead:'En stjerne kan erstattes af en trekant der opfører sig ens set fra klemmerne. Så kan usymmetrisk Y uden nul regnes som en trekant på netspændingen.',
+  inputs:[{id:'R1',label:'R1 (Y)',unit:'Ω',min:10,max:1000,step:0.1,val:200},{id:'R2',label:'R2 (Y)',unit:'Ω',min:10,max:1000,step:0.1,val:160},{id:'R3',label:'R3 (Y)',unit:'Ω',min:10,max:1000,step:0.1,val:320},{id:'U',label:'Netspænding U_L',unit:'V',min:380,max:420,step:1,val:400}],
+  formula:`Σ = R<sub>1</sub>R<sub>2</sub> + R<sub>2</sub>R<sub>3</sub> + R<sub>3</sub>R<sub>1</sub><br>R<sub>12</sub> = Σ / R<sub>3</sub><br>R<sub>23</sub> = Σ / R<sub>1</sub><br>R<sub>31</sub> = Σ / R<sub>2</sub><br><br>Tilbage (Δ→Y):<br>R<sub>1</sub> = R<sub>12</sub>·R<sub>31</sub> / (R<sub>12</sub>+R<sub>23</sub>+R<sub>31</sub>)<br><br>Symmetrisk: R<sub>Δ</sub> = 3 · R<sub>Y</sub> (også X og L)<br>P = U<sub>L</sub>² · (1/R<sub>12</sub> + 1/R<sub>23</sub> + 1/R<sub>31</sub>)<span class="c">Modstanden i Δ "overfor" en fase er den der deler med den fases Y-modstand.</span>`,
+  calc(v){const s=v.R1*v.R2+v.R2*v.R3+v.R3*v.R1,R12=s/v.R3,R23=s/v.R1,R31=s/v.R2,P=v.U*v.U*(1/R12+1/R23+1/R31);
+    return{rows:[['R12',R12,'Ω',1,'hl'],['R23',R23,'Ω',1,'hl'],['R31',R31,'Ω',1,'hl'],['I12 = U/R12',v.U/R12,'A',3],['I23',v.U/R23,'A',3],['I31',v.U/R31,'A',3],['P total (uden nul)',P,'W',0,'hl'],['Kontrol Δ→Y: R1',R12*R31/(R12+R23+R31),'Ω',1]]};}});
+
+// M5 – wattmetermetoder / Aron
+buildModel({id:'aron',short:'Wattmetermetoder',title:'1-, 2- og 3-wattmetermetoden ved symmetrisk last',lead:'Se hvordan de to Aron-wattmetre deler effekten når fasevinklen ændres. Ved cos φ = 0,5 viser det ene nul.',
+  inputs:[{id:'U',label:'Netspænding U_L',unit:'V',min:380,max:420,step:1,val:400},{id:'I',label:'Linjestrøm I_L',unit:'A',min:0.1,max:10,step:0.01,val:3.16},{id:'phi',label:'Fasevinkel φ (+ induktiv)',unit:'°',min:-90,max:90,step:1,val:46.6}],
+  formula:`1-W: W = U<sub>f</sub> · I<sub>L</sub> · cos φ,  P = 3 · W<br><br>2-W (Aron, strøm i L1 og L3, spænding mod L2):<br>W<sub>a</sub> = U<sub>L</sub> · I<sub>L</sub> · cos(30° + φ)<br>W<sub>b</sub> = U<sub>L</sub> · I<sub>L</sub> · cos(30° − φ)<br>P = W<sub>a</sub> + W<sub>b</sub><br>Q = √3 · (W<sub>b</sub> − W<sub>a</sub>)<br>tan φ = √3 (W<sub>b</sub>−W<sub>a</sub>)/(W<sub>b</sub>+W<sub>a</sub>)<br><br>3-W: P = W<sub>1</sub> + W<sub>2</sub> + W<sub>3</sub><span class="c">Formlerne for Q og tan φ ud fra Aron gælder kun ved symmetri. P = W<sub>a</sub> + W<sub>b</sub> gælder altid i 3-leder.</span>`,
+  calc(v){const r=Math.PI/180,Wa=v.U*v.I*Math.cos((30+v.phi)*r),Wb=v.U*v.I*Math.cos((30-v.phi)*r),P=Wa+Wb,W1=v.U/SQ3*v.I*Math.cos(v.phi*r);
+    return{rows:[['cos φ',Math.cos(v.phi*r),'',3],['1-W viser W',W1,'W',1],['P = 3 · W',3*W1,'W',0],['Aron W_a',Wa,'W',1,Wa<0?'bad':''],['Aron W_b',Wb,'W',1],['P = W_a + W_b',P,'W',0,'hl'],['Q = √3(W_b − W_a)',SQ3*(Wb-Wa),'var',0,'hl'],['Kontrol √3·U·I·cos φ',SQ3*v.U*v.I*Math.cos(v.phi*r),'W',0]]};},
+  plot(v,o,el){const r=Math.PI/180,a=[],b=[],p=[];for(let f=-90;f<=90;f+=2){a.push([f,v.U*v.I*Math.cos((30+f)*r)]);b.push([f,v.U*v.I*Math.cos((30-f)*r)]);p.push([f,SQ3*v.U*v.I*Math.cos(f*r)]);}
+    const m=SQ3*v.U*v.I;plotLines(el,{x0:-90,x1:90,y0:-m*0.55,y1:m*1.05,series:[{name:'W_a',color:'var(--warn)',pts:a},{name:'W_b',color:'var(--c-n)',pts:b},{name:'P',color:'var(--accent)',pts:p,dash:'5 4'}],xl:'φ [°]  (−kapacitiv / +induktiv)',yl:'W',mark:{x:v.phi,ys:[[o.rows[3][1],'var(--warn)'],[o.rows[4][1],'var(--c-n)'],[o.rows[5][1],'var(--accent)']]}});}});
+
+// M6 – modstandsbank
+buildModel({id:'bank',short:'Modstandsbank',title:'Modstandsbank: kombinationer og maksimal strøm',lead:'Alle 15 kontaktkombinationer for den valgte bank, sorteret efter hvor tæt de er på din ønskede modstand. Maksimal spænding og strøm bestemmes af den modstand der først når 1 kW (eller 10 A eller 600 V).',
+  inputs:[{id:'bank',type:'sel',label:'Bank',val:'A',opts:[['A','Grå: 200 / 400 / 800 / 1600 Ω'],['B','Blå: 57,5 / 115 / 230 / 460 Ω']]},{id:'Rt',label:'Ønsket modstand',unit:'Ω',min:10,max:1600,step:0.1,val:320},{id:'U',label:'Spænding over modstanden',unit:'V',min:0,max:600,step:1,val:400}],
+  formula:`R = 1 / Σ(1/R<sub>i</sub>)  (parallel)<br>U<sub>maks,i</sub> = min(√(P<sub>maks</sub>·R<sub>i</sub>), I<sub>maks</sub>·R<sub>i</sub>, 600 V)<br>P<sub>maks</sub> = 1 kW,  I<sub>maks</sub> = 10 A pr. modstand<br>U<sub>maks</sub> = mindste U<sub>maks,i</sub> af de tilkoblede<br>I<sub>maks</sub> = U<sub>maks</sub> / R<br>Bank i alt: 3,5 kW kontinuert<span class="c">Δ-kobling: U = 400 V. Y-kobling med nul: U = 230 V.</span>`,
+  calc(v){const vals=v.bank==='A'?VALS_A:VALS_B,lbl=v.bank==='A'?LBL_A:LBL_B,list=[];
+    for(let m=1;m<16;m++){const sw=[0,1,2,3].map(i=>!!(m&(1<<i)));const R=par(sw,vals);let Um=600;sw.forEach((s,i)=>{if(s)Um=Math.min(Um,Math.sqrt(1000*vals[i]),10*vals[i]);});list.push({sw,R,Um,Im:Um/R});}
+    list.sort((a,b)=>Math.abs(a.R-v.Rt)-Math.abs(b.R-v.Rt));
+    const html=`<div class="tablewrap" style="margin-top:8px"><table><tr><th>Kontakter</th><th style="text-align:right">R</th><th style="text-align:right">U<sub>maks</sub></th><th style="text-align:right">I<sub>maks</sub></th><th style="text-align:right">Ved ${v.U} V</th></tr>${list.slice(0,6).map(c=>{const okU=v.U<=c.Um+1e-9;return `<tr><td>${c.sw.map((s,i)=>s?lbl[i]:'').filter(Boolean).join(' + ')}</td><td class="n">${fmt(c.R,1)} Ω</td><td class="n">${fmt(c.Um,0)} V</td><td class="n">${fmt(c.Im,2)} A</td><td class="n dev ${okU?'ok':'bad'}">${fmt(v.U/c.R,2)} A · ${fmt(v.U*v.U/c.R,0)} W ${okU?'OK':'for meget'}</td></tr>`;}).join('')}</table></div>`;
+    const b=list[0];return{rows:[['Nærmeste kombination',b.sw.map((s,i)=>s?lbl[i]:'').filter(Boolean).join(' + '),'',0,'hl'],['Giver R',b.R,'Ω',1],['Strøm ved valgt U',v.U/b.R,'A',3],['Effekt ved valgt U',v.U*v.U/b.R,'W',0,v.U>b.Um?'bad':''],['Maks. strøm for denne kombination',b.Im,'A',2,'hl']],html};}});
+
+// M7 – spændingsfald
+buildModel({id:'spfald',short:'Spændingsfald',title:'Tilnærmet spændingsfald i 3-faset kabel (læringsmål M5)',lead:'Læringsmålene nævner tilnærmet spændingsfald, men slides gennemgår det ikke. Formlen bruges fordi den præcise vektorberegning sjældent ændrer resultatet mere end få promille.',
+  inputs:[{id:'I',label:'Belastningsstrøm I',unit:'A',min:1,max:200,step:0.5,val:16},{id:'l',label:'Kabellængde (enkelt vej)',unit:'m',min:5,max:300,step:1,val:50},{id:'A',label:'Tværsnit',unit:'mm²',min:1.5,max:95,step:0.5,val:2.5},{id:'cos',label:'cos φ',unit:'',min:0.5,max:1,step:0.01,val:0.85},{id:'U',label:'Netspænding',unit:'V',min:230,max:690,step:1,val:400}],
+  formula:`R = ρ · l / A,  ρ<sub>Cu</sub> = 0,0175 Ω·mm²/m<br>X ≈ 0,08 mΩ/m · l<br>ΔU ≈ √3 · I · (R·cos φ + X·sin φ)<br>ΔU % = ΔU / U<sub>L</sub> · 100<span class="c">"Tilnærmet" fordi vinklen mellem U før og efter kablet ignoreres. Kravet er typisk maks. 4–5 % til den fjerneste forbruger.</span>`,
+  calc(v){const R=0.0175*v.l/v.A,X=0.00008*v.l,sn=Math.sqrt(1-v.cos*v.cos),dU=SQ3*v.I*(R*v.cos+X*sn),pct=dU/v.U*100;
+    return{rows:[['R pr. leder',R*1000,'mΩ',1],['X pr. leder',X*1000,'mΩ',1],['ΔU',dU,'V',2,'hl'],['ΔU %',pct,'%',2,pct>4?'bad':'okc'],['Effekttab i kablet',3*v.I*v.I*R,'W',0]]};},
+  plot(v,o,el){const pts=[];const sn=Math.sqrt(1-v.cos*v.cos);for(let l=0;l<=300;l+=5)pts.push([l,SQ3*v.I*(0.0175*l/v.A*v.cos+0.00008*l*sn)/v.U*100]);const ym=Math.max(6,pts[pts.length-1][1]*1.05);
+    plotLines(el,{x0:0,x1:300,y0:0,y1:ym,series:[{name:'ΔU %',color:'var(--accent)',pts},{name:'4 %',color:'var(--bad)',pts:[[0,4],[300,4]],dash:'4 4'}],xl:'Længde [m]',yl:'ΔU [%]',mark:{x:v.l,ys:[[o.rows[3][1],'var(--accent)']]}});}});
+
+/* ============ QUIZ ============ */
+const QUIZ=[
+ {l:'Let',q:'I en symmetrisk trekantkobling: hvad er forholdet mellem linjestrøm og fasestrøm?',o:['I_L = I_f','I_L = √3 · I_f','I_L = I_f / √3','I_L = 3 · I_f'],a:1,e:'I hvert knudepunkt trækkes to fasestrømme 120° forskudt fra hinanden. Resultatet er √3 gange større.'},
+ {l:'Let',q:'Aktivitet 1: tangen omslutter L1, L2 og L3. Hvad viser den?',o:['6,5 A','2,17 A','0 A','1,25 A'],a:2,e:'Kirchhoffs 1. lov: trekanten har ingen nul, så alt der går ud ad én leder kommer tilbage ad de andre.'},
+ {l:'Let',q:'Tre ens modstande på 320 Ω kobles i trekant på 400 V. Hvad er den samlede effekt?',o:['500 W','866 W','1500 W','4500 W'],a:2,e:'P = 3 · 400²/320 = 1500 W. Hver modstand afsætter 500 W.'},
+ {l:'Mellem',q:'Aktivitet 2: resistiv linjestrøm 2,165 A og spolestrøm 2,30 A. Hvad er netstrømmen?',o:['4,47 A','0,14 A','3,16 A','2,23 A'],a:2,e:'Strømmene står 90° på hinanden: √(2,165² + 2,30²) = 3,16 A. 4,47 A er den klassiske fejl med almindelig plus.'},
+ {l:'Mellem',q:'Hvorfor er 1-wattmetermetoden acceptabel i aktivitet 1?',o:['Fordi belastningen er resistiv','Fordi net og belastning er symmetriske, så alle faser bruger lige meget','Fordi trekanten ingen nul har','Fordi wattmeteret måler alle tre faser samtidig'],a:1,e:'Ved symmetri er effekten den samme i alle faser, så P = 3 · W. Resistivt eller ej er ligegyldigt.'},
+ {l:'Mellem',q:'Aktivitet 3 (1,15 A, 1,44 A og 0,72 A i hver sin fase, med nul). Hvor stor er nulstrømmen?',o:['0 A','3,31 A','0,63 A','1,44 A'],a:2,e:'I_N = |1,15∠0° + 1,44∠−120° + 0,72∠120°| = |0,072 − j0,622| ≈ 0,63 A. 3,31 A er den forkerte almindelige sum.'},
+ {l:'Svær',q:'Aktivitet 4: nul fjernes (200 / 160 / 320 Ω). Hvilken modstand får den højeste spænding?',o:['R20 = 160 Ω (mindste)','R30 = 320 Ω (største)','Alle får 230 V','R10 = 200 Ω'],a:1,e:'Stjernepunktet trækkes mod L2 og L1, hvor modstandene er mindst. R30 = 320 Ω får ca. 271 V, mens R20 kun får 197 V.'},
+ {l:'Svær',q:'Hvornår kan 2-wattmetermetoden (Aron) give den samlede effekt korrekt?',o:['Kun ved symmetrisk belastning','Altid i et 3-leder-system, også ved usymmetri','Kun når cos φ > 0,5','Kun når nul er tilsluttet'],a:1,e:'Aron bygger på I1 + I2 + I3 = 0, som altid gælder uden nul. Med nul (4-leder) kræves tre wattmetre.'},
+ {l:'Svær',q:'Typeskilt "400 V Y / 230 V Δ" på Terco-spolen. Må den kobles i trekant på laboratoriets 3 × 400 V?',o:['Ja, Δ giver bare mere effekt','Nej, hver spole får 400 V men tåler kun 230 V','Ja, hvis man bruger 6,3 A sikringerne','Kun ved 60 Hz'],a:1,e:'I Δ ligger spolen over netspændingen. 230 V Δ betyder at den kun må Δ-kobles på et 230 V-net.'},
+ {l:'Svær',q:'Aron-måling på symmetrisk motor med cos φ = 0,5 (φ = 60°). Hvad viser W_a?',o:['P/2','0 W','Negativ værdi','P'],a:1,e:'W_a = U·I·cos(30° + 60°) = U·I·cos 90° = 0. Under cos φ = 0,5 bliver W_a negativ.'}];
+let quizState=[];
+function renderQuiz(){const qz=$('#quiz');qz.innerHTML='';quizState=QUIZ.map(()=>null);
+  QUIZ.forEach((q,i)=>{const d=document.createElement('div');d.className='q';d.innerHTML=`<div class="qh"><b>${i+1}. ${q.q}</b><span class="lvl">${q.l}</span></div><div class="opts">${q.o.map((o,j)=>`<button data-j="${j}">${o}</button>`).join('')}</div><div class="expl" hidden></div>`;qz.appendChild(d);
+    $$('.opts button',d).forEach(b=>b.addEventListener('click',()=>{if(quizState[i]!==null)return;const j=+b.dataset.j;quizState[i]=j===q.a;b.classList.add(j===q.a?'right':'wrong');$$('.opts button',d)[q.a].classList.add('right');
+      const ex=$('.expl',d);ex.hidden=false;ex.innerHTML=`<b style="color:var(${j===q.a?'--ok':'--bad'})">${j===q.a?'Rigtigt.':'Ikke helt.'}</b> ${q.e}`;$('#score').textContent=`${quizState.filter(x=>x).length} / ${QUIZ.length}`;}));});
+  $('#score').textContent=`0 / ${QUIZ.length}`;}
+$('#quizReset').addEventListener('click',renderQuiz);renderQuiz();
+
+/* ============ REGNEOPGAVER ============ */
+const EX=[
+ {t:'Opgave 1 · Aktivitet 1 og 2: netstrøm, effekt og induktans',q:'Tre modstande på 320 Ω i trekant og tre spoler med X<sub>L</sub> = 100 Ω i stjerne sidder parallelt på 3 × 400/230 V, 50 Hz. Find I<sub>L</sub> før og efter spolerne, P, Q, cos φ, L og den induktans der giver samme Q i trekant.',
+  steps:[['Fasestrøm i trekanten','I<sub>f</sub> = U<sub>L</sub>/R = 400/320 = <b>1,25 A</b>'],['Linjestrøm uden spoler','I<sub>R</sub> = √3 · 1,25 = <b>2,165 A</b>. P = 3 · 400²/320 = <b>1500 W</b>. Wattmeteret viser 500 W.'],['Spolestrøm','I<sub>X</sub> = U<sub>f</sub>/X<sub>L</sub> = 230/100 = <b>2,30 A</b> (90° efter U<sub>f</sub>). Under Terco-grænsen på 3,8 A.'],['Netstrøm vektorielt','I<sub>L</sub> = √(2,165² + 2,30²) = <b>3,16 A</b>'],['Effekter','Q = 3 · 230²/100 = <b>1587 var</b>. S = √(1500² + 1587²) = <b>2184 VA</b>. cos φ = 1500/2184 = <b>0,687</b>'],['Induktans','L = X<sub>L</sub>/(2πf) = 100/314,2 = <b>0,318 H</b>'],['Samme Q i trekant','Spolen får √3 gange spændingen, dvs. 3 gange Q ved samme X. Derfor X<sub>Δ</sub> = 3 · 100 = <b>300 Ω</b> og L<sub>Δ</sub> = <b>0,955 H</b>. Kun teoretisk: Terco tåler ikke 400 V pr. spole.']],
+  model:['induk',{U:400,R:320,X:100,f:50}],sim:2},
+ {t:'Opgave 2 · Aktivitet 3: usymmetrisk Y med nul',q:'R<sub>10</sub> = 200 Ω, R<sub>20</sub> = 160 Ω og R<sub>30</sub> = 320 Ω i stjerne med nul på 3 × 400/230 V. Find fasestrømme, nulstrøm, samlet effekt og hvad tangen viser om L1+L2+N.',
+  steps:[['Fasestrømme','Nul holder stjernepunktet på 0 V, så hver modstand får 230 V. I<sub>1</sub> = 230/200 = <b>1,15 A</b>, I<sub>2</sub> = 230/160 = <b>1,44 A</b>, I<sub>3</sub> = 230/320 = <b>0,72 A</b>.'],['Strømmene som vektorer','I<sub>1</sub> = 1,15∠0° = 1,15 + j0<br>I<sub>2</sub> = 1,44∠−120° = −0,719 − j1,245<br>I<sub>3</sub> = 0,72∠120° = −0,359 + j0,622'],['Nulstrøm','I<sub>N</sub> = (1,15 − 0,719 − 0,359) + j(0 − 1,245 + 0,622) = 0,072 − j0,622. |I<sub>N</sub>| = <b>0,63 A</b>'],['Effekt','P = 230 · 1,15 + 230 · 1,44 + 230 · 0,72 = 264,5 + 330,6 + 165,3 = <b>760 W</b>. De tre wattmetre viser ca. 265, 331 og 165 W.'],['Tang om L1+L2+N','Alle fire ledere giver 0 A (KCL). Mangler L3 i kæben, viser tangen netop |I<sub>3</sub>| = <b>0,72 A</b>.']],
+  model:['usym',{Uf:230,R1:200,R2:160,R3:320,N:true}],sim:3},
+ {t:'Opgave 3 · Aktivitet 4: forskudt stjernepunkt og Aron-måling',q:'Samme belastning som opgave 2, men nul er fjernet. Find stjernepunktsspændingen, spændingen over hver modstand, den samlede effekt og hvad de to Aron-wattmetre viser. Forklar hvorfor P er lavere end i aktivitet 3.',
+  steps:[['Millman','U<sub>N\'N</sub> = (U<sub>1</sub>/200 + U<sub>2</sub>/160 + U<sub>3</sub>/320)/(1/200 + 1/160 + 1/320). Ganges med 320 forholder admittanserne sig 1,6 : 2 : 1, så U<sub>N\'N</sub> = (1,6·U<sub>1</sub> + 2·U<sub>2</sub> + 1·U<sub>3</sub>)/4,6.'],['Indsæt','1,6 · 230 = 368<br>2 · U<sub>2</sub> = −230 − j398,4<br>U<sub>3</sub> = −115 + j199,2<br>Sum = 23 − j199,2. Divideret med 4,6: U<sub>N\'N</sub> = 5,0 − j43,3 = <b>43,6 V ∠−83°</b>. Voltmeteret mellem N og stjernepunktet viser ca. 44 V.'],['Spænding over modstandene','U<sub>1N\'</sub> = 230 − (5 − j43,3) = 225 + j43,3 → <b>229 V</b><br>U<sub>2N\'</sub> = (−115 − j199,2) − (5 − j43,3) = −120 − j155,9 → <b>197 V</b><br>U<sub>3N\'</sub> = (−115 + j199,2) − (5 − j43,3) = −120 + j242,5 → <b>271 V</b>'],['Strømme og effekt','I<sub>1</sub> = 229/200 = 1,15 A, I<sub>2</sub> = 197/160 = 1,23 A, I<sub>3</sub> = 271/320 = 0,85 A.<br>P = 262,5 + 241,9 + 228,8 = <b>733 W</b>'],['Kontrol med Y-Δ','Σ = 200·160 + 160·320 + 320·200 = 147 200. R<sub>12</sub> = Σ/R<sub>3</sub> = 460 Ω, R<sub>23</sub> = Σ/R<sub>1</sub> = 736 Ω, R<sub>31</sub> = Σ/R<sub>2</sub> = 920 Ω. P = 398,4² · (1/460 + 1/736 + 1/920) = <b>733 W</b> ✓'],['Aron','W<sub>a</sub> = Re(U<sub>12</sub> · I<sub>1</sub>*) = <b>431 W</b><br>W<sub>b</sub> = Re(U<sub>32</sub> · I<sub>3</sub>*) = <b>302 W</b><br>W<sub>a</sub> + W<sub>b</sub> = <b>733 W</b> ✓'],['Hvorfor lavere end 760 W?','Uden nul flyttes spænding fra den mindste modstand over på den største. R<sub>20</sub> = 160 Ω falder fra 331 W til 242 W, mens R<sub>30</sub> = 320 Ω kun stiger fra 165 W til 229 W. R<sub>10</sub> er næsten uændret.']],
+  model:['usym',{Uf:230,R1:200,R2:160,R3:320,N:false}],sim:4}];
+function renderEx(){const box=$('#exercises');EX.forEach((x,i)=>{const d=document.createElement('div');d.className='q';
+  d.innerHTML=`<h3>${x.t}</h3><p>${x.q}</p>${x.steps.map((s,j)=>`<details class="step"><summary>Trin ${j+1}: ${s[0]}</summary><div style="margin-top:6px">${s[1]}</div></details>`).join('')}<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn" data-open>Vis alle trin</button><button class="btn" data-model>Åbn i modellen</button><button class="btn" data-sim>Afprøv i simulatoren</button></div>`;box.appendChild(d);
+  $('[data-open]',d).addEventListener('click',()=>$$('details',d).forEach(e=>e.open=true));
+  $('[data-model]',d).addEventListener('click',()=>{showTab('modeller');MODELS[x.model[0]].set(x.model[1]);});
+  $('[data-sim]',d).addEventListener('click',()=>{S.act=x.sim;loadPreset(x.sim);S.contiSet=new Set(contiUsed(topo()));contiShow(true,'Gennemgang OK (indlæst opstilling).');S.Uf=230;$('#setUf').value=230;S.on=true;$('#setXL').value=S.xl;showTab('sim');update();window.scrollTo({top:0,behavior:'smooth'});});});}
+renderEx();
+
+/* ============ start ============ */
+loadPreset(1);S.contiSet=new Set(contiUsed(topo()));contiShow(true,'Gennemgang OK (eksempelopstilling). Fjerner du en PE-ledning, skal testen laves igen.');S.on=true;update();
+</script>
+
+</body></html>
