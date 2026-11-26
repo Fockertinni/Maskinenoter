@@ -170,11 +170,10 @@ a.quiet:hover { color: var(--fg); background: var(--hover); }
 const NU = 5; // det semester jeg er på lige nu
 
 // Genvej til EL2-emner med labøvelse: teorinoter, formler og quiz fra noter/el2/<id>.html (bygget af byg.py),
-// plus labnoterne (med modeller og test), simulatoren og forståelsesdelen fra lab nr. n
+// plus simulatoren og forståelsesdelen fra lab nr. n
 const el2Lab = (n, id) => ({
   noter:       `noter/el2/${id}.html?vis=noter`,
   formler:     `noter/el2/${id}.html?vis=formler`,
-  labnoter:    `modeller/el2/lab${n}-noter.html?vis=noter`,     // labnoterne med modellerne inde i teksten
   simulation:  `modeller/el2/lab${n}.html?vis=sim`,
   forstaaelse: `modeller/el2/lab${n}-noter.html?vis=forstaa`,
   quiz:        `noter/el2/${id}.html?vis=quiz`,
@@ -376,7 +375,7 @@ const SEMESTRE = [
    Frigiv quizzen for et helt fag: skriv  frigivet: ["quiz"]  på faget.
    Se alt (også det skjulte):      åbn siden med  ?gennemse  bagerst i adressen. ?gennemse=nej slår det fra igen.
    ===================================================================== */
-const FRIGIVET = ["simulation"];
+const FRIGIVET = ["eksamen", "noter", "formler", "simulation", "modeller", "forstaaelse", "quiz"];
 const GENNEMSE = (() => {
   const q = new URLSearchParams(location.search).get("gennemse");
   try {

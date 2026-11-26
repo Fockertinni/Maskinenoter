@@ -84,7 +84,7 @@ Alle undersider (noter, formler, labnoter, simulation, forståelse, quiz) henter
 Skabelonen `noter/kilde/skabelon.html` har den allerede.
 
 ## Skjult indhold og gennemsyn
-Øverst i datadelen af `index.html` står `const FRIGIVET = ["simulation"];`. Kun de dele vises på den live side; alt andet (noter, formler, labnoter, forståelse, quiz) er skjult, men ikke slettet.
+Øverst i datadelen af `index.html` står `const FRIGIVET = [...]`. Kun de dele, der står der, vises på den live side. Lige nu er alle dele frigivet. Fjern en del fra listen for at skjule den igen.
 
 - Frigiv en del for alle emner: tilføj den i `FRIGIVET`, fx `["simulation", "noter"]`.
 - Frigiv dele for ét emne: skriv `frigivet: ["noter", "quiz"]` på emnet i `SEMESTRE`.
