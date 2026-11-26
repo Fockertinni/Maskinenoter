@@ -13,9 +13,10 @@ Mine noter og interaktive modeller fra maskinmesteruddannelsen. Siden er ren HTM
 - `modeller/el2/` indeholder EL2-labsene. Hver lab kan vises samlet (`lab1.html`) eller én del ad gangen med `?vis=`:
   - `?vis=sim` viser simulatoren
   - `?vis=noter` viser noterne
-  - `?vis=modeller` viser modellerne
   - `?vis=forstaa` viser forståelsesdelen
   - `?vis=test` viser quizzen ("Test dig selv")
+
+Modellerne i hver lab er flyttet ind i noterne under det afsnit, de hører til. Fanen "Modeller" er derfor skjult, og `?vis=modeller` viser noterne.
 
 ## Tilføj et emne
 

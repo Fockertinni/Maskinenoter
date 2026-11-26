@@ -1081,6 +1081,22 @@ loadPreset(1);S.contiSet=new Set(contiUsed(topo()));contiShow(true,'Gennemgang O
 </script>
 
 
+
+<!-- Modeller i noterne (Maskinenoter.dk): flytter hver interaktiv model ind under den note, den hører til. -->
+<style>.note + .model, .model + .model{margin-top:14px}</style>
+<script>
+(function(){
+  var MAP=[["delta", "n-a1"], ["induk", "n-a2"], ["ydelta", "n-a3"], ["usym", "n-a4"], ["bank", "n-udstyr"], ["aron", "n-watt"], ["spfald", "n-maal"]], efter={};
+  MAP.forEach(function(p){var m=document.getElementById('m-'+p[0]),n=document.getElementById(p[1]);if(!m||!n)return;(efter[p[1]]||n).after(m);efter[p[1]]=m;});
+  var b=document.querySelector('nav.tabs button[data-tab="modeller"]');if(b)b.style.display='none';
+  if(typeof showTab!=='function')return;
+  var orig=showTab,sidst=null;
+  try{Object.keys(MODELS).forEach(function(k){var o=MODELS[k]&&MODELS[k].set;if(typeof o==='function')MODELS[k].set=function(){sidst=k;return o.apply(this,arguments);};});}catch(e){}
+  showTab=function(id){if(id!=='modeller')return orig(id);orig('noter');sidst=null;
+    setTimeout(function(){var el=sidst&&document.getElementById('m-'+sidst);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},0);};
+  if((location.hash||'')==='#modeller')showTab('modeller');
+})();
+</script>
 <!-- Enkeltvisning (Maskinenoter.dk): ?vis=sim|noter|modeller|forstaa|test viser kun én del. Rører ikke simulatorens logik. -->
 <style>
 html.solo nav.tabs{display:none}
