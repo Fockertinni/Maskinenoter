@@ -204,6 +204,233 @@
    "formler": false
   }
  ],
+ "el1": [
+  {
+   "id": "dc",
+   "navn": "DC-kredse",
+   "ikon": "batteri",
+   "intro": "Serie og parallel, Kirchhoffs love, spændings- og strømdeling, maskeligninger, superposition, Thevenin, potentialdiagram og batterier.",
+   "quiz": 9,
+   "formler": true
+  },
+  {
+   "id": "dc-eksamen",
+   "navn": "Alt du skal bruge til eksamen: DC-kredse",
+   "ikon": "batteri",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "ac",
+   "navn": "AC-kredse",
+   "ikon": "sinus",
+   "intro": "R, L og C i vekselstrøm, impedanser i serie og parallel, ækvivalentskema, Kirchhoff og Thevenin med komplekse tal, og strøm- og spændingsvektordiagrammer.",
+   "quiz": 9,
+   "formler": true
+  },
+  {
+   "id": "ac-eksamen",
+   "navn": "Alt du skal bruge til eksamen: AC-kredse",
+   "ikon": "sinus",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "kondensator",
+   "navn": "Kondensatoren",
+   "ikon": "kondensator",
+   "intro": "Elektrisk felt, flux og kapacitans, kondensatorer i serie og parallel, op- og afladning, kapacitans i kabler og luftledninger, og fasekompensering.",
+   "quiz": 9,
+   "formler": true
+  },
+  {
+   "id": "kondensator-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Kondensatoren",
+   "ikon": "kondensator",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "magnetisme",
+   "navn": "Magnetisme",
+   "ikon": "magnet",
+   "intro": "Magnetisk flux og fluxtæthed, feltstyrke og permeabilitet, magnetiske kredse med og uden luftgab, jerntab og AC-spolen med jernkerne.",
+   "quiz": 9,
+   "formler": true
+  },
+  {
+   "id": "magnetisme-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Magnetisme",
+   "ikon": "magnet",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "blandet",
+   "navn": "Blandede AC-kredse",
+   "ikon": "sinus",
+   "intro": "Parallelforbundne seriekredse og serieforbundne parallelkredse med R, X_L og X_C. Beregning trin for trin og strøm-spændingsvektordiagrammer med Thales-cirklen.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "blandet-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Blandede AC-kredse",
+   "ikon": "sinus",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "symmetrisk",
+   "navn": "3-faset symmetrisk belastning",
+   "ikon": "trefase",
+   "intro": "Stjerne og trekant, fase- og netstrømme, effekt i 3-fasede systemer, 1-, 2- og 3-wattmetermetoden, vektordiagrammer og fasekompensering med kondensatorbatteri.",
+   "quiz": 9,
+   "formler": true
+  },
+  {
+   "id": "symmetrisk-eksamen",
+   "navn": "Alt du skal bruge til eksamen: 3-faset symmetrisk belastning",
+   "ikon": "trefase",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "stjerne",
+   "navn": "Y-Δ-transformation og stjernelast uden nul",
+   "ikon": "trefase",
+   "intro": "Stjerne-trekant-transformation, usymmetrisk Y-last uden nul, stjernepunktets forskydning, Millmans formel og vektordiagrammer.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "stjerne-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Y-Δ-transformation og stjernelast uden nul",
+   "ikon": "trefase",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "usymmetrisk",
+   "navn": "Usymmetrisk belastning med nul",
+   "ikon": "trefase",
+   "intro": "1-, 2- og 3-fasede belastninger på samme 4-ledernet, knudepunktsligninger, nulstrømmen og strøm-spændingsdiagrammer.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "usymmetrisk-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Usymmetrisk belastning med nul",
+   "ikon": "trefase",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "haandregler",
+   "navn": "Magnetfelt, håndregler og induktion",
+   "ikon": "magnet",
+   "intro": "Spoleregel, proptrækkerregel, motor- og generatorregel, Lenz' lov, induktion, selvinduktion og ind- og udkobling af spoler.",
+   "quiz": 9,
+   "formler": true
+  },
+  {
+   "id": "haandregler-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Håndregler og induktion",
+   "ikon": "magnet",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "dcmotor",
+   "navn": "DC-motoren",
+   "ikon": "motor",
+   "intro": "Opbygning, kommutering og ankerreaktion, vendepoler, serie-, shunt- og permanentmagnetmotoren, spændingsligningen, moment, tab og virkningsgrad.",
+   "quiz": 9,
+   "formler": true
+  },
+  {
+   "id": "dcmotor-eksamen",
+   "navn": "Alt du skal bruge til eksamen: DC-motoren",
+   "ikon": "motor",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "leder",
+   "navn": "Ledere, effekt og energi",
+   "ikon": "leder",
+   "intro": "Lederens resistans, resistivitet og temperatur, strømtæthed og strømvarmetab, moment og vinkelhastighed, effekt, arbejde, energi og virkningsgrad, og akkumulatoren.",
+   "quiz": 9,
+   "formler": true
+  },
+  {
+   "id": "leder-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Ledere, effekt og energi",
+   "ikon": "leder",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "halvleder",
+   "navn": "Halvledere, dioder og solceller",
+   "ikon": "solcelle",
+   "intro": "PN-overgangen, dioden, LED og fotodioden, friløbsdioden, solcellens ækvivalentmodel, solindstråling, AM, STC og NOCT, IV-kurven og virkningsgrad.",
+   "quiz": 10,
+   "formler": true
+  },
+  {
+   "id": "halvleder-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Halvledere, dioder og solceller",
+   "ikon": "solcelle",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "vekselspaending",
+   "navn": "Vekselspænding, strøm og effekt (enfaset)",
+   "ikon": "sinus",
+   "intro": "Hvordan vekselspænding laves, middel-, effektiv- og spidsværdi, formfaktor, S, P og Q, effektfaktor og watt- og wattløs strøm.",
+   "quiz": 10,
+   "formler": true
+  },
+  {
+   "id": "vekselspaending-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Vekselspænding og effekt",
+   "ikon": "sinus",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "formelsamling",
+   "navn": "Samlet formelsamling",
+   "ikon": "formler",
+   "intro": "Alle formler fra Elektroteknik 1 samlet på ét sted og ordnet efter de 13 eksamenstemaer. God til repetition og til opslag, når du regner opgaver.",
+   "quiz": 0,
+   "formler": true
+  },
+  {
+   "id": "eksamen2026",
+   "navn": "Eksamen 2026",
+   "ikon": "kort",
+   "intro": "De 13 eksamenstemaer med eksempelopgaven og alle punkterne fra temalisten som spørgsmål. Læs spørgsmålet, svar selv højt, og tryk så for at se svaret.",
+   "kort": 69,
+   "quiz": 0,
+   "formler": false
+  }
+ ],
  "el2": [
   {
    "id": "faget",

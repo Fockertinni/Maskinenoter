@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Ledere, effekt og energi · Elektroteknik 1 · Maskinenoter</title>
+<link rel="stylesheet" href="../../hav.css"><script>document.documentElement.dataset.theme="dark"</script>
+<!-- Bygget af noter/kilde/byg.py. Ret i kildefilen i noter/kilde/, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #1d6fa5; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #6db8ec; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #6db8ec; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.tabs { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--hover); flex-shrink: 0; }
+.tabs button { font: 600 .9rem/1 var(--sans); color: var(--muted); background: none; border: 0; padding: .5rem .8rem; border-radius: 8px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.8rem, 5vw, 3.2rem) max(16px, env(safe-area-inset-left, 0px)) 5rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .8rem 0 0; font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.del { margin-top: 2.2rem; }
+.del > :first-child { margin-top: 0; }
+.del h2 { margin: 2.6rem 0 .6rem; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; }
+.del h3 { margin: 1.8rem 0 .4rem; font-size: 1.12rem; letter-spacing: -.01em; }
+.del p, .del li { max-width: 68ch; }
+.del ul, .del ol { padding-left: 1.3rem; }
+.del li { margin: .25rem 0; }
+.del li::marker { color: var(--muted); }
+.del code { font: .92em var(--mono); background: var(--hover); padding: .08em .35em; border-radius: 5px; }
+.del strong { font-weight: 650; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: .94rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .8rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .92rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; }
+details { margin: .9rem 0; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: .1rem 1.1rem; }
+details > summary { cursor: pointer; font-weight: 600; padding: .75rem 0; color: var(--accent); list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "▸ "; }
+details[open] > summary::before { content: "▾ "; }
+details[open] { padding-bottom: .8rem; }
+.genkald { margin-top: 2.6rem; padding: 1.1rem 1.3rem; border: 2px solid var(--accent); border-radius: 16px; background: var(--surface); }
+.genkald h2, .genkald h3 { margin-top: 0 !important; font-size: .82rem !important; letter-spacing: .08em !important; text-transform: uppercase; color: var(--accent); }
+.genkald details { box-shadow: none; border: 1px solid var(--line); }
+
+/* quiz */
+.q { margin: 1rem 0; padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); }
+.q .nr { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q .tekst { margin: .3rem 0 .8rem; font-weight: 600; }
+.q .valg { display: grid; gap: 8px; }
+.q .valg button { text-align: left; font: inherit; font-size: .98rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: .65rem .9rem; cursor: pointer; }
+.q .valg button:hover:not(:disabled) { border-color: var(--accent); }
+.q .valg button:disabled { cursor: default; }
+.q .valg button.ok { background: var(--ok-bg); border-color: var(--ok); }
+.q .valg button.bad { background: var(--bad-bg); border-color: var(--bad); }
+.q .tal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q input { font: 1rem var(--mono); width: 11rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.q .enhed { color: var(--muted); }
+.knap { font: 600 .95rem var(--sans); padding: .6rem 1rem; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.svar { margin-top: .8rem; padding: .7rem .9rem; border-radius: 10px; font-size: .96rem; }
+.svar.ok { background: var(--ok-bg); } .svar.bad { background: var(--bad-bg); } .svar.hint { background: var(--key); }
+.svar b { display: block; margin-bottom: .15rem; }
+.score { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border-radius: 16px; background: var(--soft); border-left: 3px solid var(--accent); }
+.score h2 { margin: 0 0 .3rem !important; font-size: 1.2rem !important; }
+.score ul { margin: .4rem 0; }
+.emnetag { font-size: .76rem; font-weight: 600; color: var(--accent); margin-left: .4rem; text-transform: none; letter-spacing: 0; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .bar .in { gap: 8px; }
+  .tabs button { padding: .48rem .6rem; font-size: .85rem; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .8rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+}
+@media print { .bar { display: none; } .del[hidden] { display: block !important; } details { box-shadow: none; border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m4-el1">‹ Elektroteknik 1</a>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-del="noter">Noter</button>
+    <button role="tab" data-del="formler">Formler</button>
+    <button role="tab" data-del="quiz">Quiz</button>
+  </div>
+</div></header>
+<main>
+  <p class="kicker">Elektroteknik 1</p>
+  <h1>Ledere, effekt og energi</h1>
+  <p class="intro">Lederens resistans, resistivitet og temperatur, strømtæthed og strømvarmetab, moment og vinkelhastighed, effekt, arbejde, energi og virkningsgrad, og akkumulatoren.</p>
+  <section class="del" id="d-noter" role="tabpanel"><blockquote>
+<p><strong>Kilder</strong>
+PP11 Ledere, strømvarmetab, effekt, arbejde og energi · Obligatorisk opgavesæt 1, opgave 4 · Obligatorisk opgavesæt 2, opgave 5 · Obligatorisk opgavesæt 3, opgave 2</p>
+</blockquote>
+<p>Strøm gennem en leder giver varme. Hvor meget, afhænger af lederens resistans, og resistansen afhænger af materiale, længde, tværsnit og temperatur. Det er grundlaget for at dimensionere kabler og regne energiforbrug.</p>
+<h2>Lederens resistans</h2>
+<pre class="formel">R = ρ · l / S = l / (γ · S)        G = 1 / R = γ · S / l   [S, siemens]</pre>
+
+<table>
+<thead>
+<tr>
+<th>Materiale</th>
+<th>ρ ved 20 °C [Ω·mm²/m]</th>
+<th>α [1/°C]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kobber</td>
+<td>0,0175</td>
+<td>0,004</td>
+</tr>
+<tr>
+<td>Aluminium</td>
+<td>0,028</td>
+<td>0,0037</td>
+</tr>
+<tr>
+<td>Konstantan</td>
+<td>ca. 0,5</td>
+<td>0,000005 (næsten konstant)</td>
+</tr>
+</tbody>
+</table>
+<p>Med l i meter og S i mm² kan ρ = 0,0175 Ω·mm²/m bruges direkte.</p>
+<h2>Resistans og temperatur</h2>
+<pre class="formel">R₂ = R₁ · (1 + α · (T₂ − T₁))       →   T₂ = T₁ + (R₂/R₁ − 1) / α</pre>
+
+<p>Metaller har positiv α: modstanden stiger med temperaturen. Kul har negativ α. Det bruges omvendt til at <strong>måle</strong> temperaturen i en vikling: mål R kold og varm, og regn T₂ ud.</p>
+<h3>Gennemregnet eksempel (opgavesæt 1, opgave 4: svejsekabel)</h3>
+<p>Kobberkabel, S = 10 mm², R = 8,75 mΩ ved 20 °C, I = 50 A. Efter 240 minutter er R = 11,2 mΩ.</p>
+<details>
+<summary>Vis udregning</summary>
+<table>
+<thead>
+<tr>
+<th>Størrelse</th>
+<th>Udregning</th>
+<th>Resultat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Længde</td>
+<td>8,75·10⁻³ · 10 / 0,0175</td>
+<td>5,0 m</td>
+</tr>
+<tr>
+<td>Effekttab ved start</td>
+<td>8,75·10⁻³ · 50²</td>
+<td>21,9 W</td>
+</tr>
+<tr>
+<td>Strømtæthed</td>
+<td>50 / 10</td>
+<td>5 A/mm²</td>
+</tr>
+<tr>
+<td>Sluttemperatur</td>
+<td>20 + (11,2 / 8,75 − 1) / 0,004</td>
+<td>90 °C</td>
+</tr>
+<tr>
+<td>Effekttab ved slut</td>
+<td>11,2·10⁻³ · 50²</td>
+<td>28 W</td>
+</tr>
+</tbody>
+</table>
+</details>
+<h2>Strømtæthed og strømvarmetab</h2>
+<pre class="formel">J = I / S          [A/mm²]
+P = R · I²         [W]       strømvarmetab (kobbertab)</pre>
+
+<p>Høj strømtæthed betyder meget varme pr. volumen. Et tyndt kabel med høj J bliver varmt, og isolationen ældes. Varmeafgivelsen afhænger af overfladen, så kabler dimensioneres efter tilladt temperatur, ikke kun efter J.</p>
+<blockquote>
+<p><strong>Trykfejl på slides (PP11, slide 2)</strong>
+Strømvarmetabet står som P = R · I² · N. Enheden er watt [W], ikke newton. N skal ikke ganges på.</p>
+</blockquote>
+<div class="m" data-m="leder"></div>
+
+<h2>Moment og vinkelhastighed</h2>
+<pre class="formel">M = F · r          [Nm]
+ω = 2π · n         [rad/s]   (n i omdr./s)     ω = 2π · n / 60  (n i o/min)
+P = M · ω          [W]       M = P_aksel / ω</pre>
+
+<blockquote>
+<p><strong>Bemærk om slides (PP11, slide 4)</strong>
+Sliden skriver ω = 2π · f. Det gælder for elektriske størrelser. For en aksel skal du bruge omdrejningstallet n. For en 2-polet motor er n og f næsten ens, men for en 4-polet motor er n kun halvdelen.</p>
+</blockquote>
+<h2>Effekt, arbejde, energi og virkningsgrad</h2>
+<pre class="formel">W = F · s          [J]        mekanisk arbejde
+P = W / t          [W]        effekt
+P = U · I          [J/C · C/s = J/s = W]
+W = P · t          [J] eller [kWh]      1 kWh = 3,6 MJ
+η = P2 / P1 = (P1 − ΔP) / P1 = P2 / (P2 + ΔP)</pre>
+
+<h3>Gennemregnet eksempel (opgavesæt 3, opgave 2: komfuret juleaften)</h3>
+<p>To kogezoner på 1,5 kW, to på 2 kW, over- og undervarme i ovnen (0,8 + 1 kW) i 2 timer. Elpris 2,30 kr./kWh.</p>
+<details>
+<summary>Vis udregning</summary>
+<table>
+<thead>
+<tr>
+<th>Størrelse</th>
+<th>Udregning</th>
+<th>Resultat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Samlet effekt</td>
+<td>2 · 1,5 + 2 · 2 + 0,8 + 1</td>
+<td>8,8 kW</td>
+</tr>
+<tr>
+<td>Energi</td>
+<td>8,8 kW · 2 h</td>
+<td>17,6 kWh</td>
+</tr>
+<tr>
+<td>I joule</td>
+<td>17,6 · 3,6·10⁶</td>
+<td>63,4 MJ</td>
+</tr>
+<tr>
+<td>Pris</td>
+<td>17,6 · 2,30</td>
+<td>40,48 kr.</td>
+</tr>
+</tbody>
+</table>
+<p>Grillen (1,5 kW) er ikke tændt.</p>
+</details>
+<h3>Gennemregnet eksempel (opgavesæt 2, opgave 5: to varmelegemer)</h3>
+<p>Ved 230 V udvikles 500 kJ på 25 minutter i serie og 2.500 kJ i parallel.</p>
+<details>
+<summary>Vis udregning</summary>
+<table>
+<thead>
+<tr>
+<th>Størrelse</th>
+<th>Udregning</th>
+<th>Resultat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P serie og parallel</td>
+<td>500.000/1.500 og 2.500.000/1.500</td>
+<td>333 W og 1.667 W</td>
+</tr>
+<tr>
+<td>R serie</td>
+<td>230² / 333</td>
+<td>158,7 Ω = R1 + R2</td>
+</tr>
+<tr>
+<td>R parallel</td>
+<td>230² / 1.667</td>
+<td>31,74 Ω = R1R2/(R1 + R2)</td>
+</tr>
+<tr>
+<td>R1 · R2</td>
+<td>31,74 · 158,7</td>
+<td>5.037 Ω²</td>
+</tr>
+<tr>
+<td>Løs x² − 158,7x + 5.037 = 0</td>
+<td></td>
+<td>R1 = 43,9 Ω og R2 = 114,8 Ω</td>
+</tr>
+</tbody>
+</table>
+<p>Frekvensen (60 Hz) er ligegyldig, fordi lasten er rent resistiv.</p>
+</details>
+<h2>Elektromotorisk kraft, ladning og akkumulatoren</h2>
+<pre class="formel">E = W / Q          [V = J/C]     EMK: energi pr. ladning, som kilden tilfører
+Q = I · t          [C = As]      kapacitet angives i Ah (1 Ah = 3.600 C)
+U_kl = E − I · R_i               klemspænding
+R_i = (E − U_kl) / I             indre modstand</pre>
+
+<ul>
+<li><strong>EMK</strong> måles i tomgang (I = 0). Under belastning falder klemspændingen med I · R_i.</li>
+<li><strong>Kapacitet:</strong> 60 Ah kan levere 5 A i 12 timer. Ved høj strøm er den reelle kapacitet mindre.</li>
+<li><strong>Virkningsgrad (går ud over slides):</strong> Ah-virkningsgraden = afgivet Ah / tilført Ah (bly typisk 85–90 %). Wh-virkningsgraden er lavere (70–80 %), fordi opladning sker ved højere spænding end afladning.</li>
+<li><strong>Indre modstand:</strong> ældes et batteri, stiger R_i. Det ses ved, at klemspændingen falder meget ved start af en motor, selv om tomgangsspændingen ser fin ud.</li>
+</ul>
+<details>
+<summary>Forudsig først: et 12,6 V-batteri med R_i = 0,05 Ω belastes med 1 Ω. Hvad er klemspændingen?</summary>
+<p>I = 12,6 / 1,05 = 12 A. U_kl = 12,6 − 12 · 0,05 = 12,0 V. Ved en startmotor på 0,05 Ω falder den til 6,3 V. Prøv i modellen.</p>
+</details>
+<div class="m" data-m="akku"></div>
+
+<div class="genkald">
+<h3>Test dig selv</h3>
+<ol>
+<li>Hvad sker der med R, når du fordobler tværsnittet?</li>
+<li>Hvordan kan du måle temperaturen i en motorvikling uden termometer?</li>
+<li>Hvor mange joule er 1 kWh?</li>
+<li>Hvorfor falder klemspændingen, når et batteri belastes?</li>
+</ol>
+<details>
+<summary>Svar</summary>
+<ol>
+<li>Den halveres.</li>
+<li>Mål viklingens modstand kold og varm. T₂ = T₁ + (R₂/R₁ − 1)/α.</li>
+<li>3,6 MJ.</li>
+<li>Strømmen giver et spændingsfald I · R_i over batteriets indre modstand.</li>
+</ol>
+</details>
+</div></section>
+  <section class="del" id="d-formler" role="tabpanel"><h3>Resistans</h3>
+<pre class="formel">R = ρ · l / S = 1 / G        ρ_Cu = 0,0175 Ω·mm²/m
+R₂ = R₁ · (1 + α · (T₂ − T₁))     α_Cu = 0,004 /°C
+J = I / S
+P = R · I²</pre>
+
+<h3>Mekanik</h3>
+<pre class="formel">M = F · r       ω = 2π · n       P = M · ω
+W = F · s       P = W / t</pre>
+
+<h3>Energi og virkningsgrad</h3>
+<pre class="formel">W = P · t        1 kWh = 3,6·10⁶ J
+η = P2 / P1 = P2 / (P2 + ΔP)</pre>
+
+<h3>Akkumulator</h3>
+<pre class="formel">E = W / Q        Q = I · t
+U_kl = E − I · R_i       R_i = (E − U_kl) / I</pre></section>
+  <section class="del" id="d-quiz" role="tabpanel">
+    <p>Svar på spørgsmålene, før du kigger i noterne. Ved talopgaver har du to forsøg, og komma og punktum virker begge.</p>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </section>
+</main>
+<script>
+const QUIZ = [{"q": "Et kobberkabel har S = 10 mm² og R = 8,75 mΩ. Hvor langt er det? (m)", "tal": 5.0, "tol": 0.05, "enhed": "m", "losning": "l = R · S / ρ = 8,75·10⁻³ · 10 / 0,0175 = 5,0 m.", "f": "R = ρ · l / S omskrevet til l.", "emne": "Ledere, effekt og energi"}, {"q": "Kablets modstand stiger fra 8,75 til 11,2 mΩ (start 20 °C, α = 0,004). Hvad er sluttemperaturen? (°C)", "tal": 90.0, "tol": 1.0, "enhed": "°C", "losning": "T₂ = 20 + (11,2/8,75 − 1)/0,004 = 20 + 0,28/0,004 = 20 + 70 = 90 °C.", "f": "Modstanden stiger 0,4 % pr. grad i kobber.", "emne": "Ledere, effekt og energi"}, {"q": "Hvad er strømvarmetabet i 8,75 mΩ ved 50 A? (W)", "tal": 21.9, "tol": 0.2, "enhed": "W", "losning": "P = R · I² = 0,00875 · 2.500 = 21,9 W.", "f": "Tabet vokser med kvadratet på strømmen.", "emne": "Ledere, effekt og energi"}, {"q": "Et komfur bruger 8,8 kW i 2 timer. Hvor meget energi er det i MJ?", "tal": 63.36, "tol": 0.1, "enhed": "MJ", "losning": "8,8 · 2 = 17,6 kWh. 17,6 · 3,6 = 63,36 MJ.", "f": "1 kWh = 3,6 MJ.", "emne": "Ledere, effekt og energi"}, {"q": "En motor afgiver 15 kW på akslen ved 1.460 o/min. Hvad er momentet? (Nm)", "tal": 98.1, "tol": 0.5, "enhed": "Nm", "losning": "ω = 2π · 1.460 / 60 = 152,9 rad/s. M = 15.000 / 152,9 = 98,1 Nm.", "f": "Husk at regne o/min om til rad/s.", "emne": "Ledere, effekt og energi"}, {"q": "En motor optager 5.155 W og afgiver 4.000 W. Hvad er virkningsgraden? (%)", "tal": 77.6, "tol": 0.2, "enhed": "%", "losning": "η = 4.000 / 5.155 = 0,776 = 77,6 %.", "f": "η = P2 / P1. Tabene er 1.155 W.", "emne": "Ledere, effekt og energi"}, {"q": "Et batteri har E = 12,6 V og U_kl = 11,9 V ved 50 A. Hvad er den indre modstand? (mΩ)", "tal": 14.0, "tol": 0.5, "enhed": "mΩ", "losning": "R_i = (12,6 − 11,9) / 50 = 0,7 / 50 = 0,014 Ω = 14 mΩ.", "f": "Spændingsfaldet over R_i er forskellen mellem EMK og klemspænding.", "emne": "Ledere, effekt og energi"}, {"valg": ["Det kan levere fx 5 A i 12 timer (en ladningsmængde på 216.000 C)", "Det kan levere 60 A i alle tilfælde", "Det har en spænding på 60 V", "Det har en energi på 60 kWh"], "rigtig": 0, "q": "Hvad betyder det, at et batteri har en kapacitet på 60 Ah?", "f": "Ah er ladning: Q = I · t. 60 Ah · 3.600 s/h = 216.000 C.", "emne": "Ledere, effekt og energi"}, {"q": "To varmelegemer giver 158,7 Ω i serie og 31,74 Ω i parallel. Hvad er det mindste? (Ω)", "tal": 43.9, "tol": 0.2, "enhed": "Ω", "losning": "R1 + R2 = 158,7 og R1R2 = 31,74 · 158,7 = 5.037. Løs x² − 158,7x + 5.037 = 0: x = (158,7 − 71,0)/2 = 43,9 Ω.", "f": "To ligninger med to ubekendte.", "emne": "Ledere, effekt og energi"}];
+const NOGLE = "mn-el1-leder", SAMLET = "" === "1";
+const q = new URLSearchParams(location.search);
+
+// tilbage-link til den side man kom fra
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+
+// faner
+const tabs = [...document.querySelectorAll("#tabs button")];
+function vis(del) {
+  if (!document.getElementById("d-" + del)) del = "noter";
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.del === del));
+  document.querySelectorAll(".del").forEach(s => s.hidden = s.id !== "d-" + del);
+}
+tabs.forEach(b => b.addEventListener("click", () => {
+  vis(b.dataset.del);
+  const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
+  window.scrollTo(0, 0);
+}));
+// tomme dele skjules i fanerne
+["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+if (!QUIZ.length) tabs.find(b => b.dataset.del === "quiz").hidden = true;
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else { const v = q.get("vis") || "noter", t = tabs.find(b => b.dataset.del === v && !b.hidden) || tabs.find(b => !b.hidden); vis(t ? t.dataset.del : "noter"); }
+
+// tabeller kan scrolles på mobil
+document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+
+// quiz
+let gemt = {};
+try { gemt = JSON.parse(localStorage.getItem(NOGLE) || "{}"); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+// Danske og engelske skrivemåder virker begge: "85.200", "85200", "1.150,5", "0,86", "0.86".
+// Et enkelt punktum efterfulgt af tre cifre kan både være tusindtal og decimal, så begge tolkninger prøves.
+const tolk = s => { s = String(s).replace(/[\s\u00a0]/g, "").replace("−", "-");
+  if (!/^-?[\d.,]+$/.test(s)) return [];
+  if (s.includes(",")) return [parseFloat(s.replace(/\./g, "").replace(",", "."))];
+  if ((s.match(/\./g) || []).length > 1) return [parseFloat(s.replace(/\./g, ""))];
+  const ud = [parseFloat(s)];
+  if (/^-?\d+\.\d{3}$/.test(s)) ud.push(parseFloat(s.replace(".", "")));
+  return ud; };
+const fmt = x => x.toLocaleString("da-DK", { maximumFractionDigits: 4 });
+
+function bygQuiz() {
+  const rod = document.getElementById("quiz"); rod.innerHTML = "";
+  QUIZ.forEach((s, i) => {
+    const el = document.createElement("div"); el.className = "q";
+    el.innerHTML = `<div class="nr">Spørgsmål ${i + 1} af ${QUIZ.length}${SAMLET ? `<span class="emnetag">${s.emne}</span>` : ""}</div><div class="tekst">${s.q}</div>`;
+    const g = gemt[i];
+    if (s.valg) {
+      const v = document.createElement("div"); v.className = "valg";
+      s.valg.forEach((t, j) => {
+        const b = document.createElement("button"); b.innerHTML = t;
+        b.addEventListener("click", () => { gemt[i] = { valgt: j, ok: j === s.rigtig }; gem(); bygQuiz(); });
+        v.append(b);
+      });
+      el.append(v);
+      if (g) {
+        [...v.children].forEach((b, j) => { b.disabled = true; if (j === s.rigtig) b.classList.add("ok"); else if (j === g.valgt) b.classList.add("bad"); });
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Ikke helt."}</b>${s.f || ""}</div>`);
+      }
+    } else {
+      const f = document.createElement("div"); f.className = "tal";
+      f.innerHTML = `<input inputmode="decimal" aria-label="Dit svar" placeholder="Dit svar"> <span class="enhed">${s.enhed || ""}</span> <button class="knap">Tjek</button> <button class="knap stille">Vis facit</button>`;
+      const [inp, , tjek, opgiv] = f.children;
+      el.append(f);
+      const faerdig = g && (g.ok || g.forsog >= 2 || g.opgivet);
+      if (g && g.svar != null) inp.value = g.svar;
+      if (faerdig) {
+        inp.disabled = tjek.disabled = opgiv.disabled = true;
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Facit: " + fmt(s.tal) + " " + (s.enhed || "")}</b>${s.losning ? s.losning + "<br>" : ""}${s.f || ""}</div>`);
+      } else if (g && g.forsog === 1) {
+        el.insertAdjacentHTML("beforeend", `<div class="svar hint"><b>Ikke helt. Tjek din opstilling og prøv igen.</b>Du har ét forsøg tilbage.</div>`);
+      }
+      const svar = () => {
+        const xs = tolk(inp.value); if (!xs.length || xs.some(isNaN)) { inp.focus(); return; }
+        const ok = xs.some(x => Math.abs(x - s.tal) <= Math.max(s.tol, Math.abs(s.tal) * 1e-9));
+        const forsog = ((g && g.forsog) || 0) + 1;
+        gemt[i] = { svar: inp.value, ok, forsog }; gem(); bygQuiz();
+      };
+      tjek.addEventListener("click", svar);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") svar(); });
+      opgiv.addEventListener("click", () => { gemt[i] = { svar: inp.value, ok: false, forsog: 2, opgivet: true }; gem(); bygQuiz(); });
+    }
+    rod.append(el);
+  });
+  // score
+  const faerdige = QUIZ.map((s, i) => gemt[i] && (s.valg || gemt[i].ok || gemt[i].forsog >= 2));
+  const antal = faerdige.filter(Boolean).length, rigtige = QUIZ.filter((s, i) => gemt[i] && gemt[i].ok).length;
+  const forkerte = QUIZ.map((s, i) => faerdige[i] && !gemt[i].ok ? `<li>${s.q.replace(/<[^>]+>/g, "")}${SAMLET ? ` <em>(${s.emne})</em>` : ""}</li>` : "").join("");
+  document.getElementById("score").innerHTML = antal === 0 ? "" : `<div class="score">
+    <h2>${rigtige} af ${QUIZ.length} rigtige${antal < QUIZ.length ? ` · ${QUIZ.length - antal} mangler` : ""}</h2>
+    ${forkerte ? `<p>Tag med i repetitionen:</p><ul>${forkerte}</ul>` : antal === QUIZ.length ? "<p>Alle rigtige. Tag quizzen igen om et par uger.</p>" : ""}
+    <button class="knap stille" id="nulstil">Start forfra</button></div>`;
+  const n = document.getElementById("nulstil");
+  if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
+}
+if (QUIZ.length) bygQuiz();
+</script>
+<script src="modeller.js"></script>
+</body>
+</html>

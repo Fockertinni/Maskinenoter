@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Eksamen 2026 · Elektroteknik 1 · Maskinenoter</title>
+<link rel="stylesheet" href="../../hav.css"><script>document.documentElement.dataset.theme="dark"</script>
+<!-- Bygget af noter/kilde/byg.py fra afsnittet "# Kort" i kildefilen. Ret i kildefilen, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #1d6fa5; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #6db8ec; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #6db8ec; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+button { font: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.bar .taeller { margin-left: auto; font: 600 .9rem var(--sans); color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.fremdrift { height: 3px; background: var(--line); }
+.fremdrift div { height: 100%; width: 0; background: var(--accent); transition: width .25s; }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.6rem, 4vw, 2.6rem) max(16px, env(safe-area-inset-left, 0px)) 6rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .7rem 0 0; font-size: 1.08rem; color: var(--muted); max-width: 60ch; }
+
+.vaelg { margin: 1.6rem 0 1rem; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.vaelg select { flex: 1 1 240px; min-width: 0; font: 600 .98rem var(--sans); color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: .6rem .8rem; }
+.knap { font: 600 .95rem var(--sans); padding: .65rem 1.05rem; border-radius: 11px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.knap:disabled { opacity: .4; cursor: default; }
+.knap.lille { padding: .5rem .8rem; font-size: .88rem; }
+.knap[aria-pressed="true"] { background: var(--accent); color: #fff; }
+
+.kort { background: var(--surface); border-radius: 20px; box-shadow: var(--shadow); padding: clamp(1.2rem, 3.5vw, 2rem); }
+.kort .nr { font-size: .78rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--accent); }
+.kort .q { margin: .4rem 0 0; font-size: clamp(1.18rem, 2.6vw, 1.42rem); line-height: 1.38; font-weight: 650; letter-spacing: -.01em; text-wrap: pretty; }
+.kort .handl { margin-top: 1.2rem; display: flex; flex-wrap: wrap; gap: 8px; }
+.kort .vis { width: 100%; padding: .95rem; font-size: 1.02rem; }
+.svar { margin-top: 1.4rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+.svar > :first-child { margin-top: 0; }
+.svar p, .svar li { max-width: 68ch; }
+.svar ul, .svar ol { padding-left: 1.3rem; }
+.svar li { margin: .25rem 0; }
+.svar li::marker { color: var(--muted); }
+.svar strong { font-weight: 650; }
+.svar img { display: block; max-width: 100%; height: auto; border-radius: 12px; margin: 1rem 0; }
+.svar img.lys { background: #fff; padding: 8px; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; border: 1px solid var(--line); }
+table { border-collapse: collapse; width: 100%; font-size: .93rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .55rem .75rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .9rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .76rem; letter-spacing: .07em; text-transform: uppercase; }
+.vurder { margin-top: 1.4rem; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.vurder .knap { padding: .8rem; }
+.vurder .sad { background: var(--ok-bg); color: var(--fg); border: 1px solid var(--ok); }
+.vurder .oev { background: var(--bad-bg); color: var(--fg); border: 1px solid var(--bad); }
+.figurer { margin-top: 1.2rem; }
+.figurer img { display: block; width: 100%; height: auto; border-radius: 12px; background: #fff; margin: 0 0 10px; border: 1px solid var(--line); }
+.figurer p { margin: .2rem 0 .6rem; font-size: .88rem; color: var(--muted); }
+
+.nav { margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.nav .knap { padding: .85rem; }
+.tip { margin: .9rem 0 0; font-size: .85rem; color: var(--muted); text-align: center; }
+
+.oversigt { margin-top: 2.4rem; }
+.oversigt h2 { font-size: 1.1rem; margin: 0 0 .3rem; letter-spacing: -.01em; }
+.oversigt .forkl { margin: 0 0 .8rem; font-size: .9rem; color: var(--muted); }
+.oversigt .gruppe { display: flex; align-items: baseline; gap: 10px; padding: .45rem 0; border-bottom: 1px solid var(--line); }
+.oversigt .gnavn { flex: 0 0 auto; width: 13.5rem; max-width: 45%; font-size: .9rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.oversigt .prikker { display: flex; flex-wrap: wrap; gap: 5px; }
+.oversigt .prik { width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); font: 600 .68rem var(--sans); cursor: pointer; padding: 0; }
+.oversigt .prik.sad { background: var(--ok-bg); border-color: var(--ok); color: var(--fg); }
+.oversigt .prik.oev { background: var(--bad-bg); border-color: var(--bad); color: var(--fg); }
+.oversigt .prik.nu { outline: 2px solid var(--accent); outline-offset: 1px; }
+.status { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 1rem; font-size: .9rem; color: var(--muted); }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .78rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+  .kort .q { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+  .oversigt .gruppe { flex-direction: column; gap: 4px; }
+  .oversigt .gnavn { width: auto; max-width: 100%; }
+}
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m4-el1">‹ Elektroteknik 1</a>
+  <span class="taeller" id="taeller"></span>
+</div><div class="fremdrift"><div id="fremdrift"></div></div></header>
+<main>
+  <p class="kicker">Elektroteknik 1</p>
+  <h1>Eksamen 2026</h1>
+  <p class="intro">De 13 eksamenstemaer med eksempelopgaven og alle punkterne fra temalisten som spørgsmål. Læs spørgsmålet, svar selv højt, og tryk så for at se svaret.</p>
+
+  <div class="vaelg">
+    <select id="gruppe" aria-label="Vælg spørgsmål"></select>
+    <button class="knap stille lille" id="kunOev" aria-pressed="false">Kun dem jeg skal øve</button>
+  </div>
+
+  <article class="kort" id="kort" aria-live="polite">
+    <div class="nr" id="nr"></div>
+    <p class="q" id="q"></p>
+    <div class="handl">
+      <button class="knap vis" id="vis">Vis svar</button>
+      <button class="knap stille lille" id="figKnap" aria-expanded="false">Vis opgavens figurer</button>
+    </div>
+    <div class="figurer" id="figurer" hidden></div>
+    <div class="svar" id="svar" hidden></div>
+    <div class="vurder" id="vurder" hidden>
+      <button class="knap sad" id="sad">Det sad ✓</button>
+      <button class="knap oev" id="oev">Øv igen</button>
+    </div>
+  </article>
+
+  <div class="nav">
+    <button class="knap stille" id="forrige">‹ Forrige</button>
+    <button class="knap stille" id="naeste">Næste ›</button>
+  </div>
+  <p class="tip">Tip: mellemrum viser svaret, pilene skifter spørgsmål.</p>
+
+  <section class="oversigt">
+    <h2>Oversigt</h2>
+    <p class="forkl">Tryk på et nummer for at hoppe dertil. Grøn sad, rød skal øves.</p>
+    <div id="oversigt"></div>
+    <div class="status"><span id="statustekst"></span><button class="knap stille lille" id="nulstil">Nulstil markeringer</button></div>
+  </section>
+</main>
+<script>
+const GRUPPER = [{"nr": "1", "titel": "DC-kredse", "sider": [], "mappe": "eksamen2026", "kort": [{"nr": "1.1", "q": "Forklar beregningen af et givent DC-kredsløb med batteri", "a": "<p>Fremgangsmåden, vist med opgavesæt 1, opgave 3 (U = 45 V, R1–R5 = 1–5 Ω):<\/p>\n<ol>\n<li><strong>Tegn kredsen<\/strong> og sæt strømretninger og spændingspile på. Batteriet er en EMK E med en indre modstand R_i i serie.<\/li>\n<li><strong>Vælg metode:<\/strong> serie/parallel-reduktion, hvis kredsen kan reduceres. Ellers Kirchhoff (masker og knuder), superposition eller Thevenin.<\/li>\n<li><strong>Thevenin:<\/strong> fjern belastningen. U_Th = tomgangsspændingen mellem a og b (her 29,0 V). R_Th = modstanden set fra a-b med kilderne kortsluttet (her 6,42 Ω).<\/li>\n<li><strong>Belast:<\/strong> I = U_Th / (R_Th + R_b). Med 5 Ω: U_ab = 29,0 · 5 / 11,42 = 12,7 V.<\/li>\n<li><strong>Kontrollér<\/strong> med Kirchhoffs spændingslov eller et potentialdiagram: rundt i en maske skal summen være nul.<\/li>\n<\/ol>"}, {"nr": "1.2", "q": "Resistanser i serie eller parallel", "a": "<p>Serie: R = R1 + R2 + …, samme strøm, spændingerne deles. Parallel: 1/R = 1/R1 + 1/R2 + …, samme spænding, strømmene deles. To i parallel: R1 · R2 / (R1 + R2). Den samlede parallelmodstand er altid mindre end den mindste.<\/p>"}, {"nr": "1.3", "q": "Kirchhoffs love", "a": "<p><strong>Strømloven:<\/strong> summen af strømme ind i en knude er lig summen ud (ladning hober sig ikke op). <strong>Spændingsloven:<\/strong> rundt i en lukket maske er ΣE = Σ(R · I) (du kommer tilbage til samme potential). Med n knuder og m grene: n − 1 knudeligninger og m − (n − 1) maskeligninger.<\/p>"}, {"nr": "1.4", "q": "Spændings- og strømdeling", "a": "<p>Spændingsdeler (serie): U_x = U · R_x / R_total. Strømdeler (to grene i parallel): I_1 = I · R_2 / (R_1 + R_2). Strømmen vælger mest den lette vej.<\/p>"}, {"nr": "1.5", "q": "Superposition", "a": "<p>Med flere kilder regner du én kilde ad gangen, mens de andre er kortsluttet (men deres indre modstand bliver). Til sidst lægges delstrømmene sammen med fortegn. Opgavesæt 1, opgave 5: I_RB = 0,071 + 1,997 = 2,07 A. I_E1 bliver negativ (−0,55 A), så E1 bliver opladet.<\/p>"}, {"nr": "1.6", "q": "Thevenin", "a": "<p>Enhver lineær kreds set fra to klemmer kan erstattes af én spændingskilde U_Th i serie med R_Th. U_Th måles i tomgang. R_Th findes med kilderne kortsluttet, eller som U_Th / I_kortslutning. Fordel: du kan hurtigt regne mange forskellige belastninger.<\/p>"}, {"nr": "1.7", "q": "Potentialdiagram", "a": "<p>Vælg et nulpunkt og gå rundt i kredsen. En kilde giver et spring op (fra − til +), en modstand et fald på R · I i strømmens retning. Ender du samme sted, som du startede, er regningen rigtig.<\/p>"}, {"nr": "1.8", "q": "Batterier og elementer", "a": "<p>Et element er en galvanisk celle: to forskellige metaller i en elektrolyt giver en EMK. Batteri = flere celler. Serie: spændingerne lægges sammen. Parallel: kapaciteten og strømmen lægges sammen (cellerne skal have samme spænding). Klemspænding U_kl = E − I · R_i.<\/p>\n<blockquote>\n<p><strong>Usikker<\/strong>\nSlides kalder den positive pol anoden. Ved afladning er den positive pol katoden (reduktion), ved opladning anoden. Det afhænger af, hvilken konvention læreren bruger. Spørg, hvis det kommer op.<\/p>\n<\/blockquote>"}]}, {"nr": "2", "titel": "AC-kredse", "sider": [], "mappe": "eksamen2026", "kort": [{"nr": "2.1", "q": "Tegn og forklar ækvivalentskemaet for en serie- eller parallelkreds", "a": "<p><strong>Serie<\/strong> (opgavesæt 2, opgave 4: R = 35 Ω, spole 50 Ω og 0,2 H, C = 25,85 µF, 230 V 50 Hz):<\/p>\n<ol>\n<li>Ækvivalentskemaet: spolen er en ideel L i serie med sin modstand. Alle R lægges sammen: R = 85 Ω. X_L = 62,8 Ω, X_C = 123,2 Ω.<\/li>\n<li>Z = 85 − j60,3 = 104,2 Ω ∠ −35,4°. I = 230 / 104,2 = 2,21 A.<\/li>\n<li>Kredsen er kapacitiv (under resonans på 70 Hz), så strømmen ligger 35,4° før spændingen.<\/li>\n<\/ol>\n<p><strong>Parallel:<\/strong> samme spænding over alle grene. Regn strømmene I_R = U/R, I_L = U/X_L, I_C = U/X_C og læg dem sammen vektorielt: I = √(I_R² + (I_L − I_C)²).<\/p>\n<p>Et serieskema kan omregnes til et parallelt med samme Z og φ, men så er R og X andre værdier.<\/p>"}, {"nr": "2.2", "q": "Impedanser i serie eller parallel", "a": "<p>Serie: Z̄ = Z̄1 + Z̄2 (læg R og X sammen hver for sig). Parallel: Z̄ = Z̄1 · Z̄2 / (Z̄1 + Z̄2) eller via admittanser Ȳ = 1/Z̄. Brug kompleks regning, når grenene både har R og X.<\/p>"}, {"nr": "2.3", "q": "Kirchhoffs love i AC", "a": "<p>De gælder også i AC, men med vektorer (komplekse tal). Summen af strømmene i en knude er nul som vektorsum, ikke som talsum. To strømme på 0,79 og 0,56 A kan give 0,87 A.<\/p>"}, {"nr": "2.4", "q": "Thevenin i AC", "a": "<p>Samme fremgangsmåde som DC, men U_Th og Z_Th er komplekse.<\/p>"}, {"nr": "2.5", "q": "Strøm-spændingsvektordiagrammer", "a": "<p>Serie: læg strømmen vandret (den er fælles). U_R ligger langs I, U_L 90° foran, U_C 90° bagud. U er vektorsummen. Parallel: læg spændingen vandret, og tegn grenstrømmene ud fra den.<\/p>"}]}, {"nr": "3", "titel": "Kondensatoren", "sider": [], "mappe": "eksamen2026", "kort": [{"nr": "3.1", "q": "Skitser et strøm-spændingsdiagram ud fra fasekompensering", "a": "<p>Lysstofrøret i opgavesæt 2, opgave 6 (230 V, P = 28 W):<\/p>\n<ol>\n<li>Tegn U vandret.<\/li>\n<li>Tegn I₂ = 0,25 A med φ₂ = 60,9° bagud (cos φ = 28 / (230 · 0,25) = 0,487).<\/li>\n<li>Del I₂ i en wattstrøm 0,122 A langs U og en wattløs strøm 0,218 A nedad.<\/li>\n<li>Tegn I_C = 0,131 A lodret opad (90° før U).<\/li>\n<li>I₁ = I₂ + I_C = 0,15 A. Den aktive strøm er uændret. Kun den wattløse er blevet mindre.<\/li>\n<li>C = I_C / (U · ω) = 1,81 µF.<\/li>\n<\/ol>"}, {"nr": "3.2", "q": "Kondensatoren som komponent", "a": "<p>To ledende plader adskilt af en isolator (dielektrikum). Den lagrer ladning og energi i et elektrisk felt. DC: spærrer, når den er ladet. AC: leder, med X_C = 1/(2πfC), og strømmen ligger 90° før spændingen.<\/p>"}, {"nr": "3.3", "q": "Elektrisk felt, elektrisk flux og kapacitans", "a": "<p>E = U / d [V/m]. Kapacitans C = Q / U = ε₀ · ε_r · A / d. Med to lag dielektrikum (opgavesæt 1, opgave 2.1) er D den samme i begge lag, så E er størst i laget med lavest ε_r (luften). Luften tager den største del af spændingen og bryder først igennem.<\/p>"}, {"nr": "3.4", "q": "Kondensatorer i serie og parallel (C og X_C)", "a": "<p>Parallel: C = C1 + C2 (større areal). Serie: 1/C = 1/C1 + 1/C2 (større afstand). For X_C er det omvendt: i serie lægges X_C sammen.<\/p>"}, {"nr": "3.5", "q": "Op- og afladning", "a": "<p>τ = R · C. Opladning: u_C = U(1 − e^(−t/τ)), 63 % efter 1τ, fuld efter 5τ. Strømmen starter på U/R og falder til nul. Afladning: u_C = U · e^(−t/τ).<\/p>"}, {"nr": "3.6", "q": "X_C i kabler og luftledninger", "a": "<p>Et kabel er en lang kondensator. Det trækker en ladestrøm I_C = U / X_C, også i tomgang. Kabler har langt større kapacitans end luftledninger (tætte ledere, højere ε_r). Lange kabler kan give spændingsstigning i tomgang.<\/p>"}, {"nr": "3.7", "q": "Fasekompensering", "a": "<p>Kondensatorens strøm ligger 180° modsat spolens wattløse strøm og ophæver den. Q_C = P(tan φ₁ − tan φ₂). Gevinst: mindre strøm, mindre tab, mindre kabler. Aktiv effekt uændret.<\/p>"}]}, {"nr": "4", "titel": "Magnetisme", "sider": [], "mappe": "eksamen2026", "kort": [{"nr": "4.1", "q": "Forklar beregningen af reluktans og fluxtæthed i en oplyst magnetisk kreds", "a": "<p>Eksempel: jernkerne l_Fe = 400 mm, μ_r = 2.000, luftgab 1 mm, A = 4 cm², ønsket B = 1 T.<\/p>\n<ol>\n<li>Φ = B · A = 1 · 4·10⁻⁴ = 0,4 mWb.<\/li>\n<li>R_m,Fe = l / (μ₀ μ_r A) = 0,4 / (4π·10⁻⁷ · 2.000 · 4·10⁻⁴) = 0,398·10⁶ A/Wb.<\/li>\n<li>R_m,luft = 0,001 / (4π·10⁻⁷ · 4·10⁻⁴) = 1,99·10⁶ A/Wb.<\/li>\n<li>N · I = Φ(R_Fe + R_luft) = 159 + 796 = 955 A.<\/li>\n<li>Pointen: luftgabet på 1 mm kræver fem gange så mange ampervindinger som 400 mm jern.<\/li>\n<\/ol>\n<p>Omvendt: kendes N · I, regn Φ = N·I / ΣR_m og B = Φ / A.<\/p>"}, {"nr": "4.2", "q": "Magnetisk flux og fluxtæthed", "a": "<p>Flux Φ [Wb] er den samlede mængde feltlinjer. Fluxtæthed B = Φ / A [T] er linjer pr. m². H = N · I / l [A/m] er \"trykket\" og B = μ₀ μ_r H.<\/p>"}, {"nr": "4.3", "q": "Jerntab", "a": "<p><strong>Hysteresetab:<\/strong> domænerne vendes 2 gange pr. periode. Tabet er arealet af hysteresesløjfen, ∝ f. Mindskes med blødt magnetisk materiale (siliciumjern). <strong>Hvirvelstrømstab:<\/strong> den skiftende flux inducerer strømme i jernet, ∝ f². Mindskes med tynde, isolerede plader.<\/p>"}, {"nr": "4.4", "q": "Magnetiske kredsløb med og uden luftgab", "a": "<p>Den magnetiske kreds regnes som en elektrisk: N·I svarer til E, Φ til I og R_m til R. Delene ligger i serie. Luftgab har μ_r = 1, så selv et lille gab dominerer. Luftgab gør kredsen mere lineær og forhindrer mætning.<\/p>"}, {"nr": "4.5", "q": "AC-spole med jernkerne", "a": "<p>Ækvivalentskema: kobbermodstanden R_Cu i serie, og en parallel med R_Fe (jerntab) og X_m (magnetisering). Effekten P = P_Cu + P_Fe. Opgavesæt 2, opgave 9: 250 W, heraf 203 W kobbertab og 47 W jerntab.<\/p>"}]}, {"nr": "5", "titel": "Parallelforbundne seriekredse og serieforbindelse med parallelkredse", "sider": [], "mappe": "eksamen2026", "kort": [{"nr": "5.1", "q": "Tegn strøm-spændingsdiagrammet", "a": "<p>Opgavesæt 2, opgave 7 (100 V, 50 Hz):<\/p>\n<ol>\n<li>Regn hver gren som en serieimpedans: Z̄1 = R1 + jX_L, Z̄2 = R2 − jX_C.<\/li>\n<li>Strømmene I1 = 0,79 A (induktiv) og I2 = 0,56 A (kapacitiv).<\/li>\n<li>Tegn U vandret. I1 bagud, I2 foran. ΣI = 0,87 A, næsten i fase med U.<\/li>\n<li>Tegn grenspændingerne: U_R1 langs I1, U_L 90° foran I1. Tilsvarende for gren 2. Hver gren skal summe til U.<\/li>\n<li>U_cd = 98 V er afstanden mellem midtpunkterne i de to grenes spændingstrekanter.<\/li>\n<\/ol>"}, {"nr": "5.2", "q": "AC-kredse med R, X_L og X_C", "a": "<p>Hver gren regnes med Z̄ = R + j(X_L − X_C). Spoler giver +j, kondensatorer −j.<\/p>"}, {"nr": "5.3", "q": "Strøm-spændingsvektordiagrammer", "a": "<p>Parallelgrene: fælles spænding, tegn den vandret. Serieforbindelse: fælles strøm, tegn den vandret. I en blandet kreds starter du med det, der er fælles for den del, du tegner.<\/p>"}, {"nr": "5.4", "q": "Beregning af blandet forbindelse", "a": "<p>Reducér indefra og ud: parallelgrenene samles til én Z̄_p, som lægges i serie med resten. Find totalstrømmen, og regn baglæns spændinger og grenstrømme.<\/p>\n<blockquote>\n<p><strong>Usikker<\/strong>\nI besvarelsen af opgave 7 var fortegnet på Z2 forkert. Med rettet fortegn bliver Z = 114,8 Ω ∠ −1,0° og I = 0,871 A. Se emnet om blandede forbindelser.<\/p>\n<\/blockquote>"}]}, {"nr": "6", "titel": "3-faset symmetrisk belastning", "sider": [], "mappe": "eksamen2026", "kort": [{"nr": "6.1", "q": "Forklar beregningen af fase- og netlederstrømme for to symmetriske belastninger", "a": "<p>Varmelegemer 3 × 23 Ω i Y og en Δ-motor med netstrøm 9,3 A og cos φ = 0,8 på 3 × 400 V:<\/p>\n<ol>\n<li>Varmelegemer (Y): I_f = I_L = 230 / 23 = 10 A, i fase med fasespændingen.<\/li>\n<li>Motor (Δ): netstrøm 9,3 A. Strømmen i hver vikling: I_f = 9,3 / √3 = 5,37 A.<\/li>\n<li>Netstrømmene skal lægges sammen som vektorer: aktiv del 10 + 9,3 · 0,8 = 17,44 A, reaktiv del 9,3 · 0,6 = 5,58 A.<\/li>\n<li>I_L = √(17,44² + 5,58²) = 18,3 A, ikke 19,3 A.<\/li>\n<\/ol>"}, {"nr": "6.2", "q": "Wattmetermetoder (1, 2 og 3 wattmetre)", "a": "<p><strong>1 wattmeter:<\/strong> kun symmetrisk last. P = 3 · W. <strong>2 wattmetre (Aron):<\/strong> 3-leder net, vilkårlig last. P = W1 + W2. Ved symmetrisk last også Q = √3(W2 − W1). Under cos φ = 0,5 viser det ene negativt. <strong>3 wattmetre:<\/strong> 4-leder net, vilkårlig last. P = W1 + W2 + W3.<\/p>"}, {"nr": "6.3", "q": "Strøm-spændingsvektordiagrammer", "a": "<p>Tegn de tre fasespændinger 120° fra hinanden og netspændingerne som forskellen mellem dem (30° foran). Hver strøm ligger φ efter sin fasespænding.<\/p>"}, {"nr": "6.4", "q": "Fasekompensering", "a": "<p>Q_C = P(tan φ₁ − tan φ₂). Δ: C = Q_C / (3ωU_n²). Y: C = Q_C / (3ωU_f²), tre gange større. Δ giver mindre kondensatorer. Færgen (opgavesæt 3, opgave 7) skulle bruge 1,23 Mvar.<\/p>"}]}, {"nr": "7", "titel": "Stjerne-trekant transformation og Y-forbundet belastning uden nul", "sider": [], "mappe": "eksamen2026", "kort": [{"nr": "7.1", "q": "Vis beregningen af stjernepunktets forskydning", "a": "<p>R1 = 80, R2 = 125, R3 = 45 Ω i Y uden nul på 3 × 400 V:<\/p>\n<ol>\n<li>Δ-omregn: R12 = 427,2, R23 = 240,3, R31 = 153,8 Ω.<\/li>\n<li>Strømmene i Δ: I_12 = 400∠30°/427,2 osv.<\/li>\n<li>Netstrømmene ved Kirchhoff: I1 = I_12 − I_31 = 3,17 A ∠ −15,2° osv.<\/li>\n<li>Spændingerne over hver R: 254 V, 285 V og 168 V. Ikke 230 V.<\/li>\n<li>Forskydning: U_X0 = U_1N − U_R1 = 68 V ∠ 102°.<\/li>\n<\/ol>\n<p>Alternativt direkte: Ū_0 = Σ(Ū_f · Ȳ) / ΣȲ.<\/p>"}, {"nr": "7.2", "q": "Y-D transformation", "a": "<p>Δ → Y: R_a = R_ab · R_ca / (R_ab + R_bc + R_ca). Y → Δ: R_ab = (R_a R_b + R_b R_c + R_c R_a) / R_c. Symmetrisk: Z_Y = Z_Δ / 3.<\/p>"}, {"nr": "7.3", "q": "Strøm-spændingsvektordiagrammer", "a": "<p>Tegn netspændingstrekanten. Ved symmetri ligger stjernepunktet i midten. Ved usymmetri uden nul flytter det mod den fase med den største impedans. Spændingerne over lasterne er fra hver hjørnespids til det forskudte stjernepunkt.<\/p>"}]}, {"nr": "8", "titel": "Usymmetrisk belastning af 3-faset net med nul", "sider": [], "mappe": "eksamen2026", "kort": [{"nr": "8.1", "q": "Benyt Kirchhoffs strømlov på beregnede og oplyste fasestrømme", "a": "<ol>\n<li>Skriv hver strøm som vektor med vinkel ud fra sin spænding: fase L1 230∠0°, L2 230∠−120°, L3 230∠120°. En 2-faset last på L1–L2 har spænding 400∠30°.<\/li>\n<li>Træk φ fra spændingens vinkel for induktive laster.<\/li>\n<li>Strømmen i hver faseleder er summen af strømmene til de laster, der hænger på den (med fortegn for 2-fasede laster).<\/li>\n<li>Nulstrøm: Ī_N = Ī1 + Ī2 + Ī3 (komplekst).<\/li>\n<li>Opgavesæt 3, opgave 5: 12,2 / 7,2 / 10,9 A og I_N = 5,0 A.<\/li>\n<\/ol>"}, {"nr": "8.2", "q": "1-, 2- og 3-fasede belastninger", "a": "<p>1-faset: mellem fase og nul, 230 V. 2-faset: mellem to faser, 400 V, ingen nulstrøm. 3-faset symmetrisk: ingen nulstrøm. Placér 1-fasede laster, så de fordeles jævnt.<\/p>"}, {"nr": "8.3", "q": "Strøm-spændingsdiagrammer og knudepunktsligninger", "a": "<p>I stjernepunktet: Ī_N = Ī1 + Ī2 + Ī3. For en 2-faset last på L1–L2 tæller strømmen positivt i L1 og negativt i L2. Tegn alle strømme fra origo og læg dem sammen hoved til hale.<\/p>\n<blockquote>\n<p><strong>Usikker<\/strong>\nPP7 skriver I2 = I23 + (−I21). Det skal være −I12. Se emnet om stjerne uden nul.<\/p>\n<\/blockquote>"}]}, {"nr": "9", "titel": "Magnetisk felt og håndregler", "sider": [], "mappe": "eksamen2026", "kort": [{"nr": "9.1", "q": "Forklar felt-, strøm- og kraftretninger med håndregler i et givent eksempel", "a": "<ol>\n<li>Hovedfeltet går fra N til S.<\/li>\n<li>Lederens felt: proptrækkerreglen. ⊗ (ind) giver felt med uret.<\/li>\n<li>Hvor felterne peger samme vej, bliver feltet stærkt. Lederen skubbes mod den svage side.<\/li>\n<li>Kontrollér med motorreglen: venstre hånd, feltet ind i håndfladen, fingrene i strømmens retning, tommelfingeren viser kraften.<\/li>\n<li>Størrelse: F = B · I · l.<\/li>\n<\/ol>"}, {"nr": "9.2", "q": "Spoleregel, generatorregel og motorregel", "a": "<p>Spoleregel (højre hånd): fingrene følger strømmen, tommelfingeren viser N. Motorregel (venstre): felt i håndfladen, fingre = strøm, tommel = kraft. Generatorregel (højre): felt i håndfladen, tommel = bevægelse, fingre = induceret strøm.<\/p>"}, {"nr": "9.3", "q": "Proptrækkerreglen", "a": "<p>Skru en proptrækker i strømmens retning. Drejeretningen er feltets retning. Strøm ind i papiret: felt med uret.<\/p>"}, {"nr": "9.4", "q": "Lenz' lov", "a": "<p>Den inducerede strøm modarbejder den ændring, der skabte den. Derfor minus i e = −N·dΦ/dt, og derfor skal en generator drives hårdere, når den belastes.<\/p>"}, {"nr": "9.5", "q": "Induktion", "a": "<p>Ændres fluxen gennem en spole, induceres e = −N · dΦ/dt. En leder, der bevæges i et felt: E = B · l · v.<\/p>"}, {"nr": "9.6", "q": "Selvinduktion", "a": "<p>En spole modarbejder ændringer i sin egen strøm: e = −L · di/dt. L = μ · A · N² / l. Energien i feltet er ½LI².<\/p>"}, {"nr": "9.7", "q": "Ind- og udkobling af spoler", "a": "<p>τ = L / R. Indkobling: i stiger til 63 % efter 1τ. Udkobling uden diode: di/dt bliver enorm og giver gnister. Med friløbsdiode dør strømmen ud med τ.<\/p>"}]}, {"nr": "10", "titel": "DC-motoren", "sider": [], "mappe": "eksamen2026", "kort": [{"nr": "10.1", "q": "Opstil DC-motorens spændingsligning med oplyst data", "a": "<p>Shuntmotor fra opgavesæt 1, opgave 6: U = 220 V, I = 2,0 A, R_sh = 1.200 Ω, R_av = 24 Ω, ΔU_b = 2 V.<\/p>\n<ol>\n<li>Tegn ækvivalentdiagrammet: R_sh parallelt med ankergrenen (R_av, E, børster).<\/li>\n<li>I_sh = 220 / 1.200 = 0,183 A. I_a = 2,0 − 0,183 = 1,82 A.<\/li>\n<li>E = U − I_a · R_av − ΔU_b = 220 − 1,82 · 24 − 2 = 174 V.<\/li>\n<li>Serie: E = U − I_a(R_a + R_v + R_s) − ΔU_b.<\/li>\n<\/ol>"}, {"nr": "10.2", "q": "Opbygning", "a": "<p>Stator med hovedpoler (feltvikling eller permanente magneter) og vendepoler. Rotor (anker) med vikling i noter, kommutator og børster.<\/p>"}, {"nr": "10.3", "q": "Kommutering og ankerreaktion", "a": "<p>Kommutatoren vender strømmen i lederne, når de passerer den neutrale zone, så momentet altid går samme vej. Ankerstrømmen laver et tværfelt, der forskyder den neutrale zone (ankerreaktion), og det giver gnister. Vendepolerne ophæver tværfeltet.<\/p>"}, {"nr": "10.4", "q": "Serie-, shunt- og permanentmagnetmotor", "a": "<p>Serie: stort startmoment, løber løbsk ubelastet. Shunt: næsten konstant hastighed, løber løbsk ved feltafbrydelse. Permanentmagnet: konstant felt uden feltvikling, små motorer, ligner shunt.<\/p>"}, {"nr": "10.5", "q": "Tab, virkningsgrad og EMK", "a": "<p>Tab: kobbertab (I²R), børstetab (ΔU_b · I_a), jerntab og mekaniske tab. η = P2 / P1. EMK (modspændingen) E = k_E · Φ · n begrænser strømmen under drift.<\/p>\n<blockquote>\n<p><strong>Usikker<\/strong>\nPP10 nævner ikke jerntabet i tabslisten. Det er med i alle lærebøger og i opgavesæt 2, opgave 1.<\/p>\n<\/blockquote>"}]}, {"nr": "11", "titel": "Ledere, strømvarmetab, effekt, arbejde og energi", "sider": [], "mappe": "eksamen2026", "kort": [{"nr": "11.1", "q": "Beregn afsat effekt og energi i en leder ud fra oplyst data", "a": "<p>Svejsekablet fra opgavesæt 1, opgave 4 (Cu, 10 mm², 8,75 mΩ ved 20 °C, 50 A, 240 min):<\/p>\n<ol>\n<li>l = R · S / ρ = 8,75·10⁻³ · 10 / 0,0175 = 5,0 m.<\/li>\n<li>P = R · I² = 0,00875 · 2.500 = 21,9 W ved start.<\/li>\n<li>Ved 11,2 mΩ: P = 28 W, og T = 20 + (11,2/8,75 − 1) / 0,004 = 90 °C.<\/li>\n<li>Energi over 4 timer: mellem 21,9 · 4 = 88 Wh og 28 · 4 = 112 Wh, altså ca. 0,1 kWh (0,36 MJ).<\/li>\n<\/ol>\n<blockquote>\n<p><strong>Usikker<\/strong>\nOpgaven spørger ikke efter energien. Den sidste linje er et overslag, fordi modstanden stiger undervejs.<\/p>\n<\/blockquote>"}, {"nr": "11.2", "q": "Lederens resistans (resistivitet, ledertemperatur, strømtæthed)", "a": "<p>R = ρ · l / S. R₂ = R₁(1 + α(T₂ − T₁)), α_Cu = 0,004 /°C. J = I / S [A/mm²].<\/p>"}, {"nr": "11.3", "q": "Strømvarmetab", "a": "<p>P = R · I² [W]. Dobbelt strøm giver fire gange så meget varme. (PP11 skriver fejlagtigt P = R · I² · N.)<\/p>"}, {"nr": "11.4", "q": "Moment og vinkelhastighed", "a": "<p>M = F · r [Nm]. ω = 2π · n [rad/s] med n i omdr./s. P = M · ω.<\/p>"}, {"nr": "11.5", "q": "Effekt, arbejde, energi og virkningsgrad", "a": "<p>W = F · s [J]. P = W / t. W = P · t, 1 kWh = 3,6 MJ. η = P2 / P1. Komfuret: 8,8 kW i 2 timer = 17,6 kWh = 63,4 MJ = 40,48 kr.<\/p>"}, {"nr": "11.6", "q": "Elektromotorisk kraft og ladningsmængder", "a": "<p>E = W / Q [V = J/C]: den energi, kilden giver hver coulomb. Q = I · t [C = As]. 1 Ah = 3.600 C.<\/p>"}, {"nr": "11.7", "q": "Akkumulator: kapacitet, virkningsgrad, indre modstand og klemspænding", "a": "<p>Kapacitet i Ah (ladning). Virkningsgrad: afgivet Ah/tilført Ah (85–90 % for bly) eller Wh (70–80 %). U_kl = E − I · R_i. R_i = (E − U_kl) / I, stiger med alder og kulde.<\/p>"}]}, {"nr": "12", "titel": "Halvledere, dioder, lysdioder og solceller", "sider": [], "mappe": "eksamen2026", "kort": [{"nr": "12.1", "q": "Opstil beregningen af virkningsgrad ud fra oplyste data", "a": "<p>Opgavesæt 3, opgave 8: pyranometer 125,8 mV, K = 148 mV/(kW/m²), MPP ved 27,4 V og 7,3 A, P_STC = 260 W, η_STC = 15,98 %.<\/p>\n<ol>\n<li>Areal: A = 260 / (1.000 · 0,1598) = 1,627 m².<\/li>\n<li>Indstråling: asr = 125,8 / 148 = 0,85 kW/m².<\/li>\n<li>Indstrålet effekt: 850 · 1,627 = 1.383 W.<\/li>\n<li>P_m = 27,4 · 7,3 = 200 W.<\/li>\n<li>η = 200 / 1.383 = 14,46 %.<\/li>\n<\/ol>"}, {"nr": "12.2", "q": "Forklar formålet med en friløbsdiode i forhold til et DC-relæ", "a": "<p>Dioden sidder i spærreretning over relæspolen. Når strømmen afbrydes, vil spolen holde den i gang, og e = −L · di/dt giver en spændingsspids på hundredvis af volt. Dioden leder i det øjeblik, strømmen løber rundt gennem spole og diode og dør ud med τ = L/R. Spændingen bliver kun ca. 0,7 V, så kontakt eller transistor ikke ødelægges. Ulempe: relæet slipper langsommere.<\/p>"}, {"nr": "12.3", "q": "PN-overgang og det elektriske felt", "a": "<p>P-lag dopet med bor (huller), N-lag med fosfor (frie elektroner). Ved overgangen fylder elektroner huller, og der efterlades faste ioner: rumladningszonen. Ionerne laver et indbygget felt, der stopper yderligere vandring.<\/p>"}, {"nr": "12.4", "q": "Dioden, LED og fotodiode", "a": "<p>Diode: leder over ca. 0,7 V i lederetning, spærrer i spærreretning. LED: rekombination sender en foton ud, λ = h·c/E. Fotodiode: lys laver elektron-hul-par, feltet skiller dem, strømmen følger lyset.<\/p>"}, {"nr": "12.5", "q": "Solcellens ækvivalentmodel", "a": "<p>Strømkilde I_sc (∝ lys) parallelt med en diode D og en lækmodstand R_p, og en seriemodstand R_s ud til belastningen. Ideelt: R_p uendelig, R_s nul.<\/p>"}, {"nr": "12.6", "q": "Solindstråling, pyranometer, Air Mass, STC og NOCT", "a": "<p>asr = U_målt / K. AM = 1/cos θ. STC: 1.000 W/m², celle 25 °C, AM 1,5. NOCT: 800 W/m², omgivelser 20 °C, vind 1 m/s.<\/p>"}, {"nr": "12.7", "q": "IV-kurve, R-optimal og P_m", "a": "<p>IV-kurven går fra I_sc (U = 0) til U_oc (I = 0). P_m ligger i knækket (MPP). R_optimal ≈ U_oc / I_sc er et groft bud til valg af skydemodstand. Varme sænker U og P, lys hæver I.<\/p>\n<blockquote>\n<p><strong>Usikker<\/strong>\nI afleveringen blev celletemperaturen 28,6 °C. Med α_Pmpp som relativt fald (−0,42 %/°C) bliver den ca. 47,6 °C. Se emnet om halvledere.<\/p>\n<\/blockquote>"}]}, {"nr": "13", "titel": "Vekselspænding, strøm og effekter (enfaset)", "sider": [], "mappe": "eksamen2026", "kort": [{"nr": "13.1", "q": "Opstil beregningen af aktiv effekt", "a": "<p>Tre veje, vist med en spole med jernkerne (230 V, 1,25 A, R_Cu = 130 Ω, opgavesæt 2, opgave 9):<\/p>\n<ol>\n<li><strong>Med cos φ:<\/strong> P = U · I · cos φ. Måles P = 250 W, er cos φ = 250 / 287,5 = 0,87.<\/li>\n<li><strong>Med R:<\/strong> P = R · I² for alle resistive dele. Her 130 · 1,25² = 203 W kobbertab plus 47 W jerntab.<\/li>\n<li><strong>Med wattstrømmen:<\/strong> P = U · I_W = 230 · 1,09 = 250 W.<\/li>\n<\/ol>\n<p>For en serie-RL: Z = √(R² + X²), I = U/Z, cos φ = R/Z, P = U · I · cos φ = R · I².<\/p>"}, {"nr": "13.2", "q": "Fremstilling af vekselspænding", "a": "<p>En ledersløjfe drejer i et magnetfelt. Når lederne skærer feltet vinkelret, er spændingen størst. e = E_max · sin(ωt), ω = 2πf, T = 1/f = 20 ms ved 50 Hz.<\/p>"}, {"nr": "13.3", "q": "Middelværdi, effektivværdi, peak-værdi og formfaktor", "a": "<p>U_max = √2 · U_eff (230 → 325 V). U_mid = 0,637 · U_max (207 V). Formfaktor ξ = U_eff / U_mid = 1,11. Effektivværdien er den DC-spænding, der giver samme varme.<\/p>"}, {"nr": "13.4", "q": "Effekt: S, P, Q, I_W og I_WL", "a": "<p>P = U·I·cos φ [W], Q = U·I·sin φ [var], S = U·I [VA], S² = P² + Q². I_W = I·cos φ (i fase med U), I_WL = I·sin φ (90° på U). cos φ = P/S.<\/p>"}]}];
+const NOGLE = "mn-el1-eksamen2026";
+const q = new URLSearchParams(location.search);
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+const $ = id => document.getElementById(id);
+const ALLE = GRUPPER.flatMap((g, gi) => g.kort.map(k => ({ ...k, gi })));
+let gemt = { vurd: {}, pos: 0 };
+try { gemt = Object.assign(gemt, JSON.parse(localStorage.getItem(NOGLE) || "{}")); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+let kunOev = false;
+const liste = () => kunOev ? ALLE.map((k, i) => i).filter(i => gemt.vurd[ALLE[i].nr] === "oev") : ALLE.map((k, i) => i);
+let pos = Math.min(Math.max(0, +gemt.pos || 0), ALLE.length - 1);
+const fraHash = decodeURIComponent(location.hash.slice(1));
+if (fraHash) { const i = ALLE.findIndex(k => k.nr === fraHash); if (i >= 0) pos = i; }
+
+$("gruppe").innerHTML = GRUPPER.map((g, gi) => `<option value="${gi}">Spørgsmål ${g.nr} · ${g.titel} (${g.kort.length})</option>`).join("");
+$("gruppe").addEventListener("change", e => { const gi = +e.target.value; kunOev = false; opdKunOev(); gaaTil(ALLE.findIndex(k => k.gi === gi)); });
+
+function tegn() {
+  const k = ALLE[pos], g = GRUPPER[k.gi], l = liste(), plads = l.indexOf(pos);
+  $("nr").textContent = `Spørgsmål ${g.nr} · ${g.titel} · ${k.nr}`;
+  $("q").innerHTML = k.q;
+  $("svar").innerHTML = k.a; $("svar").hidden = true; $("vurder").hidden = true;
+  $("vis").hidden = false; $("vis").textContent = "Vis svar";
+  $("svar").querySelectorAll("table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+  $("figurer").hidden = true; $("figKnap").setAttribute("aria-expanded", "false"); $("figKnap").textContent = "Vis opgavens figurer";
+  $("figKnap").hidden = !g.sider.length;
+  $("gruppe").value = k.gi;
+  $("taeller").textContent = kunOev ? `${plads + 1} / ${l.length} at øve` : `${pos + 1} / ${ALLE.length}`;
+  $("fremdrift").style.width = ((kunOev ? (plads + 1) / l.length : (pos + 1) / ALLE.length) * 100) + "%";
+  $("forrige").disabled = plads <= 0; $("naeste").disabled = plads >= l.length - 1;
+  gemt.pos = pos; gem();
+  history.replaceState(null, "", "#" + encodeURIComponent(k.nr));
+  tegnOversigt();
+}
+function visSvar() {
+  if (!$("svar").hidden) return;
+  $("svar").hidden = false; $("vurder").hidden = false; $("vis").hidden = true;
+}
+function gaaTil(i) { if (i < 0 || i >= ALLE.length) return; pos = i; tegn(); window.scrollTo({ top: $("kort").offsetTop - 120, behavior: "smooth" }); }
+function flyt(d) { const l = liste(), p = l.indexOf(pos); const ny = l[p + d]; if (ny != null) gaaTil(ny); }
+function vurder(v) {
+  gemt.vurd[ALLE[pos].nr] = v; gem();
+  const l = liste(), p = l.indexOf(pos);
+  if (kunOev && v === "sad") { const rest = liste(); if (!rest.length) { kunOev = false; opdKunOev(); tegn(); return; } gaaTil(rest.find(i => i > pos) ?? rest[0]); return; }
+  if (p < l.length - 1) flyt(1); else tegn();
+}
+function tegnOversigt() {
+  $("oversigt").innerHTML = GRUPPER.map((g, gi) => `<div class="gruppe"><span class="gnavn">${g.nr} · ${g.titel}</span><span class="prikker">${
+    ALLE.map((k, i) => k.gi === gi ? `<button class="prik ${gemt.vurd[k.nr] || ""} ${i === pos ? "nu" : ""}" data-i="${i}" aria-label="Spørgsmål ${k.nr}">${k.nr.split(".")[1]}</button>` : "").join("")
+  }</span></div>`).join("");
+  const s = Object.values(gemt.vurd), sad = s.filter(v => v === "sad").length, oev = s.filter(v => v === "oev").length;
+  $("statustekst").textContent = `${sad} sad · ${oev} skal øves · ${ALLE.length - sad - oev} ikke vurderet`;
+  $("kunOev").disabled = !oev && !kunOev;
+}
+function opdKunOev() { $("kunOev").setAttribute("aria-pressed", kunOev); }
+$("oversigt").addEventListener("click", e => { const b = e.target.closest(".prik"); if (b) { kunOev = false; opdKunOev(); gaaTil(+b.dataset.i); } });
+$("vis").addEventListener("click", visSvar);
+$("sad").addEventListener("click", () => vurder("sad"));
+$("oev").addEventListener("click", () => vurder("oev"));
+$("forrige").addEventListener("click", () => flyt(-1));
+$("naeste").addEventListener("click", () => flyt(1));
+$("kunOev").addEventListener("click", () => {
+  kunOev = !kunOev; opdKunOev();
+  if (kunOev) { const l = liste(); if (!l.length) { kunOev = false; opdKunOev(); return; } if (!l.includes(pos)) pos = l[0]; }
+  tegn();
+});
+$("nulstil").addEventListener("click", () => { gemt.vurd = {}; gem(); kunOev = false; opdKunOev(); tegn(); });
+$("figKnap").addEventListener("click", () => {
+  const f = $("figurer"), g = GRUPPER[ALLE[pos].gi], aaben = f.hidden;
+  if (aaben) f.innerHTML = g.sider.map(s => `<a href="${g.mappe}/s-${String(s).padStart(2, "0")}.jpg" target="_blank" rel="noopener"><img loading="lazy" src="${g.mappe}/s-${String(s).padStart(2, "0")}.jpg" alt="Side ${s} i prøvespørgsmålene"></a>`).join("") + `<p>Siderne fra prøvespørgsmålene med figurer til spørgsmål ${g.nr}. Tryk på en side for at se den i fuld størrelse.</p>`;
+  f.hidden = !aaben; $("figKnap").setAttribute("aria-expanded", aaben); $("figKnap").textContent = aaben ? "Skjul figurer" : "Vis opgavens figurer";
+});
+document.addEventListener("keydown", e => {
+  if (e.target.closest("select, input, textarea") || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === " " || e.key === "Enter") { if ($("svar").hidden && !e.target.closest("button")) { e.preventDefault(); visSvar(); } }
+  else if (e.key === "ArrowRight") flyt(1);
+  else if (e.key === "ArrowLeft") flyt(-1);
+});
+tegn();
+</script>
+</body>
+</html>
