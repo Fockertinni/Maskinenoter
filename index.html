@@ -170,8 +170,9 @@ a.quiet:hover { color: var(--fg); background: var(--hover); }
 const NU = 5; // det semester jeg er på lige nu
 
 // Genvej til EL2-emner med labøvelse: teorinoter, formler og quiz fra noter/el2/<id>.html (bygget af byg.py),
-// plus simulatoren og forståelsesdelen fra lab nr. n
+// plus eksamenssiden (noter/el2/<id>-eksamen.html), simulatoren og forståelsesdelen fra lab nr. n
 const el2Lab = (n, id) => ({
+  eksamen:     `noter/el2/${id}-eksamen.html`,
   noter:       `noter/el2/${id}.html?vis=noter`,
   formler:     `noter/el2/${id}.html?vis=formler`,
   simulation:  `modeller/el2/lab${n}.html?vis=sim`,
@@ -214,7 +215,7 @@ const SEMESTRE = [
           dele: emne("el2", "faget", false) },
         { id: "trefaset", navn: "Trefaset belastning", ikon: "trefase",
           intro: "Stjerne og trekant, effekt i 3-fasede systemer, usymmetrisk last med og uden nul, og de tre wattmetermetoder. Labøvelse 1.",
-          dele: { ...el2Lab(1, "trefaset"), eksamen: "noter/el2/trefaset-eksamen.html" } },
+          dele: el2Lab(1, "trefaset") },
         { id: "generator", navn: "Synkrongenerator", ikon: "generator",
           intro: "Opbygning og magnetisering, ankerreaktion og vektordiagram, magnetiserings- og belastningskarakteristik, remanens og THDu. Labøvelse 2.",
           dele: el2Lab(2, "generator") },
@@ -238,10 +239,10 @@ const SEMESTRE = [
           dele: el2Lab(8, "frekvensomformer") },
         { id: "vedligehold", navn: "Tilstandsbaseret vedligehold", ikon: "vedligehold",
           intro: "Selvstudie. Korrektiv, forebyggende og tilstandsbaseret vedligehold, termografering og partielle udladninger.",
-          dele: emne("el2", "vedligehold", false) },
+          dele: { eksamen: "noter/el2/vedligehold-eksamen.html", ...emne("el2", "vedligehold", false) } },
         { id: "lys", navn: "Lysteknik", ikon: "lys",
           intro: "Selvstudie. Lysstrøm, lysstyrke og belysningsstyrke, afstandskvadrat- og cosinusloven, rumbelysning og lyskilder.",
-          dele: emne("el2", "lys") },
+          dele: { eksamen: "noter/el2/lys-eksamen.html", ...emne("el2", "lys") } },
         { id: "formelsamling", navn: "Samlet formelsamling", ikon: "formler",
           intro: "Alle formler fra Elektroteknik 2 samlet på ét sted og ordnet efter emne.",
           dele: { formler: "noter/el2/formelsamling.html?vis=formler" } },
@@ -458,7 +459,6 @@ const IKON = {
   starteluft: '<rect x="6" y="7" width="12" height="14.5" rx="5"/><path d="M12 7V3.5M8.5 3.5h7M12 14.5l2.3-2.3"/>',
   noter: '<path d="M7 2.5h7.5l4.5 4.5v14.5H7Z"/><path d="M14.5 2.5V7H19M10 12h6M10 16h6"/>',
   formler: '<path d="M17 4.5H7l6 7.5-6 7.5h10"/>',
-  eksamen: '<path d="M3 9.5 12 5l9 4.5-9 4.5-9-4.5Z"/><path d="M7 11.5V16c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5v-4.5M21 9.5V15"/>',
   labnoter: '<path d="M9.5 2.5h5M10.5 2.5v6L5 19a1.7 1.7 0 0 0 1.5 2.5h11A1.7 1.7 0 0 0 19 19l-5.5-10.5v-6"/><path d="M7.5 15h9"/>',
   simulation: '<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>',
   modeller: '<path d="M12 2.5 4 7v10l8 4.5 8-4.5V7l-8-4.5Z"/><path d="M4 7l8 4.5L20 7M12 11.5v10"/>',

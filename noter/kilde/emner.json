@@ -229,12 +229,28 @@
    "formler": true
   },
   {
+   "id": "generator-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Synkrongenerator",
+   "ikon": "generator",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og hvad du skal vise ved bordet i laboratoriet.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
    "id": "asynkron",
    "navn": "Asynkronmotor",
    "ikon": "motor",
    "intro": "Drejefelt og slip, rotortyper, ækvivalentskema og effektbalance, momentkurven, startmetoder, fasekompensering og 1-fasede motorer.",
    "quiz": 9,
    "formler": true
+  },
+  {
+   "id": "asynkron-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Asynkronmotor",
+   "ikon": "motor",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og hvad du skal vise ved bordet i laboratoriet.",
+   "quiz": 0,
+   "formler": false
   },
   {
    "id": "jording",
@@ -245,12 +261,28 @@
    "formler": true
   },
   {
+   "id": "jording-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Jording, målebroer og fordelingssystemer",
+   "ikon": "jord",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og hvad du skal vise i laboratoriet.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
    "id": "transformer",
    "navn": "Transformer",
    "ikon": "transformer",
    "intro": "Opbygning, den ideelle transformer, ækvivalentskemaet, tomgangs- og kortslutningsforsøget, tab og virkningsgrad, spændingsfald og de andre transformertyper.",
    "quiz": 9,
    "formler": true
+  },
+  {
+   "id": "transformer-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Transformer",
+   "ikon": "transformer",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og hvad du skal vise ved bordet i laboratoriet.",
+   "quiz": 0,
+   "formler": false
   },
   {
    "id": "kortslutning",
@@ -261,12 +293,28 @@
    "formler": true
   },
   {
+   "id": "kortslutning-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Kortslutning og koblingsciffer",
+   "ikon": "kortslutning",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og hvad du skal vise ved bordet i laboratoriet.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
    "id": "synkronisering",
    "navn": "Synkronisering og paralleldrift",
    "ikon": "synkron",
    "intro": "Ø-drift, de fire synkroniseringsbetingelser og instrumenterne, lastfordeling af P og Q, lastvinkel, statik, udkobling, generatorudrustning og generatoren ved kortslutning.",
    "quiz": 8,
    "formler": true
+  },
+  {
+   "id": "synkronisering-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Synkronisering og paralleldrift",
+   "ikon": "synkron",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og hvad du skal vise ved bordet i laboratoriet.",
+   "quiz": 0,
+   "formler": false
   },
   {
    "id": "frekvensomformer",
@@ -277,11 +325,27 @@
    "formler": true
   },
   {
+   "id": "frekvensomformer-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Frekvensomformer",
+   "ikon": "frekvens",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og hvad du skal vise ved bordet i laboratoriet.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
    "id": "vedligehold",
    "navn": "Tilstandsbaseret vedligehold",
    "ikon": "vedligehold",
    "intro": "Selvstudie. Korrektiv, forebyggende og tilstandsbaseret vedligehold, termografering af el-anlæg og partielle udladninger i højspændingsudstyr.",
    "quiz": 6,
+   "formler": false
+  },
+  {
+   "id": "vedligehold-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Tilstandsbaseret vedligehold",
+   "ikon": "vedligehold",
+   "intro": "Det du skal kunne forklare, de spørgsmål du kan forvente, og hvordan du kobler emnet til resten af faget.",
+   "quiz": 0,
    "formler": false
   },
   {
@@ -291,6 +355,14 @@
    "intro": "Selvstudie. Lysstrøm, lysstyrke, belysningsstyrke og luminans, afstandskvadratloven og cosinusloven, rumbelysning og lyskilderne fra glødelampe til LED.",
    "quiz": 7,
    "formler": true
+  },
+  {
+   "id": "lys-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Lysteknik",
+   "ikon": "lys",
+   "intro": "De vigtigste formler og begreber, det du skal kunne forklare, og de spørgsmål du kan forvente til lysquizzen og eksamen.",
+   "quiz": 0,
+   "formler": false
   },
   {
    "id": "formelsamling",
