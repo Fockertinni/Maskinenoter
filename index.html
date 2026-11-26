@@ -77,7 +77,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .crumbs a:hover { color: var(--fg); }
 .crumbs .sep { opacity: .5; }
 .crumbs .here { color: var(--fg); font-weight: 500; overflow: hidden; text-overflow: ellipsis; }
-.screen { padding-block: clamp(2.5rem, 7vw, 5rem) 5rem; }
+.screen { padding-block: clamp(1.75rem, 4vw, 3rem) 5rem; }
 @media (prefers-reduced-motion: no-preference) { .screen { animation: in .35s ease both; } }
 @keyframes in { from { opacity: 0; translate: 0 8px; } }
 .screen h1 { overflow-wrap: break-word; hyphens: auto; -webkit-hyphens: auto; margin: 0; font-weight: 700; font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1.05; letter-spacing: -.035em; text-wrap: balance; }
@@ -107,6 +107,22 @@ a.quiet:hover { color: var(--fg); background: var(--hover); }
   .tiles { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
   .topbar .mark span { display: none; }
 }
+/* Skibet som header på undersider */
+.shiphead { color: var(--hero-fg); overflow: hidden; margin-top: calc(-1 * env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px);
+  background: radial-gradient(80% 160% at 50% 0%, var(--hero-2), var(--hero) 75%); }
+.shiphead .topbar { position: relative; top: auto; background: none; border: 0; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.shiphead .topbar .mark { color: var(--hero-fg); }
+.shiphead .crumbs, .shiphead .crumbs a { color: var(--hero-muted); }
+.shiphead .crumbs a:hover, .shiphead .crumbs .here { color: var(--hero-fg); }
+.hship-wrap { display: grid; place-items: center; padding-block: .25rem 1.6rem; }
+.hship { --L: clamp(300px, 62vw, 860px); position: relative; width: var(--L); aspect-ratio: 5 / 1; }
+.hship-inner { position: absolute; left: 50%; top: 50%; width: calc(var(--L) / 5); height: var(--L); transform: translate(-50%, -50%) rotate(-90deg); filter: drop-shadow(0 18px 28px rgba(0,0,0,.5)); }
+.hship-inner svg, .flyship svg { display: block; width: 100%; height: 100%; }
+.flyship { position: fixed; z-index: 60; pointer-events: none; transform-origin: 50% 50%; filter: drop-shadow(0 26px 44px rgba(0,0,0,.5)); }
+@media (prefers-reduced-motion: no-preference) {
+  .hship.sail .hship-inner { animation: sail 1.1s cubic-bezier(.2,.7,.2,1) both; }
+}
+@keyframes sail { from { transform: translate(calc(-50% - 70px), -50%) rotate(-90deg); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
@@ -128,11 +144,14 @@ a.quiet:hover { color: var(--fg); background: var(--hover); }
 </div>
 
 <div id="app" hidden>
-  <header class="topbar">
-    <div class="wrap">
+  <header class="shiphead">
+    <div class="topbar">
+      <div class="wrap">
       <a class="mark" href="#start" aria-label="Maskinenoter forside"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" fill="#f08a35"/><path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Maskinenoter</span></a>
       <nav class="crumbs" id="crumbs" aria-label="Du er her"></nav>
     </div>
+    </div>
+    <div class="hship-wrap"><div class="hship" id="hship" aria-hidden="true"></div></div>
   </header>
   <main class="wrap screen" id="screen"></main>
 </div>
@@ -467,12 +486,38 @@ function setCrumbs(items) {
     ? `<a href="#${c[1]}">${esc(c[0])}</a><span class="sep">/</span>`
     : `<span class="here" aria-current="page">${esc(c[0])}</span>`).join("");
 }
+const roligt = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let foersteApp = true;
 function visApp(titel, html, crumbs) {
+  // Kommer vi fra forsiden, sejler skibet op og lægger sig vandret som header
+  const fraForside = !$("#landing").hidden && $("#ship").firstChild && !roligt();
+  let fra = null;
+  if (fraForside) { const sh = $("#ship"), r = sh.getBoundingClientRect(); fra = { cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: sh.offsetWidth, h: sh.offsetHeight }; }
   $("#landing").hidden = true; $("#app").hidden = false;
+  const hs = $("#hship");
+  if (!hs.firstChild) hs.innerHTML = `<div class="hship-inner">${shipSVG()}</div>`;
+  hs.classList.toggle("sail", foersteApp && !fra); foersteApp = false;
   setCrumbs(crumbs);
   const s = $("#screen"); s.innerHTML = html;
   s.style.animation = "none"; void s.offsetWidth; s.style.animation = "";
+  s.style.animationDelay = fra ? ".75s" : "";
   document.title = titel + " · Maskinenoter";
+  if (fra) { window.scrollTo(0, 0); flyvSkib(fra); }
+}
+function flyvSkib(fra) {
+  const maal = $("#hship .hship-inner"), r = maal.getBoundingClientRect();
+  const tcx = r.left + r.width / 2, tcy = r.top + r.height / 2, skala = maal.offsetHeight / fra.h;
+  const f = document.createElement("div"); f.className = "flyship"; f.innerHTML = shipSVG();
+  Object.assign(f.style, { left: (fra.cx - fra.w / 2) + "px", top: (fra.cy - fra.h / 2) + "px", width: fra.w + "px", height: fra.h + "px" });
+  document.body.appendChild(f); $("#hship").style.visibility = "hidden";
+  const dx = tcx - fra.cx, dy = tcy - fra.cy;
+  const anim = f.animate([
+    { transform: "translate(0px, 0px) rotate(-34deg) scale(1)" },
+    { transform: `translate(${dx * .3 + 40}px, ${dy * .3 + 70}px) rotate(-58deg) scale(${1 + (skala - 1) * .4})`, offset: .4 },
+    { transform: `translate(${dx}px, ${dy}px) rotate(-90deg) scale(${skala})` },
+  ], { duration: 1300, easing: "cubic-bezier(.45, 0, .2, 1)" });
+  const slut = () => { $("#hship").style.visibility = ""; f.remove(); };
+  anim.onfinish = slut; anim.oncancel = slut;
 }
 
 function forside() {
