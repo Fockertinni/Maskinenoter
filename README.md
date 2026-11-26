@@ -17,11 +17,12 @@ Mine noter og interaktive modeller fra maskinmesteruddannelsen. Siden er ren HTM
   - `index.html` er oversigten over alle otte øvelser.
 - `noter/pa1/` indeholder emnerne til Procesanalyse og automation 1. Hver fil (fx `plc.html`) har tre dele: Noter (med modellerne inde i teksten), Forståelse og Quiz. Med `?vis=noter`, `?vis=forstaa` eller `?vis=test` vises kun den del. Fælles stil og værktøjer ligger i `pa1.css` og `pa1.js`. Genvejen `pa1("plc")` i `index.html` giver alle tre dele.
 
-## Driftsøkonomi og Forbrændingsmotoranlæg
+## Driftsøkonomi, Forbrændingsmotoranlæg og Elektroteknik 2
 
-- `noter/drift/` og `noter/forb/` er bygget af scriptet `noter/kilde/byg.py` ud fra markdown-filerne i `noter/kilde/drift/` og `noter/kilde/forb/`. Ret altid i markdown-filen og kør `python3 noter/kilde/byg.py` (kræver `pip install markdown`). De færdige HTML-filer ligger i repoet, så siden stadig ikke har noget build-trin.
+- `noter/drift/`, `noter/forb/` og `noter/el2/` er bygget af scriptet `noter/kilde/byg.py` ud fra markdown-filerne i `noter/kilde/drift/`, `noter/kilde/forb/` og `noter/kilde/el2/`. Ret altid i markdown-filen og kør `python3 noter/kilde/byg.py` (kræver `pip install markdown`). De færdige HTML-filer ligger i repoet, så siden stadig ikke har noget build-trin.
 - Hver emnefil har tre dele: Noter, Formler og Quiz. Med `?vis=noter`, `?vis=formler` eller `?vis=quiz` vises den del. `noter/<fag>/quiz.html` er en samlet quiz for hele faget.
 - Øverst i hver markdown-fil står `id`, `navn`, `ikon` og `intro`. Under `# Quiz` står spørgsmålene i et lille format, der er forklaret øverst i `byg.py`.
+- EL2-noterne har interaktive modeller inde i teksten. I markdown skrives fx `<div class="m" data-m="stjerne"></div>`, og `noter/el2/modeller.js` tegner modellen. Listen over modeller står i den fil.
 - Genvejen `emne("drift", "budget")` i `index.html` giver alle tre dele. Skriv `emne("forb", "smoering", false)`, hvis emnet ikke har formler.
 
 ## Tilføj et emne
@@ -44,7 +45,7 @@ Find faget i `SEMESTRE`, og tilføj én post til dets `emner`:
 - `id` må kun indeholde små bogstaver og tal (ingen bindestreg). Den bliver en del af adressen.
 - Kun de dele, der har et link, bliver vist som felter. `null` betyder, at delen ikke findes endnu.
 - Et emne uden nogen dele vises som et nedtonet felt.
-- Til EL2-labs findes genvejen `el2Lab(n)`, som giver alle dele for lab nr. n.
+- Til EL2-emner med labøvelse findes genvejen `el2Lab(n, "id")`. Den giver teorinoter, formler og quiz fra `noter/el2/<id>.html` og labnoter, simulation og forståelse fra lab nr. n.
 
 ## Tilføj et fag
 

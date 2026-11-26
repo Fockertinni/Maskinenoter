@@ -29,6 +29,8 @@ UD = ROD.parent                                # noter
 FAG = {
     "drift": {"navn": "Driftsøkonomi", "farve": "#6b57c9", "farve_m": "#9a88f0", "fra": "m5-drift"},
     "forb": {"navn": "Forbrændingsmotoranlæg", "farve": "#c8501d", "farve_m": "#f08a5a", "fra": "m5-forb"},
+    # js: et script ved siden af siderne, der tegner modeller skrevet som <div class="m" data-m="..."></div>
+    "el2": {"navn": "Elektroteknik 2", "farve": "#8a5f00", "farve_m": "#f2bd3d", "fra": "m5-el2", "js": "modeller.js"},
 }
 
 def md(tekst):
@@ -51,6 +53,7 @@ def laes(fil):
 
 def quiz(tekst):
     qs = []
+    if not tekst.strip(): return qs
     for blok in re.split(r"\n\s*\n", tekst.strip()):
         q = {"valg": [], "rigtig": None}
         for linje in blok.strip().splitlines():
@@ -88,6 +91,7 @@ def side(fag, meta, noter, formler, qs, samlet=False):
         "{{NOGLE}}": f"mn-{fag}-{meta['id']}",
         "{{FAGFRA}}": f["fra"],
         "{{SAMLET}}": "1" if samlet else "",
+        "{{EKSTRA}}": f'\n<script src="{f["js"]}"></script>' if f.get("js") and not samlet else "",
     }
     s = SIDE
     for k, v in erstat.items(): s = s.replace(k, v)

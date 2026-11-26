@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Frekvensomformer · Elektroteknik 2 · Maskinenoter</title>
+<!-- Bygget af noter/kilde/byg.py. Ret i kildefilen i noter/kilde/, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #8a5f00; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #f2bd3d; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #f2bd3d; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.tabs { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--hover); flex-shrink: 0; }
+.tabs button { font: 600 .9rem/1 var(--sans); color: var(--muted); background: none; border: 0; padding: .5rem .8rem; border-radius: 8px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.8rem, 5vw, 3.2rem) max(16px, env(safe-area-inset-left, 0px)) 5rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .8rem 0 0; font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.del { margin-top: 2.2rem; }
+.del > :first-child { margin-top: 0; }
+.del h2 { margin: 2.6rem 0 .6rem; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; }
+.del h3 { margin: 1.8rem 0 .4rem; font-size: 1.12rem; letter-spacing: -.01em; }
+.del p, .del li { max-width: 68ch; }
+.del ul, .del ol { padding-left: 1.3rem; }
+.del li { margin: .25rem 0; }
+.del li::marker { color: var(--muted); }
+.del code { font: .92em var(--mono); background: var(--hover); padding: .08em .35em; border-radius: 5px; }
+.del strong { font-weight: 650; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: .94rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .8rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .92rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; }
+details { margin: .9rem 0; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: .1rem 1.1rem; }
+details > summary { cursor: pointer; font-weight: 600; padding: .75rem 0; color: var(--accent); list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "▸ "; }
+details[open] > summary::before { content: "▾ "; }
+details[open] { padding-bottom: .8rem; }
+.genkald { margin-top: 2.6rem; padding: 1.1rem 1.3rem; border: 2px solid var(--accent); border-radius: 16px; background: var(--surface); }
+.genkald h2, .genkald h3 { margin-top: 0 !important; font-size: .82rem !important; letter-spacing: .08em !important; text-transform: uppercase; color: var(--accent); }
+.genkald details { box-shadow: none; border: 1px solid var(--line); }
+
+/* quiz */
+.q { margin: 1rem 0; padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); }
+.q .nr { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q .tekst { margin: .3rem 0 .8rem; font-weight: 600; }
+.q .valg { display: grid; gap: 8px; }
+.q .valg button { text-align: left; font: inherit; font-size: .98rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: .65rem .9rem; cursor: pointer; }
+.q .valg button:hover:not(:disabled) { border-color: var(--accent); }
+.q .valg button:disabled { cursor: default; }
+.q .valg button.ok { background: var(--ok-bg); border-color: var(--ok); }
+.q .valg button.bad { background: var(--bad-bg); border-color: var(--bad); }
+.q .tal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q input { font: 1rem var(--mono); width: 11rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.q .enhed { color: var(--muted); }
+.knap { font: 600 .95rem var(--sans); padding: .6rem 1rem; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.svar { margin-top: .8rem; padding: .7rem .9rem; border-radius: 10px; font-size: .96rem; }
+.svar.ok { background: var(--ok-bg); } .svar.bad { background: var(--bad-bg); } .svar.hint { background: var(--key); }
+.svar b { display: block; margin-bottom: .15rem; }
+.score { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border-radius: 16px; background: var(--soft); border-left: 3px solid var(--accent); }
+.score h2 { margin: 0 0 .3rem !important; font-size: 1.2rem !important; }
+.score ul { margin: .4rem 0; }
+.emnetag { font-size: .76rem; font-weight: 600; color: var(--accent); margin-left: .4rem; text-transform: none; letter-spacing: 0; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .bar .in { gap: 8px; }
+  .tabs button { padding: .48rem .6rem; font-size: .85rem; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .8rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+}
+@media print { .bar { display: none; } .del[hidden] { display: block !important; } details { box-shadow: none; border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m5-el2">‹ Elektroteknik 2</a>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-del="noter">Noter</button>
+    <button role="tab" data-del="formler">Formler</button>
+    <button role="tab" data-del="quiz">Quiz</button>
+  </div>
+</div></header>
+<main>
+  <p class="kicker">Elektroteknik 2</p>
+  <h1>Frekvensomformer</h1>
+  <p class="intro">Halvlederkomponenter, styret ensretning, frekvensomformerens fire dele, PAM og PWM, U/f-styring, lineære og ulineære forbrugere, harmoniske og THD, DC-fordeling og reluktansmotoren.</p>
+  <section class="del" id="d-noter" role="tabpanel"><blockquote>
+<p><strong>Kilder</strong>
+UV 29–32 · SH s. 15–49 og 118–157 · FL1 kap. 6 · UV11 · UV2 · UV4 · Lab 8</p>
+</blockquote>
+<p>Frekvensomformeren gør det muligt at styre en vekselstrømsmotors hastighed trinløst ved at <strong>ændre frekvens og spænding sammen</strong>. Prisen er et ikke-sinusformet strømoptag fra nettet (høj THDi) og højfrekvente spændingspulser på motoren.</p>
+<h2>Halvlederkomponenter</h2>
+<table>
+<thead>
+<tr>
+<th>Komponent</th>
+<th>Styring</th>
+<th>Tænder</th>
+<th>Slukker</th>
+<th>Brug</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Diode</td>
+<td>Ingen</td>
+<td>Når anoden er positiv i forhold til katoden</td>
+<td>Når strømmen vender</td>
+<td>Ustyret ensretter</td>
+</tr>
+<tr>
+<td>Thyristor (SCR)</td>
+<td>Gate-puls</td>
+<td>Gate-puls + fremadspænding</td>
+<td>Først når strømmen går i nul</td>
+<td>Styret ensretter, softstarter, DC-drev</td>
+</tr>
+<tr>
+<td>Triac</td>
+<td>Gate</td>
+<td>Begge retninger</td>
+<td>Ved strømmens nulgennemgang</td>
+<td>1-faset AC-styring (dæmpere)</td>
+</tr>
+<tr>
+<td>Transistor / IGBT / MOSFET</td>
+<td>Gate/basis kontinuert</td>
+<td>Når gaten er på</td>
+<td>Når gaten slås fra</td>
+<td>Vekselretter (PWM), choppere</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Styret ensretning (thyristorbro):</strong> tændvinklen α forsinker tændingen og sænker middelspændingen. For en 6-puls bro:</p>
+<pre class="formel">U_d = 1,35 · U_L · cos α</pre>
+
+<p>Ved α &gt; 90° bliver U_d negativ, og broen kører som vekselretter (energi tilbage til nettet). To antiparallelle broer giver 4-kvadrantdrift af en DC-motor.</p>
+<h2>Frekvensomformerens opbygning</h2>
+<ol>
+<li><strong>Ensretter:</strong> typisk en ustyret 6-puls diodebro (B6). Laver pulserende DC.</li>
+<li><strong>Mellemkreds:</strong> kondensatorer (og ofte en DC-spole) udglatter. Spændingen er ≈ √2 · U_L, altså 540–565 V DC på et 400 V-net. Indeholder evt. også bremsechopper og bremsemodstand.</li>
+<li><strong>Vekselretter (inverter):</strong> 6 IGBT'er med friløbsdioder, der skifter mellemkredsspændingen ud på motorens tre faser.</li>
+<li><strong>Styre- og reguleringsdel:</strong> danner koblingsmønsteret, måler strøm og spænding og beskytter.</li>
+</ol>
+<p><strong>PAM og PWM:</strong> ved PAM varieres mellemkredsspændingen (chopper eller thyristorbro), og vekselretteren sætter frekvensen. Ved PWM er mellemkredsspændingen fast, og både spænding og frekvens dannes ved at variere pulsbredderne i et højfrekvent mønster (kHz). Motorens induktans udglatter strømmen til næsten sinus. Moderne drev er PWM.</p>
+<h2>Hastighedsregulering af asynkronmotorer</h2>
+<pre class="formel">n_2 = 60 · f / p · (1 − s)</pre>
+
+<p>Hastigheden kan ændres via polpartallet (polomkobling, faste trin), slippet (rotormodstand eller lavere statorspænding, som giver tab) eller frekvensen (frekvensomformer, bedst).</p>
+<ul>
+<li><strong>U/f-styring:</strong> U holdes proportional med f op til 50 Hz, så fluxen og dermed momentet er konstant. Over 50 Hz kan U ikke stige mere, og der opstår feltsvækning med faldende moment.</li>
+<li><strong>Slipkompensation:</strong> øger frekvensen med lasten, så hastigheden holdes.</li>
+<li><strong>Startkompensation / boost:</strong> ekstra spænding ved lav frekvens for at klare spændingsfaldet i R1 og give startmoment.</li>
+<li><strong>Vektorstyring / DTC:</strong> en motormodel i softwaren styrer flux og moment direkte, med en dynamik som en DC-motor.</li>
+<li><strong>Energibesparelse:</strong> pumper og blæsere følger affinitetslovene (P ∝ n³). 20 % lavere hastighed giver ca. halv effekt.</li>
+</ul>
+<div class="m" data-m="uf"></div>
+
+<p><strong>Ulemper:</strong> overharmoniske strømme i nettet, høje du/dt-pulser (lejestrømme, isolationsbelastning, EMC), krav om skærmet kabel og ofte RCD type B.</p>
+<h2>Lineære og ulineære forbrugere</h2>
+<ul>
+<li><strong>Lineær:</strong> strømmen har samme form som spændingen (R, L, C og motorer direkte på nettet).</li>
+<li><strong>Ulineær:</strong> strømmen trækkes i pulser. Det gælder ensrettere med kondensator (frekvensomformere, PC'er, LED-drivere, UPS). Diodebroen leder kun, når netspændingen er over kondensatorens spænding, så strømmen kommer i korte, høje spidser.</li>
+</ul>
+<h2>Overharmoniske og THD</h2>
+<p>En periodisk, ikke-sinusformet kurve kan skrives som en sum af sinuskurver ved grundfrekvensen (50 Hz) og heltallige multipla af den (Fourier). En 6-puls ensretter giver harmoniske af orden h = 6k ± 1: 5., 7., 11., 13. osv. Der er ingen lige og ingen, der er delelige med 3, i en symmetrisk 3-lederforsyning.</p>
+<pre class="formel">THD_i = √(I_2² + I_3² + I_4² + …) / I_1 · 100 %
+I_RMS = √(I_1² + I_2² + I_3² + …) = I_1 · √(1 + THD_i²)
+S² = P² + Q² + D²        PF = P / S = cos φ_1 · I_1 / I_RMS</pre>
+
+<p>THDu defineres på samme måde med spændinger. Harmoniske strømme giver spændingsforvrængning gennem nettets impedans: U_h = I_h · h · X_net. <strong>Derfor er THDu størst i svage net</strong>, fx et skib i ø-drift på én generator.</p>
+<p>D (Q_D) er forvrængningseffekten. cos φ (displacement) kan være næsten 1 på en frekvensomformer, mens den samlede effektfaktor PF er meget lavere.</p>
+<details>
+<summary>Forudsig først: hvad sker der med I_RMS, hvis THDi er 100 %?</summary>
+<p>I_RMS = I_1 · √(1 + 1) = 1,41 · I_1. Kablet skal føre 41 % mere strøm end grundtonen alene, selvom den nyttige effekt er den samme. Skru på skyderne i modellen.</p>
+</details>
+<div class="m" data-m="thd"></div>
+
+<p><strong>Konsekvenser:</strong> opvarmning af kabler, transformere og motorer, overbelastet nul (3. harmoniske lægges sammen i N fra 1-fasede ikke-lineære laster), resonans med kompenseringskondensatorer, fejlfunktion i elektronik og RCD'er, og støj.</p>
+<p><strong>Afhjælpning:</strong> DC-spole eller AC-netspole i drevet, 12- eller 18-puls ensretter (fasedrejningstransformer), passive filtre, aktive filtre og Active Front End (IGBT-ensretter).</p>
+<p><strong>Strømfortrængning (skin-effekt):</strong> ved højere frekvens presses strømmen ud mod lederens overflade. Det giver større effektiv modstand og ekstra tab ved harmoniske.</p>
+<h2>DC-fordelingssystemer (UV4)</h2>
+<p>Nyere skibe bruger DC-hovedfordeling. Generatorerne leverer via ensrettere til en fælles DC-skinne, og forbrugerne fødes via vekselrettere.</p>
+<ul>
+<li><strong>Fordele:</strong> generatorerne skal ikke synkroniseres og kan køre ved variabel hastighed (bedste brændstoføkonomi), batterier kobles direkte på, og der skal bruges færre transformere.</li>
+<li><strong>Ulempe:</strong> DC-kortslutninger er svære at afbryde, fordi der ingen nulgennemgang er. Det kræver halvlederbeskyttelse.</li>
+</ul>
+<h2>Reluktansmotoren</h2>
+<p>Rotoren har ingen vikling og ingen magneter, kun jern formet så den magnetiske modstand (reluktans) er lav i én retning (d-aksen) og høj på tværs (q-aksen). Rotoren søger at stille sig, så reluktansen er mindst, og følger derfor drejefeltet synkront, uden slip.</p>
+<ul>
+<li><strong>Synkron reluktansmotor (SynRM):</strong> almindelig 3-faset stator, kræver frekvensomformer. Ingen rotortab, så virkningsgraden er højere end en asynkronmotors, og rotor og lejer er køligere.</li>
+<li><strong>Switched reluctance (SR):</strong> udprægede poler på både stator og rotor. Faserne tændes på skift ud fra rotorpositionen.</li>
+<li><strong>Ulempe:</strong> lavere effektfaktor end en permanentmagnetmotor (rotoren skal magnetiseres fra statoren), og den kan ikke køre direkte på nettet.</li>
+</ul>
+<h2>Lab 8 kort</h2>
+<p>Frekvensomformeren (local mode) driver reluktansmotoren, som belastes af Terco-momentbænken med DC-generator og modstandskasse. THD-meter Chauvin Arnoux CA8335, tangens pil mod frekvensomformeren. Målerapport.</p>
+<ol>
+<li>1.500 o/min. Mål I_RMS før og efter omformeren i tomgang, og forklar forskellen (pulseret netstrøm mod motorens magnetiseringsstrøm).</li>
+<li>Tomgang, 1/3, 2/3 og 1/1 last: mål S, P, Q, Q_D, n og THDi før omformeren. Beregn η for omformer, motor og samlet.</li>
+<li>Ved en valgt typisk lastgrad: mål de ulige harmoniske, beregn THDi og P1, og sammenlign med det målte.</li>
+<li>1.000 o/min ved 2/3 M_N: beregn virkningsgraderne igen.</li>
+</ol>
+<pre class="formel">η_FO = P_ud,FO / P_ind,FO        η_motor = M · ω / P_ud,FO        η_samlet = η_FO · η_motor</pre>
+
+<blockquote>
+<p><strong>Mere til labøvelse 8</strong>
+<a href="../../modeller/el2/lab8-noter.html?vis=noter">Labnoterne</a> har hele forberedelsen og måleskemaet, <a href="../../modeller/el2/lab8.html?vis=sim">simulatoren</a> lader dig øve opstillingen, og <a href="../../modeller/el2/lab8-noter.html?vis=test">Test dig selv</a> har flere regneopgaver med trin-for-trin løsning.</p>
+</blockquote>
+<div class="genkald">
+<h3>Test dig selv</h3>
+<ol>
+<li>Nævn frekvensomformerens fire dele, og hvad hver gør.</li>
+<li>Hvorfor holdes U/f konstant under 50 Hz?</li>
+<li>Hvorfor giver en 6-puls ensretter ikke 3. harmoniske i et symmetrisk 3-ledernet?</li>
+<li>Hvorfor kan cos φ være 0,98, mens PF kun er 0,7?</li>
+</ol>
+<details>
+<summary>Svar</summary>
+<ol>
+<li>Ensretter (AC til pulserende DC), mellemkreds (udglatter og lagrer energi), vekselretter (IGBT'er danner motorens spænding og frekvens), styring (koblingsmønster, måling og beskyttelse).</li>
+<li>Fluxen er proportional med U/f. Konstant flux giver konstant moment og undgår mætning ved lav frekvens.</li>
+<li>
+<ol start="3">
+<li>harmoniske er i fase i alle tre faser og har ingen vej tilbage uden nul. Ordenerne bliver 6k ± 1.</li>
+</ol>
+</li>
+<li>cos φ måler kun vinklen for grundtonen. PF medregner også, at I_RMS er større end I_1 på grund af de harmoniske.</li>
+</ol>
+</details>
+</div></section>
+  <section class="del" id="d-formler" role="tabpanel"><h3>Ensretter</h3>
+<pre class="formel">U_d  = 1,35 · U_L · cos α          (6-puls, styret)
+U_DC ≈ √2 · U_L ≈ 540–565 V        (ustyret, 400 V net)</pre>
+
+<h3>Hastighed</h3>
+<pre class="formel">n_2 = 60 · f / p · (1 − s)
+U / f = konstant op til 50 Hz
+P ∝ n³                              (pumper og blæsere)</pre>
+
+<h3>Harmoniske</h3>
+<pre class="formel">h = 6k ± 1                          (6-puls: 5, 7, 11, 13 …)
+THD_i = √(Σ I_h²) / I_1 · 100 %     (h ≥ 2)
+I_RMS = I_1 · √(1 + THD_i²)
+U_h   = I_h · h · X_net
+S² = P² + Q² + D²
+PF = P / S = cos φ_1 · I_1 / I_RMS</pre>
+
+<h3>Virkningsgrader (Lab 8)</h3>
+<pre class="formel">η_FO     = P_ud,FO / P_ind,FO
+η_motor  = M · ω / P_ud,FO          ω = 2π · n / 60
+η_samlet = η_FO · η_motor</pre></section>
+  <section class="del" id="d-quiz" role="tabpanel">
+    <p>Svar på spørgsmålene, før du kigger i noterne. Ved talopgaver har du to forsøg, og komma og punktum virker begge.</p>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </section>
+</main>
+<script>
+const QUIZ = [{"q": "En styret 6-puls bro på 400 V har tændvinklen α = 60°. Hvad er U_d? (V)", "tal": 270.0, "tol": 1.0, "enhed": "V", "losning": "U_d = 1,35 · 400 · cos 60° = 1,35 · 400 · 0,5 = 270 V.", "f": "Ved α &gt; 90° bliver U_d negativ, og broen vekselretter.", "emne": "Frekvensomformer"}, {"valg": ["2., 4., 6. …", "3., 9., 15. …", "5., 7., 11., 13. …", "Alle ulige"], "rigtig": 2, "q": "Hvilke harmoniske giver en 6-puls ensretter?", "f": "h = 6k ± 1.", "emne": "Frekvensomformer"}, {"q": "Strømmen har I_5 = 20 %, I_7 = 14 %, I_11 = 9 % og I_13 = 7 % af grundtonen. Hvad er THDi? (%, 1 decimal)", "tal": 26.9, "tol": 0.2, "enhed": "%", "losning": "THDi = √(20² + 14² + 9² + 7²) = √(400 + 196 + 81 + 49) = √726 = 26,9 %.", "f": "De harmoniske lægges sammen kvadratisk.", "emne": "Frekvensomformer"}, {"q": "I_1 = 10 A og THDi = 50 %. Hvad er I_RMS? (A, 2 decimaler)", "tal": 11.18, "tol": 0.02, "enhed": "A", "losning": "I_RMS = 10 · √(1 + 0,5²) = 10 · 1,118 = 11,18 A.", "f": "Harmoniske øger strømmen uden at give nyttig effekt.", "emne": "Frekvensomformer"}, {"q": "En pumpe køres 20 % langsommere med frekvensomformer. Hvor stor bliver effekten i forhold til før? (%, hele tal)", "tal": 51.0, "tol": 1.0, "enhed": "%", "losning": "P ∝ n³: 0,8³ = 0,512 = 51 %.", "f": "Derfor sparer frekvensomformere meget energi på pumper og blæsere.", "emne": "Frekvensomformer"}, {"valg": ["Momentet stiger", "Spændingen kan ikke stige mere, så fluxen og momentet falder (feltsvækning)", "Motoren mætter", "Slippet bliver negativt"], "rigtig": 1, "q": "Hvad sker der over 50 Hz ved U/f-styring?", "f": "Mellemkredsspændingen begrænser udgangsspændingen.", "emne": "Frekvensomformer"}, {"valg": ["Fordi generatoren laver flere harmoniske end nettet i land", "Fordi nettets impedans er stor, så de harmoniske strømme giver store spændingsfald", "Fordi skibe kører 60 Hz", "Fordi der er flere LED-lamper"], "rigtig": 1, "q": "Hvorfor er THDu størst på et skib i ø-drift på én generator?", "f": "U_h = I_h · h · X_net. Et svagt net har stor X_net.", "emne": "Frekvensomformer"}, {"valg": ["Den kan køre direkte på nettet", "Ingen rotortab og derfor højere virkningsgrad", "Højere effektfaktor", "Den har permanente magneter"], "rigtig": 1, "q": "Hvad er reluktansmotorens fordel i forhold til asynkronmotoren?", "f": "Rotoren har hverken vikling eller magneter og kører synkront uden slip.", "emne": "Frekvensomformer"}, {"q": "Frekvensomformeren optager 1.000 W og afgiver 960 W. Motoren giver 3,8 Nm ved 1.500 o/min. Hvad er den samlede virkningsgrad? (%, hele tal)", "tal": 60.0, "tol": 1.0, "enhed": "%", "losning": "P_2 = 3,8 · 2π · 1.500 / 60 = 597 W. η_samlet = 597 / 1.000 = 0,60 = 60 %. (η_FO = 0,96, η_motor = 0,62.)", "f": "η_samlet = η_FO · η_motor.", "emne": "Frekvensomformer"}];
+const NOGLE = "mn-el2-frekvensomformer", SAMLET = "" === "1";
+const q = new URLSearchParams(location.search);
+
+// tilbage-link til den side man kom fra
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+
+// faner
+const tabs = [...document.querySelectorAll("#tabs button")];
+function vis(del) {
+  if (!document.getElementById("d-" + del)) del = "noter";
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.del === del));
+  document.querySelectorAll(".del").forEach(s => s.hidden = s.id !== "d-" + del);
+}
+tabs.forEach(b => b.addEventListener("click", () => {
+  vis(b.dataset.del);
+  const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
+  window.scrollTo(0, 0);
+}));
+// tomme dele skjules i fanerne
+["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+if (!QUIZ.length) tabs.find(b => b.dataset.del === "quiz").hidden = true;
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else { const v = q.get("vis") || "noter", t = tabs.find(b => b.dataset.del === v && !b.hidden) || tabs.find(b => !b.hidden); vis(t ? t.dataset.del : "noter"); }
+
+// tabeller kan scrolles på mobil
+document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+
+// quiz
+let gemt = {};
+try { gemt = JSON.parse(localStorage.getItem(NOGLE) || "{}"); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+// Danske og engelske skrivemåder virker begge: "85.200", "85200", "1.150,5", "0,86", "0.86".
+// Et enkelt punktum efterfulgt af tre cifre kan både være tusindtal og decimal, så begge tolkninger prøves.
+const tolk = s => { s = String(s).replace(/[\s\u00a0]/g, "").replace("−", "-");
+  if (!/^-?[\d.,]+$/.test(s)) return [];
+  if (s.includes(",")) return [parseFloat(s.replace(/\./g, "").replace(",", "."))];
+  if ((s.match(/\./g) || []).length > 1) return [parseFloat(s.replace(/\./g, ""))];
+  const ud = [parseFloat(s)];
+  if (/^-?\d+\.\d{3}$/.test(s)) ud.push(parseFloat(s.replace(".", "")));
+  return ud; };
+const fmt = x => x.toLocaleString("da-DK", { maximumFractionDigits: 4 });
+
+function bygQuiz() {
+  const rod = document.getElementById("quiz"); rod.innerHTML = "";
+  QUIZ.forEach((s, i) => {
+    const el = document.createElement("div"); el.className = "q";
+    el.innerHTML = `<div class="nr">Spørgsmål ${i + 1} af ${QUIZ.length}${SAMLET ? `<span class="emnetag">${s.emne}</span>` : ""}</div><div class="tekst">${s.q}</div>`;
+    const g = gemt[i];
+    if (s.valg) {
+      const v = document.createElement("div"); v.className = "valg";
+      s.valg.forEach((t, j) => {
+        const b = document.createElement("button"); b.innerHTML = t;
+        b.addEventListener("click", () => { gemt[i] = { valgt: j, ok: j === s.rigtig }; gem(); bygQuiz(); });
+        v.append(b);
+      });
+      el.append(v);
+      if (g) {
+        [...v.children].forEach((b, j) => { b.disabled = true; if (j === s.rigtig) b.classList.add("ok"); else if (j === g.valgt) b.classList.add("bad"); });
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Ikke helt."}</b>${s.f || ""}</div>`);
+      }
+    } else {
+      const f = document.createElement("div"); f.className = "tal";
+      f.innerHTML = `<input inputmode="decimal" aria-label="Dit svar" placeholder="Dit svar"> <span class="enhed">${s.enhed || ""}</span> <button class="knap">Tjek</button> <button class="knap stille">Vis facit</button>`;
+      const [inp, , tjek, opgiv] = f.children;
+      el.append(f);
+      const faerdig = g && (g.ok || g.forsog >= 2 || g.opgivet);
+      if (g && g.svar != null) inp.value = g.svar;
+      if (faerdig) {
+        inp.disabled = tjek.disabled = opgiv.disabled = true;
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Facit: " + fmt(s.tal) + " " + (s.enhed || "")}</b>${s.losning ? s.losning + "<br>" : ""}${s.f || ""}</div>`);
+      } else if (g && g.forsog === 1) {
+        el.insertAdjacentHTML("beforeend", `<div class="svar hint"><b>Ikke helt. Tjek din opstilling og prøv igen.</b>Du har ét forsøg tilbage.</div>`);
+      }
+      const svar = () => {
+        const xs = tolk(inp.value); if (!xs.length || xs.some(isNaN)) { inp.focus(); return; }
+        const ok = xs.some(x => Math.abs(x - s.tal) <= Math.max(s.tol, Math.abs(s.tal) * 1e-9));
+        const forsog = ((g && g.forsog) || 0) + 1;
+        gemt[i] = { svar: inp.value, ok, forsog }; gem(); bygQuiz();
+      };
+      tjek.addEventListener("click", svar);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") svar(); });
+      opgiv.addEventListener("click", () => { gemt[i] = { svar: inp.value, ok: false, forsog: 2, opgivet: true }; gem(); bygQuiz(); });
+    }
+    rod.append(el);
+  });
+  // score
+  const faerdige = QUIZ.map((s, i) => gemt[i] && (s.valg || gemt[i].ok || gemt[i].forsog >= 2));
+  const antal = faerdige.filter(Boolean).length, rigtige = QUIZ.filter((s, i) => gemt[i] && gemt[i].ok).length;
+  const forkerte = QUIZ.map((s, i) => faerdige[i] && !gemt[i].ok ? `<li>${s.q.replace(/<[^>]+>/g, "")}${SAMLET ? ` <em>(${s.emne})</em>` : ""}</li>` : "").join("");
+  document.getElementById("score").innerHTML = antal === 0 ? "" : `<div class="score">
+    <h2>${rigtige} af ${QUIZ.length} rigtige${antal < QUIZ.length ? ` · ${QUIZ.length - antal} mangler` : ""}</h2>
+    ${forkerte ? `<p>Tag med i repetitionen:</p><ul>${forkerte}</ul>` : antal === QUIZ.length ? "<p>Alle rigtige. Tag quizzen igen om et par uger.</p>" : ""}
+    <button class="knap stille" id="nulstil">Start forfra</button></div>`;
+  const n = document.getElementById("nulstil");
+  if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
+}
+if (QUIZ.length) bygQuiz();
+</script>
+<script src="modeller.js"></script>
+</body>
+</html>

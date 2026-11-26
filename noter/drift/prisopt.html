@@ -240,10 +240,11 @@ tabs.forEach(b => b.addEventListener("click", () => {
   const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
   window.scrollTo(0, 0);
 }));
-if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
-else vis(q.get("vis") || "noter");
 // tomme dele skjules i fanerne
 ["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+if (!QUIZ.length) tabs.find(b => b.dataset.del === "quiz").hidden = true;
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else { const v = q.get("vis") || "noter", t = tabs.find(b => b.dataset.del === v && !b.hidden) || tabs.find(b => !b.hidden); vis(t ? t.dataset.del : "noter"); }
 
 // tabeller kan scrolles på mobil
 document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
@@ -317,7 +318,7 @@ function bygQuiz() {
   const n = document.getElementById("nulstil");
   if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
 }
-if (QUIZ.length) bygQuiz(); else tabs.find(b => b.dataset.del === "quiz").hidden = true;
+if (QUIZ.length) bygQuiz();
 </script>
 </body>
 </html>

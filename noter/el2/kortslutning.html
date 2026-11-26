@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Kortslutning og koblingsciffer · Elektroteknik 2 · Maskinenoter</title>
+<!-- Bygget af noter/kilde/byg.py. Ret i kildefilen i noter/kilde/, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #8a5f00; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #f2bd3d; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #f2bd3d; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.tabs { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--hover); flex-shrink: 0; }
+.tabs button { font: 600 .9rem/1 var(--sans); color: var(--muted); background: none; border: 0; padding: .5rem .8rem; border-radius: 8px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.8rem, 5vw, 3.2rem) max(16px, env(safe-area-inset-left, 0px)) 5rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .8rem 0 0; font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.del { margin-top: 2.2rem; }
+.del > :first-child { margin-top: 0; }
+.del h2 { margin: 2.6rem 0 .6rem; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; }
+.del h3 { margin: 1.8rem 0 .4rem; font-size: 1.12rem; letter-spacing: -.01em; }
+.del p, .del li { max-width: 68ch; }
+.del ul, .del ol { padding-left: 1.3rem; }
+.del li { margin: .25rem 0; }
+.del li::marker { color: var(--muted); }
+.del code { font: .92em var(--mono); background: var(--hover); padding: .08em .35em; border-radius: 5px; }
+.del strong { font-weight: 650; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: .94rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .8rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .92rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; }
+details { margin: .9rem 0; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: .1rem 1.1rem; }
+details > summary { cursor: pointer; font-weight: 600; padding: .75rem 0; color: var(--accent); list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "▸ "; }
+details[open] > summary::before { content: "▾ "; }
+details[open] { padding-bottom: .8rem; }
+.genkald { margin-top: 2.6rem; padding: 1.1rem 1.3rem; border: 2px solid var(--accent); border-radius: 16px; background: var(--surface); }
+.genkald h2, .genkald h3 { margin-top: 0 !important; font-size: .82rem !important; letter-spacing: .08em !important; text-transform: uppercase; color: var(--accent); }
+.genkald details { box-shadow: none; border: 1px solid var(--line); }
+
+/* quiz */
+.q { margin: 1rem 0; padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); }
+.q .nr { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q .tekst { margin: .3rem 0 .8rem; font-weight: 600; }
+.q .valg { display: grid; gap: 8px; }
+.q .valg button { text-align: left; font: inherit; font-size: .98rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: .65rem .9rem; cursor: pointer; }
+.q .valg button:hover:not(:disabled) { border-color: var(--accent); }
+.q .valg button:disabled { cursor: default; }
+.q .valg button.ok { background: var(--ok-bg); border-color: var(--ok); }
+.q .valg button.bad { background: var(--bad-bg); border-color: var(--bad); }
+.q .tal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q input { font: 1rem var(--mono); width: 11rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.q .enhed { color: var(--muted); }
+.knap { font: 600 .95rem var(--sans); padding: .6rem 1rem; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.svar { margin-top: .8rem; padding: .7rem .9rem; border-radius: 10px; font-size: .96rem; }
+.svar.ok { background: var(--ok-bg); } .svar.bad { background: var(--bad-bg); } .svar.hint { background: var(--key); }
+.svar b { display: block; margin-bottom: .15rem; }
+.score { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border-radius: 16px; background: var(--soft); border-left: 3px solid var(--accent); }
+.score h2 { margin: 0 0 .3rem !important; font-size: 1.2rem !important; }
+.score ul { margin: .4rem 0; }
+.emnetag { font-size: .76rem; font-weight: 600; color: var(--accent); margin-left: .4rem; text-transform: none; letter-spacing: 0; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .bar .in { gap: 8px; }
+  .tabs button { padding: .48rem .6rem; font-size: .85rem; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .8rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+}
+@media print { .bar { display: none; } .del[hidden] { display: block !important; } details { box-shadow: none; border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m5-el2">‹ Elektroteknik 2</a>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-del="noter">Noter</button>
+    <button role="tab" data-del="formler">Formler</button>
+    <button role="tab" data-del="quiz">Quiz</button>
+  </div>
+</div></header>
+<main>
+  <p class="kicker">Elektroteknik 2</p>
+  <h1>Kortslutning og koblingsciffer</h1>
+  <p class="intro">Koblingsbetegnelser som Dyn11, urskive-metoden og cirkelslag, betingelser for paralleldrift, inrush og kortslutningsstrømmenes størrelse og fordeling bag en Dyn-transformer.</p>
+  <section class="del" id="d-noter" role="tabpanel"><blockquote>
+<p><strong>Kilder</strong>
+UV 21–24 · Bog 3 kap. 2.5–2.6 · UV6A · UV6C · UV12 · Lab 6</p>
+</blockquote>
+<p>Koblingsbetegnelsen (fx Dyn11) fortæller, hvordan viklingerne er forbundet, og hvor mange 30°-trin sekundærspændingen ligger efter primærspændingen. <strong>Den bestemmer, om to transformere kan parallelkobles, og hvordan en kortslutningsstrøm fordeler sig.</strong></p>
+<h2>Koblinger og betegnelse</h2>
+<ul>
+<li>Y / y = stjerne, D / d = trekant, Z / z = zigzag. Stort bogstav er højspændingssiden, lille bogstav lavspændingssiden. N / n = udført stjernepunkt.</li>
+<li><strong>Koblingsciffer = faseforskydning bagud / 30°.</strong> Dyn5 = 150° bagud, Dyn11 = 330° bagud (= 30° foran), Yy0 = i fase.</li>
+<li>I Danmark bruges Dyn5 eller Dyn11 til distribution (små transformere evt. Yzn5/Yzn11).</li>
+</ul>
+<blockquote>
+<p><strong>Hvorfor ikke Yy til distribution?</strong>
+Ved usymmetrisk last (fase-nul) kan primærstrømmen i den belastede fase kun vende tilbage gennem de to andre primærviklinger. Feltet i de ubelastede ben udlignes ikke, og stjernepunktet forskydes kraftigt. Trekant (eller zigzag) på primærsiden løser problemet, fordi en enfaset last på sekundærsiden kun belaster én primærvikling. Δ-viklingen fanger også 3. harmoniske strømme, så de ikke går ud i højspændingsnettet.</p>
+</blockquote>
+<h2>Bestem koblingscifferet (urskive-metoden)</h2>
+<ol>
+<li>Tegn primærsidens fasespændingsvektorer med A pegende mod kl. 12.</li>
+<li>Viklinger på samme ben er i fase (eller i modfase). Tegn sekundærsidens vektorer parallelt med de primære viklinger, de sidder på samme ben som.</li>
+<li>Sekundærens fasespændingsvektor a peger nu på koblingscifferet.</li>
+</ol>
+<div class="m" data-m="ciffer"></div>
+
+<p><strong>Målemetode i labbet (cirkelslag):</strong> forbind A og a, sæt lav spænding (100 V) på, og mål spændingerne mellem primær- og sekundærklemmer (B–b, C–c, B–c, C–b osv.). Tegn primærtrekanten i målestok, og slå cirkler med passeren fra B og C med de målte spændinger som radius. Skæringspunkterne giver b og c, og dermed sekundærtrekantens placering og cifferet.</p>
+<h2>Paralleldrift af transformere</h2>
+<p>Betingelser:</p>
+<ol>
+<li>Samme omsætningsforhold (ellers cirkulerende strøm allerede i tomgang).</li>
+<li>Samme koblingsciffer, eller cifre der kan gøres ens ved at ombytte klemmer (se grupperne).</li>
+<li>Samme fasefølge.</li>
+<li>Næsten samme e_k (max ca. ±10 %), ellers fordeles lasten forkert. Transformeren med lavest e_k tager mest.</li>
+<li>Effektforholdet helst ikke over ca. 1:3.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Gruppe</th>
+<th>Koblingscifre</th>
+<th>Kan parallelkobles indbyrdes ved klemombytning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I</td>
+<td>0, 4, 8</td>
+<td>Ja (cyklisk ombytning af faser)</td>
+</tr>
+<tr>
+<td>II</td>
+<td>6, 10, 2</td>
+<td>Ja</td>
+</tr>
+<tr>
+<td>III</td>
+<td>1, 5</td>
+<td>Ja, og med gruppe IV ved at bytte to faser på begge sider</td>
+</tr>
+<tr>
+<td>IV</td>
+<td>7, 11</td>
+<td>Ja, og med gruppe III</td>
+</tr>
+</tbody>
+</table>
+<p>En Dyn5 og en Dyn11 kan altså parallelkobles, hvis man bytter to faser på både primær- og sekundærsiden af den ene. Gruppe I og II kan aldrig parallelkobles med III og IV.</p>
+<blockquote>
+<p><strong>I labbet</strong>
+Før sekundærsiderne forbindes, måles spændingen mellem de klemmer, der skal sammen. 0 V er korrekt. En spænding betyder fejlkobling, som ville give kortslutning.</p>
+</blockquote>
+<h2>Indkobling og inrush</h2>
+<p>Kobles en ubelastet transformer ind i spændingens nulgennemgang, skal fluxen bygges op fra 0 og kan nå næsten 2 × Φ_max (plus remanens). Kernen går i dyb mætning, og magnetiseringsstrømmen bliver mange gange fuldlaststrømmen i de første perioder, før den klinger af. <strong>Indkobling ved spændingsmaksimum giver mindst inrush.</strong></p>
+<p>Inrush-strømmen er rig på 2. harmoniske. Differentialbeskyttelse (UV6C) bruger netop 2. harmoniske til at blokere, så relæet ikke fejludløser ved indkobling.</p>
+<h2>Kortslutningsstrømme</h2>
+<p>Ved en kortslutning direkte på sekundærklemmerne begrænses strømmen kun af transformerens egen impedans:</p>
+<pre class="formel">I_k3 = I_N · 100 / e_k        S_k = S_N · 100 / e_k        I_k3 = U_f / Z_T
+I_k2 = (√3 / 2) · I_k3 ≈ 0,87 · I_k3
+i_p  = κ · √2 · I_k           (κ mellem 1 og 2)</pre>
+
+<ul>
+<li><strong>Stødstrøm:</strong> sker kortslutningen i spændingens nulgennemgang, får strømmen et DC-led, og første top kan teoretisk blive 2 · √2 · I_k. I praksis er i_p = κ · √2 · I_k, hvor κ afhænger af R/X.</li>
+<li><strong>I_k3 er normalt størst</strong> og bestemmer kortslutningsfastheden (tavler og afbrydere).</li>
+<li><strong>Den mindste I_k</strong> (ofte 1-faset i enden af kablet) bestemmer, om sikringen når at udløse.</li>
+<li>Medregnes net og kabler: Z_total = Z_net + Z_T + Z_kabel (henført til samme spænding), og I_k = c · U_f / Z_total.</li>
+</ul>
+<details>
+<summary>Forudsig først: en 1.000 kVA transformer på 400 V med e_k = 6 %. Er I_k3 omkring 2, 24 eller 240 kA?</summary>
+<p>I_N = 1.000.000 / (√3 · 400) = 1.443 A. I_k3 = 1.443 · 100 / 6 = 24,1 kA. Sæt værdierne ind i modellen og se også stødstrømmen.</p>
+</details>
+<div class="m" data-m="kortslut"></div>
+
+<h3>Fordeling i en Dyn-transformer</h3>
+<p>Henført til samme spænding er I'k3 = I_k3 / n.</p>
+<table>
+<thead>
+<tr>
+<th>Fejl på sekundærsiden</th>
+<th>Sekundære fasestrømme</th>
+<th>Primære linjestrømme</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3-faset</td>
+<td>I_k3 i alle tre</td>
+<td>I'k3 i alle tre</td>
+</tr>
+<tr>
+<td>2-faset (fx b–c)</td>
+<td>I_k2 i to faser, 0 i den tredje</td>
+<td>I'k3 i én linje, I'k3/2 i de to andre</td>
+</tr>
+<tr>
+<td>1-faset (fx a–n)</td>
+<td>I_k1 ≈ I_k3 i én fase</td>
+<td>I'k3/√3 i to linjer, 0 i den tredje</td>
+</tr>
+</tbody>
+</table>
+<p>Pointen er, at Δ-viklingen fordeler en usymmetrisk fejl ud over flere primære ledere, så nettet ser en mere symmetrisk belastning.</p>
+<h2>Lab 6 kort</h2>
+<p>Samme 2 kVA Dyn-transformer. Variotransformeren skrues op fra 0 V, til der måles I_2,1/1 = I_k3 på sekundærsiden. Målerapport.</p>
+<ol>
+<li>3-, 2- og 1-faset kortslutning på sekundærsiden. Mål alle tre strømme på begge sider med tang, og sammenlign med tabellen.</li>
+<li>Koblingsciffer ved U_n = 100 V. Tegn med cirkelslag, og find a, b og c.</li>
+<li>Paralleldrift med gruppen overfor. Find den korrekte tilslutning, mål med voltmeter mellem klemmerne før sammenkobling, og vis processen vektorielt.</li>
+</ol>
+<blockquote>
+<p><strong>Mere til labøvelse 6</strong>
+<a href="../../modeller/el2/lab6-noter.html?vis=noter">Labnoterne</a> har hele forberedelsen og måleskemaet, <a href="../../modeller/el2/lab6.html?vis=sim">simulatoren</a> lader dig øve opstillingen, og <a href="../../modeller/el2/lab6-noter.html?vis=test">Test dig selv</a> har flere regneopgaver med trin-for-trin løsning.</p>
+</blockquote>
+<div class="genkald">
+<h3>Test dig selv</h3>
+<ol>
+<li>Hvad betyder hvert tegn i Dyn11?</li>
+<li>Hvorfor kan en Dyn11 og en Yy0 aldrig parallelkobles?</li>
+<li>Hvorfor indkobles en transformer helst ved spændingsmaksimum?</li>
+<li>Hvorfor ser nettet en mere symmetrisk last ved en 1-faset fejl bag en Dyn-transformer?</li>
+</ol>
+<details>
+<summary>Svar</summary>
+<ol>
+<li>D: trekant på HS. y: stjerne på LS. n: udført nul på LS. 11: LS ligger 11 · 30° = 330° bagud (30° foran).</li>
+<li>11 er i gruppe IV og 0 i gruppe I. Der er 30° mellem dem, og det kan ingen klemombytning rette.</li>
+<li>Fluxen ligger 90° efter spændingen. Ved spændingsmaksimum skal fluxen netop være nul, så den starter symmetrisk uden DC-forskydning og mætning.</li>
+<li>Den 1-fasede sekundærstrøm løber i én trekantvikling, som er forbundet til to primære linjer. Strømmen fordeles på to ledere i stedet for én.</li>
+</ol>
+</details>
+</div></section>
+  <section class="del" id="d-formler" role="tabpanel"><h3>Koblingsciffer</h3>
+<pre class="formel">Faseforskydning = ciffer · 30° bagud
+Dyn5 = 150°    Dyn11 = 330° (= 30° foran)    Yy0 = 0°
+Grupper:  I = 0, 4, 8   II = 2, 6, 10   III = 1, 5   IV = 7, 11</pre>
+
+<h3>Kortslutning direkte på klemmerne</h3>
+<pre class="formel">I_N  = S_N / (√3 · U_N)
+I_k3 = I_N · 100 / e_k
+S_k  = S_N · 100 / e_k
+I_k3 = U_f / Z_T
+I_k2 = (√3 / 2) · I_k3 ≈ 0,87 · I_k3
+i_p  = κ · √2 · I_k          1 ≤ κ ≤ 2</pre>
+
+<h3>Med net og kabler</h3>
+<pre class="formel">Z_total = Z_net + Z_T + Z_kabel       (henført til samme spænding)
+I_k     = c · U_f / Z_total</pre></section>
+  <section class="del" id="d-quiz" role="tabpanel">
+    <p>Svar på spørgsmålene, før du kigger i noterne. Ved talopgaver har du to forsøg, og komma og punktum virker begge.</p>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </section>
+</main>
+<script>
+const QUIZ = [{"q": "Hvor mange grader ligger sekundærspændingen efter primærspændingen i en Dyn5?", "tal": 150.0, "tol": 0.5, "enhed": "°", "losning": "5 · 30° = 150° bagud.", "f": "Hvert ciffer er 30°.", "emne": "Kortslutning og koblingsciffer"}, {"q": "En 2 kVA transformer på 400 V har e_k = 5 %. Hvad er I_k3 på sekundærsiden? (A, 1 decimal)", "tal": 57.7, "tol": 0.3, "enhed": "A", "losning": "I_N = 2.000 / (√3 · 400) = 2,887 A. I_k3 = 2,887 · 100 / 5 = 57,7 A.", "f": "Med e_k = 5 % bliver kortslutningsstrømmen 20 gange I_N.", "emne": "Kortslutning og koblingsciffer"}, {"q": "Hvad er I_k2 for samme transformer? (A, 1 decimal)", "tal": 50.0, "tol": 0.3, "enhed": "A", "losning": "I_k2 = 0,866 · 57,7 = 50,0 A.", "f": "Den 2-fasede strøm er altid √3/2 af den 3-fasede ved stiv forsyning.", "emne": "Kortslutning og koblingsciffer"}, {"q": "En 1.000 kVA, 400 V transformer har e_k = 6 %. Hvad er I_k3? (kA, 1 decimal)", "tal": 24.1, "tol": 0.1, "enhed": "kA", "losning": "I_N = 1.000.000 / (√3 · 400) = 1.443 A. I_k3 = 1.443 · 100 / 6 = 24.060 A = 24,1 kA.", "f": "Tavlen skal være kortslutningsfast for mindst denne strøm.", "emne": "Kortslutning og koblingsciffer"}, {"valg": ["0, 4 og 8", "7, og 1 og 5 ved at bytte to faser på begge sider", "Kun 11", "Alle ulige cifre"], "rigtig": 1, "q": "Hvilke koblingscifre kan parallelkobles med en Dyn11 ved at ombytte klemmer?", "f": "11 er i gruppe IV (7, 11), som kan kobles med gruppe III (1, 5).", "emne": "Kortslutning og koblingsciffer"}, {"valg": ["De deler lasten ligeligt", "Transformeren med 4 % tager mest last", "Transformeren med 6 % tager mest last", "Der løber en cirkulationsstrøm i tomgang"], "rigtig": 1, "q": "To transformere i paralleldrift har e_k = 4 % og 6 %. Hvad sker der?", "f": "Den med lavest impedans (e_k) tager mest. Cirkulationsstrøm i tomgang skyldes forskelligt omsætningsforhold.", "emne": "Kortslutning og koblingsciffer"}, {"valg": ["For at måle frekvensen", "Fordi inrush-strøm er rig på 2. harmoniske og ellers ville give fejludløsning", "For at undgå 3. harmoniske i nettet", "Fordi kortslutningsstrømme kun har 2. harmoniske"], "rigtig": 1, "q": "Hvorfor blokerer et differentialrelæ på 2. harmoniske?", "f": "En ægte indre fejl har næsten ingen 2. harmoniske, inrush har mange.", "emne": "Kortslutning og koblingsciffer"}, {"valg": ["Den største 3-fasede ved transformeren", "Den mindste, ofte 1-faset i enden af kablet", "Stødstrømmen", "Inrush-strømmen"], "rigtig": 1, "q": "Hvilken kortslutningsstrøm bestemmer, om sikringen når at udløse?", "f": "Den største bestemmer kortslutningsfastheden, den mindste bestemmer udløsningen.", "emne": "Kortslutning og koblingsciffer"}];
+const NOGLE = "mn-el2-kortslutning", SAMLET = "" === "1";
+const q = new URLSearchParams(location.search);
+
+// tilbage-link til den side man kom fra
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+
+// faner
+const tabs = [...document.querySelectorAll("#tabs button")];
+function vis(del) {
+  if (!document.getElementById("d-" + del)) del = "noter";
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.del === del));
+  document.querySelectorAll(".del").forEach(s => s.hidden = s.id !== "d-" + del);
+}
+tabs.forEach(b => b.addEventListener("click", () => {
+  vis(b.dataset.del);
+  const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
+  window.scrollTo(0, 0);
+}));
+// tomme dele skjules i fanerne
+["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+if (!QUIZ.length) tabs.find(b => b.dataset.del === "quiz").hidden = true;
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else { const v = q.get("vis") || "noter", t = tabs.find(b => b.dataset.del === v && !b.hidden) || tabs.find(b => !b.hidden); vis(t ? t.dataset.del : "noter"); }
+
+// tabeller kan scrolles på mobil
+document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+
+// quiz
+let gemt = {};
+try { gemt = JSON.parse(localStorage.getItem(NOGLE) || "{}"); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+// Danske og engelske skrivemåder virker begge: "85.200", "85200", "1.150,5", "0,86", "0.86".
+// Et enkelt punktum efterfulgt af tre cifre kan både være tusindtal og decimal, så begge tolkninger prøves.
+const tolk = s => { s = String(s).replace(/[\s\u00a0]/g, "").replace("−", "-");
+  if (!/^-?[\d.,]+$/.test(s)) return [];
+  if (s.includes(",")) return [parseFloat(s.replace(/\./g, "").replace(",", "."))];
+  if ((s.match(/\./g) || []).length > 1) return [parseFloat(s.replace(/\./g, ""))];
+  const ud = [parseFloat(s)];
+  if (/^-?\d+\.\d{3}$/.test(s)) ud.push(parseFloat(s.replace(".", "")));
+  return ud; };
+const fmt = x => x.toLocaleString("da-DK", { maximumFractionDigits: 4 });
+
+function bygQuiz() {
+  const rod = document.getElementById("quiz"); rod.innerHTML = "";
+  QUIZ.forEach((s, i) => {
+    const el = document.createElement("div"); el.className = "q";
+    el.innerHTML = `<div class="nr">Spørgsmål ${i + 1} af ${QUIZ.length}${SAMLET ? `<span class="emnetag">${s.emne}</span>` : ""}</div><div class="tekst">${s.q}</div>`;
+    const g = gemt[i];
+    if (s.valg) {
+      const v = document.createElement("div"); v.className = "valg";
+      s.valg.forEach((t, j) => {
+        const b = document.createElement("button"); b.innerHTML = t;
+        b.addEventListener("click", () => { gemt[i] = { valgt: j, ok: j === s.rigtig }; gem(); bygQuiz(); });
+        v.append(b);
+      });
+      el.append(v);
+      if (g) {
+        [...v.children].forEach((b, j) => { b.disabled = true; if (j === s.rigtig) b.classList.add("ok"); else if (j === g.valgt) b.classList.add("bad"); });
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Ikke helt."}</b>${s.f || ""}</div>`);
+      }
+    } else {
+      const f = document.createElement("div"); f.className = "tal";
+      f.innerHTML = `<input inputmode="decimal" aria-label="Dit svar" placeholder="Dit svar"> <span class="enhed">${s.enhed || ""}</span> <button class="knap">Tjek</button> <button class="knap stille">Vis facit</button>`;
+      const [inp, , tjek, opgiv] = f.children;
+      el.append(f);
+      const faerdig = g && (g.ok || g.forsog >= 2 || g.opgivet);
+      if (g && g.svar != null) inp.value = g.svar;
+      if (faerdig) {
+        inp.disabled = tjek.disabled = opgiv.disabled = true;
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Facit: " + fmt(s.tal) + " " + (s.enhed || "")}</b>${s.losning ? s.losning + "<br>" : ""}${s.f || ""}</div>`);
+      } else if (g && g.forsog === 1) {
+        el.insertAdjacentHTML("beforeend", `<div class="svar hint"><b>Ikke helt. Tjek din opstilling og prøv igen.</b>Du har ét forsøg tilbage.</div>`);
+      }
+      const svar = () => {
+        const xs = tolk(inp.value); if (!xs.length || xs.some(isNaN)) { inp.focus(); return; }
+        const ok = xs.some(x => Math.abs(x - s.tal) <= Math.max(s.tol, Math.abs(s.tal) * 1e-9));
+        const forsog = ((g && g.forsog) || 0) + 1;
+        gemt[i] = { svar: inp.value, ok, forsog }; gem(); bygQuiz();
+      };
+      tjek.addEventListener("click", svar);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") svar(); });
+      opgiv.addEventListener("click", () => { gemt[i] = { svar: inp.value, ok: false, forsog: 2, opgivet: true }; gem(); bygQuiz(); });
+    }
+    rod.append(el);
+  });
+  // score
+  const faerdige = QUIZ.map((s, i) => gemt[i] && (s.valg || gemt[i].ok || gemt[i].forsog >= 2));
+  const antal = faerdige.filter(Boolean).length, rigtige = QUIZ.filter((s, i) => gemt[i] && gemt[i].ok).length;
+  const forkerte = QUIZ.map((s, i) => faerdige[i] && !gemt[i].ok ? `<li>${s.q.replace(/<[^>]+>/g, "")}${SAMLET ? ` <em>(${s.emne})</em>` : ""}</li>` : "").join("");
+  document.getElementById("score").innerHTML = antal === 0 ? "" : `<div class="score">
+    <h2>${rigtige} af ${QUIZ.length} rigtige${antal < QUIZ.length ? ` · ${QUIZ.length - antal} mangler` : ""}</h2>
+    ${forkerte ? `<p>Tag med i repetitionen:</p><ul>${forkerte}</ul>` : antal === QUIZ.length ? "<p>Alle rigtige. Tag quizzen igen om et par uger.</p>" : ""}
+    <button class="knap stille" id="nulstil">Start forfra</button></div>`;
+  const n = document.getElementById("nulstil");
+  if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
+}
+if (QUIZ.length) bygQuiz();
+</script>
+<script src="modeller.js"></script>
+</body>
+</html>

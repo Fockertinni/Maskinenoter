@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Transformer · Elektroteknik 2 · Maskinenoter</title>
+<!-- Bygget af noter/kilde/byg.py. Ret i kildefilen i noter/kilde/, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #8a5f00; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #f2bd3d; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #f2bd3d; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.tabs { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--hover); flex-shrink: 0; }
+.tabs button { font: 600 .9rem/1 var(--sans); color: var(--muted); background: none; border: 0; padding: .5rem .8rem; border-radius: 8px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.8rem, 5vw, 3.2rem) max(16px, env(safe-area-inset-left, 0px)) 5rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .8rem 0 0; font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.del { margin-top: 2.2rem; }
+.del > :first-child { margin-top: 0; }
+.del h2 { margin: 2.6rem 0 .6rem; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; }
+.del h3 { margin: 1.8rem 0 .4rem; font-size: 1.12rem; letter-spacing: -.01em; }
+.del p, .del li { max-width: 68ch; }
+.del ul, .del ol { padding-left: 1.3rem; }
+.del li { margin: .25rem 0; }
+.del li::marker { color: var(--muted); }
+.del code { font: .92em var(--mono); background: var(--hover); padding: .08em .35em; border-radius: 5px; }
+.del strong { font-weight: 650; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: .94rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .8rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .92rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; }
+details { margin: .9rem 0; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: .1rem 1.1rem; }
+details > summary { cursor: pointer; font-weight: 600; padding: .75rem 0; color: var(--accent); list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "▸ "; }
+details[open] > summary::before { content: "▾ "; }
+details[open] { padding-bottom: .8rem; }
+.genkald { margin-top: 2.6rem; padding: 1.1rem 1.3rem; border: 2px solid var(--accent); border-radius: 16px; background: var(--surface); }
+.genkald h2, .genkald h3 { margin-top: 0 !important; font-size: .82rem !important; letter-spacing: .08em !important; text-transform: uppercase; color: var(--accent); }
+.genkald details { box-shadow: none; border: 1px solid var(--line); }
+
+/* quiz */
+.q { margin: 1rem 0; padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); }
+.q .nr { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q .tekst { margin: .3rem 0 .8rem; font-weight: 600; }
+.q .valg { display: grid; gap: 8px; }
+.q .valg button { text-align: left; font: inherit; font-size: .98rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: .65rem .9rem; cursor: pointer; }
+.q .valg button:hover:not(:disabled) { border-color: var(--accent); }
+.q .valg button:disabled { cursor: default; }
+.q .valg button.ok { background: var(--ok-bg); border-color: var(--ok); }
+.q .valg button.bad { background: var(--bad-bg); border-color: var(--bad); }
+.q .tal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q input { font: 1rem var(--mono); width: 11rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.q .enhed { color: var(--muted); }
+.knap { font: 600 .95rem var(--sans); padding: .6rem 1rem; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.svar { margin-top: .8rem; padding: .7rem .9rem; border-radius: 10px; font-size: .96rem; }
+.svar.ok { background: var(--ok-bg); } .svar.bad { background: var(--bad-bg); } .svar.hint { background: var(--key); }
+.svar b { display: block; margin-bottom: .15rem; }
+.score { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border-radius: 16px; background: var(--soft); border-left: 3px solid var(--accent); }
+.score h2 { margin: 0 0 .3rem !important; font-size: 1.2rem !important; }
+.score ul { margin: .4rem 0; }
+.emnetag { font-size: .76rem; font-weight: 600; color: var(--accent); margin-left: .4rem; text-transform: none; letter-spacing: 0; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .bar .in { gap: 8px; }
+  .tabs button { padding: .48rem .6rem; font-size: .85rem; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .8rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+}
+@media print { .bar { display: none; } .del[hidden] { display: block !important; } details { box-shadow: none; border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m5-el2">‹ Elektroteknik 2</a>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-del="noter">Noter</button>
+    <button role="tab" data-del="formler">Formler</button>
+    <button role="tab" data-del="quiz">Quiz</button>
+  </div>
+</div></header>
+<main>
+  <p class="kicker">Elektroteknik 2</p>
+  <h1>Transformer</h1>
+  <p class="intro">Opbygning, den ideelle transformer, ækvivalentskemaet, tomgangs- og kortslutningsforsøget, tab og virkningsgrad, spændingsfald og de andre transformertyper.</p>
+  <section class="del" id="d-noter" role="tabpanel"><blockquote>
+<p><strong>Kilder</strong>
+UV 17–20 · Bog 3 kap. 2.1–2.5.1 og 2.7 · UV6B · Lab 5</p>
+</blockquote>
+<p>Transformeren overfører energi mellem to viklinger via en fælles jernkerne. <strong>To simple forsøg, tomgang og kortslutning, giver alle parametre i ækvivalentskemaet</strong>, og dermed tab, virkningsgrad og spændingsfald.</p>
+<h2>Opbygning</h2>
+<ul>
+<li><strong>Kerne:</strong> koldvalsede, kornorienterede, isolerede jernplader (lamineret) for at holde hvirvelstrømstabet nede. Samlinger i 45°.</li>
+<li><strong>Kernetransformer</strong> (viklinger på to ben, større transformere) og <strong>kappetransformer</strong> (viklinger på midterbenet, små transformere).</li>
+<li>LS-viklingen ligger inderst, tættest på kernen, og HS-viklingen yderst. Det er lettere at isolere.</li>
+<li><strong>Store transformere:</strong> olie som isolation og kølemiddel, ekspansionsbeholder med silicagel-filter og gasrelæ (Buchholz), der opdager indre fejl. <strong>Tørtransformere</strong> er støbt i epoxy og bruges om bord.</li>
+</ul>
+<h2>Ideel transformer</h2>
+<pre class="formel">n = U_1 / U_2 = N_1 / N_2 = I_2 / I_1          U = 4,44 · f · N · Φ_max</pre>
+
+<p>Impedanser henføres mellem siderne med n²: Z' = n² · Z (fra sekundær til primær).</p>
+<h2>Ækvivalentskema</h2>
+<ul>
+<li><strong>Seriegren (serieimpedans):</strong> R_1 + jX_1. Viklingsmodstand og spredningsreaktans for begge viklinger henført til én side. Findes ved kortslutningsforsøget.</li>
+<li><strong>Tværgren (tværimpedans):</strong> R_Fe ∥ jX_h. Jerntab og magnetisering. Findes ved tomgangsforsøget.</li>
+</ul>
+<h2>Tomgangsforsøget</h2>
+<p>Nominel spænding på primærsiden, sekundærsiden åben. Strømmen er kun få % af I_N, så kobbertabet er ubetydeligt. <strong>Den målte effekt er jerntabet.</strong></p>
+<pre class="formel">P_0 = P_Fe        cos φ_0 = P_0 / (√3 · U_1 · I_0)        n = U_1 / U_20
+R_Fe = U_f² / P_0,fase        X_h = U_f² / Q_0,fase
+P_0 = P_0N · (U / U_N)²</pre>
+
+<p>Jerntabet stiger med kvadratet på spændingen (Lab 5, aktivitet 2).</p>
+<h2>Kortslutningsforsøget</h2>
+<p>Sekundærsiden kortsluttes, og primærspændingen skrues op fra 0, til der løber fuldlaststrøm. Spændingen er kun 3–10 % af U_N, så jerntabet er ubetydeligt. <strong>Den målte effekt er kobbertabet ved fuld last.</strong></p>
+<pre class="formel">P_k = P_Cu,1/1        Z_1 = U_1k,f / I_1,1/1        R_1 = Z_1 · cos φ_k        X_1 = Z_1 · sin φ_k
+e_k = U_1k / U_1N · 100 %        e_r = e_k · cos φ_k        e_x = e_k · sin φ_k        e_k² = e_r² + e_x²</pre>
+
+<p>e_k er typisk 4–6 % for distributionstransformere og bestemmer kortslutningsstrømmen (se Kortslutning og koblingsciffer).</p>
+<blockquote>
+<p><strong>Hvorfor er R fra kortslutningsforsøget større end DC-modstanden?</strong>
+Kortslutningseffekten indeholder også hvirvelstrømstab i metaldele og strømfortrængning i tykke ledere.</p>
+</blockquote>
+<h3>Gennemregnet eksempel (2 kVA øvelsestransformer, 400/400 V)</h3>
+<p>Eksempeltal: tomgang ved 400 V giver I_0 = 0,15 A og P_0 = 40 W. Kortslutning ved I_N giver U_1k = 20 V og P_k = 80 W. Regn I_N, cos φ_0, R_Fe, X_h, Z_1, R_1, X_1, e_k, e_r og e_x, før du åbner.</p>
+<details>
+<summary>Vis udregning</summary>
+<table>
+<thead>
+<tr>
+<th>Størrelse</th>
+<th>Udregning</th>
+<th>Resultat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I_N</td>
+<td>2.000 / (√3 · 400)</td>
+<td>2,89 A</td>
+</tr>
+<tr>
+<td>cos φ_0</td>
+<td>40 / (√3 · 400 · 0,15)</td>
+<td>0,385</td>
+</tr>
+<tr>
+<td>Q_0</td>
+<td>√(103,9² − 40²)</td>
+<td>95,9 var</td>
+</tr>
+<tr>
+<td>R_Fe</td>
+<td>230,9² / (40 / 3)</td>
+<td>4.000 Ω</td>
+</tr>
+<tr>
+<td>X_h</td>
+<td>230,9² / (95,9 / 3)</td>
+<td>1.668 Ω</td>
+</tr>
+<tr>
+<td>Z_1</td>
+<td>(20 / √3) / 2,89</td>
+<td>4,0 Ω</td>
+</tr>
+<tr>
+<td>cos φ_k</td>
+<td>80 / (√3 · 20 · 2,89)</td>
+<td>0,80</td>
+</tr>
+<tr>
+<td>R_1 / X_1</td>
+<td>4,0 · 0,8 / 4,0 · 0,6</td>
+<td>3,2 / 2,4 Ω</td>
+</tr>
+<tr>
+<td>e_k / e_r / e_x</td>
+<td>20 / 400 · 100 %, · 0,8, · 0,6</td>
+<td>5 / 4 / 3 %</td>
+</tr>
+</tbody>
+</table>
+<p>Alle værdier er pr. fase i en tænkt stjerne.</p>
+</details>
+<h2>Tab og virkningsgrad</h2>
+<pre class="formel">η = P_2 / (P_2 + P_0 + x² · P_k)        x = I / I_N</pre>
+
+<ul>
+<li>P_0 (jerntab) er konstant, så længe spændingen er konstant. Kobbertabet varierer med belastningen i anden.</li>
+<li><strong>Maksimal virkningsgrad, når kobbertab = jerntab:</strong> x = √(P_0 / P_k).</li>
+</ul>
+<details>
+<summary>Forudsig først: ved hvilken belastningsgrad har eksempeltransformeren (P_0 = 40 W, P_k = 80 W) den højeste virkningsgrad?</summary>
+<p>x = √(40 / 80) = 0,71, altså ved ca. 71 % last. Prøv at gøre jerntabet mindre i modellen, og se toppunktet flytte mod lav last. Det er derfor, transformere, der står meget i tomgang, bygges med lavt jerntab.</p>
+</details>
+<div class="m" data-m="trafoeta"></div>
+
+<h2>Spændingsfald</h2>
+<p>Definitionen er forskellen i talværdi: ΔU = |U_1| − |U_2|. I praksis bruges den tilnærmede formel (DS/HD 60364), som ligger tæt på definitionen:</p>
+<pre class="formel">ΔU ≈ I · R · cos φ + I · X · sin φ
+ε  ≈ x · (e_r · cos φ + e_x · sin φ)        (procent, Kapp-diagrammet)</pre>
+
+<p>Den forkerte metode ΔU = I · Z giver en fejl, der vokser, jo større forskellen er mellem strømmens vinkel og impedansens vinkel. Fasespændingsfald × √3 = netspændingsfald. Kapacitiv last kan give negativt spændingsfald (spændingsstigning).</p>
+<div class="m" data-m="spfald"></div>
+
+<h2>Andre transformertyper</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Kendetegn</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sparetransformer (autotransformer)</td>
+<td>Én vikling med udtag. Billig og let, men ingen galvanisk adskillelse</td>
+</tr>
+<tr>
+<td>Variotransformer</td>
+<td>Justerbar sparetransformer med kulkontakt (bruges i labbet, 0–100 %)</td>
+</tr>
+<tr>
+<td>Skilletransformer</td>
+<td>Galvanisk adskillelse af en enkelt brugsgenstand</td>
+</tr>
+<tr>
+<td>Sikkerhedstransformer</td>
+<td>Leverer SELV (max 50 V AC), forstærket isolation</td>
+</tr>
+<tr>
+<td>Strømtransformer (CT)</td>
+<td>Primær i serie med lederen, typisk x/5 A eller x/1 A. <strong>Sekundæren må aldrig åbnes under drift.</strong> Kortslut den først, ellers opstår farlig højspænding og overophedning</td>
+</tr>
+<tr>
+<td>Spændingstransformer (VT)</td>
+<td>Arbejder næsten ubelastet, typisk 100 V eller 110 V sekundært. <strong>Må ikke kortsluttes</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Måletransformere angives med nøjagtighedsklasse og VA-tal (belastningsevne). Flere strømspoler kobles i serie på en CT, flere spændingsspoler i parallel på en VT. Den ene sekundærklemme jordes altid.</p>
+<h2>Lab 5 kort</h2>
+<p>Øvelsestransformer: S_N = 2.000 VA, 3 × 400 V / 3 × 400/230 V, Dyn. Forsynes via variotransformer. Strømme måles med tang (I = gennemsnit af I_L1 og I_L3), effekten med 2-wattmetermetoden.</p>
+<ol>
+<li>Forberedelse: I_N på primær- og sekundærsiden (≈ 2,9 A).</li>
+<li>Tomgangsforsøg ved U_1N: cos φ_0, R_Fe, X_h og n.</li>
+<li>P_0 ved 25, 50, 75 og 100 % af U_1N. Vis den kvadratiske sammenhæng.</li>
+<li>Kortslutningsforsøg: kontrollér 0 V, før kortslutningen monteres, og skru op til I_k = I_N. Find Z_1, R_1, X_1, e_k, e_r og e_x.</li>
+<li>Spændingsfald over R_installation (ca. 2,2 Ω pr. fase) ved tre belastninger. Sammenlign definitionen, den tilnærmede formel og den "forkerte" metode.</li>
+</ol>
+<blockquote>
+<p><strong>Mere til labøvelse 5</strong>
+<a href="../../modeller/el2/lab5-noter.html?vis=noter">Labnoterne</a> har hele forberedelsen og måleskemaet, <a href="../../modeller/el2/lab5.html?vis=sim">simulatoren</a> lader dig øve opstillingen, og <a href="../../modeller/el2/lab5-noter.html?vis=test">Test dig selv</a> har flere regneopgaver med trin-for-trin løsning.</p>
+</blockquote>
+<div class="genkald">
+<h3>Test dig selv</h3>
+<ol>
+<li>Hvorfor måler tomgangsforsøget jerntabet og kortslutningsforsøget kobbertabet?</li>
+<li>Hvorfor må en strømtransformers sekundærkreds aldrig åbnes?</li>
+<li>Hvad sker der med jerntabet, hvis spændingen halveres?</li>
+<li>Tegn ækvivalentskemaet, og skriv, hvilket forsøg der giver hver komponent.</li>
+</ol>
+<details>
+<summary>Svar</summary>
+<ol>
+<li>I tomgang er strømmen så lille, at I²R er ubetydelig. I kortslutning er spændingen så lav, at fluxen og jerntabet er ubetydelige.</li>
+<li>Uden sekundærstrøm er der intet modfelt. Primærstrømmen magnetiserer kernen i dyb mætning, og der induceres farlig høj spænding og varme.</li>
+<li>Det falder til en fjerdedel (P_0 ∝ U²).</li>
+<li>Seriegren R_1 + jX_1 (kortslutningsforsøget) og tværgren R_Fe ∥ jX_h (tomgangsforsøget).</li>
+</ol>
+</details>
+</div></section>
+  <section class="del" id="d-formler" role="tabpanel"><h3>Ideel transformer</h3>
+<pre class="formel">n  = U_1 / U_2 = N_1 / N_2 = I_2 / I_1
+U  = 4,44 · f · N · Φ_max
+Z&#x27; = n² · Z                     (henføring til primær)
+I_N = S_N / (√3 · U_N)</pre>
+
+<h3>Tomgangsforsøg</h3>
+<pre class="formel">P_0     = P_Fe
+cos φ_0 = P_0 / (√3 · U_1 · I_0)
+R_Fe    = U_f² / P_0,fase
+X_h     = U_f² / Q_0,fase
+P_0     = P_0N · (U / U_N)²</pre>
+
+<h3>Kortslutningsforsøg</h3>
+<pre class="formel">P_k = P_Cu ved fuld last
+Z_1 = U_1k,f / I_1N      R_1 = Z_1 · cos φ_k      X_1 = Z_1 · sin φ_k
+e_k = U_1k / U_1N · 100 %
+e_r = e_k · cos φ_k      e_x = e_k · sin φ_k      e_k² = e_r² + e_x²</pre>
+
+<h3>Virkningsgrad</h3>
+<pre class="formel">η     = P_2 / (P_2 + P_0 + x² · P_k)        x = I / I_N
+x_ηmax = √(P_0 / P_k)</pre>
+
+<h3>Spændingsfald</h3>
+<pre class="formel">ΔU = |U_1| − |U_2|                          (definition)
+ΔU ≈ I · (R · cos φ + X · sin φ)            (DS/HD 60364)
+ε  ≈ x · (e_r · cos φ + e_x · sin φ)        (procent)</pre></section>
+  <section class="del" id="d-quiz" role="tabpanel">
+    <p>Svar på spørgsmålene, før du kigger i noterne. Ved talopgaver har du to forsøg, og komma og punktum virker begge.</p>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </section>
+</main>
+<script>
+const QUIZ = [{"q": "En 2 kVA transformer på 400 V. Hvad er I_N? (A, 2 decimaler)", "tal": 2.89, "tol": 0.01, "enhed": "A", "losning": "I_N = S_N / (√3 · U_N) = 2.000 / (√3 · 400) = 2,89 A.", "f": "Brug altid √3 og netspændingen ved 3-faset.", "emne": "Transformer"}, {"q": "Tomgangseffekten er 40 W ved 400 V. Hvad er den ved 200 V? (W)", "tal": 10.0, "tol": 0.1, "enhed": "W", "losning": "P_0 = 40 · (200 / 400)² = 40 · 0,25 = 10 W.", "f": "Jerntabet følger U².", "emne": "Transformer"}, {"q": "Ved kortslutningsforsøget skal der 20 V til for at drive I_N gennem en 400 V transformer. Hvad er e_k? (%)", "tal": 5.0, "tol": 0.05, "enhed": "%", "losning": "e_k = 20 / 400 · 100 % = 5 %.", "f": "e_k bestemmer også kortslutningsstrømmen: I_k3 = 20 · I_N.", "emne": "Transformer"}, {"q": "P_0 = 40 W og P_k = 80 W. Ved hvilken belastningsgrad x er virkningsgraden størst? (2 decimaler)", "tal": 0.71, "tol": 0.01, "enhed": "", "losning": "x = √(P_0 / P_k) = √0,5 = 0,71.", "f": "Her er kobbertabet x² · P_k lig med jerntabet.", "emne": "Transformer"}, {"q": "Hvad er virkningsgraden ved fuld last og cos φ = 1 for samme transformer (2 kVA)? (%, 1 decimal)", "tal": 94.3, "tol": 0.1, "enhed": "%", "losning": "η = 2.000 / (2.000 + 40 + 80) = 0,943 = 94,3 %.", "f": "Ved fuld last er x = 1, så kobbertabet er hele P_k.", "emne": "Transformer"}, {"q": "e_r = 4 % og e_x = 3 %. Hvor stort er det procentvise spændingsfald ved fuld last og cos φ = 0,8 induktiv? (%)", "tal": 5.0, "tol": 0.05, "enhed": "%", "losning": "ε = 1 · (4 · 0,8 + 3 · 0,6) = 3,2 + 1,8 = 5,0 %.", "f": "sin φ = 0,6, når cos φ = 0,8.", "emne": "Transformer"}, {"valg": ["Fordi den glemmer √3", "Fordi den lægger tallene sammen uden at tage hensyn til vinklen mellem strøm og impedans", "Fordi Z ikke kan måles", "Fordi den kun gælder for DC"], "rigtig": 1, "q": "Hvorfor er ΔU = I · Z den forkerte metode?", "f": "Kun den del af I·Z, der ligger i retning af U, ændrer spændingens størrelse.", "emne": "Transformer"}, {"valg": ["Kortslutte sekundæren", "Åbne sekundærkredsen", "Jorde den ene sekundærklemme", "Koble flere strømspoler i serie"], "rigtig": 1, "q": "Hvad må du aldrig gøre med en strømtransformer i drift?", "f": "Åben sekundær giver farlig højspænding og overophedning. Kortslut den først.", "emne": "Transformer"}, {"valg": ["Fordi den har flest vindinger", "Fordi det er lettere at isolere HS-viklingen, når den ligger yderst", "Fordi den skal køles af olien", "Det er tilfældigt"], "rigtig": 1, "q": "Hvorfor ligger LS-viklingen inderst på kernen?", "f": "Den høje spænding holdes længst væk fra den jordede kerne.", "emne": "Transformer"}];
+const NOGLE = "mn-el2-transformer", SAMLET = "" === "1";
+const q = new URLSearchParams(location.search);
+
+// tilbage-link til den side man kom fra
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+
+// faner
+const tabs = [...document.querySelectorAll("#tabs button")];
+function vis(del) {
+  if (!document.getElementById("d-" + del)) del = "noter";
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.del === del));
+  document.querySelectorAll(".del").forEach(s => s.hidden = s.id !== "d-" + del);
+}
+tabs.forEach(b => b.addEventListener("click", () => {
+  vis(b.dataset.del);
+  const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
+  window.scrollTo(0, 0);
+}));
+// tomme dele skjules i fanerne
+["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+if (!QUIZ.length) tabs.find(b => b.dataset.del === "quiz").hidden = true;
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else { const v = q.get("vis") || "noter", t = tabs.find(b => b.dataset.del === v && !b.hidden) || tabs.find(b => !b.hidden); vis(t ? t.dataset.del : "noter"); }
+
+// tabeller kan scrolles på mobil
+document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+
+// quiz
+let gemt = {};
+try { gemt = JSON.parse(localStorage.getItem(NOGLE) || "{}"); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+// Danske og engelske skrivemåder virker begge: "85.200", "85200", "1.150,5", "0,86", "0.86".
+// Et enkelt punktum efterfulgt af tre cifre kan både være tusindtal og decimal, så begge tolkninger prøves.
+const tolk = s => { s = String(s).replace(/[\s\u00a0]/g, "").replace("−", "-");
+  if (!/^-?[\d.,]+$/.test(s)) return [];
+  if (s.includes(",")) return [parseFloat(s.replace(/\./g, "").replace(",", "."))];
+  if ((s.match(/\./g) || []).length > 1) return [parseFloat(s.replace(/\./g, ""))];
+  const ud = [parseFloat(s)];
+  if (/^-?\d+\.\d{3}$/.test(s)) ud.push(parseFloat(s.replace(".", "")));
+  return ud; };
+const fmt = x => x.toLocaleString("da-DK", { maximumFractionDigits: 4 });
+
+function bygQuiz() {
+  const rod = document.getElementById("quiz"); rod.innerHTML = "";
+  QUIZ.forEach((s, i) => {
+    const el = document.createElement("div"); el.className = "q";
+    el.innerHTML = `<div class="nr">Spørgsmål ${i + 1} af ${QUIZ.length}${SAMLET ? `<span class="emnetag">${s.emne}</span>` : ""}</div><div class="tekst">${s.q}</div>`;
+    const g = gemt[i];
+    if (s.valg) {
+      const v = document.createElement("div"); v.className = "valg";
+      s.valg.forEach((t, j) => {
+        const b = document.createElement("button"); b.innerHTML = t;
+        b.addEventListener("click", () => { gemt[i] = { valgt: j, ok: j === s.rigtig }; gem(); bygQuiz(); });
+        v.append(b);
+      });
+      el.append(v);
+      if (g) {
+        [...v.children].forEach((b, j) => { b.disabled = true; if (j === s.rigtig) b.classList.add("ok"); else if (j === g.valgt) b.classList.add("bad"); });
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Ikke helt."}</b>${s.f || ""}</div>`);
+      }
+    } else {
+      const f = document.createElement("div"); f.className = "tal";
+      f.innerHTML = `<input inputmode="decimal" aria-label="Dit svar" placeholder="Dit svar"> <span class="enhed">${s.enhed || ""}</span> <button class="knap">Tjek</button> <button class="knap stille">Vis facit</button>`;
+      const [inp, , tjek, opgiv] = f.children;
+      el.append(f);
+      const faerdig = g && (g.ok || g.forsog >= 2 || g.opgivet);
+      if (g && g.svar != null) inp.value = g.svar;
+      if (faerdig) {
+        inp.disabled = tjek.disabled = opgiv.disabled = true;
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Facit: " + fmt(s.tal) + " " + (s.enhed || "")}</b>${s.losning ? s.losning + "<br>" : ""}${s.f || ""}</div>`);
+      } else if (g && g.forsog === 1) {
+        el.insertAdjacentHTML("beforeend", `<div class="svar hint"><b>Ikke helt. Tjek din opstilling og prøv igen.</b>Du har ét forsøg tilbage.</div>`);
+      }
+      const svar = () => {
+        const xs = tolk(inp.value); if (!xs.length || xs.some(isNaN)) { inp.focus(); return; }
+        const ok = xs.some(x => Math.abs(x - s.tal) <= Math.max(s.tol, Math.abs(s.tal) * 1e-9));
+        const forsog = ((g && g.forsog) || 0) + 1;
+        gemt[i] = { svar: inp.value, ok, forsog }; gem(); bygQuiz();
+      };
+      tjek.addEventListener("click", svar);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") svar(); });
+      opgiv.addEventListener("click", () => { gemt[i] = { svar: inp.value, ok: false, forsog: 2, opgivet: true }; gem(); bygQuiz(); });
+    }
+    rod.append(el);
+  });
+  // score
+  const faerdige = QUIZ.map((s, i) => gemt[i] && (s.valg || gemt[i].ok || gemt[i].forsog >= 2));
+  const antal = faerdige.filter(Boolean).length, rigtige = QUIZ.filter((s, i) => gemt[i] && gemt[i].ok).length;
+  const forkerte = QUIZ.map((s, i) => faerdige[i] && !gemt[i].ok ? `<li>${s.q.replace(/<[^>]+>/g, "")}${SAMLET ? ` <em>(${s.emne})</em>` : ""}</li>` : "").join("");
+  document.getElementById("score").innerHTML = antal === 0 ? "" : `<div class="score">
+    <h2>${rigtige} af ${QUIZ.length} rigtige${antal < QUIZ.length ? ` · ${QUIZ.length - antal} mangler` : ""}</h2>
+    ${forkerte ? `<p>Tag med i repetitionen:</p><ul>${forkerte}</ul>` : antal === QUIZ.length ? "<p>Alle rigtige. Tag quizzen igen om et par uger.</p>" : ""}
+    <button class="knap stille" id="nulstil">Start forfra</button></div>`;
+  const n = document.getElementById("nulstil");
+  if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
+}
+if (QUIZ.length) bygQuiz();
+</script>
+<script src="modeller.js"></script>
+</body>
+</html>

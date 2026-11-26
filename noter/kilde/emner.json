@@ -194,5 +194,103 @@
    "quiz": 4,
    "formler": true
   }
+ ],
+ "el2": [
+  {
+   "id": "faget",
+   "navn": "Faget, laboratoriet og rapporter",
+   "ikon": "sikkerhed",
+   "intro": "Hvad faget kræver til eksamen, de ni sikkerhedsregler i stærkstrømslaboratoriet, udstyret på bænkene og hvordan målerapporter og rapporter skal skrives.",
+   "quiz": 6,
+   "formler": false
+  },
+  {
+   "id": "trefaset",
+   "navn": "Trefaset belastning",
+   "ikon": "trefase",
+   "intro": "Stjerne og trekant, effekt i 3-fasede systemer, usymmetrisk last med og uden nul, Kirchhoff med tangamperemeter og de tre wattmetermetoder.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "generator",
+   "navn": "Synkrongenerator",
+   "ikon": "generator",
+   "intro": "Opbygning og magnetisering, f = p·n/60, ækvivalentskema og ankerreaktion, de tre karakteristikker, remanens, THDu og asynkrongeneratoren.",
+   "quiz": 7,
+   "formler": true
+  },
+  {
+   "id": "asynkron",
+   "navn": "Asynkronmotor",
+   "ikon": "motor",
+   "intro": "Drejefelt og slip, rotortyper, ækvivalentskema og effektbalance, momentkurven, startmetoder, fasekompensering og 1-fasede motorer.",
+   "quiz": 9,
+   "formler": true
+  },
+  {
+   "id": "jording",
+   "navn": "Jording, målebroer og fordelingssystemer",
+   "ikon": "jord",
+   "intro": "Wheatstone-bro og kompensationsmåling, jordelektrodens overgangsmodstand med 3-punktsmetoden, TN, TT og IT, personfaren, materialer og spændingsfald i installationer.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "transformer",
+   "navn": "Transformer",
+   "ikon": "transformer",
+   "intro": "Opbygning, den ideelle transformer, ækvivalentskemaet, tomgangs- og kortslutningsforsøget, tab og virkningsgrad, spændingsfald og de andre transformertyper.",
+   "quiz": 9,
+   "formler": true
+  },
+  {
+   "id": "kortslutning",
+   "navn": "Kortslutning og koblingsciffer",
+   "ikon": "kortslutning",
+   "intro": "Koblingsbetegnelser som Dyn11, urskive-metoden og cirkelslag, betingelser for paralleldrift, inrush og kortslutningsstrømmenes størrelse og fordeling bag en Dyn-transformer.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "synkronisering",
+   "navn": "Synkronisering og paralleldrift",
+   "ikon": "synkron",
+   "intro": "Ø-drift, de fire synkroniseringsbetingelser og instrumenterne, lastfordeling af P og Q, lastvinkel, statik, udkobling, generatorudrustning og generatoren ved kortslutning.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "frekvensomformer",
+   "navn": "Frekvensomformer",
+   "ikon": "frekvens",
+   "intro": "Halvlederkomponenter, styret ensretning, frekvensomformerens fire dele, PAM og PWM, U/f-styring, lineære og ulineære forbrugere, harmoniske og THD, DC-fordeling og reluktansmotoren.",
+   "quiz": 9,
+   "formler": true
+  },
+  {
+   "id": "vedligehold",
+   "navn": "Tilstandsbaseret vedligehold",
+   "ikon": "vedligehold",
+   "intro": "Selvstudie. Korrektiv, forebyggende og tilstandsbaseret vedligehold, termografering af el-anlæg og partielle udladninger i højspændingsudstyr.",
+   "quiz": 6,
+   "formler": false
+  },
+  {
+   "id": "lys",
+   "navn": "Lysteknik",
+   "ikon": "lys",
+   "intro": "Selvstudie. Lysstrøm, lysstyrke, belysningsstyrke og luminans, afstandskvadratloven og cosinusloven, rumbelysning og lyskilderne fra glødelampe til LED.",
+   "quiz": 7,
+   "formler": true
+  },
+  {
+   "id": "formelsamling",
+   "navn": "Samlet formelsamling",
+   "ikon": "formler",
+   "intro": "Alle formler fra Elektroteknik 2 samlet på ét sted og ordnet efter emne. God til repetition og til at slå op i, når du regner opgaver.",
+   "quiz": 0,
+   "formler": true
+  }
  ]
 }

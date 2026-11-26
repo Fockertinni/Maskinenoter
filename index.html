@@ -20,7 +20,7 @@ body{margin:0}
   /* app-farver: virker på både lys og mørk baggrund */
   --c-el: #e0a100; --c-energi: #e2552f; --c-motor: #c8501d; --c-auto: #12928f; --c-oekonomi: #6b57c9; --c-ledelse: #7c5cd6;
   --c-studie: #5b6f82; --c-vaerksted: #6d7a86; --c-praktik: #2f6fb5; --c-koel: #2a8fd0;
-  --c-noter: #2f6fd6; --c-formler: #7a56d1; --c-simulation: #e2671c; --c-modeller: #14958f; --c-forstaaelse: #d19a00; --c-quiz: #2e9b4f;
+  --c-noter: #2f6fd6; --c-formler: #7a56d1; --c-labnoter: #b0477f; --c-simulation: #e2671c; --c-modeller: #14958f; --c-forstaaelse: #d19a00; --c-quiz: #2e9b4f;
   --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
@@ -144,13 +144,15 @@ a.quiet:hover { color: var(--fg); background: var(--hover); }
    ===================================================================== */
 const NU = 5; // det semester jeg er på lige nu
 
-// Genvej til dine EL2-labs: giver alle dele for lab nr. n
-const el2Lab = n => ({
-  noter:       `modeller/el2/lab${n}-noter.html?vis=noter`,   // modellerne ligger inde i noterne
-  formler:     null,
+// Genvej til EL2-emner med labøvelse: teorinoter, formler og quiz fra noter/el2/<id>.html (bygget af byg.py),
+// plus labnoterne (med modeller og test), simulatoren og forståelsesdelen fra lab nr. n
+const el2Lab = (n, id) => ({
+  noter:       `noter/el2/${id}.html?vis=noter`,
+  formler:     `noter/el2/${id}.html?vis=formler`,
+  labnoter:    `modeller/el2/lab${n}-noter.html?vis=noter`,     // labnoterne med modellerne inde i teksten
   simulation:  `modeller/el2/lab${n}.html?vis=sim`,
   forstaaelse: `modeller/el2/lab${n}-noter.html?vis=forstaa`,
-  quiz:        `modeller/el2/lab${n}-noter.html?vis=test`,
+  quiz:        `noter/el2/${id}.html?vis=quiz`,
 });
 
 // Genvej til PA1-emner: noter (med modeller), forståelse og quiz i noter/pa1/<id>.html
@@ -180,33 +182,45 @@ const SEMESTRE = [
     { id: "term", navn: "Grundlæggende termodynamik", ikon: "energi", emner: [] },
     { id: "stud", navn: "Studiekompetence og metode", ikon: "studie", emner: [] } ] },
   { n: 5, quiz: null, fag: [
-    { id: "el2", navn: "Elektroteknik 2", ikon: "el", quiz: null,
+    { id: "el2", navn: "Elektroteknik 2", ikon: "el", quiz: "noter/el2/quiz.html",
       laeringsmaal: "https://www.teknikaqms.dk/showpage.php?pageid=485818",
       emner: [
+        { id: "faget", navn: "Faget, laboratoriet og rapporter", ikon: "sikkerhed",
+          intro: "Hvad faget kræver til eksamen, de ni sikkerhedsregler i stærkstrømslaboratoriet, udstyret på bænkene og hvordan målerapporter og rapporter skal skrives.",
+          dele: emne("el2", "faget", false) },
         { id: "trefaset", navn: "Trefaset belastning", ikon: "trefase",
-          intro: "Symmetrisk og usymmetrisk belastning af et trefaset net. Hvad sker der med strømme, effekt og stjernepunkt, når belastningen er skæv, og når nullen fjernes?",
-          dele: el2Lab(1) },
+          intro: "Stjerne og trekant, effekt i 3-fasede systemer, usymmetrisk last med og uden nul, og de tre wattmetermetoder. Labøvelse 1.",
+          dele: el2Lab(1, "trefaset") },
         { id: "generator", navn: "Synkrongenerator", ikon: "generator",
-          intro: "AC-generatorens remanens, magnetiserings- og belastningskarakteristik, og hvorfor spændingen bliver forvrænget.",
-          dele: el2Lab(2) },
+          intro: "Opbygning og magnetisering, ankerreaktion og vektordiagram, magnetiserings- og belastningskarakteristik, remanens og THDu. Labøvelse 2.",
+          dele: el2Lab(2, "generator") },
         { id: "asynkron", navn: "Asynkronmotor", ikon: "motor",
-          intro: "Den trefasede asynkronmotor: viklingsmodstand, slip, tab og effektforhold, og hvordan man forbedrer cos φ med kondensatorer.",
-          dele: el2Lab(3) },
-        { id: "jording", navn: "Jording", ikon: "jord",
-          intro: "Jordelektrodens overgangsmodstand, 3-polet måling og 55/60/65 %-kravet, og hvordan potentialet fordeler sig omkring spydene.",
-          dele: el2Lab(4) },
+          intro: "Slip, effektbalance og tab, momentkurven, startmetoder, fasekompensering med kondensatorer og 1-fasede motorer. Labøvelse 3.",
+          dele: el2Lab(3, "asynkron") },
+        { id: "jording", navn: "Jording, målebroer og fordelingssystemer", ikon: "jord",
+          intro: "Målebroer, jordelektrodens overgangsmodstand og 55/60/65 %-kravet, TN, TT og IT, personfaren og spændingsfald i installationer. Labøvelse 4.",
+          dele: el2Lab(4, "jording") },
         { id: "transformer", navn: "Transformer", ikon: "transformer",
-          intro: "Tomgangs- og kortslutningsforsøg på transformeren, og spændingsfaldet beregnet på tre forskellige måder.",
-          dele: el2Lab(5) },
+          intro: "Ækvivalentskemaet, tomgangs- og kortslutningsforsøget, virkningsgrad, spændingsfald på tre måder og måletransformere. Labøvelse 5.",
+          dele: el2Lab(5, "transformer") },
         { id: "kortslutning", navn: "Kortslutning og koblingsciffer", ikon: "kortslutning",
-          intro: "Kortslutningsstrømme bag en Dyn-transformer, koblingscifre med cirkelslag og paralleldrift af to transformere.",
-          dele: el2Lab(6) },
+          intro: "Koblingscifre og cirkelslag, paralleldrift af transformere, inrush og kortslutningsstrømme bag en Dyn-transformer. Labøvelse 6.",
+          dele: el2Lab(6, "kortslutning") },
         { id: "synkronisering", navn: "Synkronisering og paralleldrift", ikon: "synkron",
-          intro: "Synkronisering af generatorer, fordeling af aktiv og reaktiv effekt, og frekvensstatik når en generator kobles fra.",
-          dele: el2Lab(7) },
+          intro: "Synkroniseringsbetingelser, fordeling af P og Q, lastvinkel, statik, udkobling og generatorens beskyttelse. Labøvelse 7.",
+          dele: el2Lab(7, "synkronisering") },
         { id: "frekvensomformer", navn: "Frekvensomformer", ikon: "frekvens",
-          intro: "Frekvensomformer med reluktansmotor: strømmens harmoniske og virkningsgrader ved forskellig last og hastighed.",
-          dele: el2Lab(8) },
+          intro: "Halvledere, frekvensomformerens opbygning, U/f-styring, harmoniske og THD, DC-fordeling og reluktansmotoren. Labøvelse 8.",
+          dele: el2Lab(8, "frekvensomformer") },
+        { id: "vedligehold", navn: "Tilstandsbaseret vedligehold", ikon: "vedligehold",
+          intro: "Selvstudie. Korrektiv, forebyggende og tilstandsbaseret vedligehold, termografering og partielle udladninger.",
+          dele: emne("el2", "vedligehold", false) },
+        { id: "lys", navn: "Lysteknik", ikon: "lys",
+          intro: "Selvstudie. Lysstrøm, lysstyrke og belysningsstyrke, afstandskvadrat- og cosinusloven, rumbelysning og lyskilder.",
+          dele: emne("el2", "lys") },
+        { id: "formelsamling", navn: "Samlet formelsamling", ikon: "formler",
+          intro: "Alle formler fra Elektroteknik 2 samlet på ét sted og ordnet efter emne.",
+          dele: { formler: "noter/el2/formelsamling.html?vis=formler" } },
       ] },
     { id: "pa1", navn: "Procesanalyse og automation 1", ikon: "auto", quiz: null,
       laeringsmaal: "https://www.teknikaqms.dk/showpage.php?pageid=485841",
@@ -331,7 +345,7 @@ const SEMESTRE = [
 
 /* Rækkefølge og navne på delene på en emneside */
 const DELE = [
-  ["noter", "Noter"], ["formler", "Formler"], ["simulation", "Simulation"],
+  ["noter", "Noter"], ["formler", "Formler"], ["labnoter", "Labnoter"], ["simulation", "Simulation"],
   ["modeller", "Modeller"], ["forstaaelse", "Forståelse"], ["quiz", "Quiz"],
 ];
 
@@ -362,6 +376,8 @@ const IKON = {
   ladder: '<path d="M4 3v18M20 3v18M4 8.5h16M4 15.5h16"/>',
   sekvens: '<rect x="8" y="2.5" width="8" height="6"/><rect x="8" y="15.5" width="8" height="6"/><path d="M12 8.5v7M8.5 12h7"/>',
   timer: '<circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.6 2.6M9.5 2.5h5"/>',
+  lys: '<path d="M9 18h6M10 21.5h4"/><path d="M12 2.5a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 2.5Z"/><path d="M2.5 9H1M23 9h-1.5M4 3l1 1M20 3l-1 1"/>',
+  vedligehold: '<path d="M14.7 6.3a4 4 0 0 1 5 5l-1.6-1.6-2.1.5-.5 2.1 1.6 1.6a4 4 0 0 1-5-5L4 16.6V20h3.4Z"/>',
   sikkerhed: '<path d="M12 2.5 4.5 5.5v6c0 4.8 3.2 8.4 7.5 10 4.3-1.6 7.5-5.2 7.5-10v-6Z"/><path d="M12 8v5M12 16.2v.3"/>',
   // Driftsøkonomi
   regnskab: '<path d="M12 4v16M7.5 20.5h9M4 7.5h16"/><path d="M6.5 7.5 3.8 13.5h5.4ZM17.5 7.5l-2.7 6h5.4Z"/>',
@@ -389,13 +405,14 @@ const IKON = {
   starteluft: '<rect x="6" y="7" width="12" height="14.5" rx="5"/><path d="M12 7V3.5M8.5 3.5h7M12 14.5l2.3-2.3"/>',
   noter: '<path d="M7 2.5h7.5l4.5 4.5v14.5H7Z"/><path d="M14.5 2.5V7H19M10 12h6M10 16h6"/>',
   formler: '<path d="M17 4.5H7l6 7.5-6 7.5h10"/>',
+  labnoter: '<path d="M9.5 2.5h5M10.5 2.5v6L5 19a1.7 1.7 0 0 0 1.5 2.5h11A1.7 1.7 0 0 0 19 19l-5.5-10.5v-6"/><path d="M7.5 15h9"/>',
   simulation: '<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>',
   modeller: '<path d="M12 2.5 4 7v10l8 4.5 8-4.5V7l-8-4.5Z"/><path d="M4 7l8 4.5L20 7M12 11.5v10"/>',
   forstaaelse: '<path d="M9 18h6M10 21.5h4M12 2.5a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 2.5Z"/>',
   quiz: '<circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.6 2.6L16 9.6"/>',
 };
 const FARVE = { el: "el", energi: "energi", motoranlaeg: "motor", auto: "auto", oekonomi: "oekonomi", ledelse: "ledelse", studie: "studie",
-  vaerksted: "vaerksted", praktik: "praktik", koel: "koel", noter: "noter", formler: "formler", simulation: "simulation",
+  vaerksted: "vaerksted", praktik: "praktik", koel: "koel", noter: "noter", formler: "formler", labnoter: "labnoter", simulation: "simulation",
   modeller: "modeller", forstaaelse: "forstaaelse", quiz: "quiz" };
 const svg = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IKON[k] || IKON.studie}</svg>`;
 const farve = (ikon, fallback) => `var(--c-${FARVE[ikon] || fallback || "studie"})`;
