@@ -38,6 +38,8 @@ FAG = {
     # js: et script ved siden af siderne, der tegner modeller skrevet som <div class="m" data-m="..."></div>
     "el1": {"navn": "Elektroteknik 1", "farve": "#1d6fa5", "farve_m": "#6db8ec", "fra": "m4-el1", "js": "modeller.js"},
     "el2": {"navn": "Elektroteknik 2", "farve": "#8a5f00", "farve_m": "#f2bd3d", "fra": "m5-el2", "js": "modeller.js"},
+    "stud": {"navn": "Studiekompetence og metode", "farve": "#46627f", "farve_m": "#9fb6cf", "fra": "m4-stud", "js": "modeller.js"},
+    "term": {"navn": "Grundlæggende termodynamik", "farve": "#b3361f", "farve_m": "#f0775a", "fra": "m4-term", "js": "modeller.js"},
 }
 
 def md(tekst):

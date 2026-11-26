@@ -17,14 +17,21 @@ Mine noter og interaktive modeller fra maskinmesteruddannelsen. Siden er ren HTM
   - `index.html` er oversigten over alle otte øvelser.
 - `noter/pa1/` indeholder emnerne til Procesanalyse og automation 1. Hver fil (fx `plc.html`) har tre dele: Noter (med modellerne inde i teksten), Forståelse og Quiz. Med `?vis=noter`, `?vis=forstaa` eller `?vis=test` vises kun den del. Fælles stil og værktøjer ligger i `pa1.css` og `pa1.js`. Genvejen `pa1("plc")` i `index.html` giver alle tre dele.
 
-## Driftsøkonomi, Forbrændingsmotoranlæg og Elektroteknik 2
+## Driftsøkonomi, Forbrændingsmotoranlæg, Elektroteknik 1 og 2 og Grundlæggende termodynamik
 
 - `noter/drift/`, `noter/forb/`, `noter/el1/` og `noter/el2/` er bygget af scriptet `noter/kilde/byg.py` ud fra markdown-filerne i `noter/kilde/drift/`, `noter/kilde/forb/`, `noter/kilde/el1/` og `noter/kilde/el2/`. Ret altid i markdown-filen og kør `python3 noter/kilde/byg.py` (kræver `pip install markdown`). De færdige HTML-filer ligger i repoet, så siden stadig ikke har noget build-trin.
 - Hver emnefil har tre dele: Noter, Formler og Quiz. Med `?vis=noter`, `?vis=formler` eller `?vis=quiz` vises den del. `noter/<fag>/quiz.html` er en samlet quiz for hele faget.
 - Øverst i hver markdown-fil står `id`, `navn`, `ikon` og `intro`. Under `# Quiz` står spørgsmålene i et lille format, der er forklaret øverst i `byg.py`.
 - En kildefil med `# Kort` i stedet for Noter/Formler/Quiz bliver en side med ét spørgsmål ad gangen og svaret bag et tryk (skabelon `noter/kilde/kort.html`). Det bruges til "Eksamen 2026" i Forbrændingsmotoranlæg: `noter/kilde/forb/14-eksamen2026.md`, med siderne fra prøvespørgsmålene som billeder i `noter/forb/eksamen2026/`. Svar markeret `> **Usikker**` vises med gul boks. På emnesiden hedder delen `kort` ("Prøvespørgsmål med svar").
+- Grundlæggende termodynamik (M4) ligger i `noter/kilde/term/` og bygges til `noter/term/`. Hvert emne har også en eksamensside (`<id>-eksamen.html`), og modellerne ligger i `noter/term/modeller.js`. `12-formelsamling.md` er samlet automatisk fra emnernes Formler-dele.
 - EL1- og EL2-noterne har interaktive modeller inde i teksten. I markdown skrives fx `<div class="m" data-m="stjerne"></div>`, og `noter/el1/modeller.js` eller `noter/el2/modeller.js` tegner modellen. Listen over modeller står i filerne.
 - Genvejen `emne("drift", "budget")` i `index.html` giver alle tre dele. Skriv `emne("forb", "smoering", false)`, hvis emnet ikke har formler.
+
+## Studiekompetence og metode (M4)
+
+- `noter/stud/` bygges af `byg.py` fra `noter/kilde/stud/` på samme måde som EL2: 13 emner, hver med en eksamensside (`<id>-eksamen.html`), noter, quiz og formler hvor det giver mening (kun `opgave3` og `maaling`). `noter/stud/quiz.html` er den samlede quiz.
+- Modellerne ligger i `noter/stud/modeller.js` (hatte, skive, sorter, raekkefolge, belbin, instrument, wcgk). `sorter` vælger sæt med `data-s="kvkl"`, `"indded"` eller `"posher"`.
+- Materialet havde ingen prøvespørgsmål, så der er ikke noget "Eksamen"-emne med kort.
 
 ## Tilføj et emne
 
@@ -71,8 +78,9 @@ Tilføj én post til `SEMESTRE`, fx `{ n: 10, quiz: null, fag: [ ... ] }`. `NU` 
 
 Brug en af nøglerne i `IKON`:
 
+- Studiekompetence: `opgave`, `rapport`, `metode`, `viden`, `data`, `maal`, `synopsis`, `hat`
 - Fag: `el`, `energi`, `motoranlaeg`, `auto`, `oekonomi`, `ledelse`, `studie`, `vaerksted`, `praktik`, `koel`
-- Emner: `trefase`, `generator`, `motor`, `jord`, `transformer`, `kortslutning`, `synkron`, `frekvens`, `plc`, `relae`, `ladder`, `sekvens`, `timer`, `sikkerhed`
+- Emner: `termometer`, `maal`, `tryk`, `udvid`, `gas`, `varmeovf`, `stiv`, `trefase`, `generator`, `motor`, `jord`, `transformer`, `kortslutning`, `synkron`, `frekvens`, `plc`, `relae`, `ladder`, `sekvens`, `timer`, `sikkerhed`
 
 Vil du have et nyt ikon, så tilføj en linje til `IKON` med SVG-stier i et 24×24-gitter.
 

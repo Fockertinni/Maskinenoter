@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Studiegruppen: samarbejdskontrakt, Belbin og feedback · Studiekompetence og metode · Maskinenoter</title>
+<link rel="stylesheet" href="../../hav.css"><script>document.documentElement.dataset.theme="dark"</script>
+<!-- Bygget af noter/kilde/byg.py. Ret i kildefilen i noter/kilde/, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #46627f; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #9fb6cf; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #9fb6cf; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.tabs { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--hover); flex-shrink: 0; }
+.tabs button { font: 600 .9rem/1 var(--sans); color: var(--muted); background: none; border: 0; padding: .5rem .8rem; border-radius: 8px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.8rem, 5vw, 3.2rem) max(16px, env(safe-area-inset-left, 0px)) 5rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .8rem 0 0; font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.del { margin-top: 2.2rem; }
+.del > :first-child { margin-top: 0; }
+.del h2 { margin: 2.6rem 0 .6rem; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; }
+.del h3 { margin: 1.8rem 0 .4rem; font-size: 1.12rem; letter-spacing: -.01em; }
+.del p, .del li { max-width: 68ch; }
+.del ul, .del ol { padding-left: 1.3rem; }
+.del li { margin: .25rem 0; }
+.del li::marker { color: var(--muted); }
+.del code { font: .92em var(--mono); background: var(--hover); padding: .08em .35em; border-radius: 5px; }
+.del strong { font-weight: 650; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: .94rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .8rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .92rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; }
+details { margin: .9rem 0; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: .1rem 1.1rem; }
+details > summary { cursor: pointer; font-weight: 600; padding: .75rem 0; color: var(--accent); list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "▸ "; }
+details[open] > summary::before { content: "▾ "; }
+details[open] { padding-bottom: .8rem; }
+.genkald { margin-top: 2.6rem; padding: 1.1rem 1.3rem; border: 2px solid var(--accent); border-radius: 16px; background: var(--surface); }
+.genkald h2, .genkald h3 { margin-top: 0 !important; font-size: .82rem !important; letter-spacing: .08em !important; text-transform: uppercase; color: var(--accent); }
+.genkald details { box-shadow: none; border: 1px solid var(--line); }
+
+/* quiz */
+.q { margin: 1rem 0; padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); }
+.q .nr { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q .tekst { margin: .3rem 0 .8rem; font-weight: 600; }
+.q .valg { display: grid; gap: 8px; }
+.q .valg button { text-align: left; font: inherit; font-size: .98rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: .65rem .9rem; cursor: pointer; }
+.q .valg button:hover:not(:disabled) { border-color: var(--accent); }
+.q .valg button:disabled { cursor: default; }
+.q .valg button.ok { background: var(--ok-bg); border-color: var(--ok); }
+.q .valg button.bad { background: var(--bad-bg); border-color: var(--bad); }
+.q .tal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q input { font: 1rem var(--mono); width: 11rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.q .enhed { color: var(--muted); }
+.knap { font: 600 .95rem var(--sans); padding: .6rem 1rem; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.svar { margin-top: .8rem; padding: .7rem .9rem; border-radius: 10px; font-size: .96rem; }
+.svar.ok { background: var(--ok-bg); } .svar.bad { background: var(--bad-bg); } .svar.hint { background: var(--key); }
+.svar b { display: block; margin-bottom: .15rem; }
+.score { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border-radius: 16px; background: var(--soft); border-left: 3px solid var(--accent); }
+.score h2 { margin: 0 0 .3rem !important; font-size: 1.2rem !important; }
+.score ul { margin: .4rem 0; }
+.emnetag { font-size: .76rem; font-weight: 600; color: var(--accent); margin-left: .4rem; text-transform: none; letter-spacing: 0; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .bar .in { gap: 8px; }
+  .tabs button { padding: .48rem .6rem; font-size: .85rem; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .8rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+}
+@media print { .bar { display: none; } .del[hidden] { display: block !important; } details { box-shadow: none; border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m4-stud">‹ Studiekompetence og metode</a>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-del="noter">Noter</button>
+    <button role="tab" data-del="formler">Formler</button>
+    <button role="tab" data-del="quiz">Quiz</button>
+  </div>
+</div></header>
+<main>
+  <p class="kicker">Studiekompetence og metode</p>
+  <h1>Studiegruppen: samarbejdskontrakt, Belbin og feedback</h1>
+  <p class="intro">Hvad en samarbejdskontrakt skal indeholde, Belbins ni teamroller med bidrag og tilladelige svagheder, og hvordan du bruger refleksion og feedback til at justere din adfærd.</p>
+  <section class="del" id="d-noter" role="tabpanel"><blockquote>
+<p><strong>Kilder</strong>
+Skabelon "Samarbejdskontrakt – Studiegruppe" (M4, F2026) og et eksempel på en udfyldt kontrakt · "Studieteknik: Refleksion og feedback" (Belbin-opgaven, F2026) · arbejdsarket "Hvordan ser vi ud som et team"</p>
+</blockquote>
+<p>En studiegruppe fungerer ikke af sig selv. <strong>De fleste konflikter kommer af forventninger, der aldrig blev sagt højt.</strong> Samarbejdskontrakten og Belbin-øvelsen gør forventningerne synlige.</p>
+<h2>Samarbejdskontrakten</h2>
+<p>Skabelonen har 11 punkter. Til hvert punkt står nogle spørgsmål, I skal tale om.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Punkt</th>
+<th>Spørg jer selv</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Gruppemedlemmer</td>
+<td>Hvem er vi?</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Ambitionsniveau</td>
+<td>Hvilke karakterer sigter vi mod? Hvordan håndterer vi forskelle? Hvad er "en god indsats"?</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Arbejdstid og ugestruktur</td>
+<td>Faste gruppedage? Hvilke dage kan blive lange? Hvornår arbejder vi alene? Hvor fleksible er vi?</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Individuelle forpligtelser</td>
+<td>Job, familie, helbred, andre faste forpligtelser</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Kommunikation</td>
+<td>Hvilken platform? Hvordan træffes beslutninger? Hvor hurtigt forventes svar?</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Fravær</td>
+<td>Hvordan meldes det? Hvad kan man forvente af gruppen?</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Manglende indsats og konflikter</td>
+<td>Hvad gør vi, hvis nogen ikke bidrager? Hvornår tager vi samtalen? Hvornår er konsekvenser nødvendige?</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Deling af dokumenter</td>
+<td>Hvor ligger filerne? Hvem laver strukturen? Hvordan undgår vi versionskaos?</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Opgavefordeling</td>
+<td>Hvad laver vi sammen, og hvad alene? Hvordan sikrer vi fælles forståelse?</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Roller</td>
+<td>Faste eller skiftende roller, fx facilitator?</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Underskrifter</td>
+<td>Alle har læst, forstået og accepteret</td>
+</tr>
+</tbody>
+</table>
+<h3>Hvad gør en kontrakt god?</h3>
+<p>Sammenlign to svar på "Hvor hurtigt forventes svar?":</p>
+<ul>
+<li><strong>Vagt:</strong> "Inden for en acceptabel tidsramme."</li>
+<li><strong>Konkret:</strong> "Inden for 24 timer på hverdage. Haster det, ringer man."</li>
+</ul>
+<p>Kun det konkrete svar kan bruges, når der opstår en konflikt. Det samme gælder fravær ("meldes i gruppechatten senest kl. 8") og konflikter ("først en snak, så en advarsel, og først som sidste udvej kommer man ikke på afleveringen").</p>
+<p>Gode idéer fra eksemplet i materialet:</p>
+<ul>
+<li><strong>Teams i stedet for én persons OneDrive</strong>, så filerne ikke forsvinder, hvis én er syg.</li>
+<li><strong>Laboratorieøvelser og forbindelsesdiagrammer laves sammen</strong>, regneopgaver kan deles ud.</li>
+<li><strong>Facilitatorrollen roterer</strong>, så alle lærer den.</li>
+<li><strong>Åbenhed i pressede perioder</strong>, så gruppen kan hjælpe.</li>
+</ul>
+<h2>Belbins teamroller</h2>
+<p>Meredith Belbin fandt, at gode teams har en blanding af ni roller. Hver rolle har et <strong>bidrag</strong> og en <strong>tilladelig svaghed</strong>: en svaghed, man må acceptere, fordi den hænger sammen med styrken.</p>
+<div class="m" data-m="belbin"></div>
+
+<table>
+<thead>
+<tr>
+<th>Gruppe</th>
+<th>Roller</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tænkende</td>
+<td>Opstarter (Plant), Analysator (Monitor Evaluator), Specialist</td>
+</tr>
+<tr>
+<td>Sociale</td>
+<td>Koordinator, Formidler (Teamworker), Kontaktskaber (Resource Investigator)</td>
+</tr>
+<tr>
+<td>Handlingsorienterede</td>
+<td>Igangsætter (Shaper), Organisator (Implementer), Afslutter (Completer Finisher)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Går ud over materialet</strong>
+Rollebeskrivelserne er standardbeskrivelserne af Belbins roller. De danske navne varierer lidt mellem kilder. Opgavearket nævner fx "Opstarter", "Organisator" og "Afslutter".</p>
+</blockquote>
+<p><strong>Hvad betyder det for en gruppe?</strong> Har gruppen mange af samme rolle (fx mange specialister og afsluttere), bliver arbejdet grundigt og afleveret til tiden, men måske mangler der nogen, der finder nye idéer eller tager styringen. Det kan man aftale sig ud af.</p>
+<h2>Refleksion og feedback</h2>
+<p>Belbin-opgaven har to dele.</p>
+<p><strong>Del 1, individuel (30–45 min):</strong></p>
+<ol>
+<li><strong>Sammenlign</strong> din selvvurdering med observatørernes. Hvad overrasker mest og mindst, og hvorfor?</li>
+<li><strong>Hvorfor gør jeg det?</strong> Find dine <strong>antagelser</strong>: ting, du (ofte ubevidst) tror er rigtige. Fx "Hvis jeg ikke tager styring, går tingene i stå" eller "Man bør undgå konflikter".</li>
+<li><strong>Feedback som spejl:</strong> hvilke 3–5 ord står højest hos observatørerne? Bekræfter de dine antagelser eller udfordrer de dem?</li>
+<li><strong>Justering:</strong> 2 konkrete handlinger og 1 adfærd, du vil skrue op eller ned for, og hvornår.</li>
+</ol>
+<p><strong>Del 2, i gruppen (ca. 60 min):</strong> øvelsen "Hvem siger hvad" (45 udsagn), "Hvordan ser vi ud som et team", konkrete eksempler på, hvordan rollerne viste sig ved sidste gruppemøde, gruppens uskrevne regler, hvor antagelser spænder ben, og 3–5 konkrete ændringer.</p>
+<blockquote>
+<p><strong>Bedømmelseskrav fra opgavearket</strong>
+En god besvarelse sammenligner egen og andres vurdering, forklarer <em>hvorfor</em> du handler, som du gør, bruger konkrete eksempler og indeholder konkrete handlinger. Uden konkrete eksempler og handlinger er den utilstrækkelig.</p>
+</blockquote>
+<details>
+<summary>Prøv selv: gør handlingen konkret. "Jeg vil være bedre til at lytte."</summary>
+<p>Konkret: "Til de næste tre gruppemøder lader jeg de andre sige deres forslag færdigt, før jeg siger mit, og jeg spørger mindst én gang 'hvad mener du?' til den, der har sagt mindst." Den kan måles og har et tidspunkt.</p>
+</details>
+<blockquote>
+<p><strong>Uklart i materialet</strong>
+Opgavearket nævner "studiegruppens GRUS-samtale" uden at forklare, hvad GRUS står for. Spørg underviseren.</p>
+</blockquote></section>
+  <section class="del" id="d-formler" role="tabpanel"></section>
+  <section class="del" id="d-quiz" role="tabpanel">
+    <p>Svar på spørgsmålene, før du kigger i noterne. Ved talopgaver har du to forsøg, og komma og punktum virker begge.</p>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </section>
+</main>
+<script>
+const QUIZ = [{"valg": ["At bestemme, hvem der er leder", "At gøre gruppens forventninger synlige og aftalt, før der opstår konflikter", "At afløse undervisningen", "At fordele karakterer"], "rigtig": 1, "q": "Hvad er formålet med en samarbejdskontrakt?", "f": "De fleste konflikter kommer af forventninger, der aldrig blev sagt højt.", "emne": "Studiegruppen: samarbejdskontrakt, Belbin og feedback"}, {"valg": ["\"Inden for en acceptabel tidsramme\"", "\"Når man har tid\"", "\"Inden for 24 timer på hverdage. Haster det, ringer man\"", "\"Det aftaler vi senere\""], "rigtig": 2, "q": "Hvilket svar er bedst i en samarbejdskontrakt om svartid?", "f": "Kun et konkret svar kan bruges, når der opstår uenighed.", "emne": "Studiegruppen: samarbejdskontrakt, Belbin og feedback"}, {"valg": ["En svaghed, der skal fjernes", "En svaghed, der hænger sammen med rollens styrke, og som teamet må acceptere", "En fejl i en rapport", "Fravær med god grund"], "rigtig": 1, "q": "Hvad er en tilladelig svaghed i Belbins teori?", "f": "Fx kan en opstarter være dårlig til detaljer, fordi styrken er idéer.", "emne": "Studiegruppen: samarbejdskontrakt, Belbin og feedback"}, {"valg": ["Opstarter", "Kontaktskaber", "Afslutter", "Koordinator"], "rigtig": 2, "q": "Hvilken Belbin-rolle finder fejl og mangler og leverer til tiden?", "f": "Afslutteren (Completer Finisher) er omhyggelig, men kan bekymre sig for meget.", "emne": "Studiegruppen: samarbejdskontrakt, Belbin og feedback"}, {"valg": ["Opstarter (Plant)", "Organisator", "Formidler", "Specialist"], "rigtig": 0, "q": "Hvilken rolle kommer med kreative idéer og løser svære problemer?", "f": "Opstarteren er idérig, men kan glemme detaljer.", "emne": "Studiegruppen: samarbejdskontrakt, Belbin og feedback"}, {"valg": ["En aftale i gruppen", "Noget, du ofte ubevidst tror er rigtigt, fx \"man bør undgå konflikter\"", "En kilde i en rapport", "Observatørernes vurdering"], "rigtig": 1, "q": "Hvad er en antagelse i Belbin-opgaven?", "f": "Antagelser forklarer, hvorfor du handler, som du gør.", "emne": "Studiegruppen: samarbejdskontrakt, Belbin og feedback"}, {"q": "Hvor mange konkrete handlinger skal du formulere i del 1?", "tal": 2.0, "tol": 0.0, "enhed": "handlinger", "losning": "2 konkrete handlinger og 1 adfærd, du vil justere op eller ned.", "f": "Besvarelser uden konkrete handlinger vurderes som utilstrækkelige.", "emne": "Studiegruppen: samarbejdskontrakt, Belbin og feedback"}];
+const NOGLE = "mn-stud-samarbejde", SAMLET = "" === "1";
+const q = new URLSearchParams(location.search);
+
+// tilbage-link til den side man kom fra
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+
+// faner
+const tabs = [...document.querySelectorAll("#tabs button")];
+function vis(del) {
+  if (!document.getElementById("d-" + del)) del = "noter";
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.del === del));
+  document.querySelectorAll(".del").forEach(s => s.hidden = s.id !== "d-" + del);
+}
+tabs.forEach(b => b.addEventListener("click", () => {
+  vis(b.dataset.del);
+  const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
+  window.scrollTo(0, 0);
+}));
+// tomme dele skjules i fanerne
+["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+if (!QUIZ.length) tabs.find(b => b.dataset.del === "quiz").hidden = true;
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else { const v = q.get("vis") || "noter", t = tabs.find(b => b.dataset.del === v && !b.hidden) || tabs.find(b => !b.hidden); vis(t ? t.dataset.del : "noter"); }
+
+// tabeller kan scrolles på mobil
+document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+
+// quiz
+let gemt = {};
+try { gemt = JSON.parse(localStorage.getItem(NOGLE) || "{}"); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+// Danske og engelske skrivemåder virker begge: "85.200", "85200", "1.150,5", "0,86", "0.86".
+// Et enkelt punktum efterfulgt af tre cifre kan både være tusindtal og decimal, så begge tolkninger prøves.
+const tolk = s => { s = String(s).replace(/[\s\u00a0]/g, "").replace("−", "-");
+  if (!/^-?[\d.,]+$/.test(s)) return [];
+  if (s.includes(",")) return [parseFloat(s.replace(/\./g, "").replace(",", "."))];
+  if ((s.match(/\./g) || []).length > 1) return [parseFloat(s.replace(/\./g, ""))];
+  const ud = [parseFloat(s)];
+  if (/^-?\d+\.\d{3}$/.test(s)) ud.push(parseFloat(s.replace(".", "")));
+  return ud; };
+const fmt = x => x.toLocaleString("da-DK", { maximumFractionDigits: 4 });
+
+function bygQuiz() {
+  const rod = document.getElementById("quiz"); rod.innerHTML = "";
+  QUIZ.forEach((s, i) => {
+    const el = document.createElement("div"); el.className = "q";
+    el.innerHTML = `<div class="nr">Spørgsmål ${i + 1} af ${QUIZ.length}${SAMLET ? `<span class="emnetag">${s.emne}</span>` : ""}</div><div class="tekst">${s.q}</div>`;
+    const g = gemt[i];
+    if (s.valg) {
+      const v = document.createElement("div"); v.className = "valg";
+      s.valg.forEach((t, j) => {
+        const b = document.createElement("button"); b.innerHTML = t;
+        b.addEventListener("click", () => { gemt[i] = { valgt: j, ok: j === s.rigtig }; gem(); bygQuiz(); });
+        v.append(b);
+      });
+      el.append(v);
+      if (g) {
+        [...v.children].forEach((b, j) => { b.disabled = true; if (j === s.rigtig) b.classList.add("ok"); else if (j === g.valgt) b.classList.add("bad"); });
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Ikke helt."}</b>${s.f || ""}</div>`);
+      }
+    } else {
+      const f = document.createElement("div"); f.className = "tal";
+      f.innerHTML = `<input inputmode="decimal" aria-label="Dit svar" placeholder="Dit svar"> <span class="enhed">${s.enhed || ""}</span> <button class="knap">Tjek</button> <button class="knap stille">Vis facit</button>`;
+      const [inp, , tjek, opgiv] = f.children;
+      el.append(f);
+      const faerdig = g && (g.ok || g.forsog >= 2 || g.opgivet);
+      if (g && g.svar != null) inp.value = g.svar;
+      if (faerdig) {
+        inp.disabled = tjek.disabled = opgiv.disabled = true;
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Facit: " + fmt(s.tal) + " " + (s.enhed || "")}</b>${s.losning ? s.losning + "<br>" : ""}${s.f || ""}</div>`);
+      } else if (g && g.forsog === 1) {
+        el.insertAdjacentHTML("beforeend", `<div class="svar hint"><b>Ikke helt. Tjek din opstilling og prøv igen.</b>Du har ét forsøg tilbage.</div>`);
+      }
+      const svar = () => {
+        const xs = tolk(inp.value); if (!xs.length || xs.some(isNaN)) { inp.focus(); return; }
+        const ok = xs.some(x => Math.abs(x - s.tal) <= Math.max(s.tol, Math.abs(s.tal) * 1e-9));
+        const forsog = ((g && g.forsog) || 0) + 1;
+        gemt[i] = { svar: inp.value, ok, forsog }; gem(); bygQuiz();
+      };
+      tjek.addEventListener("click", svar);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") svar(); });
+      opgiv.addEventListener("click", () => { gemt[i] = { svar: inp.value, ok: false, forsog: 2, opgivet: true }; gem(); bygQuiz(); });
+    }
+    rod.append(el);
+  });
+  // score
+  const faerdige = QUIZ.map((s, i) => gemt[i] && (s.valg || gemt[i].ok || gemt[i].forsog >= 2));
+  const antal = faerdige.filter(Boolean).length, rigtige = QUIZ.filter((s, i) => gemt[i] && gemt[i].ok).length;
+  const forkerte = QUIZ.map((s, i) => faerdige[i] && !gemt[i].ok ? `<li>${s.q.replace(/<[^>]+>/g, "")}${SAMLET ? ` <em>(${s.emne})</em>` : ""}</li>` : "").join("");
+  document.getElementById("score").innerHTML = antal === 0 ? "" : `<div class="score">
+    <h2>${rigtige} af ${QUIZ.length} rigtige${antal < QUIZ.length ? ` · ${QUIZ.length - antal} mangler` : ""}</h2>
+    ${forkerte ? `<p>Tag med i repetitionen:</p><ul>${forkerte}</ul>` : antal === QUIZ.length ? "<p>Alle rigtige. Tag quizzen igen om et par uger.</p>" : ""}
+    <button class="knap stille" id="nulstil">Start forfra</button></div>`;
+  const n = document.getElementById("nulstil");
+  if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
+}
+if (QUIZ.length) bygQuiz();
+</script>
+<script src="modeller.js"></script>
+</body>
+</html>

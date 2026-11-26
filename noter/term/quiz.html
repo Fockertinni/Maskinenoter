@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Quiz for hele Grundlæggende termodynamik · Grundlæggende termodynamik · Maskinenoter</title>
+<link rel="stylesheet" href="../../hav.css"><script>document.documentElement.dataset.theme="dark"</script>
+<!-- Bygget af noter/kilde/byg.py. Ret i kildefilen i noter/kilde/, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #b3361f; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #f0775a; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #f0775a; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.tabs { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--hover); flex-shrink: 0; }
+.tabs button { font: 600 .9rem/1 var(--sans); color: var(--muted); background: none; border: 0; padding: .5rem .8rem; border-radius: 8px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.8rem, 5vw, 3.2rem) max(16px, env(safe-area-inset-left, 0px)) 5rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .8rem 0 0; font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.del { margin-top: 2.2rem; }
+.del > :first-child { margin-top: 0; }
+.del h2 { margin: 2.6rem 0 .6rem; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; }
+.del h3 { margin: 1.8rem 0 .4rem; font-size: 1.12rem; letter-spacing: -.01em; }
+.del p, .del li { max-width: 68ch; }
+.del ul, .del ol { padding-left: 1.3rem; }
+.del li { margin: .25rem 0; }
+.del li::marker { color: var(--muted); }
+.del code { font: .92em var(--mono); background: var(--hover); padding: .08em .35em; border-radius: 5px; }
+.del strong { font-weight: 650; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: .94rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .8rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .92rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; }
+details { margin: .9rem 0; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: .1rem 1.1rem; }
+details > summary { cursor: pointer; font-weight: 600; padding: .75rem 0; color: var(--accent); list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "▸ "; }
+details[open] > summary::before { content: "▾ "; }
+details[open] { padding-bottom: .8rem; }
+.genkald { margin-top: 2.6rem; padding: 1.1rem 1.3rem; border: 2px solid var(--accent); border-radius: 16px; background: var(--surface); }
+.genkald h2, .genkald h3 { margin-top: 0 !important; font-size: .82rem !important; letter-spacing: .08em !important; text-transform: uppercase; color: var(--accent); }
+.genkald details { box-shadow: none; border: 1px solid var(--line); }
+
+/* quiz */
+.q { margin: 1rem 0; padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); }
+.q .nr { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q .tekst { margin: .3rem 0 .8rem; font-weight: 600; }
+.q .valg { display: grid; gap: 8px; }
+.q .valg button { text-align: left; font: inherit; font-size: .98rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: .65rem .9rem; cursor: pointer; }
+.q .valg button:hover:not(:disabled) { border-color: var(--accent); }
+.q .valg button:disabled { cursor: default; }
+.q .valg button.ok { background: var(--ok-bg); border-color: var(--ok); }
+.q .valg button.bad { background: var(--bad-bg); border-color: var(--bad); }
+.q .tal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q input { font: 1rem var(--mono); width: 11rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.q .enhed { color: var(--muted); }
+.knap { font: 600 .95rem var(--sans); padding: .6rem 1rem; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.svar { margin-top: .8rem; padding: .7rem .9rem; border-radius: 10px; font-size: .96rem; }
+.svar.ok { background: var(--ok-bg); } .svar.bad { background: var(--bad-bg); } .svar.hint { background: var(--key); }
+.svar b { display: block; margin-bottom: .15rem; }
+.score { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border-radius: 16px; background: var(--soft); border-left: 3px solid var(--accent); }
+.score h2 { margin: 0 0 .3rem !important; font-size: 1.2rem !important; }
+.score ul { margin: .4rem 0; }
+.emnetag { font-size: .76rem; font-weight: 600; color: var(--accent); margin-left: .4rem; text-transform: none; letter-spacing: 0; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .bar .in { gap: 8px; }
+  .tabs button { padding: .48rem .6rem; font-size: .85rem; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .8rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+}
+@media print { .bar { display: none; } .del[hidden] { display: block !important; } details { box-shadow: none; border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m4-term">‹ Grundlæggende termodynamik</a>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-del="noter">Noter</button>
+    <button role="tab" data-del="formler">Formler</button>
+    <button role="tab" data-del="quiz">Quiz</button>
+  </div>
+</div></header>
+<main>
+  <p class="kicker">Grundlæggende termodynamik</p>
+  <h1>Quiz for hele Grundlæggende termodynamik</h1>
+  <p class="intro">84 spørgsmål fra alle emner i blandet rækkefølge.</p>
+  <section class="del" id="d-noter" role="tabpanel"></section>
+  <section class="del" id="d-formler" role="tabpanel"></section>
+  <section class="del" id="d-quiz" role="tabpanel">
+    <p>Svar på spørgsmålene, før du kigger i noterne. Ved talopgaver har du to forsøg, og komma og punktum virker begge.</p>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </section>
+</main>
+<script>
+const QUIZ = [{"q": "En motor yder 1.000 kW med η = 0,45, og H_n = 42.700 kJ/kg. Hvad er brændstofforbruget? (kg/h)", "tal": 187.4, "tol": 1.0, "enhed": "kg/h", "losning": "Φ_b = 1.000 / 0,45 = 2.222 kW. ṁ = 2.222 / 42.700 = 0,05204 kg/s = 187,4 kg/h.", "f": "Del effekten med virkningsgraden, og så med brændværdien.", "emne": "Energi, effekt og virkningsgrad"}, {"q": "Hvad er den største mulige virkningsgrad for en varmemaskine mellem 400 °C og 40 °C? (%, 1 decimal)", "tal": 53.5, "tol": 0.3, "enhed": "%", "losning": "η = 1 − 313,15 / 673,15 = 1 − 0,4652 = 0,535 = 53,5 %.", "f": "Carnot med temperaturer i kelvin.", "emne": "Energi, effekt og virkningsgrad"}, {"valg": ["Modstanden stiger med temperaturen", "Modstanden falder, når temperaturen stiger", "Spændingen stiger med temperaturen", "Modstanden er konstant"], "rigtig": 1, "q": "Hvad betyder NTC?", "f": "Negative Temperature Coefficient. En PTC gør det modsatte.", "emne": "Termometre og temperaturmåling"}, {"q": "En stålstang på 3 m (E = 210.000 MPa) har σ = 140 MPa. Hvor meget forlænges den? (mm)", "tal": 2.0, "tol": 0.02, "enhed": "mm", "losning": "ε = 140 / 210.000 = 0,000667. ΔL = 0,000667 · 3.000 = 2,0 mm.", "f": "ΔL = σ · L₀ / E.", "emne": "Stivhed og materialelære"}, {"valg": ["Præcis, men ikke nøjagtig", "Nøjagtig, men ikke præcis", "Både præcis og nøjagtig", "Hverken præcis eller nøjagtig"], "rigtig": 0, "q": "Målinger ligger tæt samlet, men alle 2 °C ved siden af den sande værdi. Hvordan beskrives det?", "f": "Lille spredning (præcis), men en systematisk fejl (ikke nøjagtig).", "emne": "Måling og måleusikkerhed"}, {"valg": ["Energi kan hverken opstå eller forsvinde", "Varme strømmer af sig selv fra koldt til varmt", "To legemer, der hver er i termisk ligevægt med et tredje, er i ligevægt med hinanden", "Ved 0 K står alle molekyler helt stille"], "rigtig": 2, "q": "Hvad siger termodynamikkens 0. hovedsætning?", "f": "<ol start=\"0\">\n<li>hovedsætning er grundlaget for temperaturmåling: termometret kommer i ligevægt med det, det måler.<\/li>\n<\/ol>", "emne": "Temperatur og temperaturskalaer"}, {"valg": ["0 °C", "ca. 4 °C", "20 °C", "100 °C"], "rigtig": 1, "q": "Ved hvilken temperatur har vand den største massefylde?", "f": "Vands anomali. Is fylder ca. 9 % mere end vand.", "emne": "Varmeudvidelse"}, {"q": "Fire målinger: 20, 22, 21 og 21 °C. Hvad er middelværdien? (°C)", "tal": 21.0, "tol": 0.01, "enhed": "°C", "losning": "(20 + 22 + 21 + 21) / 4 = 84 / 4 = 21 °C.", "f": "Middelværdien er summen divideret med antallet.", "emne": "Måling og måleusikkerhed"}, {"q": "1 kg luft udvider sig ved konstant tryk 2 bar fra 0,4 til 0,6 m³. Hvor stort er arbejdet? (kJ)", "tal": 40.0, "tol": 0.5, "enhed": "kJ", "losning": "W = p · ΔV = 200.000 · 0,2 = 40.000 J = 40 kJ.", "f": "Isobar: arbejdet er et rektangel i pV-diagrammet.", "emne": "Idealgasloven og tilstandsændringer"}, {"q": "Luft i en lukket flaske på 20 bar(a) og 20 °C opvarmes til 80 °C. Hvad bliver trykket? (bar(a), 2 decimaler)", "tal": 24.09, "tol": 0.05, "enhed": "bar", "losning": "p₂ = 20 · 353,15 / 293,15 = 24,09 bar(a).", "f": "Isokor: p/T er konstant, og T skal i kelvin.", "emne": "Idealgasloven og tilstandsændringer"}, {"valg": ["Fordi metallerne ruster", "Fordi spændingen afhænger af forskellen mellem målestedet og tilslutningsstedet", "Fordi signalet er for stort", "Fordi termoelementet er ulineært"], "rigtig": 1, "q": "Hvorfor skal et termoelement have koldt loddested-kompensering?", "f": "Termospændingen er proportional med temperaturforskellen. Instrumentet skal lægge klemmetemperaturen til.", "emne": "Termometre og temperaturmåling"}, {"q": "Hvor meget energi skal der til at fordampe 2 kg vand ved 100 °C? (kJ)", "tal": 4514.0, "tol": 10.0, "enhed": "kJ", "losning": "Q = 2 · 2.257 = 4.514 kJ.", "f": "Fordampningsvarmen er stor sammenlignet med opvarmningen.", "emne": "Faseovergange og vanddamp"}, {"q": "Et manometer viser 6 bar. Hvad er det absolutte tryk ca.? (bar(a), 1 decimal)", "tal": 7.0, "tol": 0.05, "enhed": "bar", "losning": "p_abs = 6 + 1,013 = 7,0 bar(a).", "f": "Manometre viser overtryk.", "emne": "Tryk"}, {"q": "En dieselmotor har kompressionsforhold 16. Luften er 40 °C ved start. Hvad bliver temperaturen efter adiabatisk kompression? (°C, κ = 1,4)", "tal": 676.0, "tol": 5.0, "enhed": "°C", "losning": "T₂ = 313,15 · 16^0,4 = 313,15 · 3,031 = 949 K = 676 °C.", "f": "Husk at regne i kelvin og trække 273,15 fra til sidst.", "emne": "Idealgasloven og tilstandsændringer"}, {"q": "Hvad er 12.570 kJ i kWh? (2 decimaler)", "tal": 3.49, "tol": 0.02, "enhed": "kWh", "losning": "12.570 / 3.600 = 3,49 kWh.", "f": "1 kWh = 3.600 kJ.", "emne": "Varme og varmekapacitet"}, {"q": "Samme kraft på en aluminiumsstang og en stålstang med samme mål. Hvor mange gange mere strækker aluminium sig? (E_stål = 210, E_Al = 70 GPa)", "tal": 3.0, "tol": 0.05, "enhed": "", "losning": "210 / 70 = 3.", "f": "Tøjningen er omvendt proportional med E.", "emne": "Stivhed og materialelære"}, {"q": "En varmeveksler i modstrøm har Δt₁ = 30 K og Δt₂ = 10 K. Hvad er Δt_m? (K, 1 decimal)", "tal": 18.2, "tol": 0.2, "enhed": "K", "losning": "Δt_m = (30 − 10) / ln(30/10) = 20 / 1,0986 = 18,2 K.", "f": "Den logaritmiske middelværdi er altid lidt mindre end den aritmetiske (20 K).", "emne": "Varmetransmission"}, {"valg": ["Fordi det er billigt og koger ved 100 °C", "Fordi det har høj specifik varmekapacitet og kan optage meget varme pr. kg", "Fordi det leder strøm", "Fordi det udvider sig meget"], "rigtig": 1, "q": "Hvorfor er vand et godt kølemiddel?", "f": "4,19 kJ/(kg·K) er ca. ni gange mere end stål.", "emne": "Varme og varmekapacitet"}, {"q": "Et Pt100 måler 138,5 Ω. Hvad er temperaturen? (°C)", "tal": 100.0, "tol": 0.5, "enhed": "°C", "losning": "t = (138,5/100 − 1) / 0,00385 = 0,385 / 0,00385 = 100 °C.", "f": "Pt100 stiger 0,385 Ω pr. grad.", "emne": "Termometre og temperaturmåling"}, {"q": "En stang med tværsnit 100 mm² belastes med 20 kN. Hvad er spændingen? (MPa)", "tal": 200.0, "tol": 0.5, "enhed": "MPa", "losning": "σ = 20.000 N / 100 mm² = 200 N/mm² = 200 MPa.", "f": "N/mm² er det samme som MPa.", "emne": "Stivhed og materialelære"}, {"valg": ["Den tilførte varme", "Nettoarbejdet pr. cyklus", "Tabet", "Temperaturstigningen"], "rigtig": 1, "q": "Hvad viser arealet inden i en lukket kurve i et pV-diagram?", "f": "Ekspansionsarbejde minus kompressionsarbejde.", "emne": "Idealgasloven og tilstandsændringer"}, {"valg": ["0", "p · V", "m · c_v · Δt", "Det afhænger af trykket"], "rigtig": 0, "q": "Hvor stort er volumenændringsarbejdet i en isokor proces?", "f": "Volumen ændrer sig ikke, så der er intet areal under kurven.", "emne": "Idealgasloven og tilstandsændringer"}, {"valg": ["Trykket bliver 3^1,4 gange større", "Trykket bliver 3 gange større", "Trykket er uændret", "Temperaturen stiger"], "rigtig": 1, "q": "Hvad sker der i en isoterm kompression til en tredjedel af volumen?", "f": "p · V er konstant, når T er konstant.", "emne": "Idealgasloven og tilstandsændringer"}, {"q": "Hvor meget energi skal der til at varme 50 kg vand fra 10 °C til 70 °C? (kJ)", "tal": 12570.0, "tol": 20.0, "enhed": "kJ", "losning": "Q = 50 · 4,19 · 60 = 12.570 kJ.", "f": "Q = m · c · Δt.", "emne": "Varme og varmekapacitet"}, {"valg": ["For at gøre dem lettere", "Fordi den blanke overflade har lav emission og udstråler mindre varme", "For at lede varmen væk", "Fordi aluminium isolerer godt"], "rigtig": 1, "q": "Hvorfor beklæder man isolering på rør med blank aluminium?", "f": "Lav ε betyder lav udstråling. Aluminium beskytter også isoleringen mod olie og vand.", "emne": "Varmetransmission"}, {"q": "Hvor meget energi skal der til at smelte 5 kg is ved 0 °C? (kJ)", "tal": 1670.0, "tol": 5.0, "enhed": "kJ", "losning": "Q = 5 · 334 = 1.670 kJ.", "f": "Under smeltningen er temperaturen konstant 0 °C.", "emne": "Faseovergange og vanddamp"}, {"q": "Hvad er 20 °C i kelvin? (K, 2 decimaler)", "tal": 293.15, "tol": 0.01, "enhed": "K", "losning": "T = 20 + 273,15 = 293,15 K.", "f": "Læg 273,15 til.", "emne": "Temperatur og temperaturskalaer"}, {"q": "En temperatur på 100 °F svarer til hvad i °C? (1 decimal)", "tal": 37.8, "tol": 0.1, "enhed": "°C", "losning": "°C = (100 − 32) / 1,8 = 68 / 1,8 = 37,8 °C.", "f": "Træk 32 fra først, og del så med 1,8.", "emne": "Temperatur og temperaturskalaer"}, {"q": "Hvor stor varmestrøm går gennem 1 m² stålplade, 10 mm tyk, med 10 K temperaturforskel? (W, λ = 50)", "tal": 50000.0, "tol": 100.0, "enhed": "W", "losning": "Φ = 50 · 1 · 10 / 0,010 = 50.000 W.", "f": "Stål leder varme rigtig godt. Det er overgangene, der begrænser.", "emne": "Varmetransmission"}, {"q": "2 kg aluminium på 150 °C lægges i 5 kg vand på 15 °C. Hvad bliver sluttemperaturen? (°C, 1 decimal)", "tal": 25.7, "tol": 0.2, "enhed": "°C", "losning": "m₁c₁ = 5 · 4,19 = 20,95 kJ/K, m₂c₂ = 2 · 0,90 = 1,80 kJ/K. t = (20,95 · 15 + 1,80 · 150) / 22,75 = (314,25 + 270) / 22,75 = 25,7 °C.", "f": "Vandet dominerer, fordi dets varmekapacitet er meget større.", "emne": "Varme og varmekapacitet"}, {"q": "Gas i en cylinder tilføres 50 kJ varme og udfører 20 kJ arbejde. Hvor meget stiger den indre energi? (kJ)", "tal": 30.0, "tol": 0.1, "enhed": "kJ", "losning": "ΔU = Q − W = 50 − 20 = 30 kJ.", "f": "Q = ΔU + W.", "emne": "Energi, effekt og virkningsgrad"}, {"q": "0,2 kg/s mættet damp (x = 1) kondenserer helt ved 2 bar(a), r = 2.202 kJ/kg. Hvor stor effekt afgives? (kW)", "tal": 440.4, "tol": 1.0, "enhed": "kW", "losning": "Φ = 0,2 · 2.202 = 440,4 kW.", "f": "Kondenserende damp afgiver fordampningsvarmen igen.", "emne": "Faseovergange og vanddamp"}, {"q": "En væg har R = 2,5 m²K/W. Hvad er U-værdien? (W/(m²K))", "tal": 0.4, "tol": 0.01, "enhed": "W/(m²K)", "losning": "U = 1 / R = 1 / 2,5 = 0,4.", "f": "U er den reciprokke af den samlede modstand.", "emne": "Varmetransmission"}, {"q": "Et vakuummeter på en kondensator viser −0,9 bar. Hvad er det absolutte tryk ca.? (bar(a), 2 decimaler)", "tal": 0.11, "tol": 0.02, "enhed": "bar", "losning": "p_abs = −0,9 + 1,013 = 0,11 bar(a).", "f": "Undertryk er negativt overtryk.", "emne": "Tryk"}, {"valg": ["Den stiger jævnt", "Den er konstant", "Den falder", "Den stiger med 1 °C pr. minut"], "rigtig": 1, "q": "Hvad sker der med temperaturen, mens vand koger ved konstant tryk?", "f": "Al tilført energi går til faseovergangen (latent varme).", "emne": "Faseovergange og vanddamp"}, {"valg": ["For at undgå korrosion", "For at dampen kan kondensere ved lav temperatur, så turbinen kan udnytte et større trykfald", "For at gøre vandet tungere", "For at dampen bliver overhedet"], "rigtig": 1, "q": "Hvorfor er der vakuum i en dampturbines kondensator?", "f": "Ved 0,1 bar(a) kondenserer damp ved ca. 46 °C.", "emne": "Faseovergange og vanddamp"}, {"valg": ["Mindre trykfald", "Temperaturforskellen holdes større gennem hele veksleren, så der kræves mindre areal", "Den er nemmere at rense", "Den bruger mindre vand"], "rigtig": 1, "q": "Hvorfor er modstrøm bedre end medstrøm i en varmeveksler?", "f": "Med modstrøm kan det kolde medium endda komme ud varmere end det varme medium kommer ud.", "emne": "Varmetransmission"}, {"valg": ["Tykkere stål", "Tykkere isolering", "Malet stål", "Højere h på indersiden"], "rigtig": 1, "q": "Hvad gør mest for at mindske varmetabet gennem en isoleret stålvæg?", "f": "Isoleringen er den største modstand. Stålets bidrag er ubetydeligt.", "emne": "Varmetransmission"}, {"q": "Ved hvilken temperatur viser °C og °F samme tal? (°C)", "tal": -40.0, "tol": 0.5, "enhed": "°C", "losning": "x = 1,8x + 32 ⇒ −0,8x = 32 ⇒ x = −40.", "f": "−40 °C = −40 °F.", "emne": "Temperatur og temperaturskalaer"}, {"q": "Et Pt100 er tilsluttet med 2 ledere, der tilsammen har 1 Ω. Hvor stor bliver fejlen? (°C, 1 decimal)", "tal": 2.6, "tol": 0.1, "enhed": "°C", "losning": "Δt = 1 / 0,385 = 2,6 °C for høj.", "f": "Brug 3- eller 4-leder for at fjerne ledningsmodstanden.", "emne": "Termometre og temperaturmåling"}, {"valg": ["Fordi energi forsvinder", "Fordi en del af energien altid bliver til varme, der ikke kan udnyttes til det ønskede formål", "Fordi man måler forkert", "Det er den ikke, en elmotor kan have η = 1"], "rigtig": 1, "q": "Hvorfor er virkningsgraden altid under 1?", "f": "Energien forsvinder ikke (1. hovedsætning), men noget bliver til tab, typisk varme.", "emne": "Energi, effekt og virkningsgrad"}, {"valg": ["Temperaturen er præcis 80,1 °C", "Instrumentet viser med 0,6 °C opløsning", "Den sande værdi ligger med ca. 95 % sandsynlighed mellem 79,5 og 80,7 °C", "Temperaturen svinger 0,6 °C op og ned"], "rigtig": 2, "q": "Hvad betyder det, at et resultat er \"80,1 °C ± 0,6 °C (k = 2)\"?", "f": "Udvidet usikkerhed med k = 2 svarer til ca. 95 % dækning.", "emne": "Måling og måleusikkerhed"}, {"q": "Damp ved 5 bar(a) har x = 0,95. Hvad er entalpien? (kJ/kg, h' = 640, r = 2.107)", "tal": 2642.0, "tol": 3.0, "enhed": "kJ/kg", "losning": "h = 640 + 0,95 · 2.107 = 640 + 2.001,7 = 2.642 kJ/kg.", "f": "h = h' + x · r.", "emne": "Faseovergange og vanddamp"}, {"valg": ["8,314 J/(kg·K)", "287 J/(kg·K)", "1.005 J/(kg·K)", "1,4"], "rigtig": 1, "q": "Hvad er gaskonstanten R for luft?", "f": "8,314 er den universelle gaskonstant pr. mol. Pr. kg luft er R = 287.", "emne": "Idealgasloven og tilstandsændringer"}, {"valg": ["Trækstyrken ved 0,2 % brudforlængelse", "Den spænding, der giver 0,2 % blivende tøjning", "Elasticitetsmodulet ved 0,2 % tøjning", "20 % af trækstyrken"], "rigtig": 1, "q": "Hvad er R_p0,2?", "f": "Bruges som flydegrænse for materialer uden tydeligt flydepunkt.", "emne": "Stivhed og materialelære"}, {"q": "Hvad er trykket i bunden af en 8 m høj vandtank (overtryk)? (bar, 2 decimaler)", "tal": 0.78, "tol": 0.01, "enhed": "bar", "losning": "p = 1000 · 9,81 · 8 = 78.480 Pa = 0,78 bar.", "f": "Ca. 0,1 bar pr. meter vand.", "emne": "Tryk"}, {"q": "Et stålrør kan ikke bevæge sig og opvarmes 40 K. Hvad bliver spændingen? (MPa, E = 210.000 MPa, α = 12 · 10⁻⁶)", "tal": 100.8, "tol": 1.0, "enhed": "MPa", "losning": "σ = E · α · Δt = 210.000 · 12 · 10⁻⁶ · 40 = 100,8 MPa.", "f": "Termiske spændinger kan nemt blive store.", "emne": "Varmeudvidelse"}, {"q": "En flade på 2 m² med ε = 0,9 er 200 °C, og omgivelserne er 20 °C. Hvad udstråler den netto? (W)", "tal": 4361.0, "tol": 50.0, "enhed": "W", "losning": "Φ = 0,9 · 5,67·10⁻⁸ · 2 · (473,15⁴ − 293,15⁴) = 1,0206·10⁻⁷ · (5,012·10¹⁰ − 0,7385·10¹⁰) = 1,0206·10⁻⁷ · 4,273·10¹⁰ = 4.361 W.", "f": "Temperaturerne skal i kelvin og opløftes i 4. potens.", "emne": "Varmetransmission"}, {"valg": ["En væskesøjle stiger", "Et krumt rør retter sig ud, når trykket stiger", "En piezokrystal giver en spænding", "En fjeder trykkes sammen af et stempel"], "rigtig": 1, "q": "Hvordan virker et Bourdonrørsmanometer?", "f": "Bevægelsen af rørets ende overføres til viseren via et tandhjulsværk.", "emne": "Tryk"}, {"valg": ["β = α", "β = α / 3", "β ≈ 3 · α", "β = α²"], "rigtig": 2, "q": "Hvordan hænger β og α sammen for et fast stof?", "f": "Stoffet udvider sig i tre retninger.", "emne": "Varmeudvidelse"}, {"valg": ["Kraften", "Forlængelsen over en kendt målelængde", "Temperaturen", "Tværsnittet"], "rigtig": 1, "q": "Hvad måler ekstensometret i en trækprøve?", "f": "Kraften måles af maskinens kraftmåler. Ekstensometret måler tøjningen præcist.", "emne": "Stivhed og materialelære"}, {"valg": ["At man kan spore, hvem der målte", "En ubrudt kæde af kalibreringer tilbage til en national eller international standard", "At målingen gemmes i en log", "At instrumentet har et serienummer"], "rigtig": 1, "q": "Hvad er sporbarhed?", "f": "Sporbarhed er det, der gør, at en måling i Danmark kan sammenlignes med en i Tyskland.", "emne": "Måling og måleusikkerhed"}, {"valg": ["Ledning", "Konvektion", "Stråling", "Ingen af dem"], "rigtig": 2, "q": "Hvilken form for varmetransmission kræver intet medium?", "f": "Stråling går også gennem vakuum. Sådan kommer solens varme til jorden.", "emne": "Varmetransmission"}, {"valg": ["Motorens effekt", "Det specifikke brændstofforbrug", "Brændværdien", "Smøreolieforbruget"], "rigtig": 1, "q": "Hvad er 201 g/kWh et udtryk for?", "f": "Gram brændstof pr. kWh akselarbejde. Jo lavere, jo bedre virkningsgrad.", "emne": "Energi, effekt og virkningsgrad"}, {"q": "Hvad er 180 °C i Fahrenheit? (°F)", "tal": 356.0, "tol": 0.5, "enhed": "°F", "losning": "°F = 180 · 1,8 + 32 = 324 + 32 = 356 °F.", "f": "Gang med 1,8 og læg 32 til.", "emne": "Temperatur og temperaturskalaer"}, {"valg": ["288,15 K", "15 K", "318,15 K", "27 K"], "rigtig": 1, "q": "Kølevandet stiger fra 30 °C til 45 °C. Hvad er temperaturstigningen i kelvin?", "f": "En temperaturforskel er den samme i °C og K. Man lægger kun 273,15 til en temperatur, ikke til en forskel.", "emne": "Temperatur og temperaturskalaer"}, {"q": "Hvad er modstanden i et Pt100 ved 50 °C? (Ω, 2 decimaler)", "tal": 119.25, "tol": 0.05, "enhed": "Ω", "losning": "R = 100 · (1 + 0,00385 · 50) = 100 · 1,1925 = 119,25 Ω.", "f": "R = R0 · (1 + α · t).", "emne": "Termometre og temperaturmåling"}, {"valg": ["Overtryk", "Absolut tryk", "Det er ligegyldigt", "Differenstryk"], "rigtig": 1, "q": "Hvilket tryk skal bruges i idealgasloven?", "f": "Gasloven gælder for det absolutte tryk, ligesom temperaturen skal være absolut (K).", "emne": "Tryk"}, {"valg": ["Du måler for varmt", "Du måler sandsynligvis for koldt", "Ingen betydning, IR måler altid rigtigt", "Du måler temperaturen inde i røret"], "rigtig": 1, "q": "Du måler en blank, rustfri flange med et IR-termometer sat til ε = 0,95. Hvad sker der?", "f": "En blank flade har lav ε og udsender mindre stråling end instrumentet regner med. Den reflekterer også omgivelserne.", "emne": "Termometre og temperaturmåling"}, {"valg": ["For at fjerne luft", "Fordi vandet udvider sig, når det bliver varmt, og ellers ville trykket stige voldsomt", "For at holde temperaturen konstant", "For at give pumpen tilløbstryk"], "rigtig": 1, "q": "Hvorfor har et lukket centralvarmeanlæg en ekspansionsbeholder?", "f": "Vand er næsten usammentrykkeligt, så selv en lille udvidelse i et lukket system giver et stort tryk.", "emne": "Varmeudvidelse"}, {"valg": ["Styrke", "Stivhed", "Hårdhed", "Sejhed"], "rigtig": 1, "q": "Hvad er elasticitetsmodulet et mål for?", "f": "E er hældningen i det elastiske område: hvor meget spænding der skal til pr. tøjning.", "emne": "Stivhed og materialelære"}, {"valg": ["Spritermometer", "NTC-termistor", "Termoelement", "Kviksølvtermometer"], "rigtig": 2, "q": "Hvilket termometer er bedst til at måle udstødningstemperaturen (ca. 450 °C) efter hver cylinder?", "f": "Termoelementer er robuste, hurtige og tåler høje temperaturer. Pt100 kan også, men er mere sårbart over for vibrationer.", "emne": "Termometre og temperaturmåling"}, {"valg": ["Fordi olien bliver tykkere", "Fordi olien udvider sig mere end tanken, når den bliver varm", "Fordi luften skal kunne komme ud", "Fordi tanken skrumper"], "rigtig": 1, "q": "Hvorfor skal man aldrig fylde en tank helt med kold olie?", "f": "Væsker udvider sig langt mere end stål.", "emne": "Varmeudvidelse"}, {"q": "En kæde har η = 0,9, 0,35 og 0,96. Hvad er den samlede virkningsgrad? (%, 1 decimal)", "tal": 30.2, "tol": 0.2, "enhed": "%", "losning": "0,9 · 0,35 · 0,96 = 0,3024 = 30,2 %.", "f": "Virkningsgrader ganges.", "emne": "Energi, effekt og virkningsgrad"}, {"q": "Spredningen på den enkelte måling er 0,8 °C, og du tager 16 målinger. Hvad er standardusikkerheden på middelværdien? (°C)", "tal": 0.2, "tol": 0.01, "enhed": "°C", "losning": "u = s / √n = 0,8 / √16 = 0,8 / 4 = 0,2 °C.", "f": "Flere målinger giver en sikrere middelværdi.", "emne": "Måling og måleusikkerhed"}, {"valg": ["0", "0,5", "1", "Over 1"], "rigtig": 2, "q": "Hvad er dampkvaliteten x for tør mættet damp?", "f": "x = 1 betyder, at alt er fordampet, men dampen er ikke overhedet.", "emne": "Faseovergange og vanddamp"}, {"q": "To uafhængige usikkerhedsbidrag er 0,3 °C og 0,4 °C. Hvad er den samlede standardusikkerhed? (°C)", "tal": 0.5, "tol": 0.01, "enhed": "°C", "losning": "u_c = √(0,3² + 0,4²) = √(0,09 + 0,16) = √0,25 = 0,5 °C.", "f": "Bidrag lægges sammen kvadratisk, ikke direkte (0,7 ville være forkert).", "emne": "Måling og måleusikkerhed"}, {"valg": ["Mod metallet med den største udvidelseskoefficient", "Mod metallet med den mindste udvidelseskoefficient", "Den bøjer ikke, den bliver længere", "Det afhænger af strømmen"], "rigtig": 1, "q": "I hvilken retning bøjer en bimetalstrimmel ved opvarmning?", "f": "Metallet med størst udvidelse bliver længst og kommer på ydersiden af buen.", "emne": "Termometre og temperaturmåling"}, {"q": "500 L hydraulikolie varmes fra 20 til 60 °C (β = 0,0007 /K). Hvor meget vokser rumfanget? (L)", "tal": 14.0, "tol": 0.2, "enhed": "L", "losning": "ΔV = 0,0007 · 500 · 40 = 14 L.", "f": "Derfor må tanken aldrig være helt fuld.", "emne": "Varmeudvidelse"}, {"q": "Kølevand strømmer med 1,5 kg/s og opvarmes fra 70 til 82 °C. Hvor stor er varmeeffekten? (kW, 1 decimal)", "tal": 75.4, "tol": 0.3, "enhed": "kW", "losning": "Φ = 1,5 · 4,19 · 12 = 75,4 kW.", "f": "Med massestrøm får man effekt i stedet for energi.", "emne": "Varme og varmekapacitet"}, {"q": "En S235-stang belastes til 94 MPa. Hvad er sikkerheden mod flydning? (1 decimal)", "tal": 2.5, "tol": 0.05, "enhed": "", "losning": "n = 235 / 94 = 2,5.", "f": "n = R_e / σ.", "emne": "Stivhed og materialelære"}, {"q": "En hydraulikcylinder har Ø 80 mm og 150 bar. Hvad er kraften? (kN, 1 decimal)", "tal": 75.4, "tol": 0.3, "enhed": "kN", "losning": "A = π · 0,08² / 4 = 5,027 · 10⁻³ m². F = 15 · 10⁶ · 5,027 · 10⁻³ = 75.400 N = 75,4 kN.", "f": "Husk at omregne bar til Pa og mm til m.", "emne": "Tryk"}, {"q": "Et type K-termoelement måler 400 °C, og klemmerne er 20 °C. Hvad er termospændingen ca.? (mV, k = 41 µV/°C)", "tal": 15.6, "tol": 0.1, "enhed": "mV", "losning": "U = 0,041 · (400 − 20) = 0,041 · 380 = 15,58 mV.", "f": "Kun forskellen giver spænding.", "emne": "Termometre og temperaturmåling"}, {"valg": ["Varme strømmer fra varmt til koldt", "Energi kan omdannes, men hverken opstå eller forsvinde", "Ingen maskine har virkningsgrad 1", "Ved 0 K står molekylerne stille"], "rigtig": 1, "q": "Hvad siger 1. hovedsætning?", "f": "Det er energibevarelse. \"Varme fra varmt til koldt\" og \"η under 1\" er 2. hovedsætning.", "emne": "Energi, effekt og virkningsgrad"}, {"valg": ["1.000 Pa", "10.000 Pa", "100.000 Pa", "1.000.000 Pa"], "rigtig": 2, "q": "Hvor mange pascal er 1 bar?", "f": "1 bar = 10⁵ Pa = 100 kPa.", "emne": "Tryk"}, {"valg": ["Tilfældig fejl", "Systematisk fejl", "Grov fejl", "Opløsningsfejl"], "rigtig": 1, "q": "En termometer viser altid 1,5 °C for meget. Hvilken fejltype er det?", "f": "Den er ens hver gang, så den forsvinder ikke ved at måle flere gange. Den fjernes ved kalibrering.", "emne": "Måling og måleusikkerhed"}, {"q": "Hvad er massefylden af luft ved 1,013 bar(a) og 20 °C? (kg/m³, 2 decimaler)", "tal": 1.2, "tol": 0.01, "enhed": "kg/m³", "losning": "ρ = p / (R · T) = 101.300 / (287 · 293,15) = 101.300 / 84.134 = 1,20 kg/m³.", "f": "Luft vejer ca. 1,2 kg pr. m³ ved stuetemperatur.", "emne": "Idealgasloven og tilstandsændringer"}, {"valg": ["Q = m · c · Δt", "p · V = m · R · T", "ΔL = α · L₀ · Δt", "Φ = ṁ · c · Δt"], "rigtig": 1, "q": "Hvilken formel kræver, at temperaturen sættes ind i kelvin?", "f": "Idealgasloven bruger den absolutte temperatur T. De andre bruger en forskel Δt, hvor °C og K giver samme tal.", "emne": "Temperatur og temperaturskalaer"}, {"valg": ["Vand", "Aluminium", "Stål", "Kobber"], "rigtig": 3, "q": "Hvilket stof skal der mindst energi til at opvarme 1 K pr. kg?", "f": "Kobber har c = 0,385 kJ/(kg·K), den laveste i tabellen.", "emne": "Varme og varmekapacitet"}, {"q": "En aluminiumsstang på 2 m opvarmes 80 K (α = 23 · 10⁻⁶ /K). Hvor meget bliver den længere? (mm, 2 decimaler)", "tal": 3.68, "tol": 0.02, "enhed": "mm", "losning": "ΔL = 23 · 10⁻⁶ · 2000 mm · 80 = 3,68 mm.", "f": "Regn L₀ i mm, så får du svaret i mm direkte.", "emne": "Varmeudvidelse"}, {"q": "3 kg vand på 80 °C blandes med 1 kg vand på 20 °C. Hvad bliver sluttemperaturen? (°C)", "tal": 65.0, "tol": 0.2, "enhed": "°C", "losning": "Samme c: t = (3 · 80 + 1 · 20) / 4 = 260 / 4 = 65 °C.", "f": "Når stofferne er ens, går c ud.", "emne": "Varme og varmekapacitet"}, {"q": "En pumpe optager 15 kW el og leverer 11,25 kW hydraulisk effekt. Hvad er virkningsgraden? (%)", "tal": 75.0, "tol": 0.5, "enhed": "%", "losning": "η = 11,25 / 15 = 0,75 = 75 %.", "f": "Nyttig effekt divideret med tilført.", "emne": "Energi, effekt og virkningsgrad"}, {"valg": ["100 °C", "120 °C", "ca. 180 °C", "ca. 250 °C"], "rigtig": 2, "q": "Ved hvilken temperatur koger vand i en kedel på 10 bar(a)?", "f": "Mætningstemperaturen stiger med trykket.", "emne": "Faseovergange og vanddamp"}, {"valg": ["Stangen brister straks", "Stangen får en blivende forlængelse", "Stangen bliver stivere", "Ingenting, den går tilbage"], "rigtig": 1, "q": "Hvad sker der, når spændingen overstiger flydegrænsen?", "f": "Over R_e er deformationen plastisk. Brud sker først ved R_m og videre.", "emne": "Stivhed og materialelære"}];
+const NOGLE = "mn-term-quiz", SAMLET = "1" === "1";
+const q = new URLSearchParams(location.search);
+
+// tilbage-link til den side man kom fra
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+
+// faner
+const tabs = [...document.querySelectorAll("#tabs button")];
+function vis(del) {
+  if (!document.getElementById("d-" + del)) del = "noter";
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.del === del));
+  document.querySelectorAll(".del").forEach(s => s.hidden = s.id !== "d-" + del);
+}
+tabs.forEach(b => b.addEventListener("click", () => {
+  vis(b.dataset.del);
+  const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
+  window.scrollTo(0, 0);
+}));
+// tomme dele skjules i fanerne
+["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+if (!QUIZ.length) tabs.find(b => b.dataset.del === "quiz").hidden = true;
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else { const v = q.get("vis") || "noter", t = tabs.find(b => b.dataset.del === v && !b.hidden) || tabs.find(b => !b.hidden); vis(t ? t.dataset.del : "noter"); }
+
+// tabeller kan scrolles på mobil
+document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+
+// quiz
+let gemt = {};
+try { gemt = JSON.parse(localStorage.getItem(NOGLE) || "{}"); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+// Danske og engelske skrivemåder virker begge: "85.200", "85200", "1.150,5", "0,86", "0.86".
+// Et enkelt punktum efterfulgt af tre cifre kan både være tusindtal og decimal, så begge tolkninger prøves.
+const tolk = s => { s = String(s).replace(/[\s\u00a0]/g, "").replace("−", "-");
+  if (!/^-?[\d.,]+$/.test(s)) return [];
+  if (s.includes(",")) return [parseFloat(s.replace(/\./g, "").replace(",", "."))];
+  if ((s.match(/\./g) || []).length > 1) return [parseFloat(s.replace(/\./g, ""))];
+  const ud = [parseFloat(s)];
+  if (/^-?\d+\.\d{3}$/.test(s)) ud.push(parseFloat(s.replace(".", "")));
+  return ud; };
+const fmt = x => x.toLocaleString("da-DK", { maximumFractionDigits: 4 });
+
+function bygQuiz() {
+  const rod = document.getElementById("quiz"); rod.innerHTML = "";
+  QUIZ.forEach((s, i) => {
+    const el = document.createElement("div"); el.className = "q";
+    el.innerHTML = `<div class="nr">Spørgsmål ${i + 1} af ${QUIZ.length}${SAMLET ? `<span class="emnetag">${s.emne}</span>` : ""}</div><div class="tekst">${s.q}</div>`;
+    const g = gemt[i];
+    if (s.valg) {
+      const v = document.createElement("div"); v.className = "valg";
+      s.valg.forEach((t, j) => {
+        const b = document.createElement("button"); b.innerHTML = t;
+        b.addEventListener("click", () => { gemt[i] = { valgt: j, ok: j === s.rigtig }; gem(); bygQuiz(); });
+        v.append(b);
+      });
+      el.append(v);
+      if (g) {
+        [...v.children].forEach((b, j) => { b.disabled = true; if (j === s.rigtig) b.classList.add("ok"); else if (j === g.valgt) b.classList.add("bad"); });
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Ikke helt."}</b>${s.f || ""}</div>`);
+      }
+    } else {
+      const f = document.createElement("div"); f.className = "tal";
+      f.innerHTML = `<input inputmode="decimal" aria-label="Dit svar" placeholder="Dit svar"> <span class="enhed">${s.enhed || ""}</span> <button class="knap">Tjek</button> <button class="knap stille">Vis facit</button>`;
+      const [inp, , tjek, opgiv] = f.children;
+      el.append(f);
+      const faerdig = g && (g.ok || g.forsog >= 2 || g.opgivet);
+      if (g && g.svar != null) inp.value = g.svar;
+      if (faerdig) {
+        inp.disabled = tjek.disabled = opgiv.disabled = true;
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Facit: " + fmt(s.tal) + " " + (s.enhed || "")}</b>${s.losning ? s.losning + "<br>" : ""}${s.f || ""}</div>`);
+      } else if (g && g.forsog === 1) {
+        el.insertAdjacentHTML("beforeend", `<div class="svar hint"><b>Ikke helt. Tjek din opstilling og prøv igen.</b>Du har ét forsøg tilbage.</div>`);
+      }
+      const svar = () => {
+        const xs = tolk(inp.value); if (!xs.length || xs.some(isNaN)) { inp.focus(); return; }
+        const ok = xs.some(x => Math.abs(x - s.tal) <= Math.max(s.tol, Math.abs(s.tal) * 1e-9));
+        const forsog = ((g && g.forsog) || 0) + 1;
+        gemt[i] = { svar: inp.value, ok, forsog }; gem(); bygQuiz();
+      };
+      tjek.addEventListener("click", svar);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") svar(); });
+      opgiv.addEventListener("click", () => { gemt[i] = { svar: inp.value, ok: false, forsog: 2, opgivet: true }; gem(); bygQuiz(); });
+    }
+    rod.append(el);
+  });
+  // score
+  const faerdige = QUIZ.map((s, i) => gemt[i] && (s.valg || gemt[i].ok || gemt[i].forsog >= 2));
+  const antal = faerdige.filter(Boolean).length, rigtige = QUIZ.filter((s, i) => gemt[i] && gemt[i].ok).length;
+  const forkerte = QUIZ.map((s, i) => faerdige[i] && !gemt[i].ok ? `<li>${s.q.replace(/<[^>]+>/g, "")}${SAMLET ? ` <em>(${s.emne})</em>` : ""}</li>` : "").join("");
+  document.getElementById("score").innerHTML = antal === 0 ? "" : `<div class="score">
+    <h2>${rigtige} af ${QUIZ.length} rigtige${antal < QUIZ.length ? ` · ${QUIZ.length - antal} mangler` : ""}</h2>
+    ${forkerte ? `<p>Tag med i repetitionen:</p><ul>${forkerte}</ul>` : antal === QUIZ.length ? "<p>Alle rigtige. Tag quizzen igen om et par uger.</p>" : ""}
+    <button class="knap stille" id="nulstil">Start forfra</button></div>`;
+  const n = document.getElementById("nulstil");
+  if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
+}
+if (QUIZ.length) bygQuiz();
+</script>
+</body>
+</html>

@@ -254,8 +254,86 @@ const SEMESTRE = [
           intro: "De 13 eksamenstemaer med eksempelopgaven og alle punkterne som spørgsmål. Svar selv højt, og tryk så for at se svaret.",
           dele: { kort: "noter/el1/eksamen2026.html" } },
       ] },
-    { id: "term", navn: "Grundlæggende termodynamik", ikon: "energi", emner: [] },
-    { id: "stud", navn: "Studiekompetence og metode", ikon: "studie", emner: [] } ] },
+    { id: "term", navn: "Grundlæggende termodynamik", ikon: "energi", quiz: "noter/term/quiz.html",
+      emner: [
+        { id: "temperatur", navn: "Temperatur og temperaturskalaer", ikon: "termometer",
+          intro: "Hvad temperatur er, 0. hovedsætning, Celsius, Kelvin og Fahrenheit, og hvorfor gasformler altid skal have kelvin.",
+          dele: { eksamen: "noter/term/temperatur-eksamen.html", ...emne("term", "temperatur") } },
+        { id: "termometre", navn: "Termometre og temperaturmåling", ikon: "termometer",
+          intro: "Væsketermometer, bimetal, termistor, Pt100, termoelement og IR: måleprincip, måleområde og usikkerhed.",
+          dele: { eksamen: "noter/term/termometre-eksamen.html", ...emne("term", "termometre") } },
+        { id: "maaling", navn: "Måling og måleusikkerhed", ikon: "maal",
+          intro: "Systematiske og tilfældige fejl, middelværdi, spredning, standardusikkerhed, kalibrering og sporbarhed.",
+          dele: { eksamen: "noter/term/maaling-eksamen.html", ...emne("term", "maaling") } },
+        { id: "tryk", navn: "Tryk", ikon: "tryk",
+          intro: "Absolut tryk og overtryk, enheder, hydrostatisk tryk, manometre og Pascals lov i hydraulik.",
+          dele: { eksamen: "noter/term/tryk-eksamen.html", ...emne("term", "tryk") } },
+        { id: "udvidelse", navn: "Varmeudvidelse", ikon: "udvid",
+          intro: "Lineær udvidelse og volumenudvidelse, bimetal, termiske spændinger og kompensatorer.",
+          dele: { eksamen: "noter/term/udvidelse-eksamen.html", ...emne("term", "udvidelse") } },
+        { id: "varme", navn: "Varme og varmekapacitet", ikon: "flamme",
+          intro: "Q = m · c · Δt, varmeeffekt i en strøm, blandingstemperatur og kalorimetri.",
+          dele: { eksamen: "noter/term/varme-eksamen.html", ...emne("term", "varme") } },
+        { id: "damp", navn: "Faseovergange og vanddamp", ikon: "kedel",
+          intro: "Latent varme, opvarmningskurven, kogepunkt og tryk, dampkvalitet og entalpi.",
+          dele: { eksamen: "noter/term/damp-eksamen.html", ...emne("term", "damp") } },
+        { id: "gas", navn: "Idealgasloven og tilstandsændringer", ikon: "gas",
+          intro: "p · V = m · R · T, isobar, isokor, isoterm og adiabatisk, pV-diagrammet og arbejde.",
+          dele: { eksamen: "noter/term/gas-eksamen.html", ...emne("term", "gas") } },
+        { id: "energi", navn: "Energi, effekt og virkningsgrad", ikon: "energi",
+          intro: "1. og 2. hovedsætning, brændværdi, specifikt brændstofforbrug, virkningsgrad i en kæde og Carnot.",
+          dele: { eksamen: "noter/term/energi-eksamen.html", ...emne("term", "energi") } },
+        { id: "varmetransmission", navn: "Varmetransmission", ikon: "varmeovf",
+          intro: "Ledning, konvektion og stråling, U-værdi og isolering, og varmevekslere.",
+          dele: { eksamen: "noter/term/varmetransmission-eksamen.html", ...emne("term", "varmetransmission") } },
+        { id: "stivhed", navn: "Stivhed og materialelære", ikon: "stiv",
+          intro: "Spænding og tøjning, Hookes lov, Young's modulus, spændings-tøjningskurven og trækprøven.",
+          dele: { eksamen: "noter/term/stivhed-eksamen.html", ...emne("term", "stivhed") } },
+        { id: "formelsamling", navn: "Samlet formelsamling", ikon: "formler",
+          intro: "Alle formler fra faget samlet på ét sted og ordnet efter emne.",
+          dele: { formler: "noter/term/formelsamling.html?vis=formler" } },
+      ] },
+    { id: "stud", navn: "Studiekompetence og metode", ikon: "studie", quiz: "noter/stud/quiz.html",
+      emner: [
+        { id: "faget", navn: "Faget, forløbet og opgaverne", ikon: "studie",
+          intro: "Hvad faget går ud på, de obligatoriske opgaver på M4, forløbet for opgave 3 og litteraturen.",
+          dele: { eksamen: "noter/stud/faget-eksamen.html", ...emne("stud", "faget", false) } },
+        { id: "opgaveformer", navn: "Opgavetyper, formalia og kildehenvisning", ikon: "opgave",
+          intro: "Almindelige opgaver, projektrapporter og laboratorierapporter, 2600 anslag pr. side, forside og sidehoved, fodnoter og kildehenvisning.",
+          dele: { eksamen: "noter/stud/opgaveformer-eksamen.html", ...emne("stud", "opgaveformer", false) } },
+        { id: "projektrapport", navn: "Projektrapporten og problemformuleringen", ikon: "rapport",
+          intro: "Afsnittene fra abstract til bilag, den røde tråd, problemstilling mod problemformulering, afgrænsning, diskussion og konklusion.",
+          dele: { eksamen: "noter/stud/projektrapport-eksamen.html", ...emne("stud", "projektrapport", false) } },
+        { id: "metode", navn: "Metode, metodologi og metodekompetence", ikon: "metode",
+          intro: "Hvad en metode er, metode mod metodologi, hvorfor metodevalg aldrig er uskyldige, og de fire delkompetencer.",
+          dele: { eksamen: "noter/stud/metode-eksamen.html", ...emne("stud", "metode", false) } },
+        { id: "videnskabsteori", navn: "Videnskabsteori", ikon: "viden",
+          intro: "Positivisme og hermeneutik, deduktion og induktion, og natur- og samfundsvidenskab i samme opgave.",
+          dele: { eksamen: "noter/stud/videnskabsteori-eksamen.html", ...emne("stud", "videnskabsteori", false) } },
+        { id: "dataindsamling", navn: "Kvantitative og kvalitative metoder", ikon: "data",
+          intro: "Tal mod ord, typiske metoder til dataindsamling, primære og sekundære data, informationssøgning og triangulering.",
+          dele: { eksamen: "noter/stud/dataindsamling-eksamen.html", ...emne("stud", "dataindsamling", false) } },
+        { id: "kvalitet", navn: "Validitet, reliabilitet, kildekritik og bias", ikon: "maal",
+          intro: "Måler vi det rigtige, og får vi det samme igen? Kildekritikkens fire kriterier og hvor bias sniger sig ind.",
+          dele: { eksamen: "noter/stud/kvalitet-eksamen.html", ...emne("stud", "kvalitet", false) } },
+        { id: "synopsis", navn: "Synopsis", ikon: "synopsis",
+          intro: "En velbegrundet plan for en opgave: opbygning, metodedelen og forskellen på synopsis og rapport.",
+          dele: { eksamen: "noter/stud/synopsis-eksamen.html", ...emne("stud", "synopsis", false) } },
+        { id: "ideer", navn: "Idégenerering og De Bonos tænkehatte", ikon: "hat",
+          intro: "Paralleltænkning, de seks tænkehatte og processen fra mange idéer til ét emne.",
+          dele: { eksamen: "noter/stud/ideer-eksamen.html", ...emne("stud", "ideer", false) } },
+        { id: "baeredygtighed", navn: "Bæredygtighed i metodisk perspektiv", ikon: "esg",
+          intro: "Bæredygtig ledelse, fra politik til handling, og metoderne LCA, carbon footprint, MFA og interessentanalyse.",
+          dele: { eksamen: "noter/stud/baeredygtighed-eksamen.html", ...emne("stud", "baeredygtighed", false) } },
+        { id: "opgave3", navn: "Obligatorisk opgave 3 trin for trin", ikon: "koel",
+          intro: "Opgaveoplægget, en arbejdsplan og et gennemgået eksempel om et dampkompressionskøleanlæg med COP og SCOP.",
+          dele: { eksamen: "noter/stud/opgave3-eksamen.html", ...emne("stud", "opgave3") } },
+        { id: "samarbejde", navn: "Studiegruppen: kontrakt, Belbin og feedback", ikon: "ledelse",
+          intro: "Samarbejdskontraktens punkter, Belbins ni teamroller og refleksion og feedback med konkrete handlinger.",
+          dele: { eksamen: "noter/stud/samarbejde-eksamen.html", ...emne("stud", "samarbejde", false) } },
+        { id: "maaling", navn: "Måleusikkerhed: worst case og geometrisk kombination", ikon: "kapacitet",
+          intro: "Portfolio-opgaven i måling: usikkerhed fra databladet, worst case, geometrisk kombination, afrunding og skemaerne.",
+          dele: { eksamen: "noter/stud/maaling-eksamen.html", ...emne("stud", "maaling") } } ] } ] },
   { n: 5, quiz: null, fag: [
     { id: "el2", navn: "Elektroteknik 2", ikon: "el", quiz: "noter/el2/quiz.html",
       laeringsmaal: "https://www.teknikaqms.dk/showpage.php?pageid=485818",
@@ -494,6 +572,15 @@ const IKON = {
   magnet: '<path d="M5 3.5h4.5V12a2.5 2.5 0 0 0 5 0V3.5H19V12a7 7 0 0 1-14 0Z"/><path d="M5 7.5h4.5M14.5 7.5H19"/>',
   leder: '<path d="M2.5 12h3l1.5-4 3 8 3-8 3 8 1.5-4h4"/>',
   solcelle: '<rect x="3" y="10" width="18" height="11" rx="1"/><path d="M3 15.5h18M9 10v11M15 10v11M12 2.5v3M6.5 4l1.5 2M17.5 4 16 6"/>',
+  // Studiekompetence og metode
+  opgave: '<path d="M7 2.5h7.5l4.5 4.5v14.5H7Z"/><path d="M14.5 2.5V7H19"/><path d="m9.5 14 2 2 3.5-4"/>',
+  rapport: '<path d="M5 3h10l4 4v14H5Z"/><path d="M8.5 10h7M8.5 13.5h7M8.5 17h4"/>',
+  metode: '<circle cx="5" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 6h6a3 3 0 0 1 0 6h-2a3 3 0 0 0 0 6h6"/>',
+  viden: '<path d="M3 5.5c3-1.2 6-1.2 9 .8v13c-3-2-6-2-9-.8Z"/><path d="M21 5.5c-3-1.2-6-1.2-9 .8v13c3-2 6-2 9-.8Z"/>',
+  data: '<ellipse cx="12" cy="5.5" rx="7" ry="2.5"/><path d="M5 5.5v13c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-13M5 12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5"/>',
+  maal: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/>',
+  synopsis: '<path d="M4 4.5h16M4 9.5h10M4 14.5h16M4 19.5h7"/>',
+  hat: '<path d="M3 17.5h18"/><path d="M6 17.5V9.5c0-2 2.7-3.5 6-3.5s6 1.5 6 3.5v8"/><path d="M6 13h12"/>',
   // Driftsøkonomi
   regnskab: '<path d="M12 4v16M7.5 20.5h9M4 7.5h16"/><path d="M6.5 7.5 3.8 13.5h5.4ZM17.5 7.5l-2.7 6h5.4Z"/>',
   omkostning: '<ellipse cx="12" cy="6" rx="7" ry="2.5"/><path d="M5 6v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V6M5 12v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-6"/>',
@@ -525,6 +612,13 @@ const IKON = {
   simulation: '<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>',
   modeller: '<path d="M12 2.5 4 7v10l8 4.5 8-4.5V7l-8-4.5Z"/><path d="M4 7l8 4.5L20 7M12 11.5v10"/>',
   forstaaelse: '<path d="M9 18h6M10 21.5h4M12 2.5a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 2.5Z"/>',
+  termometer: '<path d="M10 14.5V5a2 2 0 0 1 4 0v9.5a4 4 0 1 1-4 0Z"/><path d="M12 9v7.5"/><path d="M16.5 6h2M16.5 9h2M16.5 12h2"/>',
+  maal: '<path d="M3 18.5 18.5 3l2.5 2.5L5.5 21Z"/><path d="m7 15 1.5 1.5M10 12l2 2M13 9l1.5 1.5M16 6l2 2"/>',
+  tryk: '<circle cx="12" cy="13" r="8"/><path d="M12 13 16 8.5"/><path d="M7 16.5h10M12 3v2"/>',
+  udvid: '<path d="M7 9.5h10v5H7Z"/><path d="M2.5 12h3M18.5 12h3M4 10l-1.5 2L4 14M20 10l1.5 2L20 14"/>',
+  gas: '<path d="M6 3.5v17h12v-17"/><path d="M6 9h12M12 9V3.5"/><circle cx="9.5" cy="14" r="1"/><circle cx="14" cy="16.5" r="1"/><circle cx="14.5" cy="12.5" r="1"/>',
+  varmeovf: '<path d="M10 3v18M14 3v18"/><path d="M3 8c1.2-1.3 2.3-1.3 3.5 0M3 13c1.2-1.3 2.3-1.3 3.5 0M17.5 8c1.2-1.3 2.3-1.3 3.5 0M17.5 13c1.2-1.3 2.3-1.3 3.5 0"/>',
+  stiv: '<path d="M12 2.5v3M12 18.5v3"/><path d="M9 5.5h6v13H9Z"/><path d="M9 10.5c1.5 1 4.5 1 6 0"/>',
   quiz: '<circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.6 2.6L16 9.6"/>',
 };
 const FARVE = { el: "el", energi: "energi", motoranlaeg: "motor", auto: "auto", oekonomi: "oekonomi", ledelse: "ledelse", studie: "studie",
@@ -586,16 +680,20 @@ function setCrumbs(items) {
 const roligt = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let foersteApp = true;
 const kanSide = () => innerWidth >= 900;
+// Skibets sejlads er kun pynt: siden vises og kan klikkes med det samme, og et nyt klik afbryder turen
+let tur = null;
+const stopTur = () => { if (!tur) return; const t = tur; tur = null; if (t.timer) { clearTimeout(t.timer); t.skift(); } t.anim.cancel(); };
 function visApp(titel, html, crumbs, mode = "top") {
   const A = $("#app");
   if (mode === "side" && !kanSide()) mode = "top";
+  if (!(tur && tur.mode === mode)) stopTur();   // sejler skibet allerede mod samme plads, får det lov at sejle færdigt
   // Kommer vi fra forsiden, sejler skibet af sted og lægger sig vandret som header
   const sejl = !$("#landing").hidden && $("#ship").firstChild && !roligt() && mode === "top";
   let fra = null;
   if (sejl) { const sh = $("#ship"), r = sh.getBoundingClientRect(); fra = { cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: sh.offsetWidth, h: sh.offsetHeight }; }
   // Skifter vi mellem header og venstre side, sejler skibet derhen
   const forMode = A.classList.contains("side") ? "side" : "top";
-  const skift = !A.hidden && forMode !== mode && !roligt();
+  const skift = !A.hidden && forMode !== mode && !roligt() && !tur;
   const kilde = skift ? skibPlads(forMode) : null;
   const hs = $("#hship"), ss = $("#sship");
   if (!hs.firstChild) hs.innerHTML = `<div class="hship-inner">${shipSVG()}</div>`;
@@ -605,8 +703,7 @@ function visApp(titel, html, crumbs, mode = "top") {
   setCrumbs(crumbs);
   const s = $("#screen"); s.innerHTML = html;
   s.style.animation = "none"; void s.offsetWidth; s.style.animation = "";
-  s.style.animationDelay = sejl ? "3.9s" : skift ? "3.2s" : "";
-  document.title = titel + " · Maskinenoter";
+    document.title = titel + " · Maskinenoter";
   if (skift) { window.scrollTo(0, 0); omSkib(kilde, mode); return; }
   if (!sejl) { $("#landing").hidden = true; $("#landing").classList.remove("sejler"); A.hidden = false; return; }
   sejlTur(fra);
@@ -633,9 +730,9 @@ function omSkib(fra, mode) {
     { p: [fra.cx, fra.cy], k: [0, -1], s: 1 },
     { p: [til.cx, til.cy], k: [1, 0], s: slut },
   ];
-  const anim = f.animate(rute2kf(rute, 26, fra.cx, fra.cy), { duration: mode === "side" ? 3800 : 2600, easing: "cubic-bezier(.45, .05, .25, 1)", fill: "forwards" });
-  const faerdig = () => { fra.el.style.visibility = ""; til.el.style.visibility = ""; f.remove(); };
-  anim.onfinish = faerdig; anim.oncancel = faerdig;
+  const anim = f.animate(rute2kf(rute, 26, fra.cx, fra.cy), { duration: mode === "side" ? 2100 : 1300, easing: "cubic-bezier(.45, .05, .25, 1)", fill: "forwards" });
+  const faerdig = () => { fra.el.style.visibility = ""; til.el.style.visibility = ""; f.remove(); if (tur && tur.anim === anim) tur = null; };
+  anim.onfinish = faerdig; anim.oncancel = faerdig; tur = { anim, mode };
 }
 /* Skibets rute: punkter med kurs (enhedsvektor). Mellem punkterne tegnes en blød kurve (Hermite),
    og stævnen peger altid i sejlretningen. */
@@ -674,7 +771,8 @@ function sejlTur(fra) {
   L.classList.add("sejler"); $("#ship").style.visibility = "hidden";
   const f = document.createElement("div"); f.className = "flyship"; f.innerHTML = shipSVG(); document.body.appendChild(f);
   Object.assign(f.style, { left: (fra.cx - fra.w / 2) + "px", top: (fra.cy - fra.h / 2) + "px", width: fra.w + "px", height: fra.h + "px" });
-  setTimeout(() => { L.hidden = true; L.classList.remove("sejler"); $("#ship").style.visibility = ""; A.hidden = false; $("#hship").style.visibility = "hidden"; }, 520);
+  const skift = () => { L.hidden = true; L.classList.remove("sejler"); $("#ship").style.visibility = ""; A.hidden = false; $("#hship").style.visibility = "hidden"; };
+  const timer = setTimeout(() => { if (tur) tur.timer = null; skift(); }, 220);
   const lille = Math.min(.5, (vh * .55) / fra.h);   // så skibet kan vende på skærmen
   const N = (x, y) => { const m = Math.hypot(x, y); return [x / m, y / m]; };
   const rad = 34 * Math.PI / 180;
@@ -686,11 +784,12 @@ function sejlTur(fra) {
     { p: [vw * .26, vh * .30], k: N(.75, -.66), s: lille },
     { p: [tcx, tcy], k: [1, 0], s: slutSkala },
   ];
-  const anim = f.animate(rute2kf(rute, 24, fra.cx, fra.cy), { duration: 4600, easing: "cubic-bezier(.45, .05, .25, 1)", fill: "forwards" });
-  const slut = () => { $("#hship").style.visibility = ""; f.remove(); };
-  anim.onfinish = slut; anim.oncancel = slut;
+  const anim = f.animate(rute2kf(rute, 24, fra.cx, fra.cy), { duration: 2600, easing: "cubic-bezier(.45, .05, .25, 1)", fill: "forwards" });
+  const slut = () => { $("#hship").style.visibility = ""; f.remove(); if (tur && tur.anim === anim) tur = null; };
+  anim.onfinish = slut; anim.oncancel = slut; tur = { anim, timer, skift, mode: "top" };
 }
 function forside() {
+  stopTur();
   $("#app").hidden = true; $("#landing").hidden = false;
   document.title = "Maskinenoter";
   if (!$("#ship").firstChild) $("#ship").innerHTML = shipSVG();
