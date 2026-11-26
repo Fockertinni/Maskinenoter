@@ -81,3 +81,13 @@ Alle undersider (noter, formler, labnoter, simulation, forståelse, quiz) henter
 ```
 
 Skabelonen `noter/kilde/skabelon.html` har den allerede.
+
+## Skjult indhold og gennemsyn
+Øverst i datadelen af `index.html` står `const FRIGIVET = ["simulation"];`. Kun de dele vises på den live side; alt andet (noter, formler, labnoter, forståelse, quiz) er skjult, men ikke slettet.
+
+- Frigiv en del for alle emner: tilføj den i `FRIGIVET`, fx `["simulation", "noter"]`.
+- Frigiv dele for ét emne: skriv `frigivet: ["noter", "quiz"]` på emnet i `SEMESTRE`.
+- Frigiv quizzen for et helt fag: skriv `frigivet: ["quiz"]` på faget.
+- Se alt, også det skjulte: åbn `https://maskinenoter.dk/?gennemse`. Browseren husker det, til du trykker "Slå fra" eller åbner `?gennemse=nej`.
+
+Bemærk: de skjulte filer ligger stadig på serveren, så den der kender den præcise adresse, kan åbne dem. De er bare ikke linket fra siden.

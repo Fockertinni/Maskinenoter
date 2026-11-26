@@ -120,6 +120,7 @@ a.quiet:hover { color: var(--fg); background: var(--hover); }
 .sship svg { display: block; width: 100%; height: 100%; }
 #app.side .screen { max-width: calc(1080px + var(--sw) + 64px); padding-left: calc(var(--sw) + 88px); }
 #landing .hero .wrap { transition: opacity .5s ease; }
+.gennemse { position: fixed; z-index: 70; right: 16px; bottom: 16px; padding: .5rem .85rem; border-radius: 999px; background: var(--accent); color: #1a0e04; font: 600 .82rem/1.2 var(--sans); text-decoration: none; box-shadow: 0 6px 20px rgba(0,0,0,.4); }
 #landing.sejler .hero .wrap { opacity: 0; }
 .flyship { position: fixed; z-index: 60; pointer-events: none; transform-origin: 50% 50%; filter: drop-shadow(0 26px 44px rgba(0,0,0,.5)); }
 @media (prefers-reduced-motion: no-preference) {
@@ -159,6 +160,7 @@ a.quiet:hover { color: var(--fg); background: var(--hover); }
   </header>
   <main class="wrap screen" id="screen"></main>
 </div>
+<a class="gennemse" id="gennemse" href="?gennemse=nej" hidden>Gennemsyn: du ser også skjult indhold · Slå fra</a>
 
 <script>
 /* =====================================================================
@@ -366,7 +368,35 @@ const SEMESTRE = [
     { id: "bach", navn: "Bachelorprojekt", ikon: "studie", emner: [] } ] },
 ];
 
+/* =====================================================================
+   FRIGIVET INDHOLD
+   Kun de dele, der står i FRIGIVET, vises på den live side. Resten er skjult, indtil det er gennemgået.
+   Frigiv én del for alle emner:   tilføj den her, fx "noter".
+   Frigiv dele for ét emne:        skriv  frigivet: ["noter", "quiz"]  på emnet i SEMESTRE.
+   Frigiv quizzen for et helt fag: skriv  frigivet: ["quiz"]  på faget.
+   Se alt (også det skjulte):      åbn siden med  ?gennemse  bagerst i adressen. ?gennemse=nej slår det fra igen.
+   ===================================================================== */
+const FRIGIVET = ["simulation"];
+const GENNEMSE = (() => {
+  const q = new URLSearchParams(location.search).get("gennemse");
+  try {
+    if (q === "nej") localStorage.removeItem("gennemse");
+    else if (q !== null) localStorage.setItem("gennemse", "1");
+    return localStorage.getItem("gennemse") === "1";
+  } catch (e) { return q !== null && q !== "nej"; }
+})();
+if (!GENNEMSE) for (const s of SEMESTRE) {
+  if (!FRIGIVET.includes("quiz")) s.quiz = null;
+  for (const f of s.fag) {
+    const fagOk = k => FRIGIVET.includes(k) || (f.frigivet || []).includes(k);
+    if (!fagOk("quiz")) f.quiz = null;
+    for (const e of f.emner) if (e.dele) for (const k of Object.keys(e.dele))
+      if (!fagOk(k) && !(e.frigivet || []).includes(k)) e.dele[k] = null;
+  }
+}
+
 /* Rækkefølge og navne på delene på en emneside */
+if (GENNEMSE) addEventListener("DOMContentLoaded", () => { $("#gennemse").hidden = false; });
 const DELE = [
   ["noter", "Noter"], ["formler", "Formler"], ["labnoter", "Labnoter"], ["simulation", "Simulation"],
   ["modeller", "Modeller"], ["forstaaelse", "Forståelse"], ["quiz", "Quiz"],
