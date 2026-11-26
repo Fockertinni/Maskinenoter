@@ -45,6 +45,7 @@ Find faget i `SEMESTRE`, og tilføj én post til dets `emner`:
 - `id` må kun indeholde små bogstaver og tal (ingen bindestreg). Den bliver en del af adressen.
 - Kun de dele, der har et link, bliver vist som felter. `null` betyder, at delen ikke findes endnu.
 - Et emne uden nogen dele vises som et nedtonet felt.
+- Delen `eksamen` ("Alt du skal bruge til eksamen") er en eksamensside for emnet, fx `noter/el2/trefaset-eksamen.html`, bygget af byg.py fra `noter/kilde/el2/01b-trefaset-eksamen.md`. Den vises først på emnesiden.
 - Til EL2-emner med labøvelse findes genvejen `el2Lab(n, "id")`. Den giver teorinoter, formler og quiz fra `noter/el2/<id>.html` og labnoter, simulation og forståelse fra lab nr. n.
 
 ## Tilføj et fag

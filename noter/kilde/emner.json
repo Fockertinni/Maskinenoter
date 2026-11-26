@@ -213,6 +213,14 @@
    "formler": true
   },
   {
+   "id": "trefaset-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Trefaset belastning",
+   "ikon": "trefase",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og hvad du skal vise ved bordet i laboratoriet.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
    "id": "generator",
    "navn": "Synkrongenerator",
    "ikon": "generator",
