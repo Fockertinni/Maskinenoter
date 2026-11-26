@@ -529,16 +529,20 @@ function setCrumbs(items) {
 const roligt = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let foersteApp = true;
 const kanSide = () => innerWidth >= 900;
+// Skibets sejlads er kun pynt: siden vises og kan klikkes med det samme, og et nyt klik afbryder turen
+let tur = null;
+const stopTur = () => { if (!tur) return; const t = tur; tur = null; if (t.timer) { clearTimeout(t.timer); t.skift(); } t.anim.cancel(); };
 function visApp(titel, html, crumbs, mode = "top") {
   const A = $("#app");
   if (mode === "side" && !kanSide()) mode = "top";
+  if (!(tur && tur.mode === mode)) stopTur();   // sejler skibet allerede mod samme plads, får det lov at sejle færdigt
   // Kommer vi fra forsiden, sejler skibet af sted og lægger sig vandret som header
   const sejl = !$("#landing").hidden && $("#ship").firstChild && !roligt() && mode === "top";
   let fra = null;
   if (sejl) { const sh = $("#ship"), r = sh.getBoundingClientRect(); fra = { cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: sh.offsetWidth, h: sh.offsetHeight }; }
   // Skifter vi mellem header og venstre side, sejler skibet derhen
   const forMode = A.classList.contains("side") ? "side" : "top";
-  const skift = !A.hidden && forMode !== mode && !roligt();
+  const skift = !A.hidden && forMode !== mode && !roligt() && !tur;
   const kilde = skift ? skibPlads(forMode) : null;
   const hs = $("#hship"), ss = $("#sship");
   if (!hs.firstChild) hs.innerHTML = `<div class="hship-inner">${shipSVG()}</div>`;
@@ -548,8 +552,7 @@ function visApp(titel, html, crumbs, mode = "top") {
   setCrumbs(crumbs);
   const s = $("#screen"); s.innerHTML = html;
   s.style.animation = "none"; void s.offsetWidth; s.style.animation = "";
-  s.style.animationDelay = sejl ? "3.9s" : skift ? "3.2s" : "";
-  document.title = titel + " · Maskinenoter";
+    document.title = titel + " · Maskinenoter";
   if (skift) { window.scrollTo(0, 0); omSkib(kilde, mode); return; }
   if (!sejl) { $("#landing").hidden = true; $("#landing").classList.remove("sejler"); A.hidden = false; return; }
   sejlTur(fra);
@@ -576,9 +579,9 @@ function omSkib(fra, mode) {
     { p: [fra.cx, fra.cy], k: [0, -1], s: 1 },
     { p: [til.cx, til.cy], k: [1, 0], s: slut },
   ];
-  const anim = f.animate(rute2kf(rute, 26, fra.cx, fra.cy), { duration: mode === "side" ? 3800 : 2600, easing: "cubic-bezier(.45, .05, .25, 1)", fill: "forwards" });
-  const faerdig = () => { fra.el.style.visibility = ""; til.el.style.visibility = ""; f.remove(); };
-  anim.onfinish = faerdig; anim.oncancel = faerdig;
+  const anim = f.animate(rute2kf(rute, 26, fra.cx, fra.cy), { duration: mode === "side" ? 2100 : 1300, easing: "cubic-bezier(.45, .05, .25, 1)", fill: "forwards" });
+  const faerdig = () => { fra.el.style.visibility = ""; til.el.style.visibility = ""; f.remove(); if (tur && tur.anim === anim) tur = null; };
+  anim.onfinish = faerdig; anim.oncancel = faerdig; tur = { anim, mode };
 }
 /* Skibets rute: punkter med kurs (enhedsvektor). Mellem punkterne tegnes en blød kurve (Hermite),
    og stævnen peger altid i sejlretningen. */
@@ -617,7 +620,8 @@ function sejlTur(fra) {
   L.classList.add("sejler"); $("#ship").style.visibility = "hidden";
   const f = document.createElement("div"); f.className = "flyship"; f.innerHTML = shipSVG(); document.body.appendChild(f);
   Object.assign(f.style, { left: (fra.cx - fra.w / 2) + "px", top: (fra.cy - fra.h / 2) + "px", width: fra.w + "px", height: fra.h + "px" });
-  setTimeout(() => { L.hidden = true; L.classList.remove("sejler"); $("#ship").style.visibility = ""; A.hidden = false; $("#hship").style.visibility = "hidden"; }, 520);
+  const skift = () => { L.hidden = true; L.classList.remove("sejler"); $("#ship").style.visibility = ""; A.hidden = false; $("#hship").style.visibility = "hidden"; };
+  const timer = setTimeout(() => { if (tur) tur.timer = null; skift(); }, 220);
   const lille = Math.min(.5, (vh * .55) / fra.h);   // så skibet kan vende på skærmen
   const N = (x, y) => { const m = Math.hypot(x, y); return [x / m, y / m]; };
   const rad = 34 * Math.PI / 180;
@@ -629,11 +633,12 @@ function sejlTur(fra) {
     { p: [vw * .26, vh * .30], k: N(.75, -.66), s: lille },
     { p: [tcx, tcy], k: [1, 0], s: slutSkala },
   ];
-  const anim = f.animate(rute2kf(rute, 24, fra.cx, fra.cy), { duration: 4600, easing: "cubic-bezier(.45, .05, .25, 1)", fill: "forwards" });
-  const slut = () => { $("#hship").style.visibility = ""; f.remove(); };
-  anim.onfinish = slut; anim.oncancel = slut;
+  const anim = f.animate(rute2kf(rute, 24, fra.cx, fra.cy), { duration: 2600, easing: "cubic-bezier(.45, .05, .25, 1)", fill: "forwards" });
+  const slut = () => { $("#hship").style.visibility = ""; f.remove(); if (tur && tur.anim === anim) tur = null; };
+  anim.onfinish = slut; anim.oncancel = slut; tur = { anim, timer, skift, mode: "top" };
 }
 function forside() {
+  stopTur();
   $("#app").hidden = true; $("#landing").hidden = false;
   document.title = "Maskinenoter";
   if (!$("#ship").firstChild) $("#ship").innerHTML = shipSVG();
