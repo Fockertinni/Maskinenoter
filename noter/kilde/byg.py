@@ -7,6 +7,12 @@ Hver kildefil har en kort top med id, navn, ikon og intro, og derefter tre dele:
   # Noter     almindelig markdown
   # Formler   markdown; kodeblokke (```) bliver formelbokse
   # Quiz      spørgsmål i det lille format herunder
+eller i stedet for de tre dele et kortsæt (ét spørgsmål ad gangen, svar ved tryk):
+  # Kort
+  ## 1 · Gruppens titel
+  sider: 3, 4             (valgfri: sider i noter/<fag>/<id>/s-NN.jpg med opgavens figurer)
+  ### 1.1 Spørgsmålet
+  svaret i almindelig markdown; > **Usikker** ... markerer et usikkert svar
 
 Quiz-format (tom linje mellem spørgsmål):
   Q: Spørgsmålet
@@ -47,7 +53,7 @@ def laes(fil):
     top, krop = raa.split("\n---\n", 1)
     meta = dict(l.split(":", 1) for l in top.strip().strip("-").strip().splitlines() if ":" in l)
     meta = {k.strip(): v.strip() for k, v in meta.items()}
-    dele = re.split(r"^# (Noter|Formler|Quiz)\s*$", krop, flags=re.M)
+    dele = re.split(r"^# (Noter|Formler|Quiz|Kort)\s*$", krop, flags=re.M)
     d = {dele[i]: dele[i + 1].strip() for i in range(1, len(dele), 2)}
     return meta, d
 
@@ -78,6 +84,36 @@ def quiz(tekst):
     return qs
 
 SIDE = (ROD / "skabelon.html").read_text(encoding="utf-8")
+KORTSIDE = (ROD / "kort.html").read_text(encoding="utf-8")
+
+def kort(tekst, mappe):
+    grupper = []
+    for blok in re.split(r"^## ", tekst, flags=re.M)[1:]:
+        hoved, *kortene = re.split(r"^### ", blok, flags=re.M)
+        linjer = hoved.strip().splitlines()
+        nr, titel = [x.strip() for x in linjer[0].split("·", 1)]
+        sider = [int(x) for l in linjer[1:] if l.startswith("sider:") for x in l[6:].split(",") if x.strip()]
+        g = {"nr": nr, "titel": titel, "sider": sider, "mappe": mappe, "kort": []}
+        for k in kortene:
+            forste, _, svar = k.partition("\n")
+            knr, sp = forste.strip().split(" ", 1)
+            if not svar.strip(): raise SystemExit(f"Kort uden svar: {knr}")
+            g["kort"].append({"nr": knr, "q": inline(sp), "a": md(svar.strip())})
+        grupper.append(g)
+    return grupper
+
+def kortside(fag, meta, grupper):
+    f = FAG[fag]
+    erstat = {
+        "{{TITEL}}": html.escape(meta["navn"]), "{{FAG}}": f["navn"],
+        "{{FARVE}}": f["farve"], "{{FARVE_M}}": f["farve_m"],
+        "{{INTRO}}": html.escape(meta.get("intro", "")),
+        "{{KORT}}": json.dumps(grupper, ensure_ascii=False).replace("</", "<\\/"),
+        "{{NOGLE}}": f"mn-{fag}-{meta['id']}", "{{FAGFRA}}": f["fra"],
+    }
+    s = KORTSIDE
+    for k, v in erstat.items(): s = s.replace(k, v)
+    return s
 
 def side(fag, meta, noter, formler, qs, samlet=False):
     f = FAG[fag]
@@ -105,6 +141,13 @@ def main():
         emner, samlet = [], []
         for fil in kilde:
             meta, d = laes(fil)
+            if "Kort" in d:
+                grupper = kort(d["Kort"], meta["id"])
+                (UD / fag / f"{meta['id']}.html").write_text(kortside(fag, meta, grupper), encoding="utf-8")
+                n = sum(len(g["kort"]) for g in grupper)
+                emner.append({k: meta.get(k) for k in ("id", "navn", "ikon", "intro")} | {"kort": n, "quiz": 0, "formler": False})
+                print(f"{fag}/{meta['id']}: {n} kort")
+                continue
             qs = quiz(d.get("Quiz", ""))
             for q in qs: q["emne"] = meta["navn"]
             (UD / fag / f"{meta['id']}.html").write_text(

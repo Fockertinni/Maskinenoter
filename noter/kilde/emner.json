@@ -193,6 +193,15 @@
    "intro": "Sådan foregår den mundtlige prøve, hvad du skal kunne efter læringsmålene, studieplanens emner og kilder, hele formelsamlingen og huller i materialet.",
    "quiz": 4,
    "formler": true
+  },
+  {
+   "id": "eksamen2026",
+   "navn": "Eksamen 2026",
+   "ikon": "eksamen",
+   "intro": "Alle 30 prøvespørgsmål til den mundtlige eksamen med underspørgsmål. Læs spørgsmålet, svar selv højt, og tryk så for at se svaret.",
+   "kort": 161,
+   "quiz": 0,
+   "formler": false
   }
  ],
  "el2": [

@@ -22,6 +22,7 @@ Mine noter og interaktive modeller fra maskinmesteruddannelsen. Siden er ren HTM
 - `noter/drift/`, `noter/forb/` og `noter/el2/` er bygget af scriptet `noter/kilde/byg.py` ud fra markdown-filerne i `noter/kilde/drift/`, `noter/kilde/forb/` og `noter/kilde/el2/`. Ret altid i markdown-filen og kør `python3 noter/kilde/byg.py` (kræver `pip install markdown`). De færdige HTML-filer ligger i repoet, så siden stadig ikke har noget build-trin.
 - Hver emnefil har tre dele: Noter, Formler og Quiz. Med `?vis=noter`, `?vis=formler` eller `?vis=quiz` vises den del. `noter/<fag>/quiz.html` er en samlet quiz for hele faget.
 - Øverst i hver markdown-fil står `id`, `navn`, `ikon` og `intro`. Under `# Quiz` står spørgsmålene i et lille format, der er forklaret øverst i `byg.py`.
+- En kildefil med `# Kort` i stedet for Noter/Formler/Quiz bliver en side med ét spørgsmål ad gangen og svaret bag et tryk (skabelon `noter/kilde/kort.html`). Det bruges til "Eksamen 2026" i Forbrændingsmotoranlæg: `noter/kilde/forb/14-eksamen2026.md`, med siderne fra prøvespørgsmålene som billeder i `noter/forb/eksamen2026/`. Svar markeret `> **Usikker**` vises med gul boks. På emnesiden hedder delen `kort` ("Prøvespørgsmål med svar").
 - EL2-noterne har interaktive modeller inde i teksten. I markdown skrives fx `<div class="m" data-m="stjerne"></div>`, og `noter/el2/modeller.js` tegner modellen. Listen over modeller står i den fil.
 - Genvejen `emne("drift", "budget")` i `index.html` giver alle tre dele. Skriv `emne("forb", "smoering", false)`, hvis emnet ikke har formler.
 

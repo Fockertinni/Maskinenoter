@@ -311,6 +311,9 @@ const SEMESTRE = [
         { id: "eksamen", navn: "Eksamen og formelsamling", ikon: "eksamen",
           intro: "Sådan foregår den mundtlige prøve, hvad du skal kunne efter læringsmålene, studieplanens emner og kilder, hele formelsamlingen og huller i materialet.",
           dele: emne("forb", "eksamen") },
+        { id: "eksamen2026", navn: "Eksamen 2026", ikon: "kort",
+          intro: "Alle 30 prøvespørgsmål med de 161 underspørgsmål. Ét spørgsmål ad gangen: svar selv højt, og tryk så for at se svaret.",
+          dele: { kort: "noter/forb/eksamen2026.html" } },
       ] },
     { id: "drift", navn: "Driftsøkonomi", ikon: "oekonomi", quiz: "noter/drift/quiz.html",
       laeringsmaal: "https://www.teknikaqms.dk/showpage.php?pageid=485877",
@@ -376,7 +379,7 @@ const SEMESTRE = [
    Frigiv quizzen for et helt fag: skriv  frigivet: ["quiz"]  på faget.
    Se alt (også det skjulte):      åbn siden med  ?gennemse  bagerst i adressen. ?gennemse=nej slår det fra igen.
    ===================================================================== */
-const FRIGIVET = ["eksamen", "noter", "formler", "simulation", "modeller", "forstaaelse", "quiz"];
+const FRIGIVET = ["eksamen", "kort", "noter", "formler", "simulation", "modeller", "forstaaelse", "quiz"];
 const GENNEMSE = (() => {
   const q = new URLSearchParams(location.search).get("gennemse");
   try {
@@ -399,6 +402,7 @@ if (!GENNEMSE) for (const s of SEMESTRE) {
 if (GENNEMSE) addEventListener("DOMContentLoaded", () => { $("#gennemse").hidden = false; });
 const DELE = [
   ["eksamen", "Alt du skal bruge til eksamen"],
+  ["kort", "Prøvespørgsmål med svar"],
   ["noter", "Noter"], ["formler", "Formler"], ["labnoter", "Labnoter"], ["simulation", "Simulation"],
   ["modeller", "Modeller"], ["forstaaelse", "Forståelse"], ["quiz", "Quiz"],
 ];
@@ -444,6 +448,7 @@ const IKON = {
   investering: '<path d="M3.5 18 9.5 12l4 4 7-8"/><path d="M15 8h5.5v5.5"/>',
   finansiering: '<path d="M3 9.5 12 4l9 5.5Z"/><path d="M5.5 10v8M9.8 10v8M14.2 10v8M18.5 10v8M3 20.5h18"/>',
   esg: '<path d="M5 19.5c0-8.5 5.5-14.5 15-14.5 0 10-6 15.5-14 15"/><path d="M5 19.5c3-4.2 6.2-6.8 10-8.7"/>',
+  kort: '<rect x="3" y="7" width="14" height="13" rx="2"/><path d="M7 4h12a2 2 0 0 1 2 2v10"/><path d="M8.2 11.2a1.9 1.9 0 1 1 2.6 1.8c-.5.2-.8.6-.8 1.1v.4"/><path d="M10 17.2h.01"/>',
   eksamen: '<path d="M8 4.5H5.5v16.5h13V4.5H16"/><rect x="8" y="3" width="8" height="3.2" rx="1"/><path d="m9 13.5 2.2 2.2 4-4.2"/>',
   // Forbrændingsmotoranlæg
   stempel: '<rect x="6.5" y="2.5" width="11" height="7.5" rx="1.5"/><path d="M6.5 5.5h11M12 10v3.5"/><circle cx="12" cy="17" r="4"/><circle cx="12" cy="17" r="1"/>',
@@ -466,7 +471,7 @@ const IKON = {
   quiz: '<circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.6 2.6L16 9.6"/>',
 };
 const FARVE = { el: "el", energi: "energi", motoranlaeg: "motor", auto: "auto", oekonomi: "oekonomi", ledelse: "ledelse", studie: "studie",
-  vaerksted: "vaerksted", praktik: "praktik", koel: "koel", noter: "noter", formler: "formler", eksamen: "eksamen", labnoter: "labnoter", simulation: "simulation",
+  vaerksted: "vaerksted", praktik: "praktik", koel: "koel", noter: "noter", formler: "formler", eksamen: "eksamen", kort: "eksamen", labnoter: "labnoter", simulation: "simulation",
   modeller: "modeller", forstaaelse: "forstaaelse", quiz: "quiz" };
 const svg = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IKON[k] || IKON.studie}</svg>`;
 const farve = (ikon, fallback) => `var(--c-${FARVE[ikon] || fallback || "studie"})`;
