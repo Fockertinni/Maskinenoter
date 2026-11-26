@@ -80,7 +80,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .screen { padding-block: clamp(2.5rem, 7vw, 5rem) 5rem; }
 @media (prefers-reduced-motion: no-preference) { .screen { animation: in .35s ease both; } }
 @keyframes in { from { opacity: 0; translate: 0 8px; } }
-.screen h1 { margin: 0; font-weight: 700; font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1.05; letter-spacing: -.035em; text-wrap: balance; }
+.screen h1 { overflow-wrap: break-word; hyphens: auto; -webkit-hyphens: auto; margin: 0; font-weight: 700; font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1.05; letter-spacing: -.035em; text-wrap: balance; }
 .meta { margin: .6rem 0 0; color: var(--muted); font-size: 1rem; display: flex; gap: .9rem; flex-wrap: wrap; }
 .meta a { color: var(--accent); text-decoration: none; }
 .meta a:hover { text-decoration: underline; }
@@ -90,7 +90,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 a.tile:hover { transform: translateY(-3px); box-shadow: 0 2px 4px rgba(0,0,0,.05), 0 16px 36px rgba(0,0,0,.1); }
 .tile .app { width: 60px; height: 60px; border-radius: 16px; display: grid; place-items: center; background: var(--c, var(--c-studie)); color: #fff; box-shadow: inset 0 -2px 0 rgba(0,0,0,.12); }
 .tile .app svg { width: 30px; height: 30px; }
-.tile .name { font-size: .98rem; font-weight: 600; line-height: 1.25; letter-spacing: -.01em; text-wrap: balance; }
+.tile .name { max-width: 100%; overflow-wrap: break-word; hyphens: auto; -webkit-hyphens: auto; font-size: .98rem; font-weight: 600; line-height: 1.25; letter-spacing: -.01em; text-wrap: balance; }
 .tile.off { opacity: .38; box-shadow: none; background: transparent; border: 1px dashed var(--line); }
 .quiet { margin-top: 3rem; display: inline-flex; align-items: center; gap: .6rem; padding: .7rem 1.1rem; border-radius: 999px; color: var(--muted); text-decoration: none; font-size: .95rem; border: 1px solid var(--line); }
 a.quiet:hover { color: var(--fg); background: var(--hover); }
@@ -160,6 +160,13 @@ const pa1 = id => ({
   quiz:        `noter/pa1/${id}.html?vis=test`,
 });
 
+// Genvej til emner bygget af noter/kilde/byg.py: noter, formler og quiz i noter/<fag>/<id>.html
+const emne = (fag, id, formler = true) => ({
+  noter:   `noter/${fag}/${id}.html?vis=noter`,
+  formler: formler ? `noter/${fag}/${id}.html?vis=formler` : null,
+  quiz:    `noter/${fag}/${id}.html?vis=quiz`,
+});
+
 const SEMESTRE = [
   { n: 1, fag: [
     { id: "vaerksted", navn: "Værkstedsskole", ikon: "vaerksted", emner: [] } ] },
@@ -223,10 +230,86 @@ const SEMESTRE = [
           intro: "Nødstop og sikkerhedsrelæ, stopkategorier, testcases og testsuites, og de syv dele af en fuld dokumentation.",
           dele: pa1("sikkerhed") },
       ] },
-    { id: "forb", navn: "Forbrændingsmotoranlæg", ikon: "motoranlaeg", emner: [],
-      laeringsmaal: "https://www.teknikaqms.dk/showpage.php?pageid=485875" },
-    { id: "drift", navn: "Driftsøkonomi", ikon: "oekonomi", emner: [],
-      laeringsmaal: "https://www.teknikaqms.dk/showpage.php?pageid=485877" } ] },
+    { id: "forb", navn: "Forbrændingsmotoranlæg", ikon: "motoranlaeg", quiz: "noter/forb/quiz.html",
+      laeringsmaal: "https://www.teknikaqms.dk/showpage.php?pageid=485875",
+      emner: [
+        { id: "opbygning", navn: "Motoropbygning og stempelringe", ikon: "stempel",
+          intro: "Krydshovedmotoren bygget op nedefra, fra bundramme til topstykke, og stempelringenes opgaver med tætning, køling og slid.",
+          dele: emne("forb", "opbygning", false) },
+        { id: "forbraending", navn: "Forbrændingsprocessen og fejl", ikon: "flamme",
+          intro: "Hvordan en oliedråbe brænder, hvorfor tændingstidspunktet skal ligge lidt efter TDC, det forsatte diagram og hvordan du aflæser fejl i forbrændingen.",
+          dele: emne("forb", "forbraending") },
+        { id: "braendstof", navn: "Brændstofsystemer og common rail", ikon: "braendstof",
+          intro: "Det eksterne og interne brændstofsystem, viskositetsregulering, skift mellem DO og HFO, og hvorfor common rail giver bedre forbrænding.",
+          dele: emne("forb", "braendstof", false) },
+        { id: "pumper", navn: "Pumper og kompressorer", ikon: "pumpe",
+          intro: "Strømnings- og deplacementpumper, pumpekurve og rørkarakteristik, kavitation, ejektoren og stalling i centrifugalkompressoren.",
+          dele: emne("forb", "pumper") },
+        { id: "turbo", navn: "Turboladning og beregninger", ikon: "turbo",
+          intro: "Hvorfor turboladning giver mere effekt og lavere forbrug, luftens vej gennem anlægget, impuls- mod jævntryksladning, og et fuldt gennemregnet eksempel med effekter og virkningsgrader.",
+          dele: emne("forb", "turbo") },
+        { id: "smoering", navn: "Smøreolie og smøresystemer", ikon: "smoering",
+          intro: "Hovedsmøresystem, kamakselsystem og cylindersmøring, system- mod cylinderolie, hydrodynamisk smøring og forskellen på trunk- og krydshovedmotorer.",
+          dele: emne("forb", "smoering", false) },
+        { id: "centrifuger", navn: "Centrifuger og separation", ikon: "centrifuge",
+          intro: "Stokes' lov, hvorfor en centrifuge separerer ca. 6000 gange bedre end en settlingstank, purifier mod clarifier, gravity disc, tallerkenstakken og Alcap.",
+          dele: emne("forb", "centrifuger") },
+        { id: "koelevand", navn: "Kølevandssystemer", ikon: "koel",
+          intro: "Centralkølesystemet med søvand, LT- og HT-kreds, ekspansionstanken, vandbehandling og typiske fejl.",
+          dele: emne("forb", "koelevand") },
+        { id: "kedler", navn: "Skibskedler og WHR", ikon: "kedel",
+          intro: "Udstødskedel og hjælpekedel, kedeltyper, regulering af dampproduktionen, kedelsystemet med Waste Heat Recovery og damptabellen.",
+          dele: emne("forb", "kedler") },
+        { id: "hydraulik", navn: "Hydraulikventiler", ikon: "hydraulik",
+          intro: "Trykbegrænsning og trykreduktion, bremseventilen, og 2-vejs, 3-vejs og variabel pumpe til mængderegulering, med fokus på energitab.",
+          dele: emne("forb", "hydraulik") },
+        { id: "regulering", navn: "Regulering og omdrejningsregulator", ikon: "regulering",
+          intro: "P- og PI-regulatoren forklaret med vandtårnet og den hydrauliske omdrejningsregulator, varig afvigelse og hvorfor parallelkoblede generatorer skal have speeddroop.",
+          dele: emne("forb", "regulering", false) },
+        { id: "starteluft", navn: "Starteluft og motorstart", ikon: "starteluft",
+          intro: "Startmetoder, start med direkte trykluft, starteluftventilen, sikkerhed mod utilsigtet start, Kongsberg-systemet og manøvresystemet.",
+          dele: emne("forb", "starteluft", false) },
+        { id: "eksamen", navn: "Eksamen og formelsamling", ikon: "eksamen",
+          intro: "Sådan foregår den mundtlige prøve, hvad du skal kunne efter læringsmålene, studieplanens emner og kilder, hele formelsamlingen og huller i materialet.",
+          dele: emne("forb", "eksamen") },
+      ] },
+    { id: "drift", navn: "Driftsøkonomi", ikon: "oekonomi", quiz: "noter/drift/quiz.html",
+      laeringsmaal: "https://www.teknikaqms.dk/showpage.php?pageid=485877",
+      emner: [
+        { id: "regnskab", navn: "Virksomheden og årsregnskabet", ikon: "regnskab",
+          intro: "Virksomhedens mål, styringsniveauer, ejerformer og regnskabets tre dele. Grundlaget for resten af faget.",
+          dele: emne("drift", "regnskab") },
+        { id: "omkostninger", navn: "Indtægter og omkostninger", ikon: "omkostning",
+          intro: "Forskellen på indtægt, indbetaling, udgift, omkostning og udbetaling, omkostningstyper, afskrivning, offeromkostning og sunk cost.",
+          dele: emne("drift", "omkostninger") },
+        { id: "elasticitet", navn: "Afsætning og elasticitet", ikon: "elasticitet",
+          intro: "Hvor meget kan vi sælge, og hvordan reagerer kunderne, når prisen, indkomsten eller konkurrentens pris ændrer sig? Konkurrenceformer og prisdifferentiering.",
+          dele: emne("drift", "elasticitet") },
+        { id: "prisopt", navn: "Pris- og aktivitetsoptimering", ikon: "optimering",
+          intro: "Hvilken pris og afsætning giver det største dækningsbidrag? Differensmetoden, monopolpunktet, prisdifferentiering, eksport ved knap kapacitet og bidrags- mod fordelingskalkulation.",
+          dele: emne("drift", "prisopt") },
+        { id: "indhylning", navn: "Indhyllingskurver", ikon: "indhylning",
+          intro: "Hvilken kombination af anlæg, eller egen produktion mod indkøb, giver de laveste totale omkostninger ved en given mængde?",
+          dele: emne("drift", "indhylning") },
+        { id: "kapacitet", navn: "Kapacitetsstyring", ikon: "kapacitet",
+          intro: "De rigtige ressourcer i det rigtige omfang på det rigtige tidspunkt. Når kapaciteten er knap, skal den bruges på det, der giver mest DB pr. enhed af den knappe faktor.",
+          dele: emne("drift", "kapacitet") },
+        { id: "budget", navn: "Budgettering", ikon: "budget",
+          intro: "Resultat-, likviditets- og balancebudget. Budgetprocessen, regneregler og den indirekte metode til likviditetsbudgettet med et fuldt gennemregnet eksempel.",
+          dele: emne("drift", "budget") },
+        { id: "investering", navn: "Investering og TCO", ikon: "investering",
+          intro: "Kan en investering betale sig, og hvad sker der, hvis forudsætningerne ændrer sig? Kapitalværdi, intern rente, annuitet, payback, inflation, levetid og Total Cost of Ownership.",
+          dele: emne("drift", "investering") },
+        { id: "finansiering", navn: "Finansiering", ikon: "finansiering",
+          intro: "Hvordan skaffes pengene til en investering, og hvad koster det reelt? Egen- og fremmedfinansiering, låntyper, hovedstol og effektiv rente.",
+          dele: emne("drift", "finansiering") },
+        { id: "esg", navn: "Bæredygtighed, CSR og ESG", ikon: "esg",
+          intro: "Virksomheder måles ikke kun på profit. Bæredygtighed indgår i rapportering, finansiering og investeringer, og som maskinmester leverer du ofte data til fx energi og CO₂e.",
+          dele: emne("drift", "esg", false) },
+        { id: "eksamen", navn: "Eksamen, Excel og formelsamling", ikon: "eksamen",
+          intro: "Sådan foregår den skriftlige prøve, de Excel-funktioner du skal kunne, hele formelsamlingen og en oversigt over gamle eksamensopgaver sorteret efter emne.",
+          dele: emne("drift", "eksamen") },
+      ] } ] },
   { n: 6, fag: [
     { id: "elaut1", navn: "El-autorisation 1", ikon: "el", emner: [] },
     { id: "pa2", navn: "Procesanalyse og automation 2", ikon: "auto", emner: [] },
@@ -280,6 +363,30 @@ const IKON = {
   sekvens: '<rect x="8" y="2.5" width="8" height="6"/><rect x="8" y="15.5" width="8" height="6"/><path d="M12 8.5v7M8.5 12h7"/>',
   timer: '<circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.6 2.6M9.5 2.5h5"/>',
   sikkerhed: '<path d="M12 2.5 4.5 5.5v6c0 4.8 3.2 8.4 7.5 10 4.3-1.6 7.5-5.2 7.5-10v-6Z"/><path d="M12 8v5M12 16.2v.3"/>',
+  // Driftsøkonomi
+  regnskab: '<path d="M12 4v16M7.5 20.5h9M4 7.5h16"/><path d="M6.5 7.5 3.8 13.5h5.4ZM17.5 7.5l-2.7 6h5.4Z"/>',
+  omkostning: '<ellipse cx="12" cy="6" rx="7" ry="2.5"/><path d="M5 6v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V6M5 12v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-6"/>',
+  elasticitet: '<path d="M4 3.5V20h16.5"/><path d="M6.5 6c2 6 6 10 12 11.5"/>',
+  optimering: '<path d="M3.5 20.5h17"/><path d="M4 18c3-9 5-12 8-12s5 3 8 12"/><circle cx="12" cy="6" r="1.6" fill="currentColor"/>',
+  indhylning: '<path d="M3.5 20 20.5 6M3.5 13l17 3M3.5 8.5l17 10"/>',
+  kapacitet: '<path d="M3.5 16.5a8.5 8.5 0 0 1 17 0"/><path d="m12 16.5 4.5-5M3.5 20h17"/>',
+  budget: '<path d="M3.5 20.5h17M6 20.5V12h3v8.5M10.5 20.5V7h3v13.5M15 20.5V3.5h3v17"/>',
+  investering: '<path d="M3.5 18 9.5 12l4 4 7-8"/><path d="M15 8h5.5v5.5"/>',
+  finansiering: '<path d="M3 9.5 12 4l9 5.5Z"/><path d="M5.5 10v8M9.8 10v8M14.2 10v8M18.5 10v8M3 20.5h18"/>',
+  esg: '<path d="M5 19.5c0-8.5 5.5-14.5 15-14.5 0 10-6 15.5-14 15"/><path d="M5 19.5c3-4.2 6.2-6.8 10-8.7"/>',
+  eksamen: '<path d="M8 4.5H5.5v16.5h13V4.5H16"/><rect x="8" y="3" width="8" height="3.2" rx="1"/><path d="m9 13.5 2.2 2.2 4-4.2"/>',
+  // Forbrændingsmotoranlæg
+  stempel: '<rect x="6.5" y="2.5" width="11" height="7.5" rx="1.5"/><path d="M6.5 5.5h11M12 10v3.5"/><circle cx="12" cy="17" r="4"/><circle cx="12" cy="17" r="1"/>',
+  flamme: '<path d="M12 2.5c3.2 4.2 6.5 6.8 6.5 11a6.5 6.5 0 0 1-13 0c0-2.6 1.4-4.3 3.2-5.9.3 2.1 1.3 3.2 2.5 3.7C11 8.6 11.5 5.4 12 2.5Z"/>',
+  braendstof: '<path d="M12 2.5c3.6 4.6 6 7.7 6 11.2a6 6 0 0 1-12 0c0-3.5 2.4-6.6 6-11.2Z"/><path d="M9.5 14.5a2.6 2.6 0 0 0 2.5 2.5"/>',
+  pumpe: '<circle cx="11" cy="13" r="7"/><circle cx="11" cy="13" r="2"/><path d="M11 6h10v4.5"/>',
+  turbo: '<circle cx="12" cy="12" r="9"/><path d="M12 12c0-4 2-6.5 5.5-6.5M12 12c4 0 6.5 2 6.5 5.5M12 12c0 4-2 6.5-5.5 6.5M12 12c-4 0-6.5-2-6.5-5.5"/>',
+  smoering: '<path d="M3 11.5h11.5l4.5-3.5 2.5 1.2-5.5 7.3H5Z"/><path d="M7.5 11.5V8.5h4.5v3"/><path d="M20.5 14.5c.6.9.9 1.5.9 2a.9.9 0 0 1-1.8 0c0-.5.3-1.1.9-2Z"/>',
+  centrifuge: '<circle cx="12" cy="12" r="3"/><path d="M20 12a8 8 0 0 1-13.7 5.7M4 12a8 8 0 0 1 13.7-5.7"/><path d="M17.7 2.8v3.9h-3.9M6.3 21.2v-3.9h3.9"/>',
+  kedel: '<rect x="5" y="2.5" width="14" height="19" rx="3.5"/><path d="M12 9c1.9 2.1 2.7 3.4 2.7 4.8a2.7 2.7 0 0 1-5.4 0c0-1.4.8-2.7 2.7-4.8Z"/>',
+  hydraulik: '<rect x="2.5" y="8" width="12" height="8" rx="1"/><path d="M9.5 12h12M9.5 9.5v5M5 16v3h3"/>',
+  regulering: '<path d="M12 2.5v6.5M12 9l-5 5.5M12 9l5 5.5"/><circle cx="6" cy="16" r="2.2"/><circle cx="18" cy="16" r="2.2"/><path d="M7.5 21h9"/>',
+  starteluft: '<rect x="6" y="7" width="12" height="14.5" rx="5"/><path d="M12 7V3.5M8.5 3.5h7M12 14.5l2.3-2.3"/>',
   noter: '<path d="M7 2.5h7.5l4.5 4.5v14.5H7Z"/><path d="M14.5 2.5V7H19M10 12h6M10 16h6"/>',
   formler: '<path d="M17 4.5H7l6 7.5-6 7.5h10"/>',
   simulation: '<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>',

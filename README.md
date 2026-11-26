@@ -17,6 +17,13 @@ Mine noter og interaktive modeller fra maskinmesteruddannelsen. Siden er ren HTM
   - `index.html` er oversigten over alle otte øvelser.
 - `noter/pa1/` indeholder emnerne til Procesanalyse og automation 1. Hver fil (fx `plc.html`) har tre dele: Noter (med modellerne inde i teksten), Forståelse og Quiz. Med `?vis=noter`, `?vis=forstaa` eller `?vis=test` vises kun den del. Fælles stil og værktøjer ligger i `pa1.css` og `pa1.js`. Genvejen `pa1("plc")` i `index.html` giver alle tre dele.
 
+## Driftsøkonomi og Forbrændingsmotoranlæg
+
+- `noter/drift/` og `noter/forb/` er bygget af scriptet `noter/kilde/byg.py` ud fra markdown-filerne i `noter/kilde/drift/` og `noter/kilde/forb/`. Ret altid i markdown-filen og kør `python3 noter/kilde/byg.py` (kræver `pip install markdown`). De færdige HTML-filer ligger i repoet, så siden stadig ikke har noget build-trin.
+- Hver emnefil har tre dele: Noter, Formler og Quiz. Med `?vis=noter`, `?vis=formler` eller `?vis=quiz` vises den del. `noter/<fag>/quiz.html` er en samlet quiz for hele faget.
+- Øverst i hver markdown-fil står `id`, `navn`, `ikon` og `intro`. Under `# Quiz` står spørgsmålene i et lille format, der er forklaret øverst i `byg.py`.
+- Genvejen `emne("drift", "budget")` i `index.html` giver alle tre dele. Skriv `emne("forb", "smoering", false)`, hvis emnet ikke har formler.
+
 ## Tilføj et emne
 
 Find faget i `SEMESTRE`, og tilføj én post til dets `emner`:

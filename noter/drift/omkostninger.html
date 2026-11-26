@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Indtægter og omkostninger · Driftsøkonomi · Maskinenoter</title>
+<!-- Bygget af noter/kilde/byg.py. Ret i kildefilen i noter/kilde/, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #6b57c9; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #9a88f0; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #9a88f0; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.tabs { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--hover); flex-shrink: 0; }
+.tabs button { font: 600 .9rem/1 var(--sans); color: var(--muted); background: none; border: 0; padding: .5rem .8rem; border-radius: 8px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.8rem, 5vw, 3.2rem) max(16px, env(safe-area-inset-left, 0px)) 5rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .8rem 0 0; font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.del { margin-top: 2.2rem; }
+.del > :first-child { margin-top: 0; }
+.del h2 { margin: 2.6rem 0 .6rem; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; }
+.del h3 { margin: 1.8rem 0 .4rem; font-size: 1.12rem; letter-spacing: -.01em; }
+.del p, .del li { max-width: 68ch; }
+.del ul, .del ol { padding-left: 1.3rem; }
+.del li { margin: .25rem 0; }
+.del li::marker { color: var(--muted); }
+.del code { font: .92em var(--mono); background: var(--hover); padding: .08em .35em; border-radius: 5px; }
+.del strong { font-weight: 650; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: .94rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .8rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .92rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; }
+details { margin: .9rem 0; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: .1rem 1.1rem; }
+details > summary { cursor: pointer; font-weight: 600; padding: .75rem 0; color: var(--accent); list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "▸ "; }
+details[open] > summary::before { content: "▾ "; }
+details[open] { padding-bottom: .8rem; }
+.genkald { margin-top: 2.6rem; padding: 1.1rem 1.3rem; border: 2px solid var(--accent); border-radius: 16px; background: var(--surface); }
+.genkald h2, .genkald h3 { margin-top: 0 !important; font-size: .82rem !important; letter-spacing: .08em !important; text-transform: uppercase; color: var(--accent); }
+.genkald details { box-shadow: none; border: 1px solid var(--line); }
+
+/* quiz */
+.q { margin: 1rem 0; padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); }
+.q .nr { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q .tekst { margin: .3rem 0 .8rem; font-weight: 600; }
+.q .valg { display: grid; gap: 8px; }
+.q .valg button { text-align: left; font: inherit; font-size: .98rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: .65rem .9rem; cursor: pointer; }
+.q .valg button:hover:not(:disabled) { border-color: var(--accent); }
+.q .valg button:disabled { cursor: default; }
+.q .valg button.ok { background: var(--ok-bg); border-color: var(--ok); }
+.q .valg button.bad { background: var(--bad-bg); border-color: var(--bad); }
+.q .tal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q input { font: 1rem var(--mono); width: 11rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.q .enhed { color: var(--muted); }
+.knap { font: 600 .95rem var(--sans); padding: .6rem 1rem; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.svar { margin-top: .8rem; padding: .7rem .9rem; border-radius: 10px; font-size: .96rem; }
+.svar.ok { background: var(--ok-bg); } .svar.bad { background: var(--bad-bg); } .svar.hint { background: var(--key); }
+.svar b { display: block; margin-bottom: .15rem; }
+.score { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border-radius: 16px; background: var(--soft); border-left: 3px solid var(--accent); }
+.score h2 { margin: 0 0 .3rem !important; font-size: 1.2rem !important; }
+.score ul { margin: .4rem 0; }
+.emnetag { font-size: .76rem; font-weight: 600; color: var(--accent); margin-left: .4rem; text-transform: none; letter-spacing: 0; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .bar .in { gap: 8px; }
+  .tabs button { padding: .48rem .6rem; font-size: .85rem; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .8rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+}
+@media print { .bar { display: none; } .del[hidden] { display: block !important; } details { box-shadow: none; border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m5-drift">‹ Driftsøkonomi</a>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-del="noter">Noter</button>
+    <button role="tab" data-del="formler">Formler</button>
+    <button role="tab" data-del="quiz">Quiz</button>
+  </div>
+</div></header>
+<main>
+  <p class="kicker">Driftsøkonomi</p>
+  <h1>Indtægter og omkostninger</h1>
+  <p class="intro">Forskellen på indtægt, indbetaling, udgift, omkostning og udbetaling, omkostningstyper, afskrivning, offeromkostning og sunk cost.</p>
+  <section class="del" id="d-noter" role="tabpanel"><blockquote>
+<p><strong>Pensum</strong>
+Lærebog kap. 4 · Lektion 2–3 · Eksamensvægt: indgår i næsten alle opgaver</p>
+</blockquote>
+<p>Kapitel 4 giver begreberne til alle senere beregninger. Det vigtigste er at kunne skelne mellem <em>hvornår</em> noget er en indtægt eller omkostning, og <em>hvornår</em> pengene faktisk går ind eller ud.</p>
+<h2>Pengene ind</h2>
+<ul>
+<li><strong>Indtægt:</strong> værdien af det solgte i perioden (faktureringskriteriet eller produktionskriteriet).</li>
+<li><strong>Indbetaling:</strong> når pengene faktisk kommer ind.</li>
+</ul>
+<h2>Pengene ud</h2>
+<ul>
+<li><strong>Udgift:</strong> når varen eller ydelsen modtages.</li>
+<li><strong>Omkostning:</strong> når den forbruges.</li>
+<li><strong>Udbetaling:</strong> når der betales.</li>
+</ul>
+<blockquote>
+<p><strong>Eksempel (lærebogen s. 83)</strong>
+Varer købes i februar for 20.000 kr. med 60 dages kredit. Halvdelen sælges i marts og halvdelen i maj. Udgift: februar 20.000. Udbetaling: april 20.000. Omkostning: marts 10.000 og maj 10.000.</p>
+</blockquote>
+<h2>Omkostningstyper</h2>
+<ul>
+<li><strong>Variable omkostninger (VO):</strong> varierer direkte med produktionen, fx råvarer, akkordløn og energi i produktionen.</li>
+<li><strong>Kapacitetsomkostninger (KO):</strong> uafhængige af produktionens størrelse og kan ikke ændres på kort sigt.<ul>
+<li><em>Kontante KO:</em> betales stort set samtidig med forbruget (husleje, funktionærløn).</li>
+<li><em>Beregnede KO:</em> aktivets kostpris fordeles over årene (afskrivninger).</li>
+</ul>
+</li>
+<li><strong>Springvist varierende omkostninger:</strong> KO stiger i spring, når kapaciteten udvides (en ekstra maskine, en ekstra vagt).<ul>
+<li><em>Reversible:</em> kan fjernes igen ved lavere aktivitet (lejet lager, vikarer).</li>
+<li><em>Irreversible:</em> kan ikke fjernes igen (købt maskine, ombygning).</li>
+</ul>
+</li>
+</ul>
+<h2>Variable omkostningers forløb</h2>
+<table>
+<thead>
+<tr>
+<th>Forløb</th>
+<th>DOMK når mængden stiger</th>
+<th>Årsager</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Proportionalt</td>
+<td>Konstant (DOMK = VE)</td>
+<td>Standardantagelsen i opgaver</td>
+</tr>
+<tr>
+<td>Degressivt</td>
+<td>Falder</td>
+<td>Mængderabat, bedre udnyttelse, stordriftsfordele</td>
+</tr>
+<tr>
+<td>Progressivt</td>
+<td>Stiger</td>
+<td>Overarbejde, fejl, pladsmangel</td>
+</tr>
+</tbody>
+</table>
+<h2>Andre begreber</h2>
+<ul>
+<li><strong>Offeromkostning (alternativomkostning):</strong> den fortjeneste, man giver afkald på ved at vælge et alternativ fra.</li>
+<li><strong>Sunk cost:</strong> en irreversibel omkostning, der allerede er afholdt. Den skal <strong>aldrig</strong> indgå i en beslutning.</li>
+</ul>
+<blockquote>
+<p><strong>Faldgrube</strong>
+Til eksamen står sunk cost ofte som "udviklingsomkostninger på X kr." eller "reklamekampagnen er bestilt". Kun fremtidige betalinger, der afhænger af beslutningen, skal med.</p>
+</blockquote>
+<div class="genkald">
+<h3>Test dig selv</h3>
+<ol>
+<li>Giv to eksempler på springvist varierende omkostninger på et skib eller et værk. Er de reversible?</li>
+<li>Hvorfor er DOMK = VE ved proportionale omkostninger?</li>
+<li>En lækagereparation har kostet 80.000 kr. Nu foreslås en ny pumpe. Skal de 80.000 kr. med i beregningen?</li>
+</ol>
+<details>
+<summary>Svar</summary>
+<ol>
+<li>En ekstra vagtordning (reversibel, den kan afskaffes igen) og en ekstra kedel eller pumpe, der købes (irreversibel).</li>
+<li>Når hver ekstra enhed koster det samme, er ændringen i VO pr. ekstra enhed lig med VO pr. enhed.</li>
+<li>Nej. De 80.000 kr. er sunk cost. Kun fremtidige betalinger, der afhænger af beslutningen, skal med.</li>
+</ol>
+</details>
+</div></section>
+  <section class="del" id="d-formler" role="tabpanel"><pre class="formel">VE   = VO / afsætning          variabel enhedsomkostning
+KE   = KO / afsætning          kapacitetsomkostning pr. enhed
+SE   = VE + KE                 samlet enhedsomkostning
+DOMK = ΔVO / Δx                differensomkostning</pre>
+
+<pre class="formel">Lineær afskrivning = (Anskaffelse – Scrapværdi) / Levetid
+Saldoafskrivning   = Saldo primo · p
+                     p = 1 – (Scrap / Anskaffelse)^(1/n)</pre>
+
+<h2>Eksempel 1: afskrivning</h2>
+<p>En maskine købes for 500.000 kr., levetid 4 år, scrapværdi 120.000 kr. Regn den lineære afskrivning og saldoprocenten selv først.</p>
+<details>
+<summary>Vis udregning</summary>
+<ul>
+<li>Lineært: (500.000 − 120.000) / 4 = <strong>95.000 kr./år</strong>.</li>
+<li>Saldo: p = 1 − (120/500)^(1/4) = 1 − 0,24^0,25 ≈ <strong>30 %</strong>. År 1: 0,30 · 500.000 = 150.000. År 2: 0,30 · 350.000 = 105.000 osv. Efter 4 år er saldoen ca. 120.000.</li>
+</ul>
+</details>
+<h2>Eksempel 2: offeromkostning</h2>
+<p>En elektriker kan tjene 500.000 kr./år, men læser i stedet til maskinmester med 60.000 kr. i SU og 2.000 kr. til bøger. Kost og logi koster 100.000 kr.</p>
+<details>
+<summary>Vis udregning</summary>
+<ul>
+<li>Omkostning: kost og logi på 100.000 kr. skal betales uanset valget, så den er ikke relevant for valget.</li>
+<li>Offeromkostning ved at studere: 500.000 − 60.000 + 2.000 = <strong>442.000 kr./år</strong>.</li>
+</ul>
+</details>
+<h2>Eksempel 3: sunk cost</h2>
+<p>Udvikling af et kursus har kostet 100.000 kr. Afholdelsen koster 75.000 kr., videreudvikling 50.000 kr., og en kunde vil betale 200.000 kr. Skal kurset holdes?</p>
+<details>
+<summary>Vis udregning</summary>
+<ul>
+<li>Forkert: 100.000 + 75.000 + 50.000 = 225.000 &gt; 200.000, altså nej.</li>
+<li>Rigtigt: 75.000 + 50.000 = 125.000 &lt; 200.000, altså <strong>ja, fortsæt</strong>. De 100.000 kr. er sunk cost.</li>
+</ul>
+</details></section>
+  <section class="del" id="d-quiz" role="tabpanel">
+    <p>Svar på spørgsmålene, før du kigger i noterne. Ved talopgaver har du to forsøg, og komma og punktum virker begge.</p>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </section>
+</main>
+<script>
+const QUIZ = [{"valg": ["Februar", "Marts", "April", "Maj"], "rigtig": 2, "q": "Varer købes i februar med 60 dages kredit og sælges i marts. Hvornår er der en <strong>udbetaling<\/strong>?", "f": "Udgiften er i februar (varen modtages), omkostningen i marts (varen forbruges), og udbetalingen sker, når kreditten udløber 60 dage efter: april.", "emne": "Indtægter og omkostninger"}, {"valg": ["Husleje", "Funktionærløn", "Afskrivning på en maskine", "Råvarer"], "rigtig": 2, "q": "Hvilken af disse er en beregnet kapacitetsomkostning?", "f": "Beregnede KO er aktivets kostpris fordelt over levetiden. Husleje og funktionærløn er kontante KO, råvarer er variable.", "emne": "Indtægter og omkostninger"}, {"valg": ["Konstant", "Faldende", "Stigende", "Først stigende, så faldende"], "rigtig": 2, "q": "Hvordan forløber DOMK ved progressive variable omkostninger, når mængden stiger?", "f": "Progressive omkostninger skyldes fx overarbejde, fejl og pladsmangel. Hver ekstra enhed bliver dyrere.", "emne": "Indtægter og omkostninger"}, {"q": "En maskine koster 500.000 kr., har levetid 4 år og scrapværdi 120.000 kr. Hvad er den lineære afskrivning pr. år?", "tal": 95000.0, "tol": 1.0, "enhed": "kr.", "losning": "(500.000 − 120.000) / 4 = 95.000 kr.", "f": "Kun det beløb, der faktisk tabes over levetiden (anskaffelse minus scrap), fordeles.", "emne": "Indtægter og omkostninger"}, {"q": "Samme maskine (500.000 kr., scrap 120.000 kr., 4 år) afskrives med saldometoden. Hvad er saldoprocenten p i %? (Afrund til hele procent.)", "tal": 30.0, "tol": 0.6, "enhed": "%", "losning": "p = 1 − (120.000/500.000)^(1/4) = 1 − 0,24^0,25 = 1 − 0,700 = 0,30 → 30 %.", "f": "Med p = 30 % falder saldoen 500 → 350 → 245 → 171,5 → 120 (1.000 kr.).", "emne": "Indtægter og omkostninger"}, {"valg": ["Nej, for 225.000 &gt; 200.000", "Ja, for 125.000 &lt; 200.000. Udviklingen er sunk cost", "Ja, men kun hvis prisen hæves til 225.000", "Det kan ikke afgøres uden KO"], "rigtig": 1, "q": "Udvikling har kostet 100.000 kr. At gennemføre koster 125.000 kr., og kunden betaler 200.000 kr. Hvad er beslutningen?", "f": "De 100.000 kr. er brugt uanset hvad. Kun de fremtidige 125.000 kr. afhænger af beslutningen.", "emne": "Indtægter og omkostninger"}, {"valg": ["En omkostning, der allerede er afholdt", "Den fortjeneste, man giver afkald på ved at vælge et alternativ fra", "En variabel omkostning, der stiger i spring", "Omkostningen ved at ofre et aktiv (scrapværdi)"], "rigtig": 1, "q": "Hvad er en offeromkostning?", "f": "Den første mulighed er sunk cost. Offeromkostningen er værdien af det bedste fravalgte alternativ.", "emne": "Indtægter og omkostninger"}];
+const NOGLE = "mn-drift-omkostninger", SAMLET = "" === "1";
+const q = new URLSearchParams(location.search);
+
+// tilbage-link til den side man kom fra
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+
+// faner
+const tabs = [...document.querySelectorAll("#tabs button")];
+function vis(del) {
+  if (!document.getElementById("d-" + del)) del = "noter";
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.del === del));
+  document.querySelectorAll(".del").forEach(s => s.hidden = s.id !== "d-" + del);
+}
+tabs.forEach(b => b.addEventListener("click", () => {
+  vis(b.dataset.del);
+  const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
+  window.scrollTo(0, 0);
+}));
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else vis(q.get("vis") || "noter");
+// tomme dele skjules i fanerne
+["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+
+// tabeller kan scrolles på mobil
+document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+
+// quiz
+let gemt = {};
+try { gemt = JSON.parse(localStorage.getItem(NOGLE) || "{}"); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+// Danske og engelske skrivemåder virker begge: "85.200", "85200", "1.150,5", "0,86", "0.86".
+// Et enkelt punktum efterfulgt af tre cifre kan både være tusindtal og decimal, så begge tolkninger prøves.
+const tolk = s => { s = String(s).replace(/[\s\u00a0]/g, "").replace("−", "-");
+  if (!/^-?[\d.,]+$/.test(s)) return [];
+  if (s.includes(",")) return [parseFloat(s.replace(/\./g, "").replace(",", "."))];
+  if ((s.match(/\./g) || []).length > 1) return [parseFloat(s.replace(/\./g, ""))];
+  const ud = [parseFloat(s)];
+  if (/^-?\d+\.\d{3}$/.test(s)) ud.push(parseFloat(s.replace(".", "")));
+  return ud; };
+const fmt = x => x.toLocaleString("da-DK", { maximumFractionDigits: 4 });
+
+function bygQuiz() {
+  const rod = document.getElementById("quiz"); rod.innerHTML = "";
+  QUIZ.forEach((s, i) => {
+    const el = document.createElement("div"); el.className = "q";
+    el.innerHTML = `<div class="nr">Spørgsmål ${i + 1} af ${QUIZ.length}${SAMLET ? `<span class="emnetag">${s.emne}</span>` : ""}</div><div class="tekst">${s.q}</div>`;
+    const g = gemt[i];
+    if (s.valg) {
+      const v = document.createElement("div"); v.className = "valg";
+      s.valg.forEach((t, j) => {
+        const b = document.createElement("button"); b.innerHTML = t;
+        b.addEventListener("click", () => { gemt[i] = { valgt: j, ok: j === s.rigtig }; gem(); bygQuiz(); });
+        v.append(b);
+      });
+      el.append(v);
+      if (g) {
+        [...v.children].forEach((b, j) => { b.disabled = true; if (j === s.rigtig) b.classList.add("ok"); else if (j === g.valgt) b.classList.add("bad"); });
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Ikke helt."}</b>${s.f || ""}</div>`);
+      }
+    } else {
+      const f = document.createElement("div"); f.className = "tal";
+      f.innerHTML = `<input inputmode="decimal" aria-label="Dit svar" placeholder="Dit svar"> <span class="enhed">${s.enhed || ""}</span> <button class="knap">Tjek</button> <button class="knap stille">Vis facit</button>`;
+      const [inp, , tjek, opgiv] = f.children;
+      el.append(f);
+      const faerdig = g && (g.ok || g.forsog >= 2 || g.opgivet);
+      if (g && g.svar != null) inp.value = g.svar;
+      if (faerdig) {
+        inp.disabled = tjek.disabled = opgiv.disabled = true;
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Facit: " + fmt(s.tal) + " " + (s.enhed || "")}</b>${s.losning ? s.losning + "<br>" : ""}${s.f || ""}</div>`);
+      } else if (g && g.forsog === 1) {
+        el.insertAdjacentHTML("beforeend", `<div class="svar hint"><b>Ikke helt. Tjek din opstilling og prøv igen.</b>Du har ét forsøg tilbage.</div>`);
+      }
+      const svar = () => {
+        const xs = tolk(inp.value); if (!xs.length || xs.some(isNaN)) { inp.focus(); return; }
+        const ok = xs.some(x => Math.abs(x - s.tal) <= Math.max(s.tol, Math.abs(s.tal) * 1e-9));
+        const forsog = ((g && g.forsog) || 0) + 1;
+        gemt[i] = { svar: inp.value, ok, forsog }; gem(); bygQuiz();
+      };
+      tjek.addEventListener("click", svar);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") svar(); });
+      opgiv.addEventListener("click", () => { gemt[i] = { svar: inp.value, ok: false, forsog: 2, opgivet: true }; gem(); bygQuiz(); });
+    }
+    rod.append(el);
+  });
+  // score
+  const faerdige = QUIZ.map((s, i) => gemt[i] && (s.valg || gemt[i].ok || gemt[i].forsog >= 2));
+  const antal = faerdige.filter(Boolean).length, rigtige = QUIZ.filter((s, i) => gemt[i] && gemt[i].ok).length;
+  const forkerte = QUIZ.map((s, i) => faerdige[i] && !gemt[i].ok ? `<li>${s.q.replace(/<[^>]+>/g, "")}${SAMLET ? ` <em>(${s.emne})</em>` : ""}</li>` : "").join("");
+  document.getElementById("score").innerHTML = antal === 0 ? "" : `<div class="score">
+    <h2>${rigtige} af ${QUIZ.length} rigtige${antal < QUIZ.length ? ` · ${QUIZ.length - antal} mangler` : ""}</h2>
+    ${forkerte ? `<p>Tag med i repetitionen:</p><ul>${forkerte}</ul>` : antal === QUIZ.length ? "<p>Alle rigtige. Tag quizzen igen om et par uger.</p>" : ""}
+    <button class="knap stille" id="nulstil">Start forfra</button></div>`;
+  const n = document.getElementById("nulstil");
+  if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
+}
+if (QUIZ.length) bygQuiz(); else tabs.find(b => b.dataset.del === "quiz").hidden = true;
+</script>
+</body>
+</html>

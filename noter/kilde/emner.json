@@ -1,0 +1,198 @@
+{
+ "drift": [
+  {
+   "id": "regnskab",
+   "navn": "Virksomheden og årsregnskabet",
+   "ikon": "regnskab",
+   "intro": "Virksomhedens mål, styringsniveauer, ejerformer og regnskabets tre dele. Grundlaget for resten af faget.",
+   "quiz": 6,
+   "formler": true
+  },
+  {
+   "id": "omkostninger",
+   "navn": "Indtægter og omkostninger",
+   "ikon": "omkostning",
+   "intro": "Forskellen på indtægt, indbetaling, udgift, omkostning og udbetaling, omkostningstyper, afskrivning, offeromkostning og sunk cost.",
+   "quiz": 7,
+   "formler": true
+  },
+  {
+   "id": "elasticitet",
+   "navn": "Afsætning og elasticitet",
+   "ikon": "elasticitet",
+   "intro": "Hvor meget kan vi sælge, og hvordan reagerer kunderne, når prisen, indkomsten eller konkurrentens pris ændrer sig? Konkurrenceformer og prisdifferentiering.",
+   "quiz": 6,
+   "formler": true
+  },
+  {
+   "id": "prisopt",
+   "navn": "Pris- og aktivitetsoptimering",
+   "ikon": "optimering",
+   "intro": "Hvilken pris og afsætning giver det største dækningsbidrag? Differensmetoden, monopolpunktet, prisdifferentiering, eksport ved knap kapacitet og bidrags- mod fordelingskalkulation.",
+   "quiz": 7,
+   "formler": true
+  },
+  {
+   "id": "indhylning",
+   "navn": "Indhyllingskurver",
+   "ikon": "indhylning",
+   "intro": "Hvilken kombination af anlæg, eller egen produktion mod indkøb, giver de laveste totale omkostninger ved en given mængde?",
+   "quiz": 6,
+   "formler": true
+  },
+  {
+   "id": "kapacitet",
+   "navn": "Kapacitetsstyring",
+   "ikon": "kapacitet",
+   "intro": "De rigtige ressourcer i det rigtige omfang på det rigtige tidspunkt. Når kapaciteten er knap, skal den bruges på det, der giver mest DB pr. enhed af den knappe faktor.",
+   "quiz": 6,
+   "formler": true
+  },
+  {
+   "id": "budget",
+   "navn": "Budgettering",
+   "ikon": "budget",
+   "intro": "Resultat-, likviditets- og balancebudget. Budgetprocessen, regneregler og den indirekte metode til likviditetsbudgettet med et fuldt gennemregnet eksempel.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "investering",
+   "navn": "Investering og TCO",
+   "ikon": "investering",
+   "intro": "Kan en investering betale sig, og hvad sker der, hvis forudsætningerne ændrer sig? Kapitalværdi, intern rente, annuitet, payback, inflation, levetid og Total Cost of Ownership.",
+   "quiz": 9,
+   "formler": true
+  },
+  {
+   "id": "finansiering",
+   "navn": "Finansiering",
+   "ikon": "finansiering",
+   "intro": "Hvordan skaffes pengene til en investering, og hvad koster det reelt? Egen- og fremmedfinansiering, låntyper, hovedstol og effektiv rente.",
+   "quiz": 6,
+   "formler": true
+  },
+  {
+   "id": "esg",
+   "navn": "Bæredygtighed, CSR og ESG",
+   "ikon": "esg",
+   "intro": "Virksomheder måles ikke kun på profit. Bæredygtighed indgår i rapportering, finansiering og investeringer, og som maskinmester leverer du ofte data til fx energi og CO₂e.",
+   "quiz": 5,
+   "formler": false
+  },
+  {
+   "id": "eksamen",
+   "navn": "Eksamen, Excel og formelsamling",
+   "ikon": "eksamen",
+   "intro": "Sådan foregår den skriftlige prøve, de Excel-funktioner du skal kunne, hele formelsamlingen og en oversigt over gamle eksamensopgaver sorteret efter emne.",
+   "quiz": 5,
+   "formler": true
+  }
+ ],
+ "forb": [
+  {
+   "id": "opbygning",
+   "navn": "Motoropbygning og stempelringe",
+   "ikon": "stempel",
+   "intro": "Krydshovedmotoren bygget op nedefra, fra bundramme til topstykke, og stempelringenes opgaver med tætning, køling og slid.",
+   "quiz": 6,
+   "formler": false
+  },
+  {
+   "id": "forbraending",
+   "navn": "Forbrændingsprocessen og fejl",
+   "ikon": "flamme",
+   "intro": "Hvordan en oliedråbe brænder, hvorfor tændingstidspunktet skal ligge lidt efter TDC, det forsatte diagram og hvordan du aflæser fejl i forbrændingen.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "braendstof",
+   "navn": "Brændstofsystemer og common rail",
+   "ikon": "braendstof",
+   "intro": "Det eksterne og interne brændstofsystem, viskositetsregulering, skift mellem DO og HFO, og hvorfor common rail giver bedre forbrænding.",
+   "quiz": 7,
+   "formler": false
+  },
+  {
+   "id": "pumper",
+   "navn": "Pumper og kompressorer",
+   "ikon": "pumpe",
+   "intro": "Strømnings- og deplacementpumper, pumpekurve og rørkarakteristik, kavitation, ejektoren og stalling i centrifugalkompressoren.",
+   "quiz": 7,
+   "formler": true
+  },
+  {
+   "id": "turbo",
+   "navn": "Turboladning og beregninger",
+   "ikon": "turbo",
+   "intro": "Hvorfor turboladning giver mere effekt og lavere forbrug, luftens vej gennem anlægget, impuls- mod jævntryksladning, og et fuldt gennemregnet eksempel med effekter og virkningsgrader.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "smoering",
+   "navn": "Smøreolie og smøresystemer",
+   "ikon": "smoering",
+   "intro": "Hovedsmøresystem, kamakselsystem og cylindersmøring, system- mod cylinderolie, hydrodynamisk smøring og forskellen på trunk- og krydshovedmotorer.",
+   "quiz": 7,
+   "formler": false
+  },
+  {
+   "id": "centrifuger",
+   "navn": "Centrifuger og separation",
+   "ikon": "centrifuge",
+   "intro": "Stokes' lov, hvorfor en centrifuge separerer ca. 6000 gange bedre end en settlingstank, purifier mod clarifier, gravity disc, tallerkenstakken og Alcap.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "koelevand",
+   "navn": "Kølevandssystemer",
+   "ikon": "koel",
+   "intro": "Centralkølesystemet med søvand, LT- og HT-kreds, ekspansionstanken, vandbehandling og typiske fejl.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "kedler",
+   "navn": "Skibskedler og WHR",
+   "ikon": "kedel",
+   "intro": "Udstødskedel og hjælpekedel, kedeltyper, regulering af dampproduktionen, kedelsystemet med Waste Heat Recovery og damptabellen.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "hydraulik",
+   "navn": "Hydraulikventiler",
+   "ikon": "hydraulik",
+   "intro": "Trykbegrænsning og trykreduktion, bremseventilen, og 2-vejs, 3-vejs og variabel pumpe til mængderegulering, med fokus på energitab.",
+   "quiz": 7,
+   "formler": true
+  },
+  {
+   "id": "regulering",
+   "navn": "Regulering og omdrejningsregulator",
+   "ikon": "regulering",
+   "intro": "P- og PI-regulatoren forklaret med vandtårnet og den hydrauliske omdrejningsregulator, varig afvigelse og hvorfor parallelkoblede generatorer skal have speeddroop.",
+   "quiz": 6,
+   "formler": false
+  },
+  {
+   "id": "starteluft",
+   "navn": "Starteluft og motorstart",
+   "ikon": "starteluft",
+   "intro": "Startmetoder, start med direkte trykluft, starteluftventilen, sikkerhed mod utilsigtet start, Kongsberg-systemet og manøvresystemet.",
+   "quiz": 7,
+   "formler": false
+  },
+  {
+   "id": "eksamen",
+   "navn": "Eksamen og formelsamling",
+   "ikon": "eksamen",
+   "intro": "Sådan foregår den mundtlige prøve, hvad du skal kunne efter læringsmålene, studieplanens emner og kilder, hele formelsamlingen og huller i materialet.",
+   "quiz": 4,
+   "formler": true
+  }
+ ]
+}

@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Eksamen, Excel og formelsamling · Driftsøkonomi · Maskinenoter</title>
+<!-- Bygget af noter/kilde/byg.py. Ret i kildefilen i noter/kilde/, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #6b57c9; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #9a88f0; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #9a88f0; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.tabs { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--hover); flex-shrink: 0; }
+.tabs button { font: 600 .9rem/1 var(--sans); color: var(--muted); background: none; border: 0; padding: .5rem .8rem; border-radius: 8px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.8rem, 5vw, 3.2rem) max(16px, env(safe-area-inset-left, 0px)) 5rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .8rem 0 0; font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.del { margin-top: 2.2rem; }
+.del > :first-child { margin-top: 0; }
+.del h2 { margin: 2.6rem 0 .6rem; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; }
+.del h3 { margin: 1.8rem 0 .4rem; font-size: 1.12rem; letter-spacing: -.01em; }
+.del p, .del li { max-width: 68ch; }
+.del ul, .del ol { padding-left: 1.3rem; }
+.del li { margin: .25rem 0; }
+.del li::marker { color: var(--muted); }
+.del code { font: .92em var(--mono); background: var(--hover); padding: .08em .35em; border-radius: 5px; }
+.del strong { font-weight: 650; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: .94rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .8rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .92rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; }
+details { margin: .9rem 0; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: .1rem 1.1rem; }
+details > summary { cursor: pointer; font-weight: 600; padding: .75rem 0; color: var(--accent); list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "▸ "; }
+details[open] > summary::before { content: "▾ "; }
+details[open] { padding-bottom: .8rem; }
+.genkald { margin-top: 2.6rem; padding: 1.1rem 1.3rem; border: 2px solid var(--accent); border-radius: 16px; background: var(--surface); }
+.genkald h2, .genkald h3 { margin-top: 0 !important; font-size: .82rem !important; letter-spacing: .08em !important; text-transform: uppercase; color: var(--accent); }
+.genkald details { box-shadow: none; border: 1px solid var(--line); }
+
+/* quiz */
+.q { margin: 1rem 0; padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); }
+.q .nr { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q .tekst { margin: .3rem 0 .8rem; font-weight: 600; }
+.q .valg { display: grid; gap: 8px; }
+.q .valg button { text-align: left; font: inherit; font-size: .98rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: .65rem .9rem; cursor: pointer; }
+.q .valg button:hover:not(:disabled) { border-color: var(--accent); }
+.q .valg button:disabled { cursor: default; }
+.q .valg button.ok { background: var(--ok-bg); border-color: var(--ok); }
+.q .valg button.bad { background: var(--bad-bg); border-color: var(--bad); }
+.q .tal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q input { font: 1rem var(--mono); width: 11rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.q .enhed { color: var(--muted); }
+.knap { font: 600 .95rem var(--sans); padding: .6rem 1rem; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.svar { margin-top: .8rem; padding: .7rem .9rem; border-radius: 10px; font-size: .96rem; }
+.svar.ok { background: var(--ok-bg); } .svar.bad { background: var(--bad-bg); } .svar.hint { background: var(--key); }
+.svar b { display: block; margin-bottom: .15rem; }
+.score { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border-radius: 16px; background: var(--soft); border-left: 3px solid var(--accent); }
+.score h2 { margin: 0 0 .3rem !important; font-size: 1.2rem !important; }
+.score ul { margin: .4rem 0; }
+.emnetag { font-size: .76rem; font-weight: 600; color: var(--accent); margin-left: .4rem; text-transform: none; letter-spacing: 0; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .bar .in { gap: 8px; }
+  .tabs button { padding: .48rem .6rem; font-size: .85rem; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .8rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+}
+@media print { .bar { display: none; } .del[hidden] { display: block !important; } details { box-shadow: none; border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m5-drift">‹ Driftsøkonomi</a>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-del="noter">Noter</button>
+    <button role="tab" data-del="formler">Formler</button>
+    <button role="tab" data-del="quiz">Quiz</button>
+  </div>
+</div></header>
+<main>
+  <p class="kicker">Driftsøkonomi</p>
+  <h1>Eksamen, Excel og formelsamling</h1>
+  <p class="intro">Sådan foregår den skriftlige prøve, de Excel-funktioner du skal kunne, hele formelsamlingen og en oversigt over gamle eksamensopgaver sorteret efter emne.</p>
+  <section class="del" id="d-noter" role="tabpanel"><p>Formålet med faget er, at du kan træffe økonomiske beslutninger som maskinmester på ledelsesniveau: driftsoptimering, budgettering, investering og finansiering.</p>
+<h2>Eksamen</h2>
+<ul>
+<li>4 timers individuel skriftlig prøve. Hele besvarelsen laves i det <strong>Excel-ark, der følger med opgavesættet</strong>. Derudover afleveres en PDF, der henviser til Excel-arket.</li>
+<li>Du må medbringe lærebøger og egne noter, også regneark med løsninger på opgaver. Du må <strong>ikke</strong> kopiere færdige regneark ind i besvarelsen.</li>
+<li>Søgemaskiner og AI er ikke tilladt. Lokal filsøgning på computeren er tilladt. Skærmen overvåges (Device Monitor).</li>
+<li>Karakter efter 7-trinsskalaen ud fra en helhedsbedømmelse. Eksamensperiode: januar eller juni.</li>
+<li>Opgavesættet angiver forventet tidsforbrug i %. E2025 havde fire opgaver med fordelingen 15 / 35 / 15 / 35 %: monopol/outsourcing, budget, investering og TCO.</li>
+</ul>
+<h2>Læringsmål (fra modulbeskrivelsen)</h2>
+<ul>
+<li><strong>Viden:</strong> forklare ejerskabs- og afsætningsforhold med fagets terminologi. Forklare økonomistyring og hvordan teorien bruges i maskinmesterfaget. Placere økonomiske poster korrekt i resultat-, likviditets- og balancebudget.</li>
+<li><strong>Færdigheder:</strong> analysere budget, driftsoptimering, investering og finansiering. Optimere aktiviteter med DB-analyser, også ved kapacitetsbegrænsning. Beregne rentabilitet, også med ikke-monetære kriterier. Beregne konsekvenser af egen- og fremmedfinansiering. Organisere, beregne og formidle i Excel.</li>
+<li><strong>Kompetencer:</strong> reflektere over eget læringsbehov.</li>
+</ul>
+<h2>Litteratur</h2>
+<ul>
+<li>Lærebog og opgavebog: <em>Erhvervsøkonomi – Videregående uddannelser</em>, 6. udg., 2025 (Sørensen, Sundvang &amp; Bang).</li>
+<li>Bukh, Flyger &amp; Melander: <em>Økonomisk virksomhedsbeskrivelse</em>, kap. 5 (eksternt regnskab).</li>
+<li>Hansen m.fl.: <em>Økonomisk styring &amp; virksomhedsanalyse</em>, kap. 4 (inflation).</li>
+<li>Hedegaard: <em>Strategisk investering og finansiering</em>, kap. 7 (ESG og forretningsmæssig bæredygtighed).</li>
+<li>FORCE Technology: artikel om Total Cost of Ownership.</li>
+</ul>
+<h2>Excel-funktioner</h2>
+<table>
+<thead>
+<tr>
+<th>Formål</th>
+<th>Dansk Excel</th>
+<th>Engelsk Excel</th>
+<th>Bemærk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nutidsværdi</td>
+<td><code>=NUTIDSVÆRDI(r; B1:Bn)</code></td>
+<td><code>NPV</code></td>
+<td><strong>Uden</strong> år 0. Læg I₀ til bagefter: <code>=NUTIDSVÆRDI(…)+B0</code></td>
+</tr>
+<tr>
+<td>Intern rente</td>
+<td><code>=IA(B0:Bn)</code></td>
+<td><code>IRR</code></td>
+<td><strong>Med</strong> år 0</td>
+</tr>
+<tr>
+<td>Annuitetsydelse og kapitaltjeneste</td>
+<td><code>=YDELSE(r; n; -nv; fv)</code></td>
+<td><code>PMT</code></td>
+<td>fv = scrapværdi (med fortegn)</td>
+</tr>
+<tr>
+<td>Effektiv rente (annuitet)</td>
+<td><code>=RENTE(n; -ydelse; provenu)</code></td>
+<td><code>RATE</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Nutidsværdi af fast beløb</td>
+<td><code>=NV(r; n; -ydelse)</code></td>
+<td><code>PV</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Kritisk værdi</td>
+<td>Data → What-if → <strong>Målsøgning</strong></td>
+<td>Goal Seek</td>
+<td>Sæt KV = 0 ved at ændre en inputcelle</td>
+</tr>
+<tr>
+<td>Optimum (avanceret)</td>
+<td>Data → <strong>Problemløser</strong></td>
+<td>Solver</td>
+<td>Maks. DB med kapacitetsbetingelse</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Gode vaner til eksamen</strong>
+Lav ét inputområde med forudsætningerne og referér til cellerne. Skriv aldrig tal direkte i formlerne, så kan følsomhedsanalyser laves på sekunder. Angiv enhed (kr., 1.000 kr., stk.) i hver tabel. Skriv en kort konklusion med ord under hver beregning ("Investeringen er lønsom, da KV &gt; 0"). Tegn indhyllingskurver som punktdiagram med lige linjer. Husk sunk costs: udviklings- og reklameomkostninger, der allerede er afholdt, skal <strong>ikke</strong> med.</p>
+</blockquote>
+<h2>Gamle eksamensopgaver efter emne</h2>
+<table>
+<thead>
+<tr>
+<th>Emne</th>
+<th>Opgaver (sæt – opg. – navn)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Elasticitet</strong> (kap. 3)</td>
+<td>E2018-1 Maskinfabrikken · E2017-1 ALFA–BRAVO · APPLE–ORANGE · AMARTY–GERDONS</td>
+</tr>
+<tr>
+<td><strong>Prisoptimering, matematisk</strong> (kap. 6)</td>
+<td>F2019-4 NEVADA/VOLA · F2018-2 TRANS/CARRY · F2017-2 BRUMLE · E2017-2 CHARLIE · E2016-1 ARGO · <strong>E2025-1 SEALMAX</strong></td>
+</tr>
+<tr>
+<td><strong>Indhyllingskurver</strong></td>
+<td>F2019-3 SMART · E2019-2 GOVAN · F2018-4 Android · E2018-3 MULTITASK · F2017-1 Aksel · E2017-4 Ekko · E2016-2 ARGO</td>
+</tr>
+<tr>
+<td><strong>Kapacitetsstyring</strong> (kap. 7)</td>
+<td>F2019-2 Furniture · E2019-5 KOMPLET · F2018-3 Egnima · E2018-2 COPENHAGEN CW · F2017-3 TANGO/DANSEN · E2017-3 DELTA · E2016-3 GAMMA</td>
+</tr>
+<tr>
+<td><strong>Budget</strong> (kap. 8)</td>
+<td>F2019-1 Samhandel · E2019-1 PRODUKTER · F2018-5 Motor · E2018-4 PACO · F2017-4 Krumtappen · E2017-5 FOXTROT · E2016-5 DONE · <strong>E2025-2 MARITEC</strong></td>
+</tr>
+<tr>
+<td><strong>Investering og TCO</strong> (kap. 9)</td>
+<td>F2019-5 SAILOR/GENTO · E2019-3 ENERGA (varmeveksler) · F2018-1 Helse · E2018-5 TACE/TERMA · E2017-6 GOLF · E2016-4 DAMGÅRD · <strong>E2025-3 kedel · E2025-4 TCO bil</strong></td>
+</tr>
+<tr>
+<td><strong>Finansiering</strong> (kap. 10)</td>
+<td>F2019-6 SAILOR · E2019-4 SERVICE</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rækkefølge (interleaving):</strong> Lav én opgave fra hver række på skift i stedet for alle budgetopgaver i træk. Start med E2025 som prøveeksamen på 4 timer, og tag tid.</p>
+<p><strong>Teorispørgsmål, der går igen</strong></p>
+<ul>
+<li>Forskellen på fuldkommen og ufuldkommen konkurrence.</li>
+<li>Er virksomheden i den passive eller den aktive budgetfase?</li>
+<li>Fordele og ulemper ved ejerformen (A/S, ApS).</li>
+<li>Hvorfor laver man en følsomhedsberegning?</li>
+<li>Hvilke ikke-økonomiske forhold kan påvirke en investering?</li>
+<li>Hvad bør indgå i fastsættelsen af kalkulationsrenten?</li>
+<li>Er det lønsomt at prisdifferentiere, og hvorfor?</li>
+<li>Formålet med budgetkontrol.</li>
+</ul></section>
+  <section class="del" id="d-formler" role="tabpanel"><p>Hele formelsamlingen for faget på én side. Forklaringerne står under hvert emne.</p>
+<h3>Resultat</h3>
+<pre class="formel">DB  = Omsætning – VO            DG = DB / Omsætning · 100
+MFB = DB – salgsfremmende omk.
+IB  = MFB – kontante KO
+Resultat før renter = IB – afskrivninger</pre>
+
+<h3>Omkostninger</h3>
+<pre class="formel">VE = VO / x      KE = KO / x      DOMK = ΔVO / Δx
+Lineær afskrivning = (K – S) / n
+Saldoafskrivning   = saldo primo · p,   p = 1 – (S/K)^(1/n)</pre>
+
+<h3>Elasticitet</h3>
+<pre class="formel">e_p = (ΔX/X) / (ΔP/P)    e_i = (ΔX/X) / (ΔI/I)    e_k = (ΔX_B/X_B) / (ΔP_A/P_A)</pre>
+
+<h3>Optimering (p = a – b·x, proportionale VO)</h3>
+<pre class="formel">DOMS = a – 2b·x        DOMS = DOMK = VE
+x* = (a – VE) / (2b)   p* = (a + VE) / 2
+Eksport ved knap kapacitet: DOMS_hjemme = p_eksport – transport</pre>
+
+<h3>Indhyllingskurve</h3>
+<pre class="formel">TO = KO + VE·x         skæring: x = ΔKO / ΔVE</pre>
+
+<h3>Kapacitet</h3>
+<pre class="formel">DIFB = ΔDB             DIFB pr. time = DIFB / Δtimer</pre>
+
+<h3>Budget</h3>
+<pre class="formel">Debitor-oms.hast.  = 360 / kredittid     Debitorer ult.  = Omsætning / oms.hast.
+Kreditor-oms.hast. = 360 / skyldtid      Kreditorer ult. = Varekøb / oms.hast.
+Lager ult. = Vareforbrug / oms.hast.     Varekøb = Vareforbrug + L_ult – L_pri
+Kassekredit ult. = Maks – Likviditetsreserve + Likvid beholdning ult.
+EK ult. = EK pri + Resultat – Privatforbrug/Udbytte
+Afkastningsgrad = RFR / Aktiver          Overskudsgrad = RFR / Omsætning
+AOH = Omsætning / Aktiver                EK-forrentning = Resultat / EK</pre>
+
+<h3>Investering</h3>
+<pre class="formel">KV = –I₀ + Σ B_t·(1+r)^–t + S·(1+r)^–n
+Kapitaltjeneste = I₀ · r/(1–(1+r)^–n) – S · r/((1+r)^n – 1)
+i_r = (i_n – q) / (1 + q)</pre>
+
+<h3>Finansiering</h3>
+<pre class="formel">Hovedstol = (Provenu + Omk.) / (Kurs/100)
+Annuitetsydelse = H · r / (1 – (1+r)^–n)</pre></section>
+  <section class="del" id="d-quiz" role="tabpanel">
+    <p>Svar på spørgsmålene, før du kigger i noterne. Ved talopgaver har du to forsøg, og komma og punktum virker begge.</p>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </section>
+</main>
+<script>
+const QUIZ = [{"valg": ["<code>NUTIDSVÆRDI<\/code>, uden år 0", "<code>IA<\/code>, med år 0", "<code>IA<\/code>, uden år 0", "<code>YDELSE<\/code>, med år 0"], "rigtig": 1, "q": "Hvilken Excel-funktion bruger du til intern rente, og skal år 0 med i området?", "f": "<code>IA<\/code> skal have hele betalingsrækken inkl. investeringen i år 0. Det er <code>NUTIDSVÆRDI<\/code>, der skal have området <em>uden<\/em> år 0.", "emne": "Eksamen, Excel og formelsamling"}, {"valg": ["<code>=NUTIDSVÆRDI(10%; B0:B5)<\/code>", "<code>=IA(B0:B5)<\/code>", "<code>=NUTIDSVÆRDI(10%; B1:B5)+B0<\/code>", "<code>=NV(10%; 5; B1)<\/code>"], "rigtig": 2, "q": "Du har en betalingsrække i B0:B5 (B0 = −500.000). Hvilken formel giver kapitalværdien ved 10 %?", "f": "<code>NUTIDSVÆRDI<\/code> diskonterer første celle ét år. Tager du B0 med, bliver investeringen også diskonteret, og KV bliver forkert. Den typiske fejl.", "emne": "Eksamen, Excel og formelsamling"}, {"valg": ["Prøv dig frem med forskellige tal", "Data → What-if-analyse → Målsøgning", "<code>=IA()<\/code> på besparelsen", "Problemløser med maks. DB"], "rigtig": 1, "q": "Hvordan finder du hurtigst den kritiske værdi for fx årlig besparelse, så KV = 0?", "f": "Målsøgning sætter KV-cellen til 0 ved at ændre den inputcelle, du vælger. Det virker kun, hvis formlerne refererer til inputcellerne.", "emne": "Eksamen, Excel og formelsamling"}, {"valg": ["Bruge egne regneark med løsninger som opslag", "Søge lokalt efter filer på din computer", "Kopiere et færdigt regneark ind i besvarelsen", "Tage et billede af en håndtegnet kurve med mobilen til PDF'en"], "rigtig": 2, "q": "Hvad må du <strong>ikke<\/strong> til eksamen?", "f": "Egne løsninger må bruges som opslag, men de må ikke kopieres ind. AI og søgemaskiner er heller ikke tilladt.", "emne": "Eksamen, Excel og formelsamling"}, {"valg": ["Fordi censor kræver det", "Så følsomhedsanalyser og målsøgning kan laves ved at ændre én celle", "Fordi Excel ellers regner forkert", "Så arket fylder mindre"], "rigtig": 1, "q": "Hvorfor skal alle forudsætninger stå i ét inputområde i Excel?", "f": "Står tallene direkte i formlerne, skal du rette mange steder for hver følsomhedsberegning, og målsøgning virker ikke.", "emne": "Eksamen, Excel og formelsamling"}];
+const NOGLE = "mn-drift-eksamen", SAMLET = "" === "1";
+const q = new URLSearchParams(location.search);
+
+// tilbage-link til den side man kom fra
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+
+// faner
+const tabs = [...document.querySelectorAll("#tabs button")];
+function vis(del) {
+  if (!document.getElementById("d-" + del)) del = "noter";
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.del === del));
+  document.querySelectorAll(".del").forEach(s => s.hidden = s.id !== "d-" + del);
+}
+tabs.forEach(b => b.addEventListener("click", () => {
+  vis(b.dataset.del);
+  const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
+  window.scrollTo(0, 0);
+}));
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else vis(q.get("vis") || "noter");
+// tomme dele skjules i fanerne
+["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+
+// tabeller kan scrolles på mobil
+document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+
+// quiz
+let gemt = {};
+try { gemt = JSON.parse(localStorage.getItem(NOGLE) || "{}"); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+// Danske og engelske skrivemåder virker begge: "85.200", "85200", "1.150,5", "0,86", "0.86".
+// Et enkelt punktum efterfulgt af tre cifre kan både være tusindtal og decimal, så begge tolkninger prøves.
+const tolk = s => { s = String(s).replace(/[\s\u00a0]/g, "").replace("−", "-");
+  if (!/^-?[\d.,]+$/.test(s)) return [];
+  if (s.includes(",")) return [parseFloat(s.replace(/\./g, "").replace(",", "."))];
+  if ((s.match(/\./g) || []).length > 1) return [parseFloat(s.replace(/\./g, ""))];
+  const ud = [parseFloat(s)];
+  if (/^-?\d+\.\d{3}$/.test(s)) ud.push(parseFloat(s.replace(".", "")));
+  return ud; };
+const fmt = x => x.toLocaleString("da-DK", { maximumFractionDigits: 4 });
+
+function bygQuiz() {
+  const rod = document.getElementById("quiz"); rod.innerHTML = "";
+  QUIZ.forEach((s, i) => {
+    const el = document.createElement("div"); el.className = "q";
+    el.innerHTML = `<div class="nr">Spørgsmål ${i + 1} af ${QUIZ.length}${SAMLET ? `<span class="emnetag">${s.emne}</span>` : ""}</div><div class="tekst">${s.q}</div>`;
+    const g = gemt[i];
+    if (s.valg) {
+      const v = document.createElement("div"); v.className = "valg";
+      s.valg.forEach((t, j) => {
+        const b = document.createElement("button"); b.innerHTML = t;
+        b.addEventListener("click", () => { gemt[i] = { valgt: j, ok: j === s.rigtig }; gem(); bygQuiz(); });
+        v.append(b);
+      });
+      el.append(v);
+      if (g) {
+        [...v.children].forEach((b, j) => { b.disabled = true; if (j === s.rigtig) b.classList.add("ok"); else if (j === g.valgt) b.classList.add("bad"); });
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Ikke helt."}</b>${s.f || ""}</div>`);
+      }
+    } else {
+      const f = document.createElement("div"); f.className = "tal";
+      f.innerHTML = `<input inputmode="decimal" aria-label="Dit svar" placeholder="Dit svar"> <span class="enhed">${s.enhed || ""}</span> <button class="knap">Tjek</button> <button class="knap stille">Vis facit</button>`;
+      const [inp, , tjek, opgiv] = f.children;
+      el.append(f);
+      const faerdig = g && (g.ok || g.forsog >= 2 || g.opgivet);
+      if (g && g.svar != null) inp.value = g.svar;
+      if (faerdig) {
+        inp.disabled = tjek.disabled = opgiv.disabled = true;
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Facit: " + fmt(s.tal) + " " + (s.enhed || "")}</b>${s.losning ? s.losning + "<br>" : ""}${s.f || ""}</div>`);
+      } else if (g && g.forsog === 1) {
+        el.insertAdjacentHTML("beforeend", `<div class="svar hint"><b>Ikke helt. Tjek din opstilling og prøv igen.</b>Du har ét forsøg tilbage.</div>`);
+      }
+      const svar = () => {
+        const xs = tolk(inp.value); if (!xs.length || xs.some(isNaN)) { inp.focus(); return; }
+        const ok = xs.some(x => Math.abs(x - s.tal) <= Math.max(s.tol, Math.abs(s.tal) * 1e-9));
+        const forsog = ((g && g.forsog) || 0) + 1;
+        gemt[i] = { svar: inp.value, ok, forsog }; gem(); bygQuiz();
+      };
+      tjek.addEventListener("click", svar);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") svar(); });
+      opgiv.addEventListener("click", () => { gemt[i] = { svar: inp.value, ok: false, forsog: 2, opgivet: true }; gem(); bygQuiz(); });
+    }
+    rod.append(el);
+  });
+  // score
+  const faerdige = QUIZ.map((s, i) => gemt[i] && (s.valg || gemt[i].ok || gemt[i].forsog >= 2));
+  const antal = faerdige.filter(Boolean).length, rigtige = QUIZ.filter((s, i) => gemt[i] && gemt[i].ok).length;
+  const forkerte = QUIZ.map((s, i) => faerdige[i] && !gemt[i].ok ? `<li>${s.q.replace(/<[^>]+>/g, "")}${SAMLET ? ` <em>(${s.emne})</em>` : ""}</li>` : "").join("");
+  document.getElementById("score").innerHTML = antal === 0 ? "" : `<div class="score">
+    <h2>${rigtige} af ${QUIZ.length} rigtige${antal < QUIZ.length ? ` · ${QUIZ.length - antal} mangler` : ""}</h2>
+    ${forkerte ? `<p>Tag med i repetitionen:</p><ul>${forkerte}</ul>` : antal === QUIZ.length ? "<p>Alle rigtige. Tag quizzen igen om et par uger.</p>" : ""}
+    <button class="knap stille" id="nulstil">Start forfra</button></div>`;
+  const n = document.getElementById("nulstil");
+  if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
+}
+if (QUIZ.length) bygQuiz(); else tabs.find(b => b.dataset.del === "quiz").hidden = true;
+</script>
+</body>
+</html>

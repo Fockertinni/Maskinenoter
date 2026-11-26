@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Quiz for hele Driftsøkonomi · Driftsøkonomi · Maskinenoter</title>
+<!-- Bygget af noter/kilde/byg.py. Ret i kildefilen i noter/kilde/, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #6b57c9; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #9a88f0; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #9a88f0; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.tabs { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--hover); flex-shrink: 0; }
+.tabs button { font: 600 .9rem/1 var(--sans); color: var(--muted); background: none; border: 0; padding: .5rem .8rem; border-radius: 8px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.8rem, 5vw, 3.2rem) max(16px, env(safe-area-inset-left, 0px)) 5rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .8rem 0 0; font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.del { margin-top: 2.2rem; }
+.del > :first-child { margin-top: 0; }
+.del h2 { margin: 2.6rem 0 .6rem; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; }
+.del h3 { margin: 1.8rem 0 .4rem; font-size: 1.12rem; letter-spacing: -.01em; }
+.del p, .del li { max-width: 68ch; }
+.del ul, .del ol { padding-left: 1.3rem; }
+.del li { margin: .25rem 0; }
+.del li::marker { color: var(--muted); }
+.del code { font: .92em var(--mono); background: var(--hover); padding: .08em .35em; border-radius: 5px; }
+.del strong { font-weight: 650; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: .94rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .8rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .92rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; }
+details { margin: .9rem 0; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: .1rem 1.1rem; }
+details > summary { cursor: pointer; font-weight: 600; padding: .75rem 0; color: var(--accent); list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "▸ "; }
+details[open] > summary::before { content: "▾ "; }
+details[open] { padding-bottom: .8rem; }
+.genkald { margin-top: 2.6rem; padding: 1.1rem 1.3rem; border: 2px solid var(--accent); border-radius: 16px; background: var(--surface); }
+.genkald h2, .genkald h3 { margin-top: 0 !important; font-size: .82rem !important; letter-spacing: .08em !important; text-transform: uppercase; color: var(--accent); }
+.genkald details { box-shadow: none; border: 1px solid var(--line); }
+
+/* quiz */
+.q { margin: 1rem 0; padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); }
+.q .nr { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q .tekst { margin: .3rem 0 .8rem; font-weight: 600; }
+.q .valg { display: grid; gap: 8px; }
+.q .valg button { text-align: left; font: inherit; font-size: .98rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: .65rem .9rem; cursor: pointer; }
+.q .valg button:hover:not(:disabled) { border-color: var(--accent); }
+.q .valg button:disabled { cursor: default; }
+.q .valg button.ok { background: var(--ok-bg); border-color: var(--ok); }
+.q .valg button.bad { background: var(--bad-bg); border-color: var(--bad); }
+.q .tal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q input { font: 1rem var(--mono); width: 11rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.q .enhed { color: var(--muted); }
+.knap { font: 600 .95rem var(--sans); padding: .6rem 1rem; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.svar { margin-top: .8rem; padding: .7rem .9rem; border-radius: 10px; font-size: .96rem; }
+.svar.ok { background: var(--ok-bg); } .svar.bad { background: var(--bad-bg); } .svar.hint { background: var(--key); }
+.svar b { display: block; margin-bottom: .15rem; }
+.score { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border-radius: 16px; background: var(--soft); border-left: 3px solid var(--accent); }
+.score h2 { margin: 0 0 .3rem !important; font-size: 1.2rem !important; }
+.score ul { margin: .4rem 0; }
+.emnetag { font-size: .76rem; font-weight: 600; color: var(--accent); margin-left: .4rem; text-transform: none; letter-spacing: 0; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .bar .in { gap: 8px; }
+  .tabs button { padding: .48rem .6rem; font-size: .85rem; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .8rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+}
+@media print { .bar { display: none; } .del[hidden] { display: block !important; } details { box-shadow: none; border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m5-drift">‹ Driftsøkonomi</a>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-del="noter">Noter</button>
+    <button role="tab" data-del="formler">Formler</button>
+    <button role="tab" data-del="quiz">Quiz</button>
+  </div>
+</div></header>
+<main>
+  <p class="kicker">Driftsøkonomi</p>
+  <h1>Quiz for hele Driftsøkonomi</h1>
+  <p class="intro">71 spørgsmål fra alle emner i blandet rækkefølge.</p>
+  <section class="del" id="d-noter" role="tabpanel"></section>
+  <section class="del" id="d-formler" role="tabpanel"></section>
+  <section class="del" id="d-quiz" role="tabpanel">
+    <p>Svar på spørgsmålene, før du kigger i noterne. Ved talopgaver har du to forsøg, og komma og punktum virker begge.</p>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </section>
+</main>
+<script>
+const QUIZ = [{"valg": ["Retten til at drive virksomhed", "At kunderne kræver dokumentation", "At ESG-dokumentation giver adgang til kapital og bedre lånevilkår", "At virksomheden må optage lån uden sikkerhed"], "rigtig": 2, "q": "Hvad dækker \"license to finance\"?", "f": "License to sell er kunderne, license to operate er lovgivningen, license to finance er banker og investorer.", "emne": "Bæredygtighed, CSR og ESG"}, {"q": "Eksport til England giver 150 kr./stk. VE er 80 kr. og transport 25 kr. Hvad er DIFB pr. stk.?", "tal": 45.0, "tol": 0.1, "enhed": "kr.", "losning": "150 − 80 − 25 = 45 kr. pr. stk.", "f": "Transporten er en variabel omkostning, der kun gælder eksportsalget.", "emne": "Kapacitetsstyring"}, {"valg": ["Budgettet med sidste års budget", "Regnskabet med budgettet, med afvigelser i kr. og %", "Resultatbudgettet med likviditetsbudgettet", "Balancen med resultatopgørelsen"], "rigtig": 1, "q": "Hvad skal sammenlignes ved budgetkontrol?", "f": "Afvigelserne og deres årsager bruges til at forbedre de næste planer.", "emne": "Budgettering"}, {"valg": ["Bruge egne regneark med løsninger som opslag", "Søge lokalt efter filer på din computer", "Kopiere et færdigt regneark ind i besvarelsen", "Tage et billede af en håndtegnet kurve med mobilen til PDF'en"], "rigtig": 2, "q": "Hvad må du <strong>ikke<\/strong> til eksamen?", "f": "Egne løsninger må bruges som opslag, men de må ikke kopieres ind. AI og søgemaskiner er heller ikke tilladt.", "emne": "Eksamen, Excel og formelsamling"}, {"valg": ["mængdetilpasser. Prisen er givet af markedet", "pristilpasser. Den sætter selv prisen", "monopolist", "både pris- og mængdetilpasser"], "rigtig": 0, "q": "En virksomhed på et marked med fuldkommen konkurrence er …", "f": "Ved fuldkommen konkurrence er afsætningskurven vandret. Virksomheden kan kun vælge, hvor meget den vil sælge til markedsprisen.", "emne": "Afsætning og elasticitet"}, {"valg": ["Serielån", "Annuitetslån", "Stående lån", "Kassekredit"], "rigtig": 1, "q": "Hvilken låntype har konstant ydelse?", "f": "Annuitetslånets ydelse er fast. Afdraget stiger, mens renten falder.", "emne": "Finansiering"}, {"q": "Du skal have 5.000.000 kr. udbetalt, stiftelsesomkostningerne er 25.000 kr., og kursen er 97. Hvad bliver hovedstolen? (hele kr.)", "tal": 5180412.0, "tol": 2.0, "enhed": "kr.", "losning": "H = (5.000.000 + 25.000) / 0,97 = 5.180.412 kr.", "f": "Kurstabet og omkostningerne gør, at du skylder mere, end du får.", "emne": "Finansiering"}, {"valg": ["Serielån", "Annuitetslån", "Stående lån", "De er ens"], "rigtig": 2, "q": "Hvilken låntype er typisk bedst for likviditeten i lånets løbetid?", "f": "Der betales kun renter undervejs, men hele hovedstolen skal betales ved udløb, og lånet er ofte dyrest.", "emne": "Finansiering"}, {"q": "Et serielån på 700.000 kr. over 7 år med 5 % rente. Hvad er ydelsen i år 1?", "tal": 135000.0, "tol": 1.0, "enhed": "kr.", "losning": "Afdrag 700.000/7 = 100.000. Rente 5 % af 700.000 = 35.000. Ydelse 135.000 kr.", "f": "I år 2 er renten kun 5 % af 600.000, så ydelsen falder til 130.000.", "emne": "Finansiering"}, {"valg": ["De er substitutter", "De er komplementære", "Blæk er en luksusvare", "Efterspørgslen er uelastisk"], "rigtig": 1, "q": "Krydspriselasticiteten mellem printer og blæk er negativ. Hvad betyder det?", "f": "Stiger printerprisen, sælges færre printere og dermed mindre blæk. Negativt fortegn betyder komplementære varer.", "emne": "Afsætning og elasticitet"}, {"valg": ["En omkostning, der allerede er afholdt", "Den fortjeneste, man giver afkald på ved at vælge et alternativ fra", "En variabel omkostning, der stiger i spring", "Omkostningen ved at ofre et aktiv (scrapværdi)"], "rigtig": 1, "q": "Hvad er en offeromkostning?", "f": "Den første mulighed er sunk cost. Offeromkostningen er værdien af det bedste fravalgte alternativ.", "emne": "Indtægter og omkostninger"}, {"valg": ["Den rente, der står i låneaftalen", "Den reelle årlige omkostning, når kurstab og gebyrer er medregnet", "Renten efter skat", "Renten fratrukket inflation"], "rigtig": 1, "q": "Hvad er den effektive rente?", "f": "Den findes som den interne rente af lånets betalingsrække: +provenu i år 0 og −ydelser derefter.", "emne": "Finansiering"}, {"q": "Anlæg X: KO = 1 mio. kr., VE = 755. Anlæg Y: KO = 2 mio. kr., VE = 455. Ved hvor mange stk. er de lige dyre? (Afrund til hele stk.)", "tal": 3333.0, "tol": 1.0, "enhed": "stk.", "losning": "x = (2.000.000 − 1.000.000) / (755 − 455) = 1.000.000/300 = 3.333 stk.", "f": "Over skæringspunktet vinder anlægget med lav VE, under vinder det med lav KO.", "emne": "Indhyllingskurver"}, {"valg": ["Alle trin, der ikke kom med", "De trin, der ikke kom med, og som har positiv DIFB", "Kun det første trin, der ikke kom med", "Trin med negativ DIFB"], "rigtig": 1, "q": "Hvilke trin tæller med i det tabte DB pga. knaphed?", "f": "Et trin med negativ DIFB ville man ikke tage med, selv med ubegrænset kapacitet, så det er ikke \"tabt\".", "emne": "Kapacitetsstyring"}, {"q": "Overtidstillægget er 400 kr./t. Et trin har DIFB pr. time = 480. Det bruger 400 timer. Hvad er merindtjeningen ved at køre overarbejde?", "tal": 32000.0, "tol": 1.0, "enhed": "kr.", "losning": "(480 − 400) · 400 = 32.000 kr.", "f": "Kun forskellen mellem DIFB pr. time og tillægget er gevinst.", "emne": "Kapacitetsstyring"}, {"valg": ["Fordi de er fradragsberettigede", "Fordi de ikke er en betaling. Pengene gik ud, da aktivet blev købt", "Fordi de står under finansieringen", "Det gør de, som plus"], "rigtig": 1, "q": "Hvorfor indgår afskrivninger ikke i likviditetsbudgettet?", "f": "Derfor starter den indirekte metode fra IB, som er før afskrivninger.", "emne": "Budgettering"}, {"valg": ["Den stiger", "Den falder", "Den er uændret", "Det kan ikke afgøres"], "rigtig": 1, "q": "Priselasticiteten er −0,4. Prisen sættes ned. Hvad sker der med omsætningen?", "f": "|e| &lt; 1 er uelastisk. Afsætningen stiger procentvis mindre, end prisen falder, så omsætningen falder.", "emne": "Afsætning og elasticitet"}, {"q": "p(x) = 1.850 − x/120 og VE = 430. Hvad er den optimale afsætning uden kapacitetsgrænse?", "tal": 85200.0, "tol": 1.0, "enhed": "stk.", "losning": "DOMS = 1.850 − 2x/120 = 430 → x = 1.420 · 60 = 85.200 stk.", "f": "Husk at DOMS har dobbelt hældning: b = 1/120, så 2b = 1/60.", "emne": "Pris- og aktivitetsoptimering"}, {"valg": ["Green", "Governance", "Growth", "Global"], "rigtig": 1, "q": "Hvad står G for i ESG?", "f": "Governance er ledelse: bestyrelse, etik, antikorruption, risikostyring og compliance.", "emne": "Bæredygtighed, CSR og ESG"}, {"valg": ["Husleje", "Funktionærløn", "Afskrivning på en maskine", "Råvarer"], "rigtig": 2, "q": "Hvilken af disse er en beregnet kapacitetsomkostning?", "f": "Beregnede KO er aktivets kostpris fordelt over levetiden. Husleje og funktionærløn er kontante KO, råvarer er variable.", "emne": "Indtægter og omkostninger"}, {"valg": ["Den kan ikke", "Gennem store kunder, banker og investorer, der kræver data fra underleverandører", "Gennem højere selskabsskat", "Kun hvis den er børsnoteret"], "rigtig": 1, "q": "Hvordan kan en mindre virksomhed blive påvirket af CSRD, selvom den ikke selv er omfattet?", "f": "De store virksomheder skal rapportere for hele værdikæden og efterspørger derfor data fra deres leverandører.", "emne": "Bæredygtighed, CSR og ESG"}, {"valg": ["<code>NUTIDSVÆRDI<\/code>, uden år 0", "<code>IA<\/code>, med år 0", "<code>IA<\/code>, uden år 0", "<code>YDELSE<\/code>, med år 0"], "rigtig": 1, "q": "Hvilken Excel-funktion bruger du til intern rente, og skal år 0 med i området?", "f": "<code>IA<\/code> skal have hele betalingsrækken inkl. investeringen i år 0. Det er <code>NUTIDSVÆRDI<\/code>, der skal have området <em>uden<\/em> år 0.", "emne": "Eksamen, Excel og formelsamling"}, {"valg": ["Likvider −100 og maskiner −100", "Maskiner −100 og egenkapital −100 (via resultatet)", "Kun resultatopgørelsen, ikke balancen", "Maskiner −100 og kreditorer +100"], "rigtig": 1, "q": "Hvad påvirker en afskrivning på 100 kr.?", "f": "Afskrivningen er en omkostning uden betaling. Aktivets værdi falder, og resultatet (og dermed egenkapitalen) falder lige så meget.", "emne": "Virksomheden og årsregnskabet"}, {"valg": ["A", "B", "C", "Kun D"], "rigtig": 2, "q": "Fra hvilken regnskabsklasse kræves der en pengestrømsopgørelse?", "f": "Pengestrømsopgørelse og udvidet ledelsesberetning kræves i klasse C og D.", "emne": "Virksomheden og årsregnskabet"}, {"q": "Indkomsten stiger 4 %, og indkomstelasticiteten er 1,5. Hvor mange procent stiger afsætningen?", "tal": 6.0, "tol": 0.05, "enhed": "%", "losning": "1,5 · 4 % = 6 %.", "f": "e_i &gt; 1 betyder, at afsætningen vokser hurtigere end indkomsten (en luksusvare).", "emne": "Afsætning og elasticitet"}, {"q": "En maskine koster 500.000 kr., har levetid 4 år og scrapværdi 120.000 kr. Hvad er den lineære afskrivning pr. år?", "tal": 95000.0, "tol": 1.0, "enhed": "kr.", "losning": "(500.000 − 120.000) / 4 = 95.000 kr.", "f": "Kun det beløb, der faktisk tabes over levetiden (anskaffelse minus scrap), fordeles.", "emne": "Indtægter og omkostninger"}, {"q": "Et annuitetslån har hovedstol 1.000.000 kr., rente 5 % og løbetid 10 år. Hvad er den årlige ydelse? (hele kr.)", "tal": 129505.0, "tol": 2.0, "enhed": "kr.", "losning": "Ydelse = 1.000.000 · 0,05 / (1 − 1,05⁻¹⁰) = 1.000.000 · 0,129505 = 129.505 kr.", "f": "I Excel: <code>=YDELSE(5%; 10; -1000000)<\/code>.", "emne": "Finansiering"}, {"valg": ["Fra (0, 0) med hældning = VE, fordi den gamle anskaffelse er sunk cost", "Med KO = den oprindelige anskaffelsespris", "Med KO = den bogførte værdi", "Det skal ikke indtegnes"], "rigtig": 0, "q": "Et gammelt anlæg er fuldt betalt. Hvordan indtegnes det?", "f": "Kun omkostninger, der afhænger af valget, skal med.", "emne": "Indhyllingskurver"}, {"valg": ["Prøv dig frem med forskellige tal", "Data → What-if-analyse → Målsøgning", "<code>=IA()<\/code> på besparelsen", "Problemløser med maks. DB"], "rigtig": 1, "q": "Hvordan finder du hurtigst den kritiske værdi for fx årlig besparelse, så KV = 0?", "f": "Målsøgning sætter KV-cellen til 0 ved at ændre den inputcelle, du vælger. Det virker kun, hvis formlerne refererer til inputcellerne.", "emne": "Eksamen, Excel og formelsamling"}, {"valg": ["At anskaffelsesprisen er ca. 80 % af de samlede omkostninger", "At anskaffelsen kun er ca. 20 %, og følgeomkostningerne ca. 80 %", "At energi er den mindste post", "At scrapværdien opvejer anskaffelsen"], "rigtig": 1, "q": "Hvad viser TCO-isbjerget?", "f": "For en elmotor er købsprisen kun ca. 1 % af levetidsomkostningerne. Energien dominerer.", "emne": "Investering og TCO"}, {"valg": ["Lønsomheden over hele levetiden", "Risiko og likviditet", "Den interne rente", "Den økonomiske levetid"], "rigtig": 1, "q": "Hvad siger payback-metoden primært noget om?", "f": "Payback ignorerer alt efter tilbagebetalingen og siger derfor ikke noget om den samlede lønsomhed.", "emne": "Investering og TCO"}, {"valg": ["DIFB pr. stk.", "DIFB pr. maskintime", "Laveste pris", "Største omsætning"], "rigtig": 0, "q": "Antallet af stk. er den knappe faktor (fx en samlet produktionsgrænse). Hvad prioriterer du efter?", "f": "Prioritér altid efter DB pr. enhed af det, der er knapt.", "emne": "Kapacitetsstyring"}, {"q": "Omsætningen er 7.258 (1.000 kr.), og kunderne får 45 dages kredit. Hvad er debitorerne ultimo? (1.000 kr., hele tal)", "tal": 907.0, "tol": 1.0, "enhed": "1.000 kr.", "losning": "Oms.hast. = 360/45 = 8. Debitorer = 7.258/8 = 907.", "f": "Jo længere kredit, desto lavere omsætningshastighed og desto flere penge bundet hos kunderne.", "emne": "Budgettering"}, {"valg": ["Likvider −300 og lager +300", "Lager +300 og kreditorer +300", "Lager +300 og egenkapital +300", "Debitorer +300 og kreditorer +300"], "rigtig": 1, "q": "En virksomhed køber materialer for 300 kr. på kredit. Hvilke poster ændres?", "f": "Der er ikke betalt endnu, så likviderne er uændrede. Virksomheden skylder leverandøren pengene, og det er kreditorer på passivsiden.", "emne": "Virksomheden og årsregnskabet"}, {"valg": ["Hvor prisen er højest", "Hvor afsætningen er størst", "Hvor DOMS = DOMK (monopolpunktet)", "Hvor DB pr. stk. er størst"], "rigtig": 2, "q": "Hvor ligger optimum ved ufuldkommen konkurrence og proportionale omkostninger?", "f": "Så længe DOMS &gt; DOMK, giver en ekstra enhed mere i omsætning, end den koster. Optimum er, hvor de to er lige store.", "emne": "Pris- og aktivitetsoptimering"}, {"valg": ["Skifter helt over til det næstbilligste anlæg", "Fylder det billigste op og lægger det næste anlæg i forlængelse", "Fordeler mængden ligeligt", "Køber endnu et af det dyreste anlæg"], "rigtig": 1, "q": "Kapaciteten på det billigste anlæg (laveste VE) er brugt op. Hvad gør man?", "f": "Kurven fortsætter fra det punkt, hvor første anlæg er fuldt, med det næste anlægs KO og VE.", "emne": "Indhyllingskurver"}, {"valg": ["Den passive budgetfase", "Den aktive budgetfase", "Budgetkontrol", "Den strategiske fase"], "rigtig": 0, "q": "Virksomheden justerer sidste års tal for kendte prisstigninger, men vurderer ingen nye tiltag. Hvilken budgetfase er det?", "f": "Ingen nye handlingsalternativer = passiv fase. Den aktive fase vurderer nye alternativer med alternativkalkuler.", "emne": "Budgettering"}, {"q": "Omsætningen var 6.400 (1.000 kr.). Priserne stiger 8 %, og mængden stiger 5 %. Hvad er den budgetterede omsætning? (1.000 kr., afrund til hele tal)", "tal": 7258.0, "tol": 1.0, "enhed": "1.000 kr.", "losning": "6.400 · 1,08 · 1,05 = 7.257,6 ≈ 7.258.", "f": "Pris og mængde ganges på hver for sig. At lægge procenterne sammen (13 %) giver en lille fejl.", "emne": "Budgettering"}, {"q": "Ved 9.000 stk. (A: KO 0/VE 10/kap. 4.000, B: 10.000/6/5.000, C: 20.000/3/5.000), hvad er de laveste totale omkostninger?", "tal": 67000.0, "tol": 1.0, "enhed": "kr.", "losning": "2 × C: 2 · 20.000 + 3 · 9.000 = 67.000 kr. (C + B = 69.000, C + A = 75.000.)", "f": "Det kan betale sig at købe en ekstra C, fordi den lave VE hurtigt tjener den ekstra KO hjem.", "emne": "Indhyllingskurver"}, {"q": "Et trin giver DIFB = 60.000 kr. og bruger 150 ekstra maskintimer. Hvad er DIFB pr. time?", "tal": 400.0, "tol": 0.5, "enhed": "kr./t", "losning": "60.000 / 150 = 400 kr. pr. time.", "f": "Det er tallet, der sammenlignes på tværs af produkter og trin.", "emne": "Kapacitetsstyring"}, {"valg": ["Kurven for det anlæg med lavest VE", "Den nederste kant af alle totalomkostningskurver, dvs. den billigste løsning ved hver mængde", "Summen af alle anlægs totalomkostninger", "Kurven for det anlæg med lavest KO"], "rigtig": 1, "q": "Hvad er indhyllingskurven?", "f": "For hver mængde aflæser man den laveste totalomkostning, uanset hvilket anlæg eller hvilken kombination der giver den.", "emne": "Indhyllingskurver"}, {"q": "Konkurrenten sænker prisen fra 9.000 til 8.500 kr., og e_kryds = 1,8. Hvor mange procent falder din afsætning? (Afrund til hele procent.)", "tal": 10.0, "tol": 0.5, "enhed": "%", "losning": "ΔP/P = −500/9.000 = −5,56 %. Afsætning: 1,8 · 5,56 % = 10,0 %.", "f": "Positivt e_kryds: varerne er substitutter, så konkurrentens prisfald trækker kunder fra dig.", "emne": "Afsætning og elasticitet"}, {"valg": ["DB pr. stk.", "DIFB pr. maskintime", "Omsætning pr. produkt", "Laveste VE"], "rigtig": 1, "q": "Maskintimerne er knappe. Hvad prioriterer du efter?", "f": "Det er timerne, der begrænser, så hver time skal bruges der, hvor den giver mest DB.", "emne": "Kapacitetsstyring"}, {"valg": ["Fordi censor kræver det", "Så følsomhedsanalyser og målsøgning kan laves ved at ændre én celle", "Fordi Excel ellers regner forkert", "Så arket fylder mindre"], "rigtig": 1, "q": "Hvorfor skal alle forudsætninger stå i ét inputområde i Excel?", "f": "Står tallene direkte i formlerne, skal du rette mange steder for hver følsomhedsberegning, og målsøgning virker ikke.", "emne": "Eksamen, Excel og formelsamling"}, {"q": "Samme maskine (500.000 kr., scrap 120.000 kr., 4 år) afskrives med saldometoden. Hvad er saldoprocenten p i %? (Afrund til hele procent.)", "tal": 30.0, "tol": 0.6, "enhed": "%", "losning": "p = 1 − (120.000/500.000)^(1/4) = 1 − 0,24^0,25 = 1 − 0,700 = 0,30 → 30 %.", "f": "Med p = 30 % falder saldoen 500 → 350 → 245 → 171,5 → 120 (1.000 kr.).", "emne": "Indtægter og omkostninger"}, {"q": "Kassekredit maks. 2.000, likviditetsreserve ultimo 397 og likvid beholdning ultimo 40. Hvad er kassekreditten (trækket) ultimo?", "tal": 1643.0, "tol": 1.0, "enhed": "1.000 kr.", "losning": "2.000 − 397 + 40 = 1.643.", "f": "Reserven er det, der er tilbage på kreditten plus kontanterne. Beholder vi 40 i kassen, skal de også trækkes på kreditten.", "emne": "Budgettering"}, {"valg": ["Med det samme, når det giver underskud", "Kun hvis man derved kan spare reversible KO på mindst 400.000 kr.", "Når DB pr. stk. er lavere end for de andre produkter", "Aldrig"], "rigtig": 1, "q": "Fordelingskalkulationen viser underskud på et produkt med DB = 400.000 kr. Hvornår bør det nedlægges?", "f": "KO forsvinder sjældent med produktet. Nedlægges det alligevel, mister man 400.000 kr. i DB, og de andre produkter skal bære de samme KO (dødsspiralen).", "emne": "Pris- og aktivitetsoptimering"}, {"valg": ["Kun C's DB", "C's DB plus DB fra de 4 D'er, der følger med", "C's DB minus D's DB", "Kun det samlede DB for D"], "rigtig": 1, "q": "Produkt C sælges sammen med 4 stk. af produkt D. Hvad skal med, når C's pris optimeres?", "f": "Komplementære varer: ser man på C alene, vælger man en forkert (for høj) pris.", "emne": "Pris- og aktivitetsoptimering"}, {"q": "Nominel rente 4 %, inflation 2 %. Hvad er den reale rente i %? (2 decimaler)", "tal": 1.96, "tol": 0.01, "enhed": "%", "losning": "i_r = (0,04 − 0,02)/1,02 = 0,0196 = 1,96 %.", "f": "Tommelfingerreglen 4 − 2 = 2 % er tæt på, men den præcise formel dividerer med (1 + q).", "emne": "Investering og TCO"}, {"valg": ["Den reale", "Den nominelle", "Den interne rente", "Lånerenten"], "rigtig": 0, "q": "Hvilken kalkulationsrente bruger du, når alle beløb står i dagens priser?", "f": "Faste priser → real rente. Løbende priser → nominel rente. Gøres det rigtigt, bliver KV ens.", "emne": "Investering og TCO"}, {"valg": ["Nej, for 225.000 &gt; 200.000", "Ja, for 125.000 &lt; 200.000. Udviklingen er sunk cost", "Ja, men kun hvis prisen hæves til 225.000", "Det kan ikke afgøres uden KO"], "rigtig": 1, "q": "Udvikling har kostet 100.000 kr. At gennemføre koster 125.000 kr., og kunden betaler 200.000 kr. Hvad er beslutningen?", "f": "De 100.000 kr. er brugt uanset hvad. Kun de fremtidige 125.000 kr. afhænger af beslutningen.", "emne": "Indtægter og omkostninger"}, {"valg": ["Strategisk", "Taktisk", "Operativt", "Normativt"], "rigtig": 1, "q": "Hvilket niveau i økonomistyringen handler om \"at gøre tingene rigtigt\" på 0–2 års sigt, fx budgettering?", "f": "Strategisk er \"de rigtige ting\" på 2–10 år. Taktisk planlægger og iværksætter strategien, og budgettet er det typiske taktiske værktøj.", "emne": "Virksomheden og årsregnskabet"}, {"valg": ["<code>=NUTIDSVÆRDI(10%; B0:B5)<\/code>", "<code>=IA(B0:B5)<\/code>", "<code>=NUTIDSVÆRDI(10%; B1:B5)+B0<\/code>", "<code>=NV(10%; 5; B1)<\/code>"], "rigtig": 2, "q": "Du har en betalingsrække i B0:B5 (B0 = −500.000). Hvilken formel giver kapitalværdien ved 10 %?", "f": "<code>NUTIDSVÆRDI<\/code> diskonterer første celle ét år. Tager du B0 med, bliver investeringen også diskonteret, og KV bliver forkert. Den typiske fejl.", "emne": "Eksamen, Excel og formelsamling"}, {"q": "A: KO 0, VE 10. B: KO 10.000, VE 6. Hvad er de totale omkostninger med B ved 3.000 stk.?", "tal": 28000.0, "tol": 1.0, "enhed": "kr.", "losning": "TO = 10.000 + 6 · 3.000 = 28.000 kr.", "f": "Til sammenligning koster A 30.000 kr. ved 3.000 stk.", "emne": "Indhyllingskurver"}, {"valg": ["+70, fordi vi skylder leverandørerne mere og har beholdt pengene", "−70, fordi gælden stiger", "Ingen påvirkning, det er kun en balancepost", "+70 under finansieringen"], "rigtig": 0, "q": "Varekreditorerne stiger fra 1.380 til 1.450. Hvordan påvirker det likviditeten?", "f": "Mere gæld til andre = plus. Det er driftsgæld, så det står under driften.", "emne": "Budgettering"}, {"q": "p(x) = 755 − x/10 og VE = 250. Hvad er monopolprisen p*?", "tal": 502.5, "tol": 0.5, "enhed": "kr.", "losning": "p* = (a + VE)/2 = (755 + 250)/2 = 502,5 kr. (x* = 2.525 stk.)", "f": "Genvejen p* = (a + VE)/2 gælder for lineær afsætning og proportionale omkostninger.", "emne": "Pris- og aktivitetsoptimering"}, {"q": "En varmeveksler sparer 7.500 Nm³ gas om året til 5,50 kr./Nm³. Hvad er den årlige besparelse?", "tal": 41250.0, "tol": 1.0, "enhed": "kr.", "losning": "7.500 · 5,50 = 41.250 kr./år.", "f": "Den årlige besparelse er nettoindbetalingen i betalingsrækken.", "emne": "Investering og TCO"}, {"valg": ["Konstant", "Faldende", "Stigende", "Først stigende, så faldende"], "rigtig": 2, "q": "Hvordan forløber DOMK ved progressive variable omkostninger, når mængden stiger?", "f": "Progressive omkostninger skyldes fx overarbejde, fejl og pladsmangel. Hver ekstra enhed bliver dyrere.", "emne": "Indtægter og omkostninger"}, {"valg": ["People, Planet, Profit", "Resultat, likviditet, balance", "Environmental, Social, Governance", "Strategisk, taktisk, operativt"], "rigtig": 0, "q": "Hvad er den tredobbelte bundlinje?", "f": "Den tredobbelte bundlinje måler social, miljømæssig og økonomisk værdi.", "emne": "Bæredygtighed, CSR og ESG"}, {"valg": ["ApS", "I/S", "A/S", "Enkeltmandsvirksomhed"], "rigtig": 2, "q": "Hvilken ejerform har begrænset hæftelse og et kapitalkrav på 400.000 kr.?", "f": "ApS har også begrænset hæftelse, men kun 20.000 kr. i kapitalkrav. I/S og enkeltmandsvirksomhed har personlig, ubegrænset hæftelse.", "emne": "Virksomheden og årsregnskabet"}, {"valg": ["Den er under 10 %", "Den er over 10 %", "Den er præcis 10 %", "Intet"], "rigtig": 1, "q": "Kapitalværdien er positiv ved en kalkulationsrente på 10 %. Hvad ved du så om den interne rente?", "f": "Den interne rente er den rente, hvor KV = 0. Er KV &gt; 0 ved 10 %, skal renten op over 10 %, før KV bliver 0.", "emne": "Investering og TCO"}, {"valg": ["Afskrivninger", "Kontante kapacitetsomkostninger", "Renter", "Salgsfremmende omkostninger"], "rigtig": 1, "q": "Hvad står mellem MFB og IB i resultatbudgettets trappe?", "f": "Omsætning − VO = DB − salgsfremmende = MFB − kontante KO = IB − afskrivninger = resultat før renter.", "emne": "Budgettering"}, {"valg": ["Hjemmemarkedet skal have mere, så reklamen tjenes hjem", "Slet ikke. Den er fast og indgår kun i MFB", "Eksporten skal sænkes med 250.000/DB-pr.-stk.", "Reklamen lægges til VE"], "rigtig": 1, "q": "En reklamekampagne på 250.000 kr. er bestilt. Hvordan påvirker den fordelingen mellem hjemmemarked og eksport?", "f": "Faste omkostninger ændrer ikke, hvor DOMS = DOMK. De trækkes fra bagefter.", "emne": "Pris- og aktivitetsoptimering"}, {"valg": ["Fordi afskrivningerne slutter", "Fordi stigende vedligehold, faldende effektivitet og nyt, bedre udstyr gør det dyrere at fortsætte end at udskifte", "Fordi scrapværdien bliver negativ", "Fordi kalkulationsrenten stiger"], "rigtig": 1, "q": "Hvorfor er den økonomiske levetid ofte kortere end den tekniske?", "f": "Anlægget kan stadig køre, men det kan betale sig at udskifte det.", "emne": "Investering og TCO"}, {"valg": ["Kundegrupperne har forskellig elasticitet", "Grupperne kan holdes adskilt", "Varen skal være uelastisk i alle grupper", "Det skal være lovligt"], "rigtig": 2, "q": "Hvilken betingelse skal <strong>ikke<\/strong> være opfyldt for at kunne prisdifferentiere?", "f": "Pointen er netop, at elasticiteten er <em>forskellig<\/em> i grupperne. Ellers ville samme pris være optimal overalt.", "emne": "Afsætning og elasticitet"}, {"valg": ["CO₂e-udledning", "Sygefravær", "Bestyrelsens sammensætning", "Affaldsmængde"], "rigtig": 1, "q": "Hvilket nøgletal hører under S?", "f": "Social handler om mennesker: ulykker, fravær, diversitet, uddannelse og trivsel.", "emne": "Bæredygtighed, CSR og ESG"}, {"valg": ["At maksimere overskuddet", "At stile efter et tilfredsstillende resultat frem for det størst mulige", "At tilfredsstille alle interessenter lige meget", "At minimere omkostningerne"], "rigtig": 1, "q": "Hvad er satisficering?", "f": "Satisficering er alternativet til gevinstmaksimering. Virksomheden nøjes med et resultat, der er godt nok.", "emne": "Virksomheden og årsregnskabet"}, {"q": "Samme virksomhed har en kapacitet på 84.000 stk. Hvilken pris skal den tage?", "tal": 1150.0, "tol": 0.5, "enhed": "kr.", "losning": "Kapaciteten er mindre end 85.200, så x = 84.000 og p = 1.850 − 84.000/120 = 1.850 − 700 = 1.150 kr.", "f": "Ved knap kapacitet sætter man den pris, der netop sælger hele kapaciteten.", "emne": "Pris- og aktivitetsoptimering"}, {"valg": ["Scrapværdien", "Installation og indkøring", "Afskrivninger", "Ekstra lagerbinding (arbejdskapital)"], "rigtig": 2, "q": "Hvilken post skal <strong>ikke<\/strong> med i en investerings betalingsrække?", "f": "Afskrivninger er ikke betalinger. Købet står allerede i år 0.", "emne": "Investering og TCO"}, {"q": "En besparelse på 90.000 kr./år i 6 år ved r = 12 % (faktor 4,1114). I₀ = 450.000 kr. Hvad er KV? (hele kr.)", "tal": -79973.0, "tol": 30.0, "enhed": "kr.", "losning": "KV = −450.000 + 90.000 · 4,11141 = −450.000 + 370.027 = −79.973 kr.", "f": "Negativ KV: ikke lønsom på de økonomiske tal alene. Bløde værdier kan vende beslutningen.", "emne": "Investering og TCO"}, {"valg": ["Februar", "Marts", "April", "Maj"], "rigtig": 2, "q": "Varer købes i februar med 60 dages kredit og sælges i marts. Hvornår er der en <strong>udbetaling<\/strong>?", "f": "Udgiften er i februar (varen modtages), omkostningen i marts (varen forbruges), og udbetalingen sker, når kreditten udløber 60 dage efter: april.", "emne": "Indtægter og omkostninger"}];
+const NOGLE = "mn-drift-quiz", SAMLET = "1" === "1";
+const q = new URLSearchParams(location.search);
+
+// tilbage-link til den side man kom fra
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+
+// faner
+const tabs = [...document.querySelectorAll("#tabs button")];
+function vis(del) {
+  if (!document.getElementById("d-" + del)) del = "noter";
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.del === del));
+  document.querySelectorAll(".del").forEach(s => s.hidden = s.id !== "d-" + del);
+}
+tabs.forEach(b => b.addEventListener("click", () => {
+  vis(b.dataset.del);
+  const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
+  window.scrollTo(0, 0);
+}));
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else vis(q.get("vis") || "noter");
+// tomme dele skjules i fanerne
+["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+
+// tabeller kan scrolles på mobil
+document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+
+// quiz
+let gemt = {};
+try { gemt = JSON.parse(localStorage.getItem(NOGLE) || "{}"); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+// Danske og engelske skrivemåder virker begge: "85.200", "85200", "1.150,5", "0,86", "0.86".
+// Et enkelt punktum efterfulgt af tre cifre kan både være tusindtal og decimal, så begge tolkninger prøves.
+const tolk = s => { s = String(s).replace(/[\s\u00a0]/g, "").replace("−", "-");
+  if (!/^-?[\d.,]+$/.test(s)) return [];
+  if (s.includes(",")) return [parseFloat(s.replace(/\./g, "").replace(",", "."))];
+  if ((s.match(/\./g) || []).length > 1) return [parseFloat(s.replace(/\./g, ""))];
+  const ud = [parseFloat(s)];
+  if (/^-?\d+\.\d{3}$/.test(s)) ud.push(parseFloat(s.replace(".", "")));
+  return ud; };
+const fmt = x => x.toLocaleString("da-DK", { maximumFractionDigits: 4 });
+
+function bygQuiz() {
+  const rod = document.getElementById("quiz"); rod.innerHTML = "";
+  QUIZ.forEach((s, i) => {
+    const el = document.createElement("div"); el.className = "q";
+    el.innerHTML = `<div class="nr">Spørgsmål ${i + 1} af ${QUIZ.length}${SAMLET ? `<span class="emnetag">${s.emne}</span>` : ""}</div><div class="tekst">${s.q}</div>`;
+    const g = gemt[i];
+    if (s.valg) {
+      const v = document.createElement("div"); v.className = "valg";
+      s.valg.forEach((t, j) => {
+        const b = document.createElement("button"); b.innerHTML = t;
+        b.addEventListener("click", () => { gemt[i] = { valgt: j, ok: j === s.rigtig }; gem(); bygQuiz(); });
+        v.append(b);
+      });
+      el.append(v);
+      if (g) {
+        [...v.children].forEach((b, j) => { b.disabled = true; if (j === s.rigtig) b.classList.add("ok"); else if (j === g.valgt) b.classList.add("bad"); });
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Ikke helt."}</b>${s.f || ""}</div>`);
+      }
+    } else {
+      const f = document.createElement("div"); f.className = "tal";
+      f.innerHTML = `<input inputmode="decimal" aria-label="Dit svar" placeholder="Dit svar"> <span class="enhed">${s.enhed || ""}</span> <button class="knap">Tjek</button> <button class="knap stille">Vis facit</button>`;
+      const [inp, , tjek, opgiv] = f.children;
+      el.append(f);
+      const faerdig = g && (g.ok || g.forsog >= 2 || g.opgivet);
+      if (g && g.svar != null) inp.value = g.svar;
+      if (faerdig) {
+        inp.disabled = tjek.disabled = opgiv.disabled = true;
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Facit: " + fmt(s.tal) + " " + (s.enhed || "")}</b>${s.losning ? s.losning + "<br>" : ""}${s.f || ""}</div>`);
+      } else if (g && g.forsog === 1) {
+        el.insertAdjacentHTML("beforeend", `<div class="svar hint"><b>Ikke helt. Tjek din opstilling og prøv igen.</b>Du har ét forsøg tilbage.</div>`);
+      }
+      const svar = () => {
+        const xs = tolk(inp.value); if (!xs.length || xs.some(isNaN)) { inp.focus(); return; }
+        const ok = xs.some(x => Math.abs(x - s.tal) <= Math.max(s.tol, Math.abs(s.tal) * 1e-9));
+        const forsog = ((g && g.forsog) || 0) + 1;
+        gemt[i] = { svar: inp.value, ok, forsog }; gem(); bygQuiz();
+      };
+      tjek.addEventListener("click", svar);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") svar(); });
+      opgiv.addEventListener("click", () => { gemt[i] = { svar: inp.value, ok: false, forsog: 2, opgivet: true }; gem(); bygQuiz(); });
+    }
+    rod.append(el);
+  });
+  // score
+  const faerdige = QUIZ.map((s, i) => gemt[i] && (s.valg || gemt[i].ok || gemt[i].forsog >= 2));
+  const antal = faerdige.filter(Boolean).length, rigtige = QUIZ.filter((s, i) => gemt[i] && gemt[i].ok).length;
+  const forkerte = QUIZ.map((s, i) => faerdige[i] && !gemt[i].ok ? `<li>${s.q.replace(/<[^>]+>/g, "")}${SAMLET ? ` <em>(${s.emne})</em>` : ""}</li>` : "").join("");
+  document.getElementById("score").innerHTML = antal === 0 ? "" : `<div class="score">
+    <h2>${rigtige} af ${QUIZ.length} rigtige${antal < QUIZ.length ? ` · ${QUIZ.length - antal} mangler` : ""}</h2>
+    ${forkerte ? `<p>Tag med i repetitionen:</p><ul>${forkerte}</ul>` : antal === QUIZ.length ? "<p>Alle rigtige. Tag quizzen igen om et par uger.</p>" : ""}
+    <button class="knap stille" id="nulstil">Start forfra</button></div>`;
+  const n = document.getElementById("nulstil");
+  if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
+}
+if (QUIZ.length) bygQuiz(); else tabs.find(b => b.dataset.del === "quiz").hidden = true;
+</script>
+</body>
+</html>

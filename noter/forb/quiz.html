@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Quiz for hele Forbrændingsmotoranlæg · Forbrændingsmotoranlæg · Maskinenoter</title>
+<!-- Bygget af noter/kilde/byg.py. Ret i kildefilen i noter/kilde/, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #c8501d; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #f08a5a; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #f08a5a; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.tabs { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--hover); flex-shrink: 0; }
+.tabs button { font: 600 .9rem/1 var(--sans); color: var(--muted); background: none; border: 0; padding: .5rem .8rem; border-radius: 8px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.8rem, 5vw, 3.2rem) max(16px, env(safe-area-inset-left, 0px)) 5rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .8rem 0 0; font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.del { margin-top: 2.2rem; }
+.del > :first-child { margin-top: 0; }
+.del h2 { margin: 2.6rem 0 .6rem; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; }
+.del h3 { margin: 1.8rem 0 .4rem; font-size: 1.12rem; letter-spacing: -.01em; }
+.del p, .del li { max-width: 68ch; }
+.del ul, .del ol { padding-left: 1.3rem; }
+.del li { margin: .25rem 0; }
+.del li::marker { color: var(--muted); }
+.del code { font: .92em var(--mono); background: var(--hover); padding: .08em .35em; border-radius: 5px; }
+.del strong { font-weight: 650; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: .94rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .8rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .92rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; }
+details { margin: .9rem 0; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: .1rem 1.1rem; }
+details > summary { cursor: pointer; font-weight: 600; padding: .75rem 0; color: var(--accent); list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "▸ "; }
+details[open] > summary::before { content: "▾ "; }
+details[open] { padding-bottom: .8rem; }
+.genkald { margin-top: 2.6rem; padding: 1.1rem 1.3rem; border: 2px solid var(--accent); border-radius: 16px; background: var(--surface); }
+.genkald h2, .genkald h3 { margin-top: 0 !important; font-size: .82rem !important; letter-spacing: .08em !important; text-transform: uppercase; color: var(--accent); }
+.genkald details { box-shadow: none; border: 1px solid var(--line); }
+
+/* quiz */
+.q { margin: 1rem 0; padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); }
+.q .nr { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q .tekst { margin: .3rem 0 .8rem; font-weight: 600; }
+.q .valg { display: grid; gap: 8px; }
+.q .valg button { text-align: left; font: inherit; font-size: .98rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: .65rem .9rem; cursor: pointer; }
+.q .valg button:hover:not(:disabled) { border-color: var(--accent); }
+.q .valg button:disabled { cursor: default; }
+.q .valg button.ok { background: var(--ok-bg); border-color: var(--ok); }
+.q .valg button.bad { background: var(--bad-bg); border-color: var(--bad); }
+.q .tal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q input { font: 1rem var(--mono); width: 11rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.q .enhed { color: var(--muted); }
+.knap { font: 600 .95rem var(--sans); padding: .6rem 1rem; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.svar { margin-top: .8rem; padding: .7rem .9rem; border-radius: 10px; font-size: .96rem; }
+.svar.ok { background: var(--ok-bg); } .svar.bad { background: var(--bad-bg); } .svar.hint { background: var(--key); }
+.svar b { display: block; margin-bottom: .15rem; }
+.score { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border-radius: 16px; background: var(--soft); border-left: 3px solid var(--accent); }
+.score h2 { margin: 0 0 .3rem !important; font-size: 1.2rem !important; }
+.score ul { margin: .4rem 0; }
+.emnetag { font-size: .76rem; font-weight: 600; color: var(--accent); margin-left: .4rem; text-transform: none; letter-spacing: 0; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .bar .in { gap: 8px; }
+  .tabs button { padding: .48rem .6rem; font-size: .85rem; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .8rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+}
+@media print { .bar { display: none; } .del[hidden] { display: block !important; } details { box-shadow: none; border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m5-forb">‹ Forbrændingsmotoranlæg</a>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-del="noter">Noter</button>
+    <button role="tab" data-del="formler">Formler</button>
+    <button role="tab" data-del="quiz">Quiz</button>
+  </div>
+</div></header>
+<main>
+  <p class="kicker">Forbrændingsmotoranlæg</p>
+  <h1>Quiz for hele Forbrændingsmotoranlæg</h1>
+  <p class="intro">91 spørgsmål fra alle emner i blandet rækkefølge.</p>
+  <section class="del" id="d-noter" role="tabpanel"></section>
+  <section class="del" id="d-formler" role="tabpanel"></section>
+  <section class="del" id="d-quiz" role="tabpanel">
+    <p>Svar på spørgsmålene, før du kigger i noterne. Ved talopgaver har du to forsøg, og komma og punktum virker begge.</p>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </section>
+</main>
+<script>
+const QUIZ = [{"valg": ["Lavere tryktab", "Større areal og mere turbulens, altså højere A og U", "Bedre forbrænding", "Mindre sod"], "rigtig": 1, "q": "Hvad giver pinrør i hjælpekedlen?", "f": "Ståltappene øger overfladen og hvirvler røggassen op.", "emne": "Skibskedler og WHR"}, {"valg": ["En fjeder", "Starteluften", "Styreluften", "Forbrændingstrykket"], "rigtig": 0, "q": "Hvad holder starteluftventilen lukket?", "f": "Styreluft over det store stempel åbner ventilen mod fjederen.", "emne": "Starteluft og motorstart"}, {"valg": ["For tidlig tænding", "For sen tænding", "Utæthed eller luftmangel", "Olie med højt cetantal"], "rigtig": 2, "q": "Kompressions-, forbrændings- og ekspansionslinjen er alle lavere, og udstødningstemperaturen er højere. Hvad tyder det på?", "f": "Lavere kompressionstryk betyder, at der mangler luft i cylinderen: utætte ringe eller ventil, snavset filter, luftkøler eller turbolader.", "emne": "Forbrændingsprocessen og fejl"}, {"valg": ["Mindre varig afvigelse, men større risiko for svingninger", "Større varig afvigelse og mere stabil regulering", "Setpunktet ændres", "Regulatoren bliver til en PI-regulator"], "rigtig": 0, "q": "Hvad sker der, når forstærkningen øges (Y flyttes mod højre i vandtårnet)?", "f": "Afvejningen mellem præcision og stabilitet er kernen i P-regulering.", "emne": "Regulering og omdrejningsregulator"}, {"valg": ["Færre cylindre", "Indsprøjtningstrykket er uafhængigt af omdrejningstallet, så forstøvningen er god ved alle laster", "Lavere tryk i systemet", "Ingen behov for brændstofventiler"], "rigtig": 1, "q": "Hvad er hovedfordelen ved common rail i forhold til kamdrevne pumper?", "f": "Railen holdes på 1500–2000 bar uanset last, og tidspunkt og mængde kan justeres online.", "emne": "Brændstofsystemer og common rail"}, {"q": "Hjælpekedlen brænder 0,05 kg/s olie med h_i = 40.000 kJ/kg. Hvad er den tilførte effekt?", "tal": 2000.0, "tol": 1.0, "enhed": "kW", "losning": "P_brændstof = 0,05 · 40.000 = 2.000 kW.", "f": "Kedlens virkningsgrad er den nyttige dampeffekt divideret med dette tal.", "emne": "Skibskedler og WHR"}, {"valg": ["Motoren starter langsomt", "Totalhavari. Derfor er der en pneumatisk sikring", "Intet, tørnegearet kobler selv ud", "Startluften blæses af"], "rigtig": 1, "q": "Hvad sker der, hvis man starter med indkoblet tørnegear?", "f": "Tørnegearet låser krumtapakslen fast.", "emne": "Starteluft og motorstart"}, {"valg": ["Lagertank → settlingstank → centrifuge → servicetank", "Lagertank → centrifuge → settlingstank → servicetank", "Settlingstank → lagertank → servicetank → centrifuge", "Servicetank → centrifuge → lagertank → settlingstank"], "rigtig": 0, "q": "Hvad er rækkefølgen i det eksterne system?", "f": "Først bundfældes det groveste i settlingstanken, så renser centrifugen grundigt, og servicetanken forsyner motoren.", "emne": "Brændstofsystemer og common rail"}, {"valg": ["Fordi turbinen så staller", "Fordi svovlsyredampe så kondenserer og tærer skorstenen", "Fordi kedlen ellers koger tør", "Fordi NOx stiger"], "rigtig": 1, "q": "Hvorfor må udstødningsgassen ikke køles under ca. 140–150 °C?", "f": "Varmen under grænsen er et bevidst tab.", "emne": "Skibskedler og WHR"}, {"valg": ["2-vejs", "3-vejs", "Pumpe med variabelt deplacement", "De er ens"], "rigtig": 0, "q": "Hvilken mængderegulering har det største energitab?", "f": "I 2-vejs står pumpen altid på trykbegrænsningens indstilling, og overskuddet går til varme.", "emne": "Hydraulikventiler"}, {"valg": ["For at øge indsprøjtningstrykket", "For at undgå skum og kavitation i højtrykspumpen", "For at sænke viskositeten", "For at kunne blande DO og HFO"], "rigtig": 1, "q": "Hvorfor er det interne brændstofsystem tryksat?", "f": "Den varme olie vil ellers afgive gas og danne bobler på pumpens sugeside.", "emne": "Brændstofsystemer og common rail"}, {"valg": ["Purifieren fjerner både vand og partikler og har vandlås. Clarifieren fjerner kun partikler", "Clarifieren fjerner vand, purifieren partikler", "Purifieren står altid efter clarifieren", "Der er ingen forskel ud over størrelsen"], "rigtig": 0, "q": "Hvad er forskellen på en purifier og en clarifier?", "f": "Clarifieren står efter purifieren som sikkerhedsnet.", "emne": "Centrifuger og separation"}, {"valg": ["For tidlig tænding", "For sen tænding", "Utæthed eller luftmangel", "Efterforbrænding"], "rigtig": 1, "q": "Diagrammet viser lavere p_max, højere ekspansionslinje og højere udstødningstemperatur. Hvad er fejlen?", "f": "Ved utæthed er alle linjer lavere, også kompressionslinjen. Her er det kun p_max, der falder.", "emne": "Forbrændingsprocessen og fejl"}, {"q": "r = 0,2 m og ω = 523,6 rad/s. Hvad er separationsfaktoren Z? (hele tal)", "tal": 5589.0, "tol": 15.0, "enhed": "", "losning": "Z = r · ω² / g = 0,2 · 274.157 / 9,81 = 5.589.", "f": "Centrifugen separerer altså ca. 5600 gange hurtigere end tyngdekraften alene.", "emne": "Centrifuger og separation"}, {"valg": ["Stort energitab", "Dyrere i anskaffelse og vedligehold", "Kan ikke holde hastigheden", "Kræver tre tilslutninger"], "rigtig": 1, "q": "Hvad er ulempen ved en pumpe med variabelt deplacement?", "f": "Den er til gengæld den mest energieffektive.", "emne": "Hydraulikventiler"}, {"valg": ["Kobler en turbolader fra ved lav last, så de andre får mere gas", "Leder gas uden om turbinen til kedlen", "Afblæser overskydende skylleluft", "Lukker for skylleluften ved brand"], "rigtig": 0, "q": "Hvad gør en cut-out-ventil (TCV)?", "f": "Exhaust waste-gate leder gas uden om turbinen, og air waste-gate afblæser luft.", "emne": "Turboladning og beregninger"}, {"valg": ["For at spare plads", "Centrifugalpumper suger dårligt, så de skal have tilløb (\"druknet\")", "For at undgå frost", "For at få koldere vand"], "rigtig": 1, "q": "Hvorfor placeres søvandspumperne under vandlinjen?", "f": "Så er pumpen altid fyldt og har positivt tryk på sugesiden.", "emne": "Kølevandssystemer"}, {"valg": ["For at få tørrere luft", "Det er tættere på isoterm kompression og bruger mindre energi", "For at nå højere temperatur", "Fordi én kompressor ikke kan nå 40 bar"], "rigtig": 1, "q": "Hvorfor kompresseres starteluften i to trin med mellemkøling?", "f": "Mellemkølingen sænker temperaturen, så andet trin skal komprimere en luft med højere massefylde.", "emne": "Starteluft og motorstart"}, {"valg": ["De sænker U", "De ændrer det effektive areal A i Q = U · A · Δt_m", "De ændrer Δt_m", "De ændrer motorlasten"], "rigtig": 1, "q": "Hvordan virker metode 1–3 til regulering af udstødskedlen (bypass, luk for gas eller vand)?", "f": "Effekten følger A ligefrem proportionalt.", "emne": "Skibskedler og WHR"}, {"q": "Ekspansionstanken står 10 m over pumpernes sugeside. Hvad er det statiske tryk fra vandsøjlen? (bar, 2 decimaler, ρ = 1000 kg/m³)", "tal": 0.98, "tol": 0.01, "enhed": "bar", "losning": "p = ρ · g · H = 1000 · 9,81 · 10 = 98.100 Pa = 0,98 bar.", "f": "Det tryk hjælper med at holde sugetrykket over damptrykket, så pumperne ikke kavitererer.", "emne": "Kølevandssystemer"}, {"valg": ["For at beskytte receiveren", "Så massefylden stiger, og der kommer mere luft i cylinderen", "For at undgå kondensvand", "For at sænke udstødningstemperaturen"], "rigtig": 1, "q": "Hvorfor køles skylleluften efter kompressoren?", "f": "Kold luft fylder mindre. Bemærk, at køleren netop <em>danner<\/em> kondensvand, som skal drænes.", "emne": "Turboladning og beregninger"}, {"valg": ["For at varme cylindrene op", "For at se, om der er væske i cylindrene, der kan give hydraulisk lås", "For at tjekke kompressionstrykket", "For at smøre foringerne"], "rigtig": 1, "q": "Hvorfor gives der starteluft med reduceret tryk og åbne indikatorhaner før start?", "f": "Sprøjter der væske ud af en hane, skal årsagen (fx utæt kølevand eller brændstofventil) findes før start.", "emne": "Starteluft og motorstart"}, {"valg": ["Den er skylleluftreceiver", "Den er lukket og bruges som smøreolietank", "Den bærer guideplanerne", "Den rummer kamakslen"], "rigtig": 1, "q": "Hvad er bundrammens dobbeltfunktion ud over at bære hovedlejerne?", "f": "Bundrammen fungerer som bundkar. Olien løber derfra til sumptanken.", "emne": "Motoropbygning og stempelringe"}, {"valg": ["Ved et fast tidsinterval", "Transduceren MT 50 måler vandindhold i olieudløbet, og over grænsen åbnes vanddrænet", "Ved at måle trykket i skålen", "Ved at føle på olietemperaturen"], "rigtig": 1, "q": "Hvordan registrerer Alcap, at vandet skal drænes?", "f": "Når vandet når tallerkenstakken, slipper spor ud med olien. Det er signalet.", "emne": "Centrifuger og separation"}, {"valg": ["30 minutter med 30 minutters forberedelse", "20 minutter uden forberedelsestid", "20 minutter med 20 minutters forberedelse", "4 timer skriftligt"], "rigtig": 1, "q": "Hvor lang er den mundtlige prøve, og er der forberedelsestid?", "f": "Spørgsmålene er kendte på forhånd og bygger på læringsmålene og simulatorøvelserne.", "emne": "Eksamen og formelsamling"}, {"valg": ["Pumpen giver tomgangstryk (max H), men intet flow", "Trykket stiger, til røret sprænger", "Pumpen kavitererer straks", "Flowet fortsætter gennem lækager"], "rigtig": 0, "q": "Hvad sker der, hvis afgangen fra en centrifugalpumpe lukkes?", "f": "I en strømningspumpe er der ingen mekanisk adskillelse, så vandet hvirvler bare rundt. Det er deplacementpumpen, der kan sprænge røret.", "emne": "Pumper og kompressorer"}, {"valg": ["Bedre rensning", "Dårligere rensning, fordi partiklerne når ud med olien, før de rammer tallerkenen", "Ingen ændring", "Interfacet flytter ind"], "rigtig": 1, "q": "Hvad sker der, hvis flowet gennem separatoren øges?", "f": "Tommelfingerregel: jo lavere kapacitet, desto renere brændstof.", "emne": "Centrifuger og separation"}, {"valg": ["Svingklodserne går ud, og brændstoffet mindskes", "Omdrejningstallet falder, svingklodserne går ind, glideren går ned, og stemplet giver mere brændstof", "Fjederen slækkes, og setpunktet stiger", "Drøvleventilen lukker"], "rigtig": 1, "q": "I den hydrauliske omdrejningsregulator, hvad sker der, når lasten stiger?", "f": "Med kun P-del ender omdrejningstallet lidt lavere end før.", "emne": "Regulering og omdrejningsregulator"}, {"valg": ["For at fordampe vandet", "Viskositeten falder, og massefyldeforskellen mellem olie og vand/partikler bliver større", "For at brænde cat fines af", "For at øge flowet"], "rigtig": 1, "q": "Hvorfor opvarmes olien før separation?", "f": "Begge dele øger separationshastigheden i Stokes' lov.", "emne": "Centrifuger og separation"}, {"q": "En kraft på 2.000 kN virker med en arm på 0,4 m. Hvad er momentet?", "tal": 800.0, "tol": 0.5, "enhed": "kNm", "losning": "M = F · a = 2.000 · 0,4 = 800 kNm.", "f": "I TDC er armen 0, og momentet derfor 0, uanset hvor stor kraften er.", "emne": "Forbrændingsprocessen og fejl"}, {"valg": ["Fordi den kræver højere tryk", "Fordi brændstof kan lække ind fra brændstofpumperne, og så skal kun en lille mængde olie kasseres", "Fordi den kører varmere", "Fordi den skal have cylinderolie"], "rigtig": 1, "q": "Hvorfor har kamakslen sit eget smøresystem?", "f": "Brændstof i olien sænker flammepunktet. Cam LO-tanken er kun op til 1,5 m³ mod systemoliens 58 m³.", "emne": "Smøreolie og smøresystemer"}, {"valg": ["Sænker det", "Øger det, fordi samme effekt kræver mere brændstof", "Ingen ændring", "Halverer NOx og forbruget"], "rigtig": 1, "q": "Hvad gør vandemulsion (FWE) ved brændstofforbruget?", "f": "Vandet sænker forbrændingstemperaturen og dermed NOx, men vandet skal også opvarmes og fordampes.", "emne": "Brændstofsystemer og common rail"}, {"q": "Udstødningsgas 20 kg/s køles fra 280 til 160 °C, c_p = 1,05 kJ/kg·K. Hvad er den tilførte effekt?", "tal": 2520.0, "tol": 5.0, "enhed": "kW", "losning": "P_røg = 20 · 1,05 · (280 − 160) = 2.520 kW.", "f": "Effekten følger motorlasten og kan ikke reguleres på gassiden, kun ved at lede gas uden om.", "emne": "Skibskedler og WHR"}, {"q": "Turbinen: ṁ_G = 44,2 kg/s, h ind = 883 kJ/kg, h ud = 746 kJ/kg. Hvad er turbineeffekten? (kW, hele tal)", "tal": 6055.0, "tol": 10.0, "enhed": "kW", "losning": "P_T = 44,2 · (883 − 746) = 44,2 · 137 = 6.055 kW (≈ 6.060 kW).", "f": "kg/s · kJ/kg = kJ/s = kW.", "emne": "Turboladning og beregninger"}, {"valg": ["Lav sugetryk og høj temperatur", "Højt sugetryk og lav temperatur", "Højere omdrejningstal", "Drøvle på sugesiden"], "rigtig": 1, "q": "Hvordan undgår du kavitation i en centrifugalpumpe?", "f": "Lavt tryk sænker kogepunktet, så vandet koger lokalt. Derfor placeres søvandspumper under vandlinjen.", "emne": "Pumper og kompressorer"}, {"valg": ["Holde skylleluft og smøreolie adskilt", "Stoppe en skylleluftbrand i at nå krumtaphuset", "Tætne mellem stempel og foring", "Adskille skylleluftrum og krumtaphus"], "rigtig": 2, "q": "Hvad er <strong>ikke<\/strong> en opgave for stempelstangspakdåsen?", "f": "Tætningen mellem stempel og foring er stempelringenes opgave.", "emne": "Motoropbygning og stempelringe"}, {"valg": ["Lavere temperatur", "Støj og vibrationer", "Højere flow", "Lavere strømforbrug"], "rigtig": 1, "q": "Hvad er tegn på kavitation i en pumpe?", "f": "Dampbobler kollapser og sender trykbølger mod metallet. Det sker lettere i varmt vand.", "emne": "Kølevandssystemer"}, {"valg": ["Tilgangstrykket", "Afgangstrykket", "Flowet", "Temperaturen"], "rigtig": 0, "q": "Hvad føler en trykbegrænsningsventil på?", "f": "Den åbner mere til tank, når tilgangstrykket stiger.", "emne": "Hydraulikventiler"}, {"valg": ["For højt pumpetryk", "At en byrde presser olien ud hurtigere, end pumpen kan fylde, så man \"taber lasten\"", "Kavitation i pumpen ved start", "For lav hastighed ved løft"], "rigtig": 1, "q": "Hvad er problemet, som bremseventilen løser?", "f": "Bremseventilen åbner kun for drænet, når der er tryk på den anden side fra pumpen.", "emne": "Hydraulikventiler"}, {"valg": ["Ved start (tørfriktion)", "Ved normale driftsomdrejninger", "Ved maksimale omdrejninger, altid", "Den er konstant"], "rigtig": 0, "q": "Hvor er friktionen i et glideleje størst?", "f": "Kurven falder fra start til et minimum og stiger igen med forskydningshastigheden.", "emne": "Smøreolie og smøresystemer"}, {"valg": ["Ingen", "Lommeregner og formelsamling", "Alle bøger og noter", "Computer med internet"], "rigtig": 1, "q": "Hvilke hjælpemidler må du have med?", "f": "Formelsamlingen her på siden svarer til kompendiernes formler.", "emne": "Eksamen og formelsamling"}, {"q": "Hvad er ω ved 5000 o/min? (rad/s, 1 decimal)", "tal": 523.6, "tol": 0.2, "enhed": "rad/s", "losning": "ω = 2π · 5000 / 60 = 523,6 rad/s.", "f": "Husk at dividere med 60 for at komme fra minutter til sekunder.", "emne": "Centrifuger og separation"}, {"valg": ["Med opløsningsmiddel ved stop", "Med vandvask ved lav last eller nøddeskaller blæst ind med trykluft", "Ved at skifte luftfilteret", "Med damp ved fuld last"], "rigtig": 1, "q": "Hvordan rengøres turbinesiden under drift?", "f": "Dråberne eller skallerne slår belægningerne af skovlene.", "emne": "Turboladning og beregninger"}, {"q": "Luften indeholder 8,7 g vand/kg, men kan ved 3 bar kun rumme 4,9 g/kg. Hvor mange kg vand udskilles pr. time ved 43,3 kg/s luft? (hele kg)", "tal": 592.0, "tol": 3.0, "enhed": "kg/h", "losning": "(8,7 − 4,9) = 3,8 g/kg · 43,3 kg/s = 164,5 g/s · 3.600 s/h = 592 kg/h.", "f": "Derfor er water mist catcher og dræn efter skylleluftkøleren vigtige.", "emne": "Turboladning og beregninger"}, {"valg": ["Tændingsforhalingen", "Efterforbrændingen", "Den styrede forbrænding", "Indsprøjtningstiden"], "rigtig": 0, "q": "Hvad kaldes tiden fra brændselsventilen åbner, til olien antænder?", "f": "Forhalingen (a–b) afhænger af oliens sammensætning, kompressionstryk, lufttemperatur og forstøverhullerne.", "emne": "Forbrændingsprocessen og fejl"}, {"valg": ["Isokron (uden droop), så frekvensen er konstant ved alle laster", "Med stort speeddroop", "Som ren I-regulator", "Med manuel brændstofstyring"], "rigtig": 0, "q": "Hvordan skal en generator, der kører alene på nettet, indstilles?", "f": "Der er ingen andre at dele lasten med, så frekvensen skal bare holdes.", "emne": "Regulering og omdrejningsregulator"}, {"valg": ["Vand og damp", "Røggas", "Termoolie", "Luft"], "rigtig": 0, "q": "Hvad er i rørene i en vandrørskedel?", "f": "I røgrørskedlen er det omvendt: røggassen går i rørene, og vandet er udenom.", "emne": "Skibskedler og WHR"}, {"valg": ["Viskositeten i smøreolien", "Olietåge i krumtaphuset, fx fra varmløbne lejer, for at advare før en eksplosion", "Vand i olien", "Olieniveauet i sumpen"], "rigtig": 1, "q": "Hvad overvåger en oil mist detector?", "f": "Den alarmerer eller stopper motoren, før olietågen når en eksplosiv koncentration.", "emne": "Smøreolie og smøresystemer"}, {"valg": ["15", "40", "80", "150"], "rigtig": 2, "q": "Hvor mange ppm cat fines tillader ISO 8217?", "f": "Motorfabrikanterne vil helst ned på 15 ppm, så separatoren skal fjerne en stor del.", "emne": "Centrifuger og separation"}, {"valg": ["Under 0,5 m/s", "Over 1 m/s, så faststof ikke bundfælder", "Præcis 3 m/s", "Det er ligegyldigt"], "rigtig": 1, "q": "Hvad er tommelfingerreglen for vandhastigheden i søvandssystemet?", "f": "Ved lav hastighed sætter sand og silt sig i rør og kølere.", "emne": "Kølevandssystemer"}, {"valg": ["Fordi den kører hurtigere", "Fordi gennemslag går direkte ned i krumtaphuset, hvor olietågen kan antænde", "Fordi den har mindre olie", "Fordi den ikke har stempelringe"], "rigtig": 1, "q": "Hvorfor er risikoen for krumtaphuseksplosion størst i en trunkmotor?", "f": "Krydshovedmotoren har stempelstangspakdåsen, der adskiller forbrændingsrum og krumtaphus.", "emne": "Smøreolie og smøresystemer"}, {"q": "En lamelpumpe har et deplacement på 50 cm³ pr. omdrejning og kører 1.450 o/min. Hvad er flowet i liter pr. minut?", "tal": 72.5, "tol": 0.1, "enhed": "l/min", "losning": "Q = D · n = 50 cm³ · 1.450 /min = 72.500 cm³/min = 72,5 l/min.", "f": "1 liter = 1.000 cm³.", "emne": "Pumper og kompressorer"}, {"valg": ["Kun lidt lavere effekt", "Effekttab, risiko for skylleluftbrand og krumtaphuseksplosion og forurenet olie", "Højere kompressionstryk", "Lavere udstødningstemperatur"], "rigtig": 1, "q": "Hvad er konsekvenserne af gennemslag forbi stempelringene?", "f": "Varm gas forbi ringene antænder olierester i skylleluftrummet og forurener smøreolien.", "emne": "Motoropbygning og stempelringe"}, {"valg": ["At regulere flowet", "At placere interfacet mellem olie og vand ved at ændre vandudløbets radius", "At styre skudintervallet", "At måle vandindholdet"], "rigtig": 1, "q": "Hvad bruges gravity disc til?", "f": "Den skiftes ved ny brændstoftype, fordi massefylden ændrer interfacets placering.", "emne": "Centrifuger og separation"}, {"valg": ["I K30", "I Michael Winthers Motorlære Kompendium (MW kap. 1–8)", "I Hydraulik for driftsteknikere", "I K22"], "rigtig": 1, "q": "Hvor finder du formlerne til ydelse, middeltryk og energifordeling?", "f": "De står ikke i kompendierne, som denne formelsamling bygger på.", "emne": "Eksamen og formelsamling"}, {"valg": ["Intet, de deler lasten ligeligt", "Lasten fordeles tilfældigt, og en generator kan blive aflastet og udkoble på retureffekt", "Frekvensen stiger", "Spændingen falder"], "rigtig": 1, "q": "Hvad kan ske, hvis to parallelkoblede generatorer begge kører isokront?", "f": "Speeddroop giver hver maskine en fast sammenhæng mellem last og frekvens.", "emne": "Regulering og omdrejningsregulator"}, {"valg": ["Når stemplet er på vej op i kompressionsslaget", "Når stemplet er på vej ned i arbejdsslaget, indtil det nærmer sig BDC", "Hele tiden under start", "Kun i TDC"], "rigtig": 1, "q": "Hvornår får en cylinder starteluft?", "f": "Starteluftfordeleren styrer det, så luften skubber stemplet den rigtige vej.", "emne": "Starteluft og motorstart"}, {"valg": ["Åbner mere", "Lukker mere", "Dræner til tank", "Intet"], "rigtig": 1, "q": "Hvad gør en trykreduktionsventil, når afgangstrykket stiger?", "f": "Den sidder i hovedrøret og føler på afgangstrykket.", "emne": "Hydraulikventiler"}, {"valg": ["For lidt tid", "For lav temperatur, fx store dråber eller kolde flader", "For meget luft", "For højt cetantal"], "rigtig": 1, "q": "Hvad er årsagen til sod?", "f": "Oliekoks skyldes for lidt tid. Sod skyldes for lav temperatur.", "emne": "Forbrændingsprocessen og fejl"}, {"valg": ["Ved søkisten", "Ved ekspansionstanken", "Ved centralkøleren", "Ved LT-pumperne"], "rigtig": 1, "q": "Udstødningsgas i kølevandet. Hvor slår det typisk alarm?", "f": "Gassen samles der, hvor luften udskilles. Det tyder på en revne i topstykke eller foring.", "emne": "Kølevandssystemer"}, {"valg": ["For tidlig tænding", "Utæthed", "Efterforbrænding", "Lavere kompressionstryk"], "rigtig": 2, "q": "En brændstofventil savler. Hvilken fejl giver det?", "f": "Olie drypper ind efter, at ventilen skulle have lukket, og brænder sent i ekspansionen.", "emne": "Forbrændingsprocessen og fejl"}, {"valg": ["Brændstofpumpernes kamme frem", "Brændstofpumpernes kamme tilbage", "Skyllelufttrykket op", "Kølevandstemperaturen ned"], "rigtig": 0, "q": "P_max er for lav efter skift af brændselsolie, og andre årsager er udelukket. Hvad justerer du?", "f": "Tidligere indsprøjtning giver højere p_max. Er p_max for høj, flyttes kammene tilbage.", "emne": "Forbrændingsprocessen og fejl"}, {"valg": ["Nogle grader før TDC", "Præcis i TDC", "Nogle grader efter TDC", "Omkring 90° efter TDC"], "rigtig": 2, "q": "Hvor skal maksimaltrykket ideelt ligge?", "f": "Efter TDC får kraften en arm. For sent er volumen vokset, og trykket er faldet.", "emne": "Forbrændingsprocessen og fejl"}, {"valg": ["Olie pumpes ind under højt tryk, så akslen løftes", "Olielagene trækkes med rundt af akslen og løfter den, så der er fuld adskillelse", "Smøring med vand", "Smøring ved start, hvor akslen hviler i lejet"], "rigtig": 1, "q": "Hvad er hydrodynamisk smøring?", "f": "Det kræver bevægelse. Derfor er friktionen størst ved start.", "emne": "Smøreolie og smøresystemer"}, {"valg": ["Den brænder bedre", "Viskositeten bliver for lav, og pumpestempel og dysenål smøres dårligt og kan sætte sig fast", "Den danner sod", "Den får højere cetantal"], "rigtig": 1, "q": "Hvad sker der, hvis DO bliver opvarmet som HFO?", "f": "Derfor sænkes temperaturen langsomt ved skift fra HFO til DO.", "emne": "Brændstofsystemer og common rail"}, {"valg": ["Den er billigere", "Den er mere stabil og mindre følsom for svingninger i damptrykket", "Den kræver ingen viskosimeter", "Den kan køre uden damp"], "rigtig": 1, "q": "Hvad er fordelen ved kaskaderegulering af viskositeten?", "f": "Slaven føler på rørmetaltemperaturen og retter hurtigt for forstyrrelser fra dampsiden.", "emne": "Brændstofsystemer og common rail"}, {"valg": ["Olietemperaturen", "Viskositeten", "Damptrykket", "Flowet"], "rigtig": 1, "q": "Hvad er setpunktet for dampventilen til forvarmeren?", "f": "Viskositeten skal være rigtig ved indsprøjtning. Temperaturen er kun midlet til at nå den.", "emne": "Brændstofsystemer og common rail"}, {"valg": ["I pumpekurvens toppunkt", "Hvor pumpekurven skærer rørkarakteristikken", "Ved max flow", "Hvor virkningsgraden er størst"], "rigtig": 1, "q": "Hvor ligger driftspunktet for en centrifugalpumpe?", "f": "Pumpen leverer netop det tryk, rørsystemet kræver ved det flow.", "emne": "Pumper og kompressorer"}, {"valg": ["Med trykket", "Med volumenstrømmen", "Med oliens temperatur", "Med fjederspændingen"], "rigtig": 1, "q": "Hvordan reguleres hastigheden af en hydraulikcylinder?", "f": "Trykket bestemmer kraften. Flowet bestemmer hastigheden.", "emne": "Hydraulikventiler"}, {"valg": ["Kun til at drive kedlens pumper", "I en generator (sparer hjælpemotorer) eller på propelakslen (sparer hovedmotor)", "Til at forvarme brændstoffet", "Til at drive turboladeren"], "rigtig": 1, "q": "Hvad bruges WHR-turbinens effekt til?", "f": "Overskudsdampen bliver til arbejde i stedet for at blive kondenseret væk.", "emne": "Skibskedler og WHR"}, {"q": "Damp ved 7 bar med tørhedsgrad x = 0,98 (h′ = 697,3, r = 2.064,8 kJ/kg). Hvad er h_x? (1 decimal)", "tal": 2720.8, "tol": 0.5, "enhed": "kJ/kg", "losning": "h_x = 697,3 + 0,98 · 2.064,8 = 697,3 + 2.023,5 = 2.720,8 kJ/kg.", "f": "Tør mættet damp ville have h″ = 2.762,0 kJ/kg.", "emne": "Skibskedler og WHR"}, {"valg": ["Den kører langsommere og giver lavere afgangstryk end receivertrykket, som den anden holder oppe", "Den får for meget luft", "Dens lejer bliver for varme", "Udstødningstrykket stiger"], "rigtig": 0, "q": "To parallelle turboladere, hvor den ene turbine er tilsmudset. Hvorfor staller den?", "f": "Parallelle turboladere skal give samme afgangstryk. Den svage kan ikke levere mod receiveren, og luften løber baglæns.", "emne": "Pumper og kompressorer"}, {"valg": ["Bestået skriftlig delprøve", "Godkendte simulatorøvelser B–E (obligatorisk opgave 1–4) og deltagelse i ekskursioner", "Fremmøde til 80 % af lektionerne", "En afleveret rapport om turboladning"], "rigtig": 1, "q": "Hvad er forudsætningen for at gå til eksamen?", "f": "Begge dele skal være opfyldt.", "emne": "Eksamen og formelsamling"}, {"valg": ["Høj viskositet", "Stor evne til at neutralisere syre (svovlsyre fra brændstoffet)", "Lavt askeindhold", "Høj varmeledningsevne"], "rigtig": 1, "q": "Hvad betyder et højt TBN i cylinderolie?", "f": "TBN = Total Base Number. Jo mere svovl i brændstoffet, desto højere TBN skal olien have.", "emne": "Smøreolie og smøresystemer"}, {"q": "Δp = 200 bar og Q = 40 l/min. Hvad er effekttabet i kW? (1 decimal)", "tal": 13.3, "tol": 0.1, "enhed": "kW", "losning": "P = Δp · Q = 2 · 10⁷ Pa · (40/60.000) m³/s = 13.333 W ≈ 13,3 kW.", "f": "Pas på enhederne: bar → Pa og l/min → m³/s.", "emne": "Hydraulikventiler"}, {"valg": ["Bortlede friktionsvarme", "Transportere slidpartikler til filteret", "Neutralisere svovlsyre fra forbrændingen", "Hindre korrosion"], "rigtig": 2, "q": "Hvilken opgave har systemolien <strong>ikke<\/strong>?", "f": "Neutralisering er cylinderoliens opgave (højt TBN). I krydshovedmotoren møder systemolien ikke forbrændingen.", "emne": "Smøreolie og smøresystemer"}, {"valg": ["At holde trykket i tankene", "At hindre forbrændingsgas fra en utæt starteluftventil i at nå startelufttankene", "At beskytte mod overtryk", "At dræne kondensvand"], "rigtig": 1, "q": "Hvad er formålet med kontraventilen i hovedrøret?", "f": "Varm gas i startluftsystemet kan antænde olierester og give eksplosion.", "emne": "Starteluft og motorstart"}, {"valg": ["Skylleluftkøleren", "Cylinderforingen", "Topstykket", "Udstødningsventilen"], "rigtig": 0, "q": "Hvilken komponent køles af LT-kredsen?", "f": "LT køler olie, skylleluft og kompressorer. HT køler motorens varme dele.", "emne": "Kølevandssystemer"}, {"valg": ["Svingningerne", "Den varige afvigelse", "Behovet for et setpunkt", "Forsinkelsen"], "rigtig": 1, "q": "Hvad fjerner I-delen i en PI-regulator?", "f": "I-delen bliver ved med at ændre udgangen, så længe der er en afvigelse.", "emne": "Regulering og omdrejningsregulator"}, {"valg": ["En fejl i måleudstyret", "At værdien efter en lastændring stabiliserer sig et stykke fra setpunktet", "At regulatoren svinger", "At setpunktet ændrer sig over tid"], "rigtig": 1, "q": "Hvad er den varige afvigelse i en P-regulator?", "f": "P-regulatoren har brug for en afvigelse for at holde ventilen i en ny stilling.", "emne": "Regulering og omdrejningsregulator"}, {"valg": ["Den øverste", "Den nederste", "Olieskraberingen", "De slides lige meget"], "rigtig": 0, "q": "Hvilken stempelring slides mest?", "f": "Slid er størst omkring TDC, hvor trykket er højest, og den øverste ring får mest.", "emne": "Motoropbygning og stempelringe"}, {"q": "P_C = 5.890 kW og P_T = 6.060 kW. Hvad er den mekaniske virkningsgrad? (2 decimaler)", "tal": 0.97, "tol": 0.005, "enhed": "", "losning": "η_m = P_C / P_T = 5.890 / 6.060 = 0,972.", "f": "Forskellen er lejefriktion og andre mekaniske tab.", "emne": "Turboladning og beregninger"}, {"valg": ["For at gøre den lettere at skifte", "Så varmeudvidelsen kan ske nedad uden spændinger", "For at give plads til skylleluftportene", "For at kølevandet kan løbe igennem"], "rigtig": 1, "q": "Hvorfor hænger cylinderforingen kun i en krave øverst?", "f": "En foring fastgjort i begge ender ville blive udsat for store spændinger, når den udvider sig.", "emne": "Motoropbygning og stempelringe"}, {"valg": ["6", "12", "18", "24"], "rigtig": 1, "q": "Hvor mange starter uden påfyldning kræver Søfartsstyrelsen for en reversibel motor?", "f": "Ikke-reversible motorer skal klare 6.", "emne": "Starteluft og motorstart"}, {"valg": ["20–30 °C", "45–50 °C", "80–90 °C", "Over 100 °C"], "rigtig": 2, "q": "Hvilken temperatur holdes HT-kredsen typisk på?", "f": "Høj temperatur giver mindre varmetab og hindrer kondensation af svovlsyre i foringen.", "emne": "Kølevandssystemer"}, {"valg": ["Rørkarakteristikken", "Stallgrænsen (surge line)", "Choke-grænsen", "Isentropen"], "rigtig": 1, "q": "Hvad kaldes grænsen, som kompressorens driftspunkt skal holde sig til højre for?", "f": "Toppunkterne ved forskellige omdrejningstal ligger på en parabel. Til venstre for den er driften ustabil.", "emne": "Pumper og kompressorer"}, {"valg": ["Det er billigere at bygge", "Så motoren kun møder lukket ferskvand og aldrig korrosivt søvand", "Søvand kan ikke køle nok", "For at spare søvandspumper"], "rigtig": 1, "q": "Hvorfor bruger store skibe et centralkølesystem?", "f": "Søvandet køler kun centralkøleren. Resten af systemet er beskyttet ferskvand med additiver.", "emne": "Kølevandssystemer"}, {"valg": ["Mere flow, lavere tryk", "Mindre flow, højere tryk", "Uændret", "Pumpekurven parallelforskydes"], "rigtig": 1, "q": "Rørmodstanden øges (fx en ventil drøvles). Hvad sker der med driftspunktet?", "f": "Rørkarakteristikken bliver stejlere. Pumpekurven ændres kun af omdrejningstallet.", "emne": "Pumper og kompressorer"}, {"valg": ["Stempelstangen", "Krydshovedet", "A-stativet", "Bundrammen"], "rigtig": 1, "q": "Hvilken del overfører sidekræfterne fra plejlstangen til guideplanerne?", "f": "Krydshovedet glider i guideplanerne, som A-stativet bærer. Derfor presses stemplet ikke mod foringen.", "emne": "Motoropbygning og stempelringe"}, {"valg": ["Impulsturboladning", "Jævntryksturboladning", "Begge", "Ingen af dem"], "rigtig": 1, "q": "Hvilken turboladning kræver el-drevne hjælpeblæsere ved start og lav last?", "f": "Den store fælles receiver giver langsom trykopbygning, når der er lidt gasenergi.", "emne": "Turboladning og beregninger"}, {"q": "Kompressoren: h ind = 539, h ud = 675, h ud,is = 656 kJ/kg. Hvad er den isentropiske virkningsgrad? (2 decimaler)", "tal": 0.86, "tol": 0.005, "enhed": "", "losning": "η_is,C = (656 − 539) / (675 − 539) = 117/136 = 0,86.", "f": "For kompressoren står det isentropiske arbejde i tælleren, fordi det virkelige er størst.", "emne": "Turboladning og beregninger"}];
+const NOGLE = "mn-forb-quiz", SAMLET = "1" === "1";
+const q = new URLSearchParams(location.search);
+
+// tilbage-link til den side man kom fra
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+
+// faner
+const tabs = [...document.querySelectorAll("#tabs button")];
+function vis(del) {
+  if (!document.getElementById("d-" + del)) del = "noter";
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.del === del));
+  document.querySelectorAll(".del").forEach(s => s.hidden = s.id !== "d-" + del);
+}
+tabs.forEach(b => b.addEventListener("click", () => {
+  vis(b.dataset.del);
+  const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
+  window.scrollTo(0, 0);
+}));
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else vis(q.get("vis") || "noter");
+// tomme dele skjules i fanerne
+["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+
+// tabeller kan scrolles på mobil
+document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+
+// quiz
+let gemt = {};
+try { gemt = JSON.parse(localStorage.getItem(NOGLE) || "{}"); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+// Danske og engelske skrivemåder virker begge: "85.200", "85200", "1.150,5", "0,86", "0.86".
+// Et enkelt punktum efterfulgt af tre cifre kan både være tusindtal og decimal, så begge tolkninger prøves.
+const tolk = s => { s = String(s).replace(/[\s\u00a0]/g, "").replace("−", "-");
+  if (!/^-?[\d.,]+$/.test(s)) return [];
+  if (s.includes(",")) return [parseFloat(s.replace(/\./g, "").replace(",", "."))];
+  if ((s.match(/\./g) || []).length > 1) return [parseFloat(s.replace(/\./g, ""))];
+  const ud = [parseFloat(s)];
+  if (/^-?\d+\.\d{3}$/.test(s)) ud.push(parseFloat(s.replace(".", "")));
+  return ud; };
+const fmt = x => x.toLocaleString("da-DK", { maximumFractionDigits: 4 });
+
+function bygQuiz() {
+  const rod = document.getElementById("quiz"); rod.innerHTML = "";
+  QUIZ.forEach((s, i) => {
+    const el = document.createElement("div"); el.className = "q";
+    el.innerHTML = `<div class="nr">Spørgsmål ${i + 1} af ${QUIZ.length}${SAMLET ? `<span class="emnetag">${s.emne}</span>` : ""}</div><div class="tekst">${s.q}</div>`;
+    const g = gemt[i];
+    if (s.valg) {
+      const v = document.createElement("div"); v.className = "valg";
+      s.valg.forEach((t, j) => {
+        const b = document.createElement("button"); b.innerHTML = t;
+        b.addEventListener("click", () => { gemt[i] = { valgt: j, ok: j === s.rigtig }; gem(); bygQuiz(); });
+        v.append(b);
+      });
+      el.append(v);
+      if (g) {
+        [...v.children].forEach((b, j) => { b.disabled = true; if (j === s.rigtig) b.classList.add("ok"); else if (j === g.valgt) b.classList.add("bad"); });
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Ikke helt."}</b>${s.f || ""}</div>`);
+      }
+    } else {
+      const f = document.createElement("div"); f.className = "tal";
+      f.innerHTML = `<input inputmode="decimal" aria-label="Dit svar" placeholder="Dit svar"> <span class="enhed">${s.enhed || ""}</span> <button class="knap">Tjek</button> <button class="knap stille">Vis facit</button>`;
+      const [inp, , tjek, opgiv] = f.children;
+      el.append(f);
+      const faerdig = g && (g.ok || g.forsog >= 2 || g.opgivet);
+      if (g && g.svar != null) inp.value = g.svar;
+      if (faerdig) {
+        inp.disabled = tjek.disabled = opgiv.disabled = true;
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Facit: " + fmt(s.tal) + " " + (s.enhed || "")}</b>${s.losning ? s.losning + "<br>" : ""}${s.f || ""}</div>`);
+      } else if (g && g.forsog === 1) {
+        el.insertAdjacentHTML("beforeend", `<div class="svar hint"><b>Ikke helt. Tjek din opstilling og prøv igen.</b>Du har ét forsøg tilbage.</div>`);
+      }
+      const svar = () => {
+        const xs = tolk(inp.value); if (!xs.length || xs.some(isNaN)) { inp.focus(); return; }
+        const ok = xs.some(x => Math.abs(x - s.tal) <= Math.max(s.tol, Math.abs(s.tal) * 1e-9));
+        const forsog = ((g && g.forsog) || 0) + 1;
+        gemt[i] = { svar: inp.value, ok, forsog }; gem(); bygQuiz();
+      };
+      tjek.addEventListener("click", svar);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") svar(); });
+      opgiv.addEventListener("click", () => { gemt[i] = { svar: inp.value, ok: false, forsog: 2, opgivet: true }; gem(); bygQuiz(); });
+    }
+    rod.append(el);
+  });
+  // score
+  const faerdige = QUIZ.map((s, i) => gemt[i] && (s.valg || gemt[i].ok || gemt[i].forsog >= 2));
+  const antal = faerdige.filter(Boolean).length, rigtige = QUIZ.filter((s, i) => gemt[i] && gemt[i].ok).length;
+  const forkerte = QUIZ.map((s, i) => faerdige[i] && !gemt[i].ok ? `<li>${s.q.replace(/<[^>]+>/g, "")}${SAMLET ? ` <em>(${s.emne})</em>` : ""}</li>` : "").join("");
+  document.getElementById("score").innerHTML = antal === 0 ? "" : `<div class="score">
+    <h2>${rigtige} af ${QUIZ.length} rigtige${antal < QUIZ.length ? ` · ${QUIZ.length - antal} mangler` : ""}</h2>
+    ${forkerte ? `<p>Tag med i repetitionen:</p><ul>${forkerte}</ul>` : antal === QUIZ.length ? "<p>Alle rigtige. Tag quizzen igen om et par uger.</p>" : ""}
+    <button class="knap stille" id="nulstil">Start forfra</button></div>`;
+  const n = document.getElementById("nulstil");
+  if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
+}
+if (QUIZ.length) bygQuiz(); else tabs.find(b => b.dataset.del === "quiz").hidden = true;
+</script>
+</body>
+</html>
