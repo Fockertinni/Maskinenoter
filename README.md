@@ -10,13 +10,11 @@ Mine noter og interaktive modeller fra maskinmesteruddannelsen. Siden er ren HTM
   - `#m5-el2-trefaset` er et emne
   - `#m5-quiz` og `#m5-el2-quiz` er samlede quizzer (pladsholdere indtil videre)
 - Alt indhold står i listen `SEMESTRE` øverst i scriptet i `index.html`.
-- `modeller/el2/` indeholder EL2-labsene. Hver lab kan vises samlet (`lab1.html`) eller én del ad gangen med `?vis=`:
-  - `?vis=sim` viser simulatoren
-  - `?vis=noter` viser noterne
-  - `?vis=forstaa` viser forståelsesdelen
-  - `?vis=test` viser quizzen ("Test dig selv")
-
-Modellerne i hver lab er flyttet ind i noterne under det afsnit, de hører til. Fanen "Modeller" er derfor skjult, og `?vis=modeller` viser noterne.
+- `modeller/el2/` indeholder EL2-labsene:
+  - `lab1.html` til `lab8.html` er de guidede simulatorer. `?vis=sim` tilføjer en tilbage-knap til forsiden.
+  - `lab1-noter.html` til `lab8-noter.html` indeholder noter (med modellerne inde i teksten), forståelse og quiz. Med `?vis=noter`, `?vis=forstaa` eller `?vis=test` vises kun den del.
+  - Gamle links som `lab1.html#noter` eller `lab1.html?vis=test` sendes automatisk videre til noter-filen.
+  - `index.html` er oversigten over alle otte øvelser.
 
 ## Tilføj et emne
 
@@ -38,7 +36,7 @@ Find faget i `SEMESTRE`, og tilføj én post til dets `emner`:
 - `id` må kun indeholde små bogstaver og tal (ingen bindestreg). Den bliver en del af adressen.
 - Kun de dele, der har et link, bliver vist som felter. `null` betyder, at delen ikke findes endnu.
 - Et emne uden nogen dele vises som et nedtonet felt.
-- Til EL2-labs findes genvejen `el2Lab(n)`, som giver alle dele for `lab{n}.html`.
+- Til EL2-labs findes genvejen `el2Lab(n)`, som giver alle dele for lab nr. n.
 
 ## Tilføj et fag
 

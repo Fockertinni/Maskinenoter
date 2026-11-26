@@ -186,6 +186,70 @@ details.step[open]{background:var(--panel)}
 .diagram svg{display:block;max-width:100%;height:auto;margin:0 auto}
 [hidden]:not([hidden=until-found i]){display:none!important}
 
+
+/* ---------- guidet gennemgang ---------- */
+.gtoggle{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;user-select:none;border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:6px 10px}
+.gtoggle input{width:17px;height:17px;accent-color:var(--accent);margin:0}
+.gtoggle:has(input:checked){color:var(--ink);border-color:var(--accent)}
+.stepper{display:flex;gap:4px;margin:0 0 12px;overflow-x:auto;padding-bottom:2px}
+.stepper button{flex:1 0 auto;min-width:96px;display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:7px;padding:7px 11px;cursor:pointer;font:inherit}
+.stepper button .k{font-family:var(--f-display);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.stepper button .t{font-family:var(--f-display);font-weight:600;font-size:17px;line-height:1.1;white-space:nowrap}
+.stepper button .bar{height:3px;width:100%;background:var(--grid);border-radius:2px;margin-top:5px;overflow:hidden}
+.stepper button .bar i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.stepper button[aria-current="step"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--accent-soft)}
+.stepper button.done .k::after{content:" ✓";color:var(--ok)}
+.stepper button.done .bar i{background:var(--ok)}
+.gdock{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:0;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;margin-bottom:12px;min-width:0}
+.gdock.ok{border-left-color:var(--ok)}
+@media (max-width:900px){.gdock{grid-template-columns:minmax(0,1fr)}.gdock .gside{border-left:0;border-top:1px solid var(--line)}}
+.gmain{padding:14px 18px 14px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.ghead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.gcount{font-family:var(--f-display);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:13px;color:var(--muted)}
+.gtitle{font-family:var(--f-display);font-size:26px;font-weight:700;line-height:1.1;margin:0;text-wrap:balance}
+.gbody{max-width:72ch}
+.gbody p{margin:0 0 6px}
+.gbody ul,.gbody ol{margin:2px 0 6px;padding-left:20px}
+.gbody li{margin:2px 0}
+.gtodo{list-style:none;padding:0;margin:4px 0 0;display:flex;flex-direction:column;gap:4px}
+.gtodo li{display:grid;grid-template-columns:22px 1fr;gap:6px;align-items:start;font-size:14.5px}
+.gtodo .mk{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);margin-top:2px;display:grid;place-items:center;font-size:11px;font-weight:700;color:transparent}
+.gtodo li.y .mk{background:var(--ok);border-color:var(--ok);color:#fff}
+.gtodo li.y span{color:var(--muted)}
+.gpred{display:flex;flex-direction:column;gap:8px;margin-top:2px}
+.gq{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:9px 12px}
+.gq label{font-weight:600;font-size:14.5px;display:block;margin-bottom:6px}
+.gq .row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.gq input[type=text]{font:inherit;font-family:var(--f-mono);font-size:15px;width:120px;padding:5px 8px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--ink);text-align:right}
+.gq .unit{font-family:var(--f-mono);font-size:14px;color:var(--muted);min-width:26px}
+.gq .fb{font-size:14px;margin-top:6px}
+.gq .fb.y{color:var(--ok)} .gq .fb.n{color:var(--bad)}
+.gq.solved{border-color:var(--ok);background:var(--ok-soft)}
+.gq textarea{width:100%;min-height:74px;font:inherit;font-size:14.5px;padding:7px 9px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--ink);resize:vertical}
+.gq .model{margin-top:8px;padding:8px 10px;border-left:3px solid var(--accent);background:var(--panel);border-radius:0 5px 5px 0;font-size:14.5px}
+.gnav{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:auto;padding-top:8px}
+.gnav .sp{flex:1}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.btn.primary[disabled]{background:var(--panel);color:var(--muted);border-color:var(--line);opacity:1}
+.btn.ghost{background:transparent}
+.linkbtn{background:none;border:0;color:var(--muted);font:inherit;font-size:13.5px;text-decoration:underline;cursor:pointer;padding:4px}
+.gstatus{font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px}
+.gstatus.y{color:var(--ok)} .gstatus.n{color:var(--muted)}
+.gside{border-left:1px solid var(--line);padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-width:0;background:var(--panel2);border-radius:0 8px 8px 0}
+.gside h4{margin:0;font-family:var(--f-display);font-size:16px;font-weight:600;letter-spacing:.03em}
+.gside svg{width:100%;height:auto;display:block;background:var(--panel);border:1px solid var(--line);border-radius:6px}
+.gside .small{margin:0}
+.gfocus{outline:3px solid var(--accent);outline-offset:3px;animation:gpulse 1.6s ease-in-out infinite}
+@keyframes gpulse{0%,100%{outline-color:var(--accent)}50%{outline-color:transparent}}
+.ghl-ring{fill:none;stroke:#ffcf33;stroke-width:3.5;pointer-events:none;animation:gring 1.3s ease-in-out infinite}
+.ghl-box{fill:none;stroke:#ffcf33;stroke-width:3;stroke-dasharray:10 7;pointer-events:none;rx:10}
+@keyframes gring{0%,100%{opacity:1}50%{opacity:.25}}
+body.guided #actCard{display:none}
+body:not(.guided) #guideWrap{display:none}
+@media (prefers-reduced-motion: reduce){.gfocus,.ghl-ring{animation:none}}
+.gpdf{font-size:14px;line-height:1.45;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 10px}
+.gpdf ul{margin:0;padding-left:18px}.gpdf li{margin:2px 0}
+.gtoggle{white-space:nowrap}
 </style>
 
 <div class="wrap">
@@ -194,16 +258,23 @@ details.step[open]{background:var(--panel)}
     <div class="eyebrow">M5 Elektroteknik 2 · Labøvelse 8</div>
     <h1>Frekvensomformer med <span>reluktansmotor</span></h1>
   </div>
-  <nav class="tabs" role="tablist" aria-label="Sider">
-    <button role="tab" data-tab="sim" aria-selected="true">Simulator</button>
-    <button role="tab" data-tab="noter" aria-selected="false">Noter</button>
-    <button role="tab" data-tab="modeller" aria-selected="false">Modeller</button>
-    <button role="tab" data-tab="forstaa" aria-selected="false">Forståelse</button>
-    <button role="tab" data-tab="test" aria-selected="false">Test dig selv</button>
-  </nav>
+  <label class="gtoggle"><input type="checkbox" id="noGuide"> Jeg ønsker ikke guide</label>
 </header>
 
 <section class="page" id="p-sim">
+<div id="guideWrap">
+  <nav class="stepper" id="stepper" aria-label="Aktiviteter i øvelsen"></nav>
+  <div class="gdock" id="gdock" aria-live="polite">
+    <div class="gmain">
+      <div class="ghead"><span class="gcount" id="gcount"></span></div>
+      <h2 class="gtitle" id="gtitle"></h2>
+      <div class="gbody" id="gbody"></div>
+      <div class="gstatus" id="gstat"></div>
+      <div class="gnav"><button class="btn ghost" id="gprev">← Tilbage</button><button class="btn" id="gshow">Vis mig</button><span class="small" id="gshowtxt"></span><span class="sp"></span><button class="linkbtn" id="gskip">Spring over</button><button class="btn primary" id="gnext">Næste trin →</button></div>
+    </div>
+    <div class="gside" id="gside"><h4 id="gdiagTitle"></h4><div id="gdiag"></div><p class="small" id="gsidenote"></p></div>
+  </div>
+</div>
   <div class="toolbar">
     <button class="btn power" id="btnPower">TÆND</button>
     <button class="btn estop" id="btnStop">NØDSTOP</button>
@@ -217,7 +288,7 @@ details.step[open]{background:var(--panel)}
       <div class="benchbox"><svg id="bench" viewBox="0 0 1180 800" role="img" aria-label="Laboratoriebænk med bordtavle, ABB ACS880, power-analysator C.A 8335, momentbænk MV1040, SynRM-motor og modstandskasse"></svg></div>
       <p class="hint">Træk ledninger mellem stikkene. Frekvensomformerens panel betjenes med Loc/Rem, Start, Stop og pilene (shift-klik: ±100 o/min). Klik på analysatorens W/A/V/harm for at skifte side, og på tangfeltet for at flytte tangen før eller efter omformeren. Lasten indstilles med EXCITATION på momentbænken.</p>
 
-      <div class="card" style="margin-top:12px">
+      <div class="card" id="cardSheet" style="margin-top:12px">
         <h3>Måleskema <small id="msAct">Aktivitet 1</small></h3>
         <p class="small">"Beregnet" er forberedelsen ud fra vejledningens værdier. "Målt" er hvad instrumenterne viser i din opstilling. Kopiér tabellen ind i Excel som verificeringsark.</p>
         <div class="tablewrap"><table id="msTable"></table></div>
@@ -233,7 +304,7 @@ details.step[open]{background:var(--panel)}
     </div>
 
     <aside class="side">
-      <div class="card">
+      <div class="card" id="actCard">
         <h3>Aktivitet <small>vælg øvelse</small></h3>
         <div class="actsel" id="actsel"></div>
         <div class="small" id="actDesc"></div>
@@ -292,95 +363,8 @@ details.step[open]{background:var(--panel)}
   </div>
 </section>
 
-<section class="page" id="p-noter" hidden>
-<h2>Noter til labøvelse 8</h2>
-  <p class="lead">Opsummering af øvelsesvejledningen opdelt i emner og koblet til læringsmålene om frekvensomformerens opbygning, THD<sub>i</sub> og hastighedskontrol af reluktansmaskinen. Gule bokse er uklarheder, røde er fejl.</p>
-  <div class="toc"><a href="#n8-f">Formål</a><a href="#n8-fo">Frekvensomformeren</a><a href="#n8-syn">Reluktansmotoren</a><a href="#n8-a1">Akt. 1</a><a href="#n8-a2">Akt. 2</a><a href="#n8-a3">Akt. 3 THD</a><a href="#n8-a4">Akt. 4</a><a href="#n8-flag">Uklarheder</a></div>
-  <div class="notes">
-    <article class="note" id="n8-f"><h3>Formål og forberedelse</h3><ul>
-      <li>Forstå reluktansmotorens virkemåde, undersøg kvaliteten af omformerens strømoptag (THD<sub>i</sub>), og bestem effektoptag og virkningsgrad.</li>
-      <li>Design et Excel-skema med n, M, P<sub>1</sub>, S, Q, Q<sub>D</sub>, THD<sub>i</sub>, omformerens udgangseffekt og de tre virkningsgrader.</li></ul></article>
-    <article class="note" id="n8-fo"><h3>Frekvensomformerens opbygning</h3><ul>
-      <li><b>Ensretter</b> (6-puls diodebro): laver net-AC om til DC. Leder kun når netspændingen er over mellemkredsspændingen → pulsformet strøm.</li>
-      <li><b>Mellemkreds</b>: kondensator (og ofte DC-spole, som i ACS880) der udglatter spændingen og lagrer energi. Den reaktive effekt til motoren pendler her.</li>
-      <li><b>Vekselretter</b> (IGBT, PWM): laver en variabel frekvens og spænding (U/f) til motoren.</li>
-      <li>Netsiden ser næsten ren virkeeffekt (cos φ<sub>1</sub> ≈ 0,95–0,98) men en forvrænget strøm med 5., 7., 11., 13. … harmoniske.</li>
-      <li><span class="formula-inline">S² = P² + Q² + Q<sub>D</sub>²</span>, <span class="formula-inline">λ = P/S = cos φ<sub>1</sub>/√(1 + THD<sub>i</sub>²)</span>.</li></ul></article>
-    <article class="note" id="n8-syn"><h3>Reluktansmotoren (SynRM)</h3><ul>
-      <li>Stator som en asynkronmotor. Rotoren har ingen viklinger eller magneter, kun udstansede fluxbarrierer der giver lav reluktans i d-aksen og høj i q-aksen.</li>
-      <li>Rotoren drejer synkront (intet slip) fordi den søger stillingen med mindst reluktans. Moment ∝ (L<sub>d</sub> − L<sub>q</sub>)·I<sub>d</sub>·I<sub>q</sub>.</li>
-      <li>Ingen rotortab → højere virkningsgrad (IE4/IE5) end asynkronmotoren, men lavere cos φ. Kræver frekvensomformer (kan ikke starte direkte).</li></ul>
-      <div class="flag"><b class="tag">Mangler</b>Vejledningen har ingen mærkeplade for reluktansmotoren eller momentbænken. "Nominelt moment" i aktivitet 4 kan derfor ikke bestemmes ud fra vejledningen. Simulatoren antager 1,5 kW, 1500 o/min, 9,55 Nm, 3,6 A, cos φ 0,72. Aflæs mærkepladen i laboratoriet.</div></article>
-    <article class="note" id="n8-a1"><h3>Aktivitet 1</h3><ul>
-      <li>Forbind omformeren til net og motor (Harting), momentbænken til modstandskassen, og sæt 1500 o/min.</li>
-      <li>C.A 8335 måler U<sub>f</sub>, I<sub>n,RMS</sub>, P, Q og cos φ før omformeren. Pilen på tangen mod omformeren (forbrugeren).</li>
-      <li>Mål I<sub>RMS</sub> før og efter omformeren i tomgang. Efter: motorens magnetiseringsstrøm (ca. 2 A). Før: kun tabene (ca. 0,3 A).</li></ul>
-      <div class="flag"><b class="tag">Tastefejl</b>"Frekvensomformen", "frekvensomformenrens", "diargam", "diaram", "i forklar" (og forklar).</div></article>
-    <article class="note" id="n8-a2"><h3>Aktivitet 2: Belastning</h3><ul>
-      <li>Tomgang, 1/3, 2/3 og 1/1 last. Mål S, P, Q, Q<sub>D</sub>, n og THD<sub>i</sub> før omformeren.</li>
-      <li><span class="formula-inline">η<sub>FO</sub> = P<sub>m1</sub>/P<sub>1</sub></span> (P<sub>m1</sub> fra omformerens display), <span class="formula-inline">η<sub>M</sub> = P<sub>2</sub>/P<sub>m1</sub></span>, <span class="formula-inline">η = P<sub>2</sub>/P<sub>1</sub></span>.</li>
-      <li>THD<sub>i</sub> er højest ved lav last, men den absolutte harmoniske strøm er størst ved fuld last.</li></ul>
-      <div class="flag"><b class="tag">Uklart</b>Vejledningen siger ikke hvordan motorens optagne effekt måles. Der er ingen analysator efter omformeren i diagram A, så P<sub>m1</sub> må tages fra omformerens display ("Udgangseffekt"). Det er en beregnet værdi med usikkerhed.</div></article>
-    <article class="note" id="n8-a3"><h3>Aktivitet 3: Harmoniske</h3><ul>
-      <li>Vælg en typisk belastningsgrad (fx 2/3: pumper og ventilatorer kører sjældent ved fuld last) og argumentér.</li>
-      <li>Mål I<sub>5</sub>, I<sub>7</sub>, I<sub>11</sub>, I<sub>13</sub> … og regn <span class="formula-inline">THD<sub>i</sub> = √(ΣI<sub>h</sub>²)/I<sub>1</sub></span>. Sammenlign med instrumentets.</li>
-      <li><span class="formula-inline">P<sub>1</sub> = √3·U·I<sub>1</sub>·cos φ<sub>1</sub></span>: kun grundtonen giver virkeeffekt når spændingen er (næsten) sinusformet.</li></ul>
-      <div class="flag"><b class="tag">Uklart</b>"Beregn ud fra målingerne den samlede THDi i % af grundfrekvensen" betyder i % af grundtonens strøm I<sub>1</sub>, ikke af frekvensen.</div></article>
-    <article class="note" id="n8-a4"><h3>Aktivitet 4: Lavere hastighed</h3><ul>
-      <li>1000 o/min og 2/3 M<sub>N</sub>. Omformeren sænker f til 33,3 Hz og U til ca. 267 V (U/f).</li>
-      <li>P<sub>2</sub> falder med n, mens kobbertabet (moment) er det samme. Motorens η falder derfor lidt.</li></ul></article>
-    <article class="note" id="n8-flag"><h3>Samlet liste over uklarheder</h3><ul>
-      <li><span class="tagchip">Mangler</span>Mærkeplade for motor og momentbænk.</li>
-      <li><span class="tagchip">Uklart</span>Hvordan P<sub>m1</sub> (motorens optagne effekt) måles.</li>
-      <li><span class="tagchip">Uklart</span>"THDi i % af grundfrekvensen".</li>
-      <li><span class="tagchip">Uklart</span>Diagram A viser analysatoren med spænding på L1, men ikke om der måles 3-faset (3 tænger) eller 1-faset ×3.</li>
-      <li><span class="tagchip err">Tastefejl</span>Flere stavefejl (se aktivitet 1).</li></ul></article>
-  </div>
-</section>
-
-<section class="page" id="p-modeller" hidden>
-  <h2>Interaktive modeller</h2>
-  <p class="lead">Hver model har formlen ved siden af. Standardværdierne er øvelsens. Skift tal og se hvad der sker. Simulatoren bruger de samme beregninger.</p>
-  <div class="toc" id="modelToc"></div>
-  <div class="models" id="models"></div>
-</section>
-
-<section class="page" id="p-forstaa" hidden>
-<h2>Forståelse</h2>
-  <div class="understand">
-    <article class="note"><h3>De 8 vigtigste ting at huske</h3><ol class="keylist">
-      <li><div><b>Ensretter → mellemkreds → vekselretter.</b> Netsiden er diodebro, motorsiden PWM.</div></li>
-      <li><div><b>Netsiden ser kun virkeeffekt</b> (plus harmoniske). Motorens reaktive strøm bliver i mellemkredsen.</div></li>
-      <li><div><b>6-puls: h = 6k ± 1.</b> 5. og 7. dominerer.</div></li>
-      <li><div><b>THD<sub>i</sub> = √(ΣI<sub>h</sub>²)/I<sub>1</sub>.</b> I<sub>RMS</sub> = I<sub>1</sub>√(1 + THD²).</div></li>
-      <li><div><b>S² = P² + Q² + Q<sub>D</sub>².</b> λ = P/S er lavere end cos φ<sub>1</sub>.</div></li>
-      <li><div><b>η = η<sub>FO</sub> · η<sub>M</sub>.</b> Faste tab dominerer ved lav last.</div></li>
-      <li><div><b>SynRM: synkron, intet slip, ingen rotortab.</b> Kræver frekvensomformer.</div></li>
-      <li><div><b>U/f konstant</b> giver konstant flux ved lavere hastighed.</div></li></ol></article>
-    <h3 style="margin-top:6px">Praktiske eksempler fra virkeligheden</h3>
-    <div class="ex">
-      <article class="note"><h4>Pumper og ventilatorer</h4><p>Effekten går med n³. En søvandspumpe på 80 % hastighed bruger ca. halvdelen af effekten. Derfor sidder der frekvensomformere på næsten alle store pumper og ventilatorer.</p></article>
-      <article class="note"><h4>Harmoniske på skibe</h4><p>Mange omformere på en lille generator forvrænger spændingen. Klasseregler kræver typisk THD<sub>u</sub> ≤ 8 %. Løsninger: 12-puls, aktive front-ends eller harmoniske filtre.</p></article>
-      <article class="note"><h4>Nulleder og transformere</h4><p>Harmoniske strømme varmer kabler og transformere ekstra op, fordi tabene går med I<sub>RMS</sub>² og hvirvelstrømstab stiger med frekvensen.</p></article>
-      <article class="note"><h4>IE5-motorer</h4><p>Reluktansmotorer (fx ABB SynRM) bruges til pumper og ventilatorer for at nå IE4/IE5 uden sjældne jordarter. De leveres altid sammen med en frekvensomformer.</p></article>
-    </div>
-    <article class="note"><h3>Typiske fejl og misforståelser</h3><ul>
-      <li><b>Tror omformeren har lav cos φ fordi motoren har:</b> netsiden har høj cos φ<sub>1</sub>.</li>
-      <li><b>Måler effekt efter omformeren med almindeligt instrument:</b> PWM-spændingen giver forkerte værdier.</li>
-      <li><b>Bruger I<sub>RMS</sub> i P = √3·U·I·cos φ:</b> brug I<sub>1</sub> og cos φ<sub>1</sub>, eller mål P direkte.</li>
-      <li><b>THD<sub>i</sub> ved tomgang overfortolkes:</b> procenten er høj, men strømmen er lille.</li>
-      <li><b>Tangens pil vendt:</b> negativ P.</li></ul></article>
-  </div>
-</section>
-
-<section class="page" id="p-test" hidden>
-  <h2>Test dig selv</h2>
-  <div style="display:flex;gap:16px;align-items:baseline;flex-wrap:wrap"><h3 id="quizN">Quiz</h3><span class="score" id="score">0 / 10</span><button class="btn" id="quizReset">Start forfra</button></div>
-  <div class="quiz" id="quiz"></div>
-  <h3 style="margin-top:28px">Regneopgaver med trin-for-trin løsning</h3>
-  <div class="quiz" id="exercises"></div>
-</section>
 </div>
+<div hidden aria-hidden="true"><div id="exercises"></div><div id="modelToc"></div><div id="models"></div><div id="quiz"></div><div id="quizN"></div><div id="quizReset"></div><div id="score"></div></div>
 <div class="toast" id="toast" hidden></div>
 
 <script>
@@ -594,7 +578,7 @@ function copyText(s,msgEl){const done=()=>{msgEl.textContent='Kopieret. Indsæt 
 function fallbackCopy(s,done,msgEl){const ta=document.createElement('textarea');ta.value=s;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){msgEl.textContent='Markér tabellen og kopiér manuelt.';}ta.remove();}
 $('#btnCopy').addEventListener('click',()=>{const rows=LAB.sheet(lastR);const tsv=['Størrelse\tEnhed\tBeregnet\tMålt\tAfvigelse %',...rows.map(r=>[r.l,r.u,cell(r.c,r.d),cell(r.m,r.d),devPct(r)].join('\t'))].join('\n');copyText(tsv,$('#copyMsg'));});
 function logCols(){return LAB.logCols?LAB.logCols(S.act):null;}
-$('#btnLog').addEventListener('click',()=>{const cols=logCols();if(!cols)return;if(!S.on&&!LAB.noPower){toast('Tænd først. Instrumenterne viser ingenting.');return;}
+$('#btnLog').addEventListener('click',()=>{const cols=logCols();if(!cols)return;if(!S.on&&!LAB.noPower&&!(LAB.logOff&&LAB.logOff(S.act))){toast('Tænd først. Instrumenterne viser ingenting.');return;}
   const row=LAB.logRow(lastR);if(!row){toast(LAB.logRefuse||'Der er ingen gyldig måling at gemme endnu.');return;}
   const L=(S.log[S.act]=S.log[S.act]||[]);const o=Object.assign({},row);cols.forEach(c=>{const v=row[c.k];o[c.k]=typeof v==='number'&&!LAB.noPower?noisy(v,c.noise):v;});L.push(o);update();toast('Målepunkt gemt i loggen.');});
 $('#btnLogClear').addEventListener('click',()=>{S.log[S.act]=[];update();});
@@ -608,8 +592,8 @@ function renderLog(){const cols=logCols();const card=$('#logCard');card.hidden=!
 /* ============ opdatering ============ */
 function update(){TPC=null;if(LAB.step)LAB.step();let R=LAB.solve();
   if(S.on&&R.fault){S.on=false;S.trip=R.fault;if(LAB.onPower)LAB.onPower(false);R=LAB.solve();}
-  noiseSeed=1+Math.floor(Math.random()*1e6);lastR=R;render();}
-function render(){const R=lastR||LAB.solve();drawBench(R);
+  noiseSeed=1+Math.floor(Math.random()*1e6);lastR=R;render();renderGuide();}
+function render(){const R=lastR||LAB.solve();drawBench(R);drawGuideHL();
   if(!LAB.noPower){const st=$('#status');st.className='statusbar'+(S.trip?' trip':(S.on?' on':''));
     $('#statusTxt').textContent=S.trip?'Udløst: '+S.trip+' Ret fejlen og tænd igen.':(S.on?(LAB.onTxt||'Under spænding. Kun afprøvning og målinger.'):'Spændingsløs. Du kan ændre opstillingen.');
     const pb=$('#btnPower');pb.textContent=S.on?(LAB.powerOff||'SLUK'):(LAB.powerOn||'TÆND');pb.classList.toggle('on',S.on);}
@@ -928,30 +912,155 @@ const EX=[
  {t:'Opgave 3 · Strøm før og efter i tomgang',q:'I tomgang ved 1500 o/min viser displayet motorstrøm 2,2 A, mens tangen før omformeren viser 0,30 A. Forklar forskellen.',
   steps:[['Motorsiden','Motorstrømmen er næsten ren magnetiseringsstrøm (reaktiv). cos φ<sub>motor</sub> er lav.'],['Mellemkredsen','Den reaktive effekt pendler mellem motoren og mellemkredsens kondensator gennem vekselretteren. Den passerer ikke ensretteren.'],['Netsiden','Nettet leverer kun tabene (ca. 150 W): I<sub>1</sub> = 150/(√3·400·0,96) ≈ 0,23 A. Med høj THD<sub>i</sub> ved lav last bliver I<sub>RMS</sub> ca. 0,3 A.'],['Konsekvens','En frekvensomformer "fasekompenserer" motoren: nettet ser cos φ<sub>1</sub> ≈ 0,95–0,98, men til gengæld harmoniske.']],model:['thd',{I1:0.23,h5:70,h7:45,h11:18,h13:14,hr:6}],sim:1}];
 
-boot();
+
+/* ============ GUIDET GENNEMGANG · fælles motor ============
+   Kræver et GC-objekt: {key, checks(), setAct(k), kick[], names[], steps[], diag?(n), regions?, side?(act), clean()} */
+const G={on:true,i:0,ans:{},seen:{},visited:new Set(),tries:{},txt:{},mcWrong:{},entered:{},hint:{},stepDone:false};
+const strip=s=>String(s).replace(/<[^>]+>/g,'');
+function gRow(sub){if(typeof LAB==='undefined')return null;try{return LAB.sheet(lastR||LAB.solve()).find(r=>strip(r.l).includes(sub))||null;}catch(e){return null;}}
+const gC=sub=>{const r=gRow(sub);return r&&typeof r.c==='number'?r.c:NaN;};
+const gM=sub=>{const r=gRow(sub);return r&&typeof r.m==='number'&&(S.on||(typeof LAB!=='undefined'&&LAB.noPower))?r.m:NaN;};
+const gnear=(v,t,tol)=>isFinite(v)&&Math.abs(v-t)<=tol;
+const gLog=k=>(S.log&&S.log[k]||[]).length;
+const gAllOk=()=>GC.checks().every(c=>c[1]);
+const gconti=()=>{if(typeof LAB!=='undefined'&&!LAB.conti)return;const b=$('#btnConti');if(b)b.click();};
+
+function gTodo(st){if(st.todoFn)return st.todoFn();return (st.todo||[]).map(t=>[t[0],!!t[1]()]);}
+function stepDone(st){const tOk=gTodo(st).every(t=>t[1]);const qOk=(st.q||[]).every((q,j)=>G.ans[G.i+':'+j]);return tOk&&qOk;}
+function actRange(a){const idx=GC.steps.map((s,i)=>s.act===a?i:-1).filter(i=>i>=0);return[idx[0],idx[idx.length-1]];}
+function qVal(q){return typeof q.val==='function'?q.val():q.val;}
+
+/* ---- fremhævning på bænken ---- */
+function drawGuideHL(){if(!G.on||G.stepDone)return;const st=GC.steps[G.i];if(!st)return;const g=sv('g',{'pointer-events':'none'},svg);
+  const hl=st.hl||{};(hl.regions||[]).forEach(r=>{const b=GC.regions&&GC.regions[r];if(b)sv('rect',{x:b[0],y:b[1],width:b[2],height:b[3],rx:10,class:'ghl-box'},g);});
+  let terms=[...(hl.terms||[])];
+  if(st.wireHint&&G.hint[G.i]){const tp=topo();(st.wireHint()||[]).forEach(([a,b])=>{if(T[a]&&T[b]&&tp.f(a)!==tp.f(b))terms.push(a,b);});}
+  [...new Set(terms)].forEach(t=>{const p=T[t];if(p)sv('circle',{cx:p.x,cy:p.y,r:16,class:'ghl-ring'},g);});}
+
+/* ---- tegn guiden ---- */
+function renderStepper(){const cur=GC.steps[G.i].act;$('#stepper').innerHTML=GC.names.map((n,a)=>{const[f,l]=actRange(a);if(f===undefined)return '';const tot=l-f+1;let v=0;for(let i=f;i<=l;i++)if(G.seen[i])v++;
+  return `<button data-a="${a}" ${a===cur?'aria-current="step"':''} class="${v===tot?'done':''}"><span class="k">${GC.kick[a]}</span><span class="t">${n}</span><span class="bar"><i style="width:${Math.round(v/tot*100)}%"></i></span></button>`;}).join('');
+  $$('#stepper button').forEach(b=>b.addEventListener('click',()=>goStep(actRange(+b.dataset.a)[0])));}
+function fmtSol(v,u){const a=Math.abs(v);const d=a===0?2:a<1?3:a<10?2:a<100?1:0;return `${fmt(v,d)} ${u}`;}
+function qHtml(q,j){const key=G.i+':'+j,a=G.ans[key],tries=G.tries[key]||0;
+  if(q.type==='txt')return `<div class="gq ${a?'solved':''}"><label for="gq${j}">${q.label}</label><textarea id="gq${j}" data-j="${j}" placeholder="Skriv dit svar her først…">${G.txt[key]||''}</textarea><div class="row" style="margin-top:6px">${a?'':`<button class="btn" data-reveal="${j}">Vis forslag</button>`}</div>${a?`<div class="model"><b>Forslag:</b> ${q.model}</div>`:''}</div>`;
+  if(q.type==='mc')return `<div class="gq ${a?'solved':''}"><label>${q.label}</label><div class="opts">${q.opts.map((o,k)=>`<button data-mc="${j}" data-k="${k}" class="${a&&k===q.a?'right':''}${G.mcWrong[key+':'+k]?' wrong':''}" ${a?'disabled':''}>${o}</button>`).join('')}</div>${a?`<div class="fb y">✓ ${q.expl}</div>`:''}</div>`;
+  const sol=fmtSol(qVal(q),q.unit);
+  return `<div class="gq ${a?'solved':''}"><label for="gq${j}">${q.label}</label><div class="row"><input type="text" inputmode="decimal" id="gq${j}" data-j="${j}" value="${G.txt[key]||''}" ${a?'disabled':''} autocomplete="off"><span class="unit">${q.unit}</span>${a?'':`<button class="btn" data-check="${j}">Tjek</button>`}${!a&&tries>=2?`<button class="linkbtn" data-sol="${j}">Vis svar</button>`:''}</div>
+   ${a?`<div class="fb y">✓ ${a==='rev'?'Facit':'Rigtigt'}: ${sol}</div>`:(tries?`<div class="fb n">Ikke helt. ${q.hint}</div>`:'')}</div>`;}
+function renderGuide(){if(!G.on)return;const st=GC.steps[G.i];const[f,l]=actRange(st.act);G.visited.add(G.i);
+  const todoL=gTodo(st);const done=stepDone(st);G.stepDone=done;if(done)G.seen[G.i]=true;
+  const last=GC.names.length-1;
+  $('#gcount').textContent=st.act>0&&st.act<last?`${GC.kick[st.act]} · trin ${G.i-f+1} af ${l-f+1}`:GC.kick[st.act];
+  $('#gtitle').textContent=st.title;
+  const todo=todoL.map(t=>`<li class="${t[1]?'y':''}"><span class="mk">✓</span><span>${t[0]}</span></li>`).join('');
+  const body=typeof st.body==='function'?st.body():(st.body||'');
+  $('#gbody').innerHTML=body+(todo?`<ul class="gtodo">${todo}</ul>`:'')+(st.q?`<div class="gpred">${st.q.map(qHtml).join('')}</div>`:'')+(st.extra?`<div style="margin-top:8px">${st.extra}</div>`:'');
+  $('#gdock').classList.toggle('ok',done);
+  const stat=$('#gstat');stat.className='gstatus '+(done?'y':'n');stat.textContent=done?'✓ Klaret. Gå videre når du er klar.':(st.q&&!todoL.length?'Svar på spørgsmålene for at gå videre.':'Gør punkterne på bænken. De krydses af automatisk.');
+  const nx=$('#gnext');nx.disabled=!done;nx.textContent=G.i===GC.steps.length-1?'Færdig':(GC.steps[G.i+1].act!==st.act?`Videre til ${GC.kick[GC.steps[G.i+1].act].toLowerCase()} →`:'Næste trin →');
+  $('#gprev').disabled=G.i===0;$('#gshow').hidden=!st.show||done;$('#gskip').hidden=done||G.i===GC.steps.length-1;
+  const hasHint=(st.showTxt||st.wireHint)&&!done;const ht=$('#gshowtxt');
+  ht.innerHTML=hasHint?(G.hint[G.i]?(st.showTxt?'Hint: '+st.showTxt:'Hint: de gule ringe viser stik, der mangler en forbindelse.'):'<button class="linkbtn" id="ghint">Hint</button>'):'';
+  const hb=$('#ghint');if(hb)hb.onclick=()=>{G.hint[G.i]=true;render();renderGuide();};
+  // sidepanel: diagram eller vejledningens punkter
+  const side=$('#gside');
+  if(st.diag&&GC.diag){side.hidden=false;$('#gdiagTitle').textContent='Tilslutningsdiagram '+'ABCD'[st.diag-1];$('#gdiag').innerHTML=GC.diag(st.diag);$('#gsidenote').textContent='Gentegnet efter øvelsesvejledningen. Den gule markering på bænken viser, hvor du skal arbejde nu.';}
+  else if(GC.side&&GC.side[st.act]){side.hidden=false;$('#gdiagTitle').textContent=GC.side[st.act][0];$('#gdiag').innerHTML=`<div class="gpdf">${GC.side[st.act][1]}</div>`;$('#gsidenote').textContent='Fra øvelsesvejledningen. Brug "Vis mig" hvis du sidder fast.';}
+  else side.hidden=true;
+  $$('.gfocus').forEach(e=>e.classList.remove('gfocus'));if(st.focus&&!done){const el=gFind(st.focus);if(el)el.classList.add('gfocus');}
+  renderStepper();bindGuide();}
+function gFind(sel){if(sel[0]==='#')return $(sel);return $$('.side .card').find(c=>{const h=c.querySelector('h3');return h&&h.textContent.includes(sel);})||null;}
+function bindGuide(){
+  $$('#gbody [data-check]').forEach(b=>b.onclick=()=>checkQ(+b.dataset.check));
+  $$('#gbody input[data-j]').forEach(inp=>{inp.oninput=()=>{G.txt[G.i+':'+inp.dataset.j]=inp.value;};inp.onkeydown=e=>{if(e.key==='Enter')checkQ(+inp.dataset.j);};});
+  $$('#gbody textarea[data-j]').forEach(t=>t.oninput=()=>{G.txt[G.i+':'+t.dataset.j]=t.value;});
+  $$('#gbody [data-sol]').forEach(b=>b.onclick=()=>{G.ans[G.i+':'+b.dataset.sol]='rev';renderGuide();});
+  $$('#gbody [data-reveal]').forEach(b=>b.onclick=()=>{const k=G.i+':'+b.dataset.reveal;if(!(G.txt[k]||'').trim()&&!confirm('Du har ikke skrevet noget endnu. Det sidder bedre fast hvis du prøver først. Vis forslaget alligevel?'))return;G.ans[k]=true;renderGuide();});
+  $$('#gbody [data-mc]').forEach(b=>b.onclick=()=>{const j=+b.dataset.mc,k=+b.dataset.k,q=GC.steps[G.i].q[j],key=G.i+':'+j;if(k===q.a)G.ans[key]=true;else G.mcWrong[key+':'+k]=true;renderGuide();});
+  $$('#gbody [data-free]').forEach(b=>b.onclick=()=>setGuide(false));
+  $$('#gbody [data-restart]').forEach(b=>b.onclick=()=>{if(confirm('Start forfra? Dine svar nulstilles.')){Object.assign(G,{i:0,ans:{},seen:{},visited:new Set(),tries:{},txt:{},mcWrong:{},entered:{},hint:{}});goStep(0);}});}
+function checkQ(j){const q=GC.steps[G.i].q[j],key=G.i+':'+j;const raw=(G.txt[key]||'').replace(/\s/g,'').replace(',','.');const v=parseFloat(raw);
+  if(isNaN(v)){toast('Skriv et tal først.');return;}
+  const val=qVal(q);const ok=q.abs!=null?Math.abs(v-val)<=q.abs:Math.abs(v-val)<=Math.abs(val)*q.tol;
+  if(ok)G.ans[key]=true;else G.tries[key]=(G.tries[key]||0)+1;renderGuide();
+  if(ok){const n=$(`#gq${j}`);n&&n.blur();}}
+function goStep(i){i=Math.max(0,Math.min(GC.steps.length-1,i));const prevAct=GC.steps[G.i].act;G.i=i;const st=GC.steps[i];
+  if(st.simAct&&S.act!==st.simAct)GC.setAct(st.simAct);
+  if(st.enter&&!G.entered[i]){G.entered[i]=true;st.enter();}
+  update();if(prevAct!==st.act)window.scrollTo({top:Math.max(0,$('#guideWrap').offsetTop-8),behavior:'smooth'});}
+$('#gnext').addEventListener('click',()=>{if(G.i===GC.steps.length-1){setGuide(false);return;}goStep(G.i+1);});
+$('#gprev').addEventListener('click',()=>goStep(G.i-1));
+$('#gskip').addEventListener('click',()=>goStep(G.i+1));
+$('#gshow').addEventListener('click',()=>{const st=GC.steps[G.i];if(!st.show)return;if(S.on&&!st.showLive){toast('Sluk først. Ledninger må kun flyttes spændingsløst.');return;}st.show();update();toast('Vist på bænken. Kig på hvad der blev ændret.');});
+function setGuide(on){G.on=on;document.body.classList.toggle('guided',on);$('#noGuide').checked=!on;try{localStorage.setItem('el2-'+GC.key+'-noguide',on?'0':'1');}catch(e){}
+  if(!on){$$('.gfocus').forEach(e=>e.classList.remove('gfocus'));}update();}
+$('#noGuide').addEventListener('change',e=>setGuide(!e.target.checked));
+function gStart(freeBoot){let noG=false;try{noG=localStorage.getItem('el2-'+GC.key+'-noguide')==='1';}catch(e){}
+  if(noG){freeBoot();setGuide(false);}else{document.body.classList.add('guided');$('#noGuide').checked=false;goStep(0);}}
+
+/* ---- trinbyggere til simulator 2–8 ---- */
+const GB={
+  intro(title,body){return {act:0,title,body,enter(){GC.clean();}};},
+  safety(extra){return {act:0,title:'Sikkerhed før du rører noget',body:`<ul><li>Alt udstyr med jordklemme får grøn/gul ledning til PE, og gennemgangen måles med Conti Light på 200 mA.</li><li>Al tilslutning, ændring og nedtagning sker spændingsløst. Simulatoren låser ledningerne, når der er tændt.</li><li>Underviseren godkender opstillingen før der tændes. Her er det tjeklisten "Underviser-tjek", som spærrer TÆND indtil alt er i orden.</li>${extra||''}</ul>`,
+    q:[{type:'mc',label:'Hvad gør du, før du ændrer en ledning i opstillingen?',opts:['Trykker NØDSTOP','Slukker spændingen, så opstillingen er spændingsløs','Fjerner PE-ledningen først'],a:1,expl:'Tilslutning, ændring og nedtagning sker altid spændingsløst. Nødstop er til nødsituationer.'}]};},
+  wire(act,title,body,o){o=o||{};return Object.assign({act,simAct:act,title:title||'Kobl op og få godkendt',body:body||'<p>Kobl spændingsløst efter tilslutningsdiagrammet. Sæt PE først, og mål gennemgangen med Conti Light. Punkterne nedenfor er underviserens tjekliste for denne aktivitet.</p>',
+    todoFn:()=>GC.checks().map(c=>[c[0],c[1]]),focus:'Underviser-tjek',wireHint:()=>LAB.acts[act].wires||[],
+    show(){const keep=S.log;loadPreset(act);S.log=keep;update();gconti();}},o);},
+  power(act,title,body,o){return Object.assign({act,simAct:act,title:title||'Tænd',body:body||'<p>Tjeklisten er grøn. Tryk TÆND øverst ved bænken.</p>',todo:[['Opstillingen er godkendt',gAllOk],['Spændingen er tændt',()=>S.on]],focus:'Underviser-tjek'},o||{});},
+  off(act,body){return {act,simAct:act,title:'Sluk før du ændrer',body:body||'<p>Næste aktivitet kræver en ændring i opstillingen. Sluk først.</p>',todo:[['Spændingen er slukket',()=>!S.on]],show(){S.on=false;if(LAB.onPower)LAB.onPower(false);},showLive:true};},
+  explain(act,qs,body){return {act,simAct:act,title:'Forklar det med dine egne ord',body:body||'<p>Skriv dit svar, før du ser forslaget. Det er det, rapporten skal kunne.</p>',q:qs.map(([label,model])=>({type:'txt',label,model}))};},
+  end(n,extra){return {act:n,title:'Øvelsen er gennemført',body:`<p>Du har været igennem alle aktiviteter. Til rapporten:</p><ul><li>Kopiér måleskema og målelog til Excel for hver aktivitet. Det gøres nemmest i fri tilstand, hvor du kan skifte aktivitet.</li>${extra||''}<li>Gentag forudsigelserne om et par dage uden at kigge. Det er der, det sidder fast.</li></ul>`,extra:'<button class="btn" data-free="1">Eksperimentér frit</button> <button class="btn" data-restart="1">Start forfra</button>'};}
+};
+GB.run=(act,title,body,todo,o)=>Object.assign({act,simAct:act,title,body,todo},o||{});
+GB.prep=(act,title,body,q,o)=>Object.assign({act,simAct:act,title:title||'Forbered: regn før du måler',body,q},o||{});
+const gL=k=>S.log&&S.log[k]||[];
+const gSync=()=>{if(typeof syncUI==='function')syncUI();};
+
+/* ---- Lab 8 · Frekvensomformer med reluktansmotor ---- */
+const GC={key:'lab8',checks:()=>allChecks(),setAct(k){S.act=k;if(LAB.onAct)LAB.onAct(k);},
+ kick:['Intro','Aktivitet 1','Aktivitet 2','Aktivitet 3','Aktivitet 4','Rapport'],
+ names:['Start','Tomgang','Last 0–1/1','Harmoniske','1000 o/min','Afslut'],
+ clean(){S.on=false;if(LAB.onPower)LAB.onPower(false);S.trip=null;S.wires=[];S.sel=-1;TPC=null;S.contiSet=new Set();S.log={};LAB.reset();gSync();contiShow(false,'Ingen målinger endnu.');GC.setAct(1);},
+ side:{1:['Aktivitet 1','<ul><li>Forbind frekvensomformeren til nettet og til reluktansmotoren, og momentbænken til modstandskassen.</li><li>Sætpunkt 1500 o/min.</li><li>THD-meter: U<sub>f</sub>, I<sub>n,RMS</sub>, effekter og cos φ.</li><li>Mål I<sub>RMS</sub> før og efter frekvensomformeren i tomgang, og forklar forskellen.</li></ul>'],
+  2:['Aktivitet 2','<ul><li>Belast med tomgang, 1/3, 2/3 og 1/1 last.</li><li>Mål S, P, Q, Q<sub>D</sub>, n og THD<sub>i</sub> før frekvensomformeren.</li><li>Beregn η for frekvensomformer, motor og samlet.</li></ul>'],
+  3:['Aktivitet 3','<ul><li>Vælg den belastning, frekvensomformeren oftest kører med, og argumentér.</li><li>Mål de ulige harmoniske og den samlede THD<sub>i</sub>.</li><li>Beregn THD<sub>i</sub> og P<sub>1</sub>, og sammenlign med de målte.</li></ul>'],
+  4:['Aktivitet 4','<ul><li>Omdrejninger 1000 o/min, last 2/3 af M<sub>N</sub>.</li><li>Mål og beregn η for frekvensomformer, motor og samlet.</li></ul>']}};
+GC.steps=[
+ GB.intro('Velkommen til labøvelse 8',`<p>Du kører en reluktansmotor fra en ABB-frekvensomformer og måler virkningsgrader og harmoniske strømme. Du gennemgår aktiviteterne én ad gangen: forbered, kobl spændingsløst, få godkendt, tænd, mål og forklar.</p><p>Gem dine målinger i <b>Målelog</b> under bænken. Sidder du fast, kan du bruge <b>Hint</b> eller <b>Vis mig</b>.</p>`),
+ GB.safety('<li>DC-generatoren i momentbænken er ikke beskyttet mod overbelastning eller kortslutning og kører isoleret uden isolationsovervågning.</li><li>Strømtangens pil skal pege mod frekvensomformeren (forbrugeren).</li>'),
+ GB.prep(1,'Forbered: strømmen før og efter',null,[
+  {type:'mc',label:'Hvorfor er strømmen før frekvensomformeren ikke sinusformet?',opts:['Fordi motoren er en reluktansmotor','Fordi diodeensretteren kun trækker strøm, når netspændingen er højere end DC-mellemkredsen, altså i korte pulser','Fordi THD-meteret måler forkert'],a:1,expl:'Ensretteren lader kondensatoren i mellemkredsen op i spidserne af sinusbølgen. Det giver korte strømpulser med mange harmoniske.'},
+  {type:'mc',label:'Hvor forventer du størst RMS-strøm i tomgang?',opts:['Før frekvensomformeren','Efter frekvensomformeren (motorstrømmen)'],a:1,expl:'Motoren trækker magnetiseringsstrøm, som pendler mellem motor og mellemkreds. Nettet leverer kun tabene, så strømmen før FO er lille.'}]),
+ GB.wire(1),GB.power(1),
+ GB.run(1,'Start i Local ved 1500 o/min','<p>Panelet i Local, sætpunkt 1500 o/min, Start. Mål med tangen før frekvensomformeren, og gem. Flyt tangen efter frekvensomformeren, og gem igen.</p>',
+  [['Frekvensomformeren kører i Local',()=>S.f.loc&&S.f.run],['Sætpunkt 1500 o/min',()=>gnear(S.f.ref,1500,5)],['Målt før FO',()=>gL(1).some(o=>/før/.test(o.w))],['Målt efter FO',()=>gL(1).some(o=>/efter/.test(o.w))]],
+  {focus:'Frekvensomformer',show(){Object.assign(S.f,{loc:true,run:true,ref:1500});gSync();},showLive:true}),
+ GB.explain(1,[['Forklar forskellen på I<sub>RMS</sub> før og efter frekvensomformeren i tomgang.','Efter FO løber motorens magnetiseringsstrøm, som er næsten ren reaktiv. Den udveksles med mellemkredsen og passerer ikke ensretteren. Før FO løber kun den aktive strøm til tab, i pulser fra ensretteren. Derfor er strømmen efter FO meget større end før.']]),
+ GB.run(2,'Belast fra tomgang til 1/1','<p>Kalibrér momentet i tomgang (ZERO), og brug lastknapperne eller feltet på momentbænken. Gem et punkt ved tomgang, 1/3, 2/3 og 1/1.</p>',
+  ['tomgang','1/3','2/3','1/1'].map(l=>['Punkt ved '+l,()=>gL(2).some(o=>o.fr===l)]),{focus:'Momentbænk'}),
+ GB.prep(2,'Regn på dit 1/1-punkt','<p>Brug målingen ved fuld last i måleskemaet.</p>',[
+  {label:'η<sub>samlet</sub> = P<sub>2</sub>/P<sub>1</sub>',unit:'%',val:()=>{const p=gL(2).find(o=>o.fr==='1/1');return p?p.eT:NaN;},tol:.04,hint:'P<sub>2</sub> = M · ω, med ω = 2π · n/60.'}]),
+ GB.explain(2,[['Hvordan ændrer THD<sub>i</sub> og virkningsgraden sig med lasten, og hvorfor?','Ved lav last er strømmen før FO lille og meget pulsformet, så THD<sub>i</sub> er høj og η lav (de faste tab dominerer). Med stigende last bliver pulserne bredere, THD<sub>i</sub> falder, og η stiger.']]),
+ GB.run(3,'Mål de harmoniske','<p>Indstil den belastning, du mener frekvensomformeren oftest kører med. Tryk "Gem målepunkt" én gang pr. harmonisk: 5., 7., 11., 13., 17., 19., 23. og 25.</p>',
+  [['Alle otte harmoniske gemt',()=>gLog(3)>=8]],{focus:'#logCard'}),
+ GB.prep(3,'Beregn THD<sub>i</sub> selv','<p>Brug dine gemte harmoniske og grundtonen I<sub>1</sub> i måleskemaet.</p>',[
+  {label:'THD<sub>i</sub> = √(ΣI<sub>h</sub>²)/I<sub>1</sub>',unit:'%',val:()=>gC('THDi = √'),tol:.05,hint:'Kvadrér hver harmonisk, læg dem sammen, tag kvadratroden og del med I<sub>1</sub>.'}]),
+ GB.explain(3,[['Hvilken belastning valgte du, og passer din beregnede THD<sub>i</sub> med den målte?','Mange pumper og ventilatorer kører ved dellast, fx 1/3–2/3. Den beregnede THD<sub>i</sub> ligger lidt under den målte, fordi kun harmoniske op til 25. orden er medtaget.']]),
+ GB.run(4,'1000 o/min og 2/3 last','<p>Sæt sætpunktet til 1000 o/min, og belast til 2/3 af M<sub>N</sub>. Gem et punkt.</p>',
+  [['Sætpunkt 1000 o/min',()=>gnear(S.f.ref,1000,5)],['Lasten er ca. 2/3 af M<sub>N</sub>',()=>gnear(gM('Belastning M/MN'),66.7,8)],['Punkt gemt',()=>gLog(4)>=1]],{focus:'Frekvensomformer'}),
+ GB.explain(4,[['Sammenlign virkningsgraderne ved 1000 og 1500 o/min ved samme moment.','Ved lavere hastighed er den afgivne effekt mindre (P = M · ω), mens kobbertabene er næsten de samme ved samme moment. Derfor falder η for motoren og samlet. Frekvensomformerens egne tab ændrer sig mindre.']]),
+ GB.end(5,'<li>Tegn grafer som funktion af lasten for aktivitet 2, og beregn η for frekvensomformer, motor og samlet i aktivitet 2 og 4.</li>')];
+
+/* ---- start ---- */
+{const _t=toast;toast=()=>{};try{boot();}finally{toast=_t;}}
+gStart(()=>{});
 
 </script>
 
 
-
-<!-- Modeller i noterne (Maskinenoter.dk): flytter hver interaktiv model ind under den note, den hører til. -->
-<style>.note + .model, .model + .model{margin-top:14px}</style>
-<script>
-(function(){
-  var MAP=[["eta", "n8-a2"], ["thd", "n8-a3"], ["uf", "n8-a4"]], efter={};
-  MAP.forEach(function(p){var m=document.getElementById('m-'+p[0]),n=document.getElementById(p[1]);if(!m||!n)return;(efter[p[1]]||n).after(m);efter[p[1]]=m;});
-  var b=document.querySelector('nav.tabs button[data-tab="modeller"]');if(b)b.style.display='none';
-  if(typeof showTab!=='function')return;
-  var orig=showTab,sidst=null;
-  try{Object.keys(MODELS).forEach(function(k){var o=MODELS[k]&&MODELS[k].set;if(typeof o==='function')MODELS[k].set=function(){sidst=k;return o.apply(this,arguments);};});}catch(e){}
-  showTab=function(id){if(id!=='modeller')return orig(id);orig('noter');sidst=null;
-    setTimeout(function(){var el=sidst&&document.getElementById('m-'+sidst);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},0);};
-  if((location.hash||'')==='#modeller')showTab('modeller');
-})();
-</script>
-<!-- Enkeltvisning (Maskinenoter.dk): ?vis=sim|noter|modeller|forstaa|test viser kun én del. Rører ikke simulatorens logik. -->
+<!-- Maskinenoter.dk: denne fil er simulatoren. Noter, forståelse og quiz ligger i lab8-noter.html, så gamle links sendes videre dertil. -->
 <style>
-html.solo nav.tabs{display:none}
 .solo-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;padding:10px max(16px,env(safe-area-inset-left,0px));background:var(--panel);border-bottom:1px solid var(--line);font:500 15px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
 .solo-bar a{color:var(--accent);text-decoration:none;font-weight:600}
 .solo-bar a:hover{text-decoration:underline}
@@ -959,9 +1068,10 @@ html.solo nav.tabs{display:none}
 </style>
 <script>
 (function(){
-  var q=new URLSearchParams(location.search),v=q.get('vis');
-  if(!v||!document.getElementById('p-'+v)||typeof showTab!=='function')return;
-  document.documentElement.classList.add('solo');showTab(v);
+  var andre=['noter','modeller','forstaa','test'],q=new URLSearchParams(location.search),v=q.get('vis'),h=(location.hash||'').slice(1);
+  if(andre.indexOf(v)>=0){location.replace('lab8-noter.html'+location.search);return;}
+  if(andre.indexOf(h)>=0){location.replace('lab8-noter.html#'+h);return;}
+  if(v!=='sim')return;
   var fra=q.get('fra')||'',bar=document.createElement('div');bar.className='solo-bar';
   var a=document.createElement('a');a.href='../../index.html'+(/^[a-z0-9-]+$/.test(fra)?'#'+fra:'');a.textContent='‹ '+(q.get('navn')||'Tilbage');
   var s=document.createElement('span');s.textContent=q.get('del')||'';

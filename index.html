@@ -146,12 +146,11 @@ const NU = 5; // det semester jeg er på lige nu
 
 // Genvej til dine EL2-labs: giver alle dele for lab nr. n
 const el2Lab = n => ({
-  noter:       `modeller/el2/lab${n}.html?vis=noter`,
+  noter:       `modeller/el2/lab${n}-noter.html?vis=noter`,   // modellerne ligger inde i noterne
   formler:     null,
   simulation:  `modeller/el2/lab${n}.html?vis=sim`,
-  modeller:    null, // modellerne ligger inde i noterne
-  forstaaelse: `modeller/el2/lab${n}.html?vis=forstaa`,
-  quiz:        `modeller/el2/lab${n}.html?vis=test`,
+  forstaaelse: `modeller/el2/lab${n}-noter.html?vis=forstaa`,
+  quiz:        `modeller/el2/lab${n}-noter.html?vis=test`,
 });
 
 const SEMESTRE = [
