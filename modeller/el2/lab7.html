@@ -994,4 +994,24 @@ boot();
 
 </script>
 
+
+<!-- Enkeltvisning (Maskinenoter.dk): ?vis=sim|noter|modeller|forstaa|test viser kun én del. Rører ikke simulatorens logik. -->
+<style>
+html.solo nav.tabs{display:none}
+.solo-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;padding:10px max(16px,env(safe-area-inset-left,0px));background:var(--panel);border-bottom:1px solid var(--line);font:500 15px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
+.solo-bar a{color:var(--accent);text-decoration:none;font-weight:600}
+.solo-bar a:hover{text-decoration:underline}
+.solo-bar span{color:var(--muted)}
+</style>
+<script>
+(function(){
+  var q=new URLSearchParams(location.search),v=q.get('vis');
+  if(!v||!document.getElementById('p-'+v)||typeof showTab!=='function')return;
+  document.documentElement.classList.add('solo');showTab(v);
+  var fra=q.get('fra')||'',bar=document.createElement('div');bar.className='solo-bar';
+  var a=document.createElement('a');a.href='../../index.html'+(/^[a-z0-9-]+$/.test(fra)?'#'+fra:'');a.textContent='‹ '+(q.get('navn')||'Tilbage');
+  var s=document.createElement('span');s.textContent=q.get('del')||'';
+  bar.append(a,s);document.body.prepend(bar);
+})();
+</script>
 </body></html>

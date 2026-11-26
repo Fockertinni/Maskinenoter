@@ -1,9 +1,66 @@
 # Maskinenoter.dk
 
-Noter og interaktive modeller til maskinmesteruddannelsen, samlet efter semester og fag.
+Mine noter og interaktive modeller fra maskinmesteruddannelsen. Siden er ren HTML, CSS og JavaScript uden build-trin, og den hostes på GitHub Pages på maskinenoter.dk (se `CNAME` og `.nojekyll`).
 
-Siden er en simpel statisk hjemmeside, der hostes gratis på GitHub Pages på domænet maskinenoter.dk.
+## Sådan er siden bygget op
 
-- `index.html` er forsiden. Fag og materiale står i listerne `SEM` og `MAT` nederst i filen.
-- `modeller/` indeholder de interaktive modeller, fx `modeller/el2/` med EL2-laboratoriesimulatorerne.
-- `CNAME` fortæller GitHub Pages, hvilket domæne siden kører på.
+- `index.html` er hele siden. Den skifter skærm via adressen:
+  - `#m5` er et semester
+  - `#m5-el2` er et fag
+  - `#m5-el2-trefaset` er et emne
+  - `#m5-quiz` og `#m5-el2-quiz` er samlede quizzer (pladsholdere indtil videre)
+- Alt indhold står i listen `SEMESTRE` øverst i scriptet i `index.html`.
+- `modeller/el2/` indeholder EL2-labsene. Hver lab kan vises samlet (`lab1.html`) eller én del ad gangen med `?vis=`:
+  - `?vis=sim` viser simulatoren
+  - `?vis=noter` viser noterne
+  - `?vis=modeller` viser modellerne
+  - `?vis=forstaa` viser forståelsesdelen
+  - `?vis=test` viser quizzen ("Test dig selv")
+
+## Tilføj et emne
+
+Find faget i `SEMESTRE`, og tilføj én post til dets `emner`:
+
+```js
+{ id: "isolation", navn: "Isolation", ikon: "el",
+  intro: "Et par sætninger om emnet.",
+  dele: {
+    noter: "noter/el2/isolation.html",
+    formler: null,
+    simulation: null,
+    modeller: null,
+    forstaaelse: null,
+    quiz: null,
+  } },
+```
+
+- `id` må kun indeholde små bogstaver og tal (ingen bindestreg). Den bliver en del af adressen.
+- Kun de dele, der har et link, bliver vist som felter. `null` betyder, at delen ikke findes endnu.
+- Et emne uden nogen dele vises som et nedtonet felt.
+- Til EL2-labs findes genvejen `el2Lab(n)`, som giver alle dele for `lab{n}.html`.
+
+## Tilføj et fag
+
+Tilføj én post til semestrets `fag`:
+
+```js
+{ id: "pa1", navn: "Procesanalyse og automation 1", ikon: "auto",
+  laeringsmaal: "https://...",   // valgfri
+  quiz: null,                    // link til en samlet quiz for faget, eller null
+  emner: [] },
+```
+
+Et fag uden emner vises nedtonet og kan ikke åbnes. Det bliver aktivt, så snart det får sit første emne.
+
+## Tilføj et semester
+
+Tilføj én post til `SEMESTRE`, fx `{ n: 10, quiz: null, fag: [ ... ] }`. `NU` øverst angiver det semester, der er markeret i semesterbaren.
+
+## Ikoner
+
+Brug en af nøglerne i `IKON`:
+
+- Fag: `el`, `energi`, `motoranlaeg`, `auto`, `oekonomi`, `ledelse`, `studie`, `vaerksted`, `praktik`, `koel`
+- Emner: `trefase`, `generator`, `motor`, `jord`, `transformer`, `kortslutning`, `synkron`, `frekvens`
+
+Vil du have et nyt ikon, så tilføj en linje til `IKON` med SVG-stier i et 24×24-gitter.
