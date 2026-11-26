@@ -591,5 +591,191 @@
    "quiz": 0,
    "formler": false
   }
+ ],
+ "term": [
+  {
+   "id": "temperatur",
+   "navn": "Temperatur og temperaturskalaer",
+   "ikon": "termometer",
+   "intro": "Hvad temperatur er, termodynamikkens 0. hovedsætning, Celsius, Kelvin og Fahrenheit, og hvorfor gasformler altid skal have kelvin.",
+   "quiz": 7,
+   "formler": true
+  },
+  {
+   "id": "temperatur-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Temperatur og temperaturskalaer",
+   "ikon": "termometer",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "termometre",
+   "navn": "Termometre og temperaturmåling",
+   "ikon": "termometer",
+   "intro": "Væsketermometer, metaludvidelse og bimetal, termistorer, Pt100, termoelementer og strålingstermometre: måleprincip, måleområde og usikkerhed.",
+   "quiz": 9,
+   "formler": true
+  },
+  {
+   "id": "termometre-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Termometre og temperaturmåling",
+   "ikon": "termometer",
+   "intro": "Måleprincip, måleområde og usikkerhed for hvert termometer, det du skal kunne tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "maaling",
+   "navn": "Måling og måleusikkerhed",
+   "ikon": "maal",
+   "intro": "Hvad en måling er, måleresultat og usikkerhed, systematiske og tilfældige fejl, middelværdi, spredning, standardusikkerhed og kalibrering.",
+   "quiz": 7,
+   "formler": true
+  },
+  {
+   "id": "maaling-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Måling og måleusikkerhed",
+   "ikon": "maal",
+   "intro": "De vigtigste formler, det du skal kunne forklare, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "tryk",
+   "navn": "Tryk",
+   "ikon": "tryk",
+   "intro": "Tryk som kraft pr. areal, enheder, absolut tryk og overtryk, hydrostatisk tryk, manometre og trykkets betydning i hydraulik.",
+   "quiz": 7,
+   "formler": true
+  },
+  {
+   "id": "tryk-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Tryk",
+   "ikon": "tryk",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "udvidelse",
+   "navn": "Varmeudvidelse",
+   "ikon": "udvid",
+   "intro": "Lineær udvidelse og volumenudvidelse, udvidelseskoefficienter, bimetal, termiske spændinger og hvordan man tager højde for udvidelse i rørsystemer.",
+   "quiz": 7,
+   "formler": true
+  },
+  {
+   "id": "udvidelse-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Varmeudvidelse",
+   "ikon": "udvid",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "varme",
+   "navn": "Varme og varmekapacitet",
+   "ikon": "flamme",
+   "intro": "Varme som energi, specifik varmekapacitet, Q = m · c · Δt, blandingstemperatur, varmeeffekt i en strøm af væske og kalorimetri.",
+   "quiz": 7,
+   "formler": true
+  },
+  {
+   "id": "varme-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Varme og varmekapacitet",
+   "ikon": "flamme",
+   "intro": "De vigtigste formler, det du skal kunne forklare, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "damp",
+   "navn": "Faseovergange og vanddamp",
+   "ikon": "kedel",
+   "intro": "Smelte- og fordampningsvarme, opvarmningskurven fra is til damp, kogepunkt og tryk, mættet og overhedet damp, dampkvalitet og entalpi fra damptabellen.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "damp-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Faseovergange og vanddamp",
+   "ikon": "kedel",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "gas",
+   "navn": "Idealgasloven og tilstandsændringer",
+   "ikon": "gas",
+   "intro": "Idealgasloven, den kombinerede gaslov, normalkubikmeter, isobar, isokor, isoterm og adiabatisk proces, pV-diagrammet og volumenændringsarbejde.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "gas-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Idealgasloven og tilstandsændringer",
+   "ikon": "gas",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "energi",
+   "navn": "Energi, effekt og virkningsgrad",
+   "ikon": "energi",
+   "intro": "Termodynamikkens 1. og 2. hovedsætning, indre energi, arbejde og varme, effekt, brændværdi, specifikt brændstofforbrug, virkningsgrad i en kæde og Carnot.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "energi-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Energi, effekt og virkningsgrad",
+   "ikon": "energi",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "varmetransmission",
+   "navn": "Varmetransmission",
+   "ikon": "varmeovf",
+   "intro": "Varmeledning, konvektion og stråling, varmeledningsevne, overgangstal, U-værdi og isolering, og hvordan varme overføres i en varmeveksler.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "varmetransmission-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Varmetransmission",
+   "ikon": "varmeovf",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "stivhed",
+   "navn": "Stivhed og materialelære",
+   "ikon": "stiv",
+   "intro": "Spænding og tøjning, Hookes lov og elasticitetsmodulet (Young's modulus), spændings-tøjningskurven for metaller, stivhed contra styrke og trækprøven.",
+   "quiz": 8,
+   "formler": true
+  },
+  {
+   "id": "stivhed-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Stivhed og materialelære",
+   "ikon": "stiv",
+   "intro": "De vigtigste formler, det du skal kunne forklare og tegne, de spørgsmål du kan forvente, og et huskekort.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "formelsamling",
+   "navn": "Samlet formelsamling",
+   "ikon": "formler",
+   "intro": "Alle formler fra Grundlæggende termodynamik samlet på ét sted og ordnet efter emne. God til repetition og til at slå op i, når du regner opgaver.",
+   "quiz": 0,
+   "formler": true
+  }
  ]
 }
