@@ -1,0 +1,13 @@
+/* Havet: samme mørke vandbaggrund på alle sider (noter, formler, labnoter, simulation, forståelse, quiz).
+   Indsæt i <head> på nye sider:  <link rel="stylesheet" href="../../hav.css"><script>document.documentElement.dataset.theme="dark"</script> */
+html:root:root {
+  color-scheme: dark;
+  --bg: #0a131c; --fg: #eef2f6; --ink: #e2e8eb; --muted: #9aa7b4;
+  /* noter */
+  --surface: #122130; --hover: #182a3c; --line: #23354a; --bar: rgba(10,19,28,.78);
+  /* labs */
+  --panel: #122130; --panel2: #16283a; --grid: #1c2e40; --bench: #15283a; --bench-line: #23354a; --accent-soft: #16363b; --warn: #e3a14b;
+}
+html { background: #0a131c !important; }
+body { background: radial-gradient(90% 70% at 70% 0%, #14283b, #0a131c 70%) fixed #0a131c !important; }
+@media print { html, body { background: #fff !important; } }

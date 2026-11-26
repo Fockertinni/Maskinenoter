@@ -72,3 +72,12 @@ Brug en af nøglerne i `IKON`:
 - Emner: `trefase`, `generator`, `motor`, `jord`, `transformer`, `kortslutning`, `synkron`, `frekvens`, `plc`, `relae`, `ladder`, `sekvens`, `timer`, `sikkerhed`
 
 Vil du have et nyt ikon, så tilføj en linje til `IKON` med SVG-stier i et 24×24-gitter.
+
+## Havbaggrund på alle sider
+Alle undersider (noter, formler, labnoter, simulation, forståelse, quiz) henter `hav.css` fra roden, så de har samme mørke vandbaggrund som forsiden. En ny side skal have denne linje lige efter `<title>`:
+
+```html
+<link rel="stylesheet" href="../../hav.css"><script>document.documentElement.dataset.theme="dark"</script>
+```
+
+Skabelonen `noter/kilde/skabelon.html` har den allerede.

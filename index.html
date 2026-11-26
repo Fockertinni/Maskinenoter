@@ -111,6 +111,14 @@ a.quiet:hover { color: var(--fg); background: var(--hover); }
 .hship { --L: clamp(300px, 62vw, 860px); position: relative; width: var(--L); aspect-ratio: 5 / 1; }
 .hship-inner { position: absolute; left: 50%; top: 50%; width: calc(var(--L) / 5); height: var(--L); transform: translate(-50%, -50%) rotate(-90deg); filter: drop-shadow(0 18px 28px rgba(0,0,0,.5)); }
 .hship-inner svg, .flyship svg { display: block; width: 100%; height: 100%; }
+/* Skibet på venstre side inde i et fag */
+:root { --sl: min(calc(100vh - 120px), 720px); --sw: calc(var(--sl) / 5); }
+.sship { display: none; }
+#app.side .hship-wrap { display: none; }
+#app.side .sship { display: block; position: fixed; z-index: 5; top: calc(env(safe-area-inset-top, 0px) + 84px); height: var(--sl); width: var(--sw);
+  left: max(24px, calc((100vw - (1080px + var(--sw) + 64px)) / 2 + 24px)); transform: rotate(180deg); filter: drop-shadow(0 18px 28px rgba(0,0,0,.5)); }
+.sship svg { display: block; width: 100%; height: 100%; }
+#app.side .screen { max-width: calc(1080px + var(--sw) + 64px); padding-left: calc(var(--sw) + 88px); }
 #landing .hero .wrap { transition: opacity .5s ease; }
 #landing.sejler .hero .wrap { opacity: 0; }
 .flyship { position: fixed; z-index: 60; pointer-events: none; transform-origin: 50% 50%; filter: drop-shadow(0 26px 44px rgba(0,0,0,.5)); }
@@ -147,6 +155,7 @@ a.quiet:hover { color: var(--fg); background: var(--hover); }
     </div>
     </div>
     <div class="hship-wrap"><div class="hship" id="hship" aria-hidden="true"></div></div>
+    <div class="sship" id="sship" aria-hidden="true"></div>
   </header>
   <main class="wrap screen" id="screen"></main>
 </div>
@@ -483,21 +492,57 @@ function setCrumbs(items) {
 }
 const roligt = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let foersteApp = true;
-function visApp(titel, html, crumbs) {
+const kanSide = () => innerWidth >= 900;
+function visApp(titel, html, crumbs, mode = "top") {
+  const A = $("#app");
+  if (mode === "side" && !kanSide()) mode = "top";
   // Kommer vi fra forsiden, sejler skibet af sted og lægger sig vandret som header
-  const sejl = !$("#landing").hidden && $("#ship").firstChild && !roligt();
+  const sejl = !$("#landing").hidden && $("#ship").firstChild && !roligt() && mode === "top";
   let fra = null;
   if (sejl) { const sh = $("#ship"), r = sh.getBoundingClientRect(); fra = { cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: sh.offsetWidth, h: sh.offsetHeight }; }
-  const hs = $("#hship");
+  // Skifter vi mellem header og venstre side, sejler skibet derhen
+  const forMode = A.classList.contains("side") ? "side" : "top";
+  const skift = !A.hidden && forMode !== mode && !roligt();
+  const kilde = skift ? skibPlads(forMode) : null;
+  const hs = $("#hship"), ss = $("#sship");
   if (!hs.firstChild) hs.innerHTML = `<div class="hship-inner">${shipSVG()}</div>`;
-  hs.classList.toggle("sail", foersteApp && !sejl); foersteApp = false;
+  if (!ss.firstChild) ss.innerHTML = shipSVG();
+  hs.classList.toggle("sail", foersteApp && !sejl && mode === "top"); foersteApp = false;
+  A.classList.toggle("side", mode === "side");
   setCrumbs(crumbs);
   const s = $("#screen"); s.innerHTML = html;
   s.style.animation = "none"; void s.offsetWidth; s.style.animation = "";
-  s.style.animationDelay = sejl ? "3.9s" : "";
+  s.style.animationDelay = sejl ? "3.9s" : skift ? "3.2s" : "";
   document.title = titel + " · Maskinenoter";
-  if (!sejl) { $("#landing").hidden = true; $("#landing").classList.remove("sejler"); $("#app").hidden = false; return; }
+  if (skift) { window.scrollTo(0, 0); omSkib(kilde, mode); return; }
+  if (!sejl) { $("#landing").hidden = true; $("#landing").classList.remove("sejler"); A.hidden = false; return; }
   sejlTur(fra);
+}
+/* Hvor står skibet lige nu (header eller venstre side) */
+function skibPlads(mode) {
+  const el = mode === "side" ? $("#sship") : $("#hship .hship-inner"), r = el.getBoundingClientRect();
+  return { el, cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: el.offsetWidth, h: el.offsetHeight };
+}
+/* Header -> venstre side: ud til højre, ned langs siden, hen langs bunden og op i venstre side. Og tilbage igen. */
+function omSkib(fra, mode) {
+  const vw = innerWidth, vh = innerHeight;
+  fra.el.style.visibility = "hidden";
+  const til = skibPlads(mode); til.el.style.visibility = "hidden";
+  const f = document.createElement("div"); f.className = "flyship"; f.innerHTML = shipSVG(); document.body.appendChild(f);
+  Object.assign(f.style, { left: (fra.cx - fra.w / 2) + "px", top: (fra.cy - fra.h / 2) + "px", width: fra.w + "px", height: fra.h + "px" });
+  const m = Math.min(1, (vh * .5) / fra.h), slut = til.h / fra.h;
+  const rute = mode === "side" ? [
+    { p: [fra.cx, fra.cy], k: [1, 0], s: 1 },
+    { p: [vw * .86, vh * .46], k: [0, 1], s: m },
+    { p: [vw * .52, vh * .86], k: [-1, 0], s: m },
+    { p: [til.cx, til.cy], k: [0, -1], s: slut },
+  ] : [
+    { p: [fra.cx, fra.cy], k: [0, -1], s: 1 },
+    { p: [til.cx, til.cy], k: [1, 0], s: slut },
+  ];
+  const anim = f.animate(rute2kf(rute, 26, fra.cx, fra.cy), { duration: mode === "side" ? 3800 : 2600, easing: "cubic-bezier(.45, .05, .25, 1)", fill: "forwards" });
+  const faerdig = () => { fra.el.style.visibility = ""; til.el.style.visibility = ""; f.remove(); };
+  anim.onfinish = faerdig; anim.oncancel = faerdig;
 }
 /* Skibets rute: punkter med kurs (enhedsvektor). Mellem punkterne tegnes en blød kurve (Hermite),
    og stævnen peger altid i sejlretningen. */
@@ -572,7 +617,7 @@ function fagSide(s, f) {
     ${f.laeringsmaal ? `<p class="meta"><a href="${f.laeringsmaal}" target="_blank" rel="noopener">Læringsmål ↗</a></p>` : ""}
     <div class="tiles">${f.emner.map(e => tile({ href: delAntal(e) ? `#m${s.n}-${f.id}-${e.id}` : null, navn: e.navn, ikon: e.ikon, c: farve(f.ikon) })).join("")}</div>
     ${quizKnap(`#m${s.n}-${f.id}-quiz`, `Quiz for hele ${f.navn}`, !!f.quiz)}`,
-    [[`M${s.n}`, `m${s.n}`], [f.navn]]);
+    [[`M${s.n}`, `m${s.n}`], [f.navn]], "side");
 }
 function emneSide(s, f, e) {
   const fra = `m${s.n}-${f.id}-${e.id}`;
@@ -581,7 +626,7 @@ function emneSide(s, f, e) {
     <h1>${esc(e.navn)}</h1>
     ${e.intro ? `<p class="intro">${esc(e.intro)}</p>` : ""}
     <div class="tiles">${DELE.filter(([k]) => e.dele[k]).map(([k, navn]) => tile({ href: link(e.dele[k], navn), navn, ikon: k, c: farve(k) })).join("")}</div>`,
-    [[`M${s.n}`, `m${s.n}`], [f.navn, `m${s.n}-${f.id}`], [e.navn]]);
+    [[`M${s.n}`, `m${s.n}`], [f.navn, `m${s.n}-${f.id}`], [e.navn]], "side");
 }
 function quizSide(s, f) {
   const hvad = f ? f.navn : `${s.n}. semester`;
@@ -592,7 +637,7 @@ function quizSide(s, f) {
     <h1>Quiz for ${esc(hvad)}</h1>
     <p class="intro">Kommer senere.</p>
     <a class="back" href="${tilbage}">‹ Tilbage</a>`,
-    f ? [[`M${s.n}`, `m${s.n}`], [f.navn, `m${s.n}-${f.id}`], ["Quiz"]] : [[`M${s.n}`, `m${s.n}`], ["Quiz"]]);
+    f ? [[`M${s.n}`, `m${s.n}`], [f.navn, `m${s.n}-${f.id}`], ["Quiz"]] : [[`M${s.n}`, `m${s.n}`], ["Quiz"]], f ? "side" : "top");
 }
 
 function rute() {
