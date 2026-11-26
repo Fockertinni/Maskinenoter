@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Varme og varmekapacitet · Grundlæggende termodynamik · Maskinenoter</title>
+<link rel="stylesheet" href="../../hav.css"><script>document.documentElement.dataset.theme="dark"</script>
+<!-- Bygget af noter/kilde/byg.py. Ret i kildefilen i noter/kilde/, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #b3361f; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #f0775a; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #f0775a; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.tabs { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--hover); flex-shrink: 0; }
+.tabs button { font: 600 .9rem/1 var(--sans); color: var(--muted); background: none; border: 0; padding: .5rem .8rem; border-radius: 8px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.8rem, 5vw, 3.2rem) max(16px, env(safe-area-inset-left, 0px)) 5rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .8rem 0 0; font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.del { margin-top: 2.2rem; }
+.del > :first-child { margin-top: 0; }
+.del h2 { margin: 2.6rem 0 .6rem; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; }
+.del h3 { margin: 1.8rem 0 .4rem; font-size: 1.12rem; letter-spacing: -.01em; }
+.del p, .del li { max-width: 68ch; }
+.del ul, .del ol { padding-left: 1.3rem; }
+.del li { margin: .25rem 0; }
+.del li::marker { color: var(--muted); }
+.del code { font: .92em var(--mono); background: var(--hover); padding: .08em .35em; border-radius: 5px; }
+.del strong { font-weight: 650; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: .94rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .8rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .92rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; }
+details { margin: .9rem 0; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: .1rem 1.1rem; }
+details > summary { cursor: pointer; font-weight: 600; padding: .75rem 0; color: var(--accent); list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "▸ "; }
+details[open] > summary::before { content: "▾ "; }
+details[open] { padding-bottom: .8rem; }
+.genkald { margin-top: 2.6rem; padding: 1.1rem 1.3rem; border: 2px solid var(--accent); border-radius: 16px; background: var(--surface); }
+.genkald h2, .genkald h3 { margin-top: 0 !important; font-size: .82rem !important; letter-spacing: .08em !important; text-transform: uppercase; color: var(--accent); }
+.genkald details { box-shadow: none; border: 1px solid var(--line); }
+
+/* quiz */
+.q { margin: 1rem 0; padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); }
+.q .nr { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q .tekst { margin: .3rem 0 .8rem; font-weight: 600; }
+.q .valg { display: grid; gap: 8px; }
+.q .valg button { text-align: left; font: inherit; font-size: .98rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: .65rem .9rem; cursor: pointer; }
+.q .valg button:hover:not(:disabled) { border-color: var(--accent); }
+.q .valg button:disabled { cursor: default; }
+.q .valg button.ok { background: var(--ok-bg); border-color: var(--ok); }
+.q .valg button.bad { background: var(--bad-bg); border-color: var(--bad); }
+.q .tal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q input { font: 1rem var(--mono); width: 11rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.q .enhed { color: var(--muted); }
+.knap { font: 600 .95rem var(--sans); padding: .6rem 1rem; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.svar { margin-top: .8rem; padding: .7rem .9rem; border-radius: 10px; font-size: .96rem; }
+.svar.ok { background: var(--ok-bg); } .svar.bad { background: var(--bad-bg); } .svar.hint { background: var(--key); }
+.svar b { display: block; margin-bottom: .15rem; }
+.score { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border-radius: 16px; background: var(--soft); border-left: 3px solid var(--accent); }
+.score h2 { margin: 0 0 .3rem !important; font-size: 1.2rem !important; }
+.score ul { margin: .4rem 0; }
+.emnetag { font-size: .76rem; font-weight: 600; color: var(--accent); margin-left: .4rem; text-transform: none; letter-spacing: 0; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .bar .in { gap: 8px; }
+  .tabs button { padding: .48rem .6rem; font-size: .85rem; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .8rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+}
+@media print { .bar { display: none; } .del[hidden] { display: block !important; } details { box-shadow: none; border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m4-term">‹ Grundlæggende termodynamik</a>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-del="noter">Noter</button>
+    <button role="tab" data-del="formler">Formler</button>
+    <button role="tab" data-del="quiz">Quiz</button>
+  </div>
+</div></header>
+<main>
+  <p class="kicker">Grundlæggende termodynamik</p>
+  <h1>Varme og varmekapacitet</h1>
+  <p class="intro">Varme som energi, specifik varmekapacitet, Q = m · c · Δt, blandingstemperatur, varmeeffekt i en strøm af væske og kalorimetri.</p>
+  <section class="del" id="d-noter" role="tabpanel"><blockquote>
+<p><strong>Kilder</strong>
+Ikke dækket af slides i materialet. Noterne bygger på standardteori.</p>
+</blockquote>
+<p>Varme er energi, der strømmer på grund af en temperaturforskel. Den strømmer altid af sig selv fra varmt til koldt, og den måles i joule (J). I maskinrummet bruger man ofte kJ, MJ og kWh.</p>
+<pre class="formel">1 kWh = 3,6 MJ = 3.600 kJ</pre>
+
+<h2>Specifik varmekapacitet</h2>
+<p>Den specifikke varmekapacitet c fortæller, hvor meget energi der skal til for at opvarme 1 kg af stoffet 1 K.</p>
+<pre class="formel">Q = m · c · Δt        [kJ] = [kg] · [kJ/(kg·K)] · [K]</pre>
+
+<table>
+<thead>
+<tr>
+<th>Stof</th>
+<th>c [kJ/(kg·K)]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vand</td>
+<td>4,19</td>
+</tr>
+<tr>
+<td>Is</td>
+<td>2,1</td>
+</tr>
+<tr>
+<td>Vanddamp (ca.)</td>
+<td>2,0</td>
+</tr>
+<tr>
+<td>Smøreolie</td>
+<td>ca. 1,9–2,0</td>
+</tr>
+<tr>
+<td>Luft (ved konstant tryk), c_p</td>
+<td>1,005</td>
+</tr>
+<tr>
+<td>Aluminium</td>
+<td>0,90</td>
+</tr>
+<tr>
+<td>Stål</td>
+<td>0,46</td>
+</tr>
+<tr>
+<td>Kobber</td>
+<td>0,385</td>
+</tr>
+</tbody>
+</table>
+<p>Vand har en usædvanlig høj varmekapacitet. Det er grunden til, at vand er så godt et kølemiddel: det kan optage meget varme uden at blive ret meget varmere.</p>
+<h3>Gennemregnet eksempel</h3>
+<p>En varmtvandsbeholder på 200 L skal varmes fra 15 °C til 60 °C med en 3 kW-varmelegeme. Hvor meget energi skal der til, og hvor lang tid tager det? Regn først.</p>
+<details>
+<summary>Vis udregning</summary>
+<p>m = 200 kg (1 L vand ≈ 1 kg). Q = 200 · 4,19 · 45 = 37.710 kJ = 37,7 MJ = 10,5 kWh.</p>
+<p>t = Q / P = 37.710 kJ / 3 kW = 12.570 s = <strong>3,5 timer</strong> (uden varmetab).</p>
+</details>
+<h2>Varmeeffekt i en strøm</h2>
+<p>I en varmeveksler eller et kølesystem strømmer væsken hele tiden. Så regner man med massestrøm ṁ (kg/s) i stedet for masse, og får en effekt (kW):</p>
+<pre class="formel">Φ = ṁ · c · Δt        [kW] = [kg/s] · [kJ/(kg·K)] · [K]</pre>
+
+<p><strong>Eksempel:</strong> 2 kg/s kølevand opvarmes 10 K i motorens køler: Φ = 2 · 4,19 · 10 = 83,8 kW. Det er den varme, kølevandet fjerner fra motoren.</p>
+<h2>Blandingstemperatur</h2>
+<p>Når to stoffer blandes eller bringes i kontakt uden varmetab, afgiver det varme varme, til de har samme temperatur. <strong>Afgivet varme = optaget varme.</strong></p>
+<pre class="formel">m₁ · c₁ · (t₁ − t) = m₂ · c₂ · (t − t₂)
+
+t = (m₁c₁t₁ + m₂c₂t₂) / (m₁c₁ + m₂c₂)</pre>
+
+<div class="m" data-m="blanding"></div>
+
+<p><strong>Forudsig først:</strong> 1 kg stål på 200 °C kommes i 2 kg vand på 20 °C. Bliver sluttemperaturen tæt på 110 °C?</p>
+<details>
+<summary>Vis svar</summary>
+<p>Nej. Vandets varmekapacitet er 2 · 4,19 = 8,38 kJ/K, stålets kun 0,46 kJ/K. Vandet "vinder": t = (8,38 · 20 + 0,46 · 200) / 8,84 = 29,4 °C.</p>
+</details>
+<h2>Kalorimetri</h2>
+<p>Med et blandingsforsøg kan man bestemme et ukendt stofs c: varm emnet op til en kendt temperatur, læg det i en kendt mængde vand, mål sluttemperaturen, og løs ligningen for c₂. I praksis skal man også regne med beholderens varmekapacitet (kalorimeterets vandværdi) og varmetabet.</p></section>
+  <section class="del" id="d-formler" role="tabpanel"><h3>Varmemængde</h3>
+<pre class="formel">Q = m · c · Δt            [kJ]
+1 kWh = 3,6 MJ</pre>
+
+<h3>Varmeeffekt i en strøm</h3>
+<pre class="formel">Φ = ṁ · c · Δt            [kW]
+ṁ = ρ · V̇                 (V̇ i m³/s)</pre>
+
+<h3>Blanding (intet tab)</h3>
+<pre class="formel">t = (m₁c₁t₁ + m₂c₂t₂) / (m₁c₁ + m₂c₂)</pre>
+
+<h3>Tid og effekt</h3>
+<pre class="formel">t = Q / P</pre>
+
+<h3>Typiske c-værdier [kJ/(kg·K)]</h3>
+<pre class="formel">vand 4,19   is 2,1   damp 2,0   olie ca. 1,9   luft c_p 1,005
+stål 0,46   aluminium 0,90   kobber 0,385</pre></section>
+  <section class="del" id="d-quiz" role="tabpanel">
+    <p>Svar på spørgsmålene, før du kigger i noterne. Ved talopgaver har du to forsøg, og komma og punktum virker begge.</p>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </section>
+</main>
+<script>
+const QUIZ = [{"q": "Hvor meget energi skal der til at varme 50 kg vand fra 10 °C til 70 °C? (kJ)", "tal": 12570.0, "tol": 20.0, "enhed": "kJ", "losning": "Q = 50 · 4,19 · 60 = 12.570 kJ.", "f": "Q = m · c · Δt.", "emne": "Varme og varmekapacitet"}, {"q": "Hvad er 12.570 kJ i kWh? (2 decimaler)", "tal": 3.49, "tol": 0.02, "enhed": "kWh", "losning": "12.570 / 3.600 = 3,49 kWh.", "f": "1 kWh = 3.600 kJ.", "emne": "Varme og varmekapacitet"}, {"q": "Kølevand strømmer med 1,5 kg/s og opvarmes fra 70 til 82 °C. Hvor stor er varmeeffekten? (kW, 1 decimal)", "tal": 75.4, "tol": 0.3, "enhed": "kW", "losning": "Φ = 1,5 · 4,19 · 12 = 75,4 kW.", "f": "Med massestrøm får man effekt i stedet for energi.", "emne": "Varme og varmekapacitet"}, {"q": "3 kg vand på 80 °C blandes med 1 kg vand på 20 °C. Hvad bliver sluttemperaturen? (°C)", "tal": 65.0, "tol": 0.2, "enhed": "°C", "losning": "Samme c: t = (3 · 80 + 1 · 20) / 4 = 260 / 4 = 65 °C.", "f": "Når stofferne er ens, går c ud.", "emne": "Varme og varmekapacitet"}, {"valg": ["Fordi det er billigt og koger ved 100 °C", "Fordi det har høj specifik varmekapacitet og kan optage meget varme pr. kg", "Fordi det leder strøm", "Fordi det udvider sig meget"], "rigtig": 1, "q": "Hvorfor er vand et godt kølemiddel?", "f": "4,19 kJ/(kg·K) er ca. ni gange mere end stål.", "emne": "Varme og varmekapacitet"}, {"valg": ["Vand", "Aluminium", "Stål", "Kobber"], "rigtig": 3, "q": "Hvilket stof skal der mindst energi til at opvarme 1 K pr. kg?", "f": "Kobber har c = 0,385 kJ/(kg·K), den laveste i tabellen.", "emne": "Varme og varmekapacitet"}, {"q": "2 kg aluminium på 150 °C lægges i 5 kg vand på 15 °C. Hvad bliver sluttemperaturen? (°C, 1 decimal)", "tal": 25.7, "tol": 0.2, "enhed": "°C", "losning": "m₁c₁ = 5 · 4,19 = 20,95 kJ/K, m₂c₂ = 2 · 0,90 = 1,80 kJ/K. t = (20,95 · 15 + 1,80 · 150) / 22,75 = (314,25 + 270) / 22,75 = 25,7 °C.", "f": "Vandet dominerer, fordi dets varmekapacitet er meget større.", "emne": "Varme og varmekapacitet"}];
+const NOGLE = "mn-term-varme", SAMLET = "" === "1";
+const q = new URLSearchParams(location.search);
+
+// tilbage-link til den side man kom fra
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+
+// faner
+const tabs = [...document.querySelectorAll("#tabs button")];
+function vis(del) {
+  if (!document.getElementById("d-" + del)) del = "noter";
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.del === del));
+  document.querySelectorAll(".del").forEach(s => s.hidden = s.id !== "d-" + del);
+}
+tabs.forEach(b => b.addEventListener("click", () => {
+  vis(b.dataset.del);
+  const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
+  window.scrollTo(0, 0);
+}));
+// tomme dele skjules i fanerne
+["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+if (!QUIZ.length) tabs.find(b => b.dataset.del === "quiz").hidden = true;
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else { const v = q.get("vis") || "noter", t = tabs.find(b => b.dataset.del === v && !b.hidden) || tabs.find(b => !b.hidden); vis(t ? t.dataset.del : "noter"); }
+
+// tabeller kan scrolles på mobil
+document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+
+// quiz
+let gemt = {};
+try { gemt = JSON.parse(localStorage.getItem(NOGLE) || "{}"); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+// Danske og engelske skrivemåder virker begge: "85.200", "85200", "1.150,5", "0,86", "0.86".
+// Et enkelt punktum efterfulgt af tre cifre kan både være tusindtal og decimal, så begge tolkninger prøves.
+const tolk = s => { s = String(s).replace(/[\s\u00a0]/g, "").replace("−", "-");
+  if (!/^-?[\d.,]+$/.test(s)) return [];
+  if (s.includes(",")) return [parseFloat(s.replace(/\./g, "").replace(",", "."))];
+  if ((s.match(/\./g) || []).length > 1) return [parseFloat(s.replace(/\./g, ""))];
+  const ud = [parseFloat(s)];
+  if (/^-?\d+\.\d{3}$/.test(s)) ud.push(parseFloat(s.replace(".", "")));
+  return ud; };
+const fmt = x => x.toLocaleString("da-DK", { maximumFractionDigits: 4 });
+
+function bygQuiz() {
+  const rod = document.getElementById("quiz"); rod.innerHTML = "";
+  QUIZ.forEach((s, i) => {
+    const el = document.createElement("div"); el.className = "q";
+    el.innerHTML = `<div class="nr">Spørgsmål ${i + 1} af ${QUIZ.length}${SAMLET ? `<span class="emnetag">${s.emne}</span>` : ""}</div><div class="tekst">${s.q}</div>`;
+    const g = gemt[i];
+    if (s.valg) {
+      const v = document.createElement("div"); v.className = "valg";
+      s.valg.forEach((t, j) => {
+        const b = document.createElement("button"); b.innerHTML = t;
+        b.addEventListener("click", () => { gemt[i] = { valgt: j, ok: j === s.rigtig }; gem(); bygQuiz(); });
+        v.append(b);
+      });
+      el.append(v);
+      if (g) {
+        [...v.children].forEach((b, j) => { b.disabled = true; if (j === s.rigtig) b.classList.add("ok"); else if (j === g.valgt) b.classList.add("bad"); });
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Ikke helt."}</b>${s.f || ""}</div>`);
+      }
+    } else {
+      const f = document.createElement("div"); f.className = "tal";
+      f.innerHTML = `<input inputmode="decimal" aria-label="Dit svar" placeholder="Dit svar"> <span class="enhed">${s.enhed || ""}</span> <button class="knap">Tjek</button> <button class="knap stille">Vis facit</button>`;
+      const [inp, , tjek, opgiv] = f.children;
+      el.append(f);
+      const faerdig = g && (g.ok || g.forsog >= 2 || g.opgivet);
+      if (g && g.svar != null) inp.value = g.svar;
+      if (faerdig) {
+        inp.disabled = tjek.disabled = opgiv.disabled = true;
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Facit: " + fmt(s.tal) + " " + (s.enhed || "")}</b>${s.losning ? s.losning + "<br>" : ""}${s.f || ""}</div>`);
+      } else if (g && g.forsog === 1) {
+        el.insertAdjacentHTML("beforeend", `<div class="svar hint"><b>Ikke helt. Tjek din opstilling og prøv igen.</b>Du har ét forsøg tilbage.</div>`);
+      }
+      const svar = () => {
+        const xs = tolk(inp.value); if (!xs.length || xs.some(isNaN)) { inp.focus(); return; }
+        const ok = xs.some(x => Math.abs(x - s.tal) <= Math.max(s.tol, Math.abs(s.tal) * 1e-9));
+        const forsog = ((g && g.forsog) || 0) + 1;
+        gemt[i] = { svar: inp.value, ok, forsog }; gem(); bygQuiz();
+      };
+      tjek.addEventListener("click", svar);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") svar(); });
+      opgiv.addEventListener("click", () => { gemt[i] = { svar: inp.value, ok: false, forsog: 2, opgivet: true }; gem(); bygQuiz(); });
+    }
+    rod.append(el);
+  });
+  // score
+  const faerdige = QUIZ.map((s, i) => gemt[i] && (s.valg || gemt[i].ok || gemt[i].forsog >= 2));
+  const antal = faerdige.filter(Boolean).length, rigtige = QUIZ.filter((s, i) => gemt[i] && gemt[i].ok).length;
+  const forkerte = QUIZ.map((s, i) => faerdige[i] && !gemt[i].ok ? `<li>${s.q.replace(/<[^>]+>/g, "")}${SAMLET ? ` <em>(${s.emne})</em>` : ""}</li>` : "").join("");
+  document.getElementById("score").innerHTML = antal === 0 ? "" : `<div class="score">
+    <h2>${rigtige} af ${QUIZ.length} rigtige${antal < QUIZ.length ? ` · ${QUIZ.length - antal} mangler` : ""}</h2>
+    ${forkerte ? `<p>Tag med i repetitionen:</p><ul>${forkerte}</ul>` : antal === QUIZ.length ? "<p>Alle rigtige. Tag quizzen igen om et par uger.</p>" : ""}
+    <button class="knap stille" id="nulstil">Start forfra</button></div>`;
+  const n = document.getElementById("nulstil");
+  if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
+}
+if (QUIZ.length) bygQuiz();
+</script>
+<script src="modeller.js"></script>
+</body>
+</html>

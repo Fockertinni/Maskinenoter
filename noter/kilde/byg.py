@@ -37,6 +37,7 @@ FAG = {
     "forb": {"navn": "Forbrændingsmotoranlæg", "farve": "#c8501d", "farve_m": "#f08a5a", "fra": "m5-forb"},
     # js: et script ved siden af siderne, der tegner modeller skrevet som <div class="m" data-m="..."></div>
     "el2": {"navn": "Elektroteknik 2", "farve": "#8a5f00", "farve_m": "#f2bd3d", "fra": "m5-el2", "js": "modeller.js"},
+    "term": {"navn": "Grundlæggende termodynamik", "farve": "#b3361f", "farve_m": "#f0775a", "fra": "m4-term", "js": "modeller.js"},
 }
 
 def md(tekst):
