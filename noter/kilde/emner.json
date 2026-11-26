@@ -381,5 +381,215 @@
    "quiz": 0,
    "formler": true
   }
+ ],
+ "stud": [
+  {
+   "id": "faget",
+   "navn": "Faget, forløbet og opgaverne",
+   "ikon": "studie",
+   "intro": "Hvad Studiekompetence og metode går ud på, de obligatoriske opgaver på M4, hvordan de hænger sammen, og hvilken litteratur der hører til.",
+   "quiz": 5,
+   "formler": false
+  },
+  {
+   "id": "faget-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Faget og opgaverne",
+   "ikon": "studie",
+   "intro": "Hvordan faget bedømmes, hvad hver obligatorisk opgave kræver, og en tjekliste før du afleverer.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "opgaveformer",
+   "navn": "Opgavetyper, formalia og kildehenvisning",
+   "ikon": "opgave",
+   "intro": "Forskellen på almindelige opgaver, projektrapporter og laboratorierapporter, formkravene til en almindelig opgave, og hvordan du henviser til bøger, hjemmesider og interview.",
+   "quiz": 7,
+   "formler": false
+  },
+  {
+   "id": "opgaveformer-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Opgavetyper og formalia",
+   "ikon": "opgave",
+   "intro": "Formkravene på én side, de tre opgavetyper, og hvordan kildehenvisninger skal se ud.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "projektrapport",
+   "navn": "Projektrapporten og problemformuleringen",
+   "ikon": "rapport",
+   "intro": "Projektrapportens afsnit fra abstract til bilag, forskellen på problemstilling og problemformulering, afgrænsning, og hvad der hører til i diskussion og konklusion.",
+   "quiz": 7,
+   "formler": false
+  },
+  {
+   "id": "projektrapport-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Projektrapporten",
+   "ikon": "rapport",
+   "intro": "Rapportens afsnit i rækkefølge, hvordan en god problemformulering ser ud, og de spørgsmål du kan få til fremlæggelsen.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "metode",
+   "navn": "Metode, metodologi og metodekompetence",
+   "ikon": "metode",
+   "intro": "Hvad en metode er, forskellen på metode og metodologi, hvorfor metodevalg aldrig er uskyldige, og de fire delkompetencer i metodekompetence.",
+   "quiz": 7,
+   "formler": false
+  },
+  {
+   "id": "metode-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Metode og metodologi",
+   "ikon": "metode",
+   "intro": "Definitionerne du skal kunne udenad, de fire delkompetencer, og hvordan du forsvarer et metodevalg.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "videnskabsteori",
+   "navn": "Videnskabsteori: positivisme, hermeneutik, induktion og deduktion",
+   "ikon": "viden",
+   "intro": "De videnskabsteoretiske tilgange, slides nævner, hvordan naturvidenskab og samfundsvidenskab bruges sammen i en maskinmesteropgave, og forskellen på induktiv og deduktiv metode.",
+   "quiz": 6,
+   "formler": false
+  },
+  {
+   "id": "videnskabsteori-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Videnskabsteori",
+   "ikon": "viden",
+   "intro": "De to tilgange og de to slutningsformer på én side, og hvordan du skriver dem ind i opgave 3.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "dataindsamling",
+   "navn": "Kvantitative og kvalitative metoder",
+   "ikon": "data",
+   "intro": "Forskellen på kvantitative og kvalitative data, typiske metoder til dataindsamling, primære og sekundære kilder, informationssøgning og metodetriangulering.",
+   "quiz": 6,
+   "formler": false
+  },
+  {
+   "id": "dataindsamling-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Kvantitative og kvalitative metoder",
+   "ikon": "data",
+   "intro": "Sammenligningen du skal kunne, hvordan du begrunder dit valg, og spørgsmålene til fremlæggelsen.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "kvalitet",
+   "navn": "Validitet, reliabilitet, kildekritik og bias",
+   "ikon": "maal",
+   "intro": "Hvordan du vurderer, om en undersøgelse måler det rigtige og kan gentages, hvordan du vurderer kilder, og hvor bias sniger sig ind.",
+   "quiz": 7,
+   "formler": false
+  },
+  {
+   "id": "kvalitet-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Validitet, reliabilitet, kildekritik og bias",
+   "ikon": "maal",
+   "intro": "De fire begreber på én side, skydeskiven, og hvordan du skriver dem ind i en diskussion.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "synopsis",
+   "navn": "Synopsis",
+   "ikon": "synopsis",
+   "intro": "Hvad en synopsis er, hvordan den er bygget op, og hvorfor den beskriver planen og ikke resultatet.",
+   "quiz": 6,
+   "formler": false
+  },
+  {
+   "id": "synopsis-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Synopsis",
+   "ikon": "synopsis",
+   "intro": "De seks afsnit, forskellen på synopsis og rapport, og hvad metodedelen skal svare på.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "ideer",
+   "navn": "Idégenerering og De Bonos tænkehatte",
+   "ikon": "hat",
+   "intro": "Hvordan en gruppe finder et emne: paralleltænkning, de seks tænkehatte, og processen fra mange idéer til ét valgt emne.",
+   "quiz": 7,
+   "formler": false
+  },
+  {
+   "id": "ideer-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Idégenerering",
+   "ikon": "hat",
+   "intro": "De seks hatte, processen fra mange idéer til ét emne, og hvordan du forklarer jeres valg af emne.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "baeredygtighed",
+   "navn": "Bæredygtighed i metodisk perspektiv",
+   "ikon": "esg",
+   "intro": "Hvad bæredygtig ledelse er, hvordan bæredygtighed bliver til konkret handling, og metoderne til at måle den: LCA, carbon footprint, MFA og interessentanalyse.",
+   "quiz": 6,
+   "formler": false
+  },
+  {
+   "id": "baeredygtighed-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Bæredygtighed i metodisk perspektiv",
+   "ikon": "esg",
+   "intro": "Definitionen, de tre dimensioner, metoderne til at måle bæredygtighed, og hvordan du kobler det til opgave 3.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "opgave3",
+   "navn": "Obligatorisk opgave 3 trin for trin",
+   "ikon": "koel",
+   "intro": "Opgaveoplægget, en arbejdsplan fra emne til fremlæggelse, og et gennemgået eksempel om et dampkompressionskøleanlæg med problemformulering, afgrænsning og metode.",
+   "quiz": 7,
+   "formler": true
+  },
+  {
+   "id": "opgave3-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Obligatorisk opgave 3",
+   "ikon": "koel",
+   "intro": "Tjekliste til afleveringen, fremlæggelsens opbygning, og de spørgsmål en anden gruppe eller underviseren kan stille.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "samarbejde",
+   "navn": "Studiegruppen: samarbejdskontrakt, Belbin og feedback",
+   "ikon": "ledelse",
+   "intro": "Hvad en samarbejdskontrakt skal indeholde, Belbins ni teamroller med bidrag og tilladelige svagheder, og hvordan du bruger refleksion og feedback til at justere din adfærd.",
+   "quiz": 7,
+   "formler": false
+  },
+  {
+   "id": "samarbejde-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Studiegruppen",
+   "ikon": "ledelse",
+   "intro": "Kontraktens punkter, de ni roller, og hvad der skal til, før en refleksion er god nok.",
+   "quiz": 0,
+   "formler": false
+  },
+  {
+   "id": "maaling",
+   "navn": "Måleusikkerhed: worst case og geometrisk kombination",
+   "ikon": "kapacitet",
+   "intro": "Portfolio-opgaven i måling: usikkerhed fra databladet, worst case og geometrisk kombination for summer, produkter og potenser, afrunding i måle- og resultatskemaer, og et fuldt gennemregnet eksempel.",
+   "quiz": 9,
+   "formler": true
+  },
+  {
+   "id": "maaling-eksamen",
+   "navn": "Alt du skal bruge til eksamen: Måleusikkerhed",
+   "ikon": "kapacitet",
+   "intro": "Reglerne for worst case og geometrisk kombination, afrunding, de fire skemaer, og fælderne der koster point.",
+   "quiz": 0,
+   "formler": false
+  }
  ]
 }

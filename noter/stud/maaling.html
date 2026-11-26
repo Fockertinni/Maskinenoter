@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Måleusikkerhed: worst case og geometrisk kombination · Studiekompetence og metode · Maskinenoter</title>
+<link rel="stylesheet" href="../../hav.css"><script>document.documentElement.dataset.theme="dark"</script>
+<!-- Bygget af noter/kilde/byg.py. Ret i kildefilen i noter/kilde/, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #46627f; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #9fb6cf; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #9fb6cf; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.tabs { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--hover); flex-shrink: 0; }
+.tabs button { font: 600 .9rem/1 var(--sans); color: var(--muted); background: none; border: 0; padding: .5rem .8rem; border-radius: 8px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.8rem, 5vw, 3.2rem) max(16px, env(safe-area-inset-left, 0px)) 5rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .8rem 0 0; font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.del { margin-top: 2.2rem; }
+.del > :first-child { margin-top: 0; }
+.del h2 { margin: 2.6rem 0 .6rem; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; }
+.del h3 { margin: 1.8rem 0 .4rem; font-size: 1.12rem; letter-spacing: -.01em; }
+.del p, .del li { max-width: 68ch; }
+.del ul, .del ol { padding-left: 1.3rem; }
+.del li { margin: .25rem 0; }
+.del li::marker { color: var(--muted); }
+.del code { font: .92em var(--mono); background: var(--hover); padding: .08em .35em; border-radius: 5px; }
+.del strong { font-weight: 650; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: .94rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .8rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .92rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; }
+details { margin: .9rem 0; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: .1rem 1.1rem; }
+details > summary { cursor: pointer; font-weight: 600; padding: .75rem 0; color: var(--accent); list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "▸ "; }
+details[open] > summary::before { content: "▾ "; }
+details[open] { padding-bottom: .8rem; }
+.genkald { margin-top: 2.6rem; padding: 1.1rem 1.3rem; border: 2px solid var(--accent); border-radius: 16px; background: var(--surface); }
+.genkald h2, .genkald h3 { margin-top: 0 !important; font-size: .82rem !important; letter-spacing: .08em !important; text-transform: uppercase; color: var(--accent); }
+.genkald details { box-shadow: none; border: 1px solid var(--line); }
+
+/* quiz */
+.q { margin: 1rem 0; padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); }
+.q .nr { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q .tekst { margin: .3rem 0 .8rem; font-weight: 600; }
+.q .valg { display: grid; gap: 8px; }
+.q .valg button { text-align: left; font: inherit; font-size: .98rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: .65rem .9rem; cursor: pointer; }
+.q .valg button:hover:not(:disabled) { border-color: var(--accent); }
+.q .valg button:disabled { cursor: default; }
+.q .valg button.ok { background: var(--ok-bg); border-color: var(--ok); }
+.q .valg button.bad { background: var(--bad-bg); border-color: var(--bad); }
+.q .tal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q input { font: 1rem var(--mono); width: 11rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.q .enhed { color: var(--muted); }
+.knap { font: 600 .95rem var(--sans); padding: .6rem 1rem; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.svar { margin-top: .8rem; padding: .7rem .9rem; border-radius: 10px; font-size: .96rem; }
+.svar.ok { background: var(--ok-bg); } .svar.bad { background: var(--bad-bg); } .svar.hint { background: var(--key); }
+.svar b { display: block; margin-bottom: .15rem; }
+.score { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border-radius: 16px; background: var(--soft); border-left: 3px solid var(--accent); }
+.score h2 { margin: 0 0 .3rem !important; font-size: 1.2rem !important; }
+.score ul { margin: .4rem 0; }
+.emnetag { font-size: .76rem; font-weight: 600; color: var(--accent); margin-left: .4rem; text-transform: none; letter-spacing: 0; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .bar .in { gap: 8px; }
+  .tabs button { padding: .48rem .6rem; font-size: .85rem; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .8rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+}
+@media print { .bar { display: none; } .del[hidden] { display: block !important; } details { box-shadow: none; border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m4-stud">‹ Studiekompetence og metode</a>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-del="noter">Noter</button>
+    <button role="tab" data-del="formler">Formler</button>
+    <button role="tab" data-del="quiz">Quiz</button>
+  </div>
+</div></header>
+<main>
+  <p class="kicker">Studiekompetence og metode</p>
+  <h1>Måleusikkerhed: worst case og geometrisk kombination</h1>
+  <p class="intro">Portfolio-opgaven i måling: usikkerhed fra databladet, worst case og geometrisk kombination for summer, produkter og potenser, afrunding i måle- og resultatskemaer, og et fuldt gennemregnet eksempel.</p>
+  <section class="del" id="d-noter" role="tabpanel"><blockquote>
+<p><strong>Kilder</strong>
+"Opgave – portfolio M4 – Måling – Studiekompetence og Metode – F2026" (RSC og FIJO) · gruppens besvarelse "Studiekompetence M4 portfolio" (lab 16.03.2026) · datablade for Elma BM251 og Elma 9400 ligger på CN (ikke med i materialet)</p>
+</blockquote>
+<p>Ingen måling er præcis. <strong>Et måleresultat er kun komplet, når det har en usikkerhed</strong>: 34,2 ± 1,0 Ω siger, at den sande værdi med stor sikkerhed ligger mellem 33,2 og 35,2 Ω. Portfolio-opgaven træner, hvordan usikkerheden fra instrumenterne føres videre til de størrelser, du beregner.</p>
+<h2>Opgaven</h2>
+<p>En DC-kreds med R1 og R2 i serie på ca. 30 V DC. Efter 3 minutter måles samtidig:</p>
+<table>
+<thead>
+<tr>
+<th>Måling</th>
+<th>Værdi</th>
+<th>Instrument</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I_kreds</td>
+<td>0,867 A DC</td>
+<td>Elma tangamperemeter 9400</td>
+</tr>
+<tr>
+<td>U_R1</td>
+<td>19,44 V DC</td>
+<td>Elma BM251 multimeter</td>
+</tr>
+<tr>
+<td>U_R2</td>
+<td>10,16 V DC</td>
+<td>Elma BM251 multimeter</td>
+</tr>
+</tbody>
+</table>
+<p>Spændingen frakobles, og modstandene måles: <strong>R1 = 22,1 Ω</strong>, <strong>R2 = 12,1 Ω</strong> (hvert sit multimeter).</p>
+<blockquote>
+<p><strong>Trykfejl i opgaveoplægget</strong>
+Under figur 2 står "modstand R1 = 22,1 Ω" og "modstand R1 = 12,1 Ω". Den anden skal være <strong>R2</strong>. Tabel 4 i oplægget hedder også både "Worst case" (den første) og "Worst case og geometrisk kombination". Den første er tabel 3.</p>
+</blockquote>
+<p>Der skal beregnes fem størrelser med usikkerhed: R_kreds = R1 + R2, U_kreds = U_R1 + U_R2, og effekten i R1 på tre måder: U_R1 · I, R1 · I² og U_R1² / R1.</p>
+<h2>Trin 1 · Usikkerheden fra databladet</h2>
+<p>Et digitalt instrument har en nøjagtighed som <strong>±(p % af aflæsningen + n digits)</strong>. Et "digit" er værdien af det sidste ciffer i displayet (opløsningen).</p>
+<pre class="formel">ΔS = p/100 · S + n · opløsning
+ΔS/S = ΔS / S · 100 %</pre>
+
+<div class="m" data-m="instrument"></div>
+
+<p>Gruppens værdier passer med disse specifikationer:</p>
+<table>
+<thead>
+<tr>
+<th>Måling</th>
+<th>Antaget nøjagtighed</th>
+<th>Udregning</th>
+<th>ΔS</th>
+<th>ΔS/S</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R1 = 22,1 Ω</td>
+<td>±(0,5 % + 4 dg), opløsning 0,1 Ω</td>
+<td>0,005 · 22,1 + 4 · 0,1</td>
+<td>0,51 Ω</td>
+<td>2,31 %</td>
+</tr>
+<tr>
+<td>R2 = 12,1 Ω</td>
+<td>samme</td>
+<td>0,005 · 12,1 + 4 · 0,1</td>
+<td>0,46 Ω</td>
+<td>3,8 %</td>
+</tr>
+<tr>
+<td>U_R1 = 19,44 V</td>
+<td>±(0,2 % + 3 dg), opløsning 0,01 V</td>
+<td>0,002 · 19,44 + 3 · 0,01</td>
+<td>0,069 V</td>
+<td>0,354 %</td>
+</tr>
+<tr>
+<td>U_R2 = 10,16 V</td>
+<td>samme</td>
+<td>0,002 · 10,16 + 3 · 0,01</td>
+<td>0,050 V</td>
+<td>0,495 %</td>
+</tr>
+<tr>
+<td>I = 0,867 A</td>
+<td>±(1,0 % + 3 dg), opløsning 0,001 A</td>
+<td>0,01 · 0,867 + 3 · 0,001</td>
+<td>0,0117 A</td>
+<td>1,35 %</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Usikkert: tjek databladene</strong>
+Specifikationerne ovenfor er regnet baglæns ud fra gruppens tal, fordi databladene ikke var med. Opgaveoplæggets eksempeltabel skriver <strong>±(1,0 % + 10 dg)</strong> for Elma 9400. Med opløsning 0,001 A giver det ΔI = 0,01 · 0,867 + 10 · 0,001 = <strong>0,0187 A (2,15 %)</strong>, ikke 0,0117 A. Slå det rigtige måleområde og den rigtige nøjagtighed op, før du bruger tallene.</p>
+</blockquote>
+<p><strong>Måleskemaets regler (fra oplægget):</strong> alle cifre i den målte værdi vises. Den absolutte usikkerhed får <strong>1 decimal mere end instrumentets opløsning</strong> (fx 0,51 Ω ved 0,1 Ω opløsning, og 0,069 V ved 0,01 V). Den relative usikkerhed får <strong>3 betydende cifre, hvis første ciffer er under 3</strong>, ellers 2 (2,31 % men 3,8 %).</p>
+<h2>Trin 2 · Worst case</h2>
+<p><strong>Worst case</strong> antager, at alle fejl trækker i samme retning på samme tid. Det giver den største mulige usikkerhed.</p>
+<ul>
+<li><strong>Sum og differens:</strong> læg de <strong>absolutte</strong> usikkerheder sammen.</li>
+<li><strong>Produkt og kvotient:</strong> læg de <strong>relative</strong> usikkerheder sammen.</li>
+<li><strong>Potens:</strong> gang den relative usikkerhed med <strong>eksponenten</strong>.</li>
+</ul>
+<h2>Trin 3 · Geometrisk kombination</h2>
+<p><strong>Geometrisk kombination</strong> (kvadratisk addition) bruges, når målingerne er <strong>stokastisk uafhængige</strong>: fejlene er tilfældige og kommer fra forskellige instrumenter, så det er usandsynligt, at alle er maksimale i samme retning. Usikkerhederne lægges sammen som siderne i en retvinklet trekant.</p>
+<ul>
+<li><strong>Sum og differens:</strong> ΔZ = √(ΔX² + ΔY²).</li>
+<li><strong>Produkt og kvotient:</strong> ΔZ/Z = √((ΔX/X)² + (ΔY/Y)²).</li>
+<li><strong>Potens:</strong> eksponenten ganges på <strong>inden</strong> kvadratet: (2 · ΔI/I)².</li>
+</ul>
+<blockquote>
+<p><strong>Fælden med I²</strong>
+I² er <strong>én</strong> måling af I, ikke to uafhængige. Begge faktorer har præcis samme fejl, så de er fuldt korrelerede. Derfor er bidraget <strong>(2 · ΔI/I)²</strong>, ikke (ΔI/I)² + (ΔI/I)². Gruppens besvarelse fik 3,00 % for R1 · I² og 2,36 % for U_R1² / R1 med geometrisk kombination. Det svarer til at regne kvadratet som to uafhængige målinger. Med reglen ovenfor bliver det <strong>3,55 %</strong> og <strong>2,42 %</strong>. <em>Usikkert: tjek med underviseren, hvilken regel der forventes.</em></p>
+</blockquote>
+<div class="m" data-m="wcgk"></div>
+
+<h2>Gennemregnet eksempel</h2>
+<h3>R_kreds = R1 + R2</h3>
+<pre class="formel">R_kreds = 22,1 + 12,1 = 34,2 Ω
+WC:  ΔR = 0,51 + 0,46 = 0,97 Ω            ΔR/R = 0,97 / 34,2 = 2,84 %
+GK:  ΔR = √(0,51² + 0,46²) = 0,69 Ω       ΔR/R = 2,01 %</pre>
+
+<h3>P = R1 · I²</h3>
+<pre class="formel">P = 22,1 · 0,867² = 16,61 W
+WC:  ΔP/P = 2,31 % + 2 · 1,35 % = 5,01 %        ΔP = 0,83 W
+GK:  ΔP/P = √(2,31² + (2 · 1,35)²) = 3,55 %     ΔP = 0,59 W</pre>
+
+<details>
+<summary>Prøv selv: regn P = U_R1 · I med worst case og geometrisk kombination, før du åbner.</summary>
+<p>P = 19,44 · 0,867 = 16,85 W. WC: 0,354 % + 1,35 % = 1,70 %, ΔP = 0,29 W. GK: √(0,354² + 1,35²) = 1,40 %, ΔP = 0,24 W.</p>
+</details>
+<h2>Resultatskemaet</h2>
+<p><strong>Afrundingsregel (fra oplægget):</strong> usikkerheden angives med <strong>1–2 betydende cifre</strong>, og værdien rundes af til <strong>samme decimalplads som usikkerheden</strong>. Det undgår falsk præcision. Mellemregninger laves med alle cifre.</p>
+<table>
+<thead>
+<tr>
+<th>Størrelse</th>
+<th>Værdi</th>
+<th>Worst case</th>
+<th>Geometrisk kombination</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R_kreds = R1 + R2</td>
+<td>34,2 Ω</td>
+<td>± 1,0 Ω (2,8 %)</td>
+<td>± 0,7 Ω (2,0 %)</td>
+</tr>
+<tr>
+<td>U_kreds = U_R1 + U_R2</td>
+<td>29,60 V</td>
+<td>± 0,12 V (0,40 %)</td>
+<td>± 0,09 V (0,29 %)</td>
+</tr>
+<tr>
+<td>P_R1 = U_R1 · I</td>
+<td>16,85 W</td>
+<td>± 0,29 W (1,7 %)</td>
+<td>± 0,24 W (1,4 %)</td>
+</tr>
+<tr>
+<td>P_R1 = R1 · I²</td>
+<td>16,6 W</td>
+<td>± 0,8 W (5,0 %)</td>
+<td>± 0,6 W (3,6 %)</td>
+</tr>
+<tr>
+<td>P_R1 = U_R1² / R1</td>
+<td>17,1 W</td>
+<td>± 0,5 W (3,0 %)</td>
+<td>± 0,4 W (2,4 %)</td>
+</tr>
+</tbody>
+</table>
+<p>Tallene for R_kreds passer med oplæggets eksempeltabel (34,2 ± 1,0 Ω, 2,8 % og 0,7 Ω, 2,0 %).</p>
+<h2>Kort faktuel diskussion af de tre effekter</h2>
+<ul>
+<li><strong>De tre effekter stemmer overens inden for usikkerheden:</strong> intervallerne 16,6 ± 0,8, 16,85 ± 0,29 og 17,1 ± 0,5 W overlapper alle omkring 16,6–17,1 W.</li>
+<li><strong>U_R1 · I har den mindste usikkerhed</strong>, fordi spændingsmålingen er meget nøjagtig (0,35 %), og I kun indgår én gang.</li>
+<li><strong>R1 · I² har den største usikkerhed</strong>, fordi I indgår i anden potens, og modstandsmålingen er den mest usikre (2,31 %).</li>
+<li><strong>U_R1² / R1</strong> ligger imellem: U er nøjagtig, men R1 trækker op.</li>
+<li><strong>Geometrisk kombination giver mindre usikkerhed end worst case</strong>, fordi det er usandsynligt, at alle fejl er maksimale i samme retning.</li>
+<li><strong>Bemærk:</strong> R1 blev målt <strong>kold og uden strøm</strong>, mens U og I blev målt i drift. Opvarmning ændrer modstanden, så R1 · I² og U² / R1 kan afvige systematisk fra U · I. Det er en trussel mod validiteten, ikke mod reliabiliteten.</li>
+</ul>
+<h2>Tillægsopgaven: R1 // R2</h2>
+<p>Udtrykket R1 · R2 / (R1 + R2) indeholder de samme målinger flere gange, så <strong>min/max-metoden</strong> er lettest: indsæt de mindste værdier for at få minimum og de største for at få maksimum (parallelmodstanden stiger med begge).</p>
+<pre class="formel">R1//R2 = 22,1 · 12,1 / 34,2 = 7,82 Ω
+min = 21,59 · 11,64 / 33,23 = 7,56 Ω
+max = 22,61 · 12,56 / 35,17 = 8,07 Ω
+ΔR = (8,07 − 7,56) / 2 = 0,26 Ω   →   7,8 ± 0,3 Ω (3,3 %)</pre>
+
+<details>
+<summary>Forudsig først: er parallelmodstanden mere eller mindre usikker i procent end R1 alene?</summary>
+<p>Mere: 3,3 % mod 2,31 % for R1, men mindre end R2's 3,8 %. Parallelmodstanden domineres af den mindste modstand (R2), som har den største relative usikkerhed.</p>
+</details></section>
+  <section class="del" id="d-formler" role="tabpanel"><h3>Usikkerhed fra databladet</h3>
+<pre class="formel">ΔS = p/100 · S + n · opløsning
+ΔS/S = ΔS / S · 100 %</pre>
+
+<h3>Worst case</h3>
+<pre class="formel">Z = X ± Y         ΔZ = ΔX + ΔY
+Z = X · Y, X / Y  ΔZ/Z = ΔX/X + ΔY/Y
+Z = Xⁿ            ΔZ/Z = |n| · ΔX/X</pre>
+
+<h3>Geometrisk kombination (uafhængige målinger)</h3>
+<pre class="formel">Z = X ± Y         ΔZ = √(ΔX² + ΔY²)
+Z = X · Y, X / Y  ΔZ/Z = √((ΔX/X)² + (ΔY/Y)²)
+Z = Xⁿ · Yᵐ       ΔZ/Z = √((n · ΔX/X)² + (m · ΔY/Y)²)</pre>
+
+<h3>Effekt i en modstand</h3>
+<pre class="formel">P = U · I = R · I² = U² / R</pre>
+
+<h3>Min/max (tillægsopgaven)</h3>
+<pre class="formel">R1//R2 = R1 · R2 / (R1 + R2)
+ΔR ≈ (R_max − R_min) / 2</pre>
+
+<h3>Afrunding</h3>
+<pre class="formel">Måleskema:     ΔS med 1 decimal mere end opløsningen
+               ΔS/S: 3 betydende cifre hvis første &lt; 3, ellers 2
+Resultatskema: ΔS med 1–2 betydende cifre, værdien til samme decimal</pre></section>
+  <section class="del" id="d-quiz" role="tabpanel">
+    <p>Svar på spørgsmålene, før du kigger i noterne. Ved talopgaver har du to forsøg, og komma og punktum virker begge.</p>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </section>
+</main>
+<script>
+const QUIZ = [{"q": "Et multimeter har nøjagtigheden ±(0,5 % + 4 dg) og opløsningen 0,1 Ω. Det viser 22,1 Ω. Hvad er den absolutte usikkerhed? (Ω)", "tal": 0.51, "tol": 0.01, "enhed": "Ω", "losning": "ΔR = 0,005 · 22,1 + 4 · 0,1 = 0,11 + 0,40 = 0,51 Ω.", "f": "Digits-delen fylder mest ved små aflæsninger.", "emne": "Måleusikkerhed: worst case og geometrisk kombination"}, {"q": "R1 = 22,1 ± 0,51 Ω og R2 = 12,1 ± 0,46 Ω. Hvad er worst case-usikkerheden på R1 + R2? (Ω)", "tal": 0.97, "tol": 0.01, "enhed": "Ω", "losning": "Ved en sum lægges de absolutte usikkerheder sammen: 0,51 + 0,46 = 0,97 Ω.", "f": "Worst case antager, at begge fejl trækker samme vej.", "emne": "Måleusikkerhed: worst case og geometrisk kombination"}, {"q": "Samme modstande. Hvad er den geometrisk kombinerede usikkerhed på R1 + R2? (Ω)", "tal": 0.69, "tol": 0.01, "enhed": "Ω", "losning": "√(0,51² + 0,46²) = √(0,2601 + 0,2116) = √0,4717 = 0,69 Ω.", "f": "Kvadratisk addition, fordi målingerne er uafhængige.", "emne": "Måleusikkerhed: worst case og geometrisk kombination"}, {"q": "U = 19,44 V ± 0,354 % og I = 0,867 A ± 1,35 %. Hvad er worst case den relative usikkerhed på P = U · I? (%)", "tal": 1.7, "tol": 0.02, "enhed": "%", "losning": "Ved et produkt lægges de relative usikkerheder sammen: 0,354 + 1,35 = 1,70 %.", "f": "Produkt og kvotient: relative usikkerheder.", "emne": "Måleusikkerhed: worst case og geometrisk kombination"}, {"q": "R1 ± 2,31 % og I ± 1,35 %. Hvad er den geometrisk kombinerede relative usikkerhed på P = R1 · I²? (%)", "tal": 3.55, "tol": 0.05, "enhed": "%", "losning": "√(2,31² + (2 · 1,35)²) = √(5,34 + 7,29) = √12,63 = 3,55 %.", "f": "Eksponenten 2 ganges på I's relative usikkerhed før kvadratet, fordi I² er én måling.", "emne": "Måleusikkerhed: worst case og geometrisk kombination"}, {"valg": ["Altid, fordi den giver mindst usikkerhed", "Når målingerne er stokastisk uafhængige, fx fra forskellige instrumenter", "Kun ved summer", "Kun når worst case er for stor"], "rigtig": 1, "q": "Hvornår må man bruge geometrisk kombination?", "f": "Ellers er worst case det sikre valg.", "emne": "Måleusikkerhed: worst case og geometrisk kombination"}, {"valg": ["16,612 ± 0,8321 W", "17 ± 1 W", "16,6 ± 0,8 W", "16,61 ± 0,8 W"], "rigtig": 2, "q": "En beregnet effekt er 16,612 W ± 0,8321 W. Hvordan skrives den i resultatskemaet?", "f": "1–2 betydende cifre på usikkerheden og værdien til samme decimal.", "emne": "Måleusikkerhed: worst case og geometrisk kombination"}, {"valg": ["Fordi den er den største værdi", "Fordi spændingsmålingen er meget nøjagtig, og I kun indgår én gang", "Fordi modstanden ikke er målt", "Fordi den er beregnet med worst case"], "rigtig": 1, "q": "Hvorfor har P = U · I den mindste usikkerhed af de tre effektberegninger?", "f": "R1 · I² har den største, fordi I er i anden potens, og R er usikker.", "emne": "Måleusikkerhed: worst case og geometrisk kombination"}, {"q": "R1 = 22,1 Ω og R2 = 12,1 Ω. Hvad er R1 // R2? (Ω, 2 decimaler)", "tal": 7.82, "tol": 0.01, "enhed": "Ω", "losning": "22,1 · 12,1 / (22,1 + 12,1) = 267,41 / 34,2 = 7,82 Ω.", "f": "Min/max-metoden er lettest til usikkerheden, fordi R1 og R2 indgår flere gange.", "emne": "Måleusikkerhed: worst case og geometrisk kombination"}];
+const NOGLE = "mn-stud-maaling", SAMLET = "" === "1";
+const q = new URLSearchParams(location.search);
+
+// tilbage-link til den side man kom fra
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+
+// faner
+const tabs = [...document.querySelectorAll("#tabs button")];
+function vis(del) {
+  if (!document.getElementById("d-" + del)) del = "noter";
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.del === del));
+  document.querySelectorAll(".del").forEach(s => s.hidden = s.id !== "d-" + del);
+}
+tabs.forEach(b => b.addEventListener("click", () => {
+  vis(b.dataset.del);
+  const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
+  window.scrollTo(0, 0);
+}));
+// tomme dele skjules i fanerne
+["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+if (!QUIZ.length) tabs.find(b => b.dataset.del === "quiz").hidden = true;
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else { const v = q.get("vis") || "noter", t = tabs.find(b => b.dataset.del === v && !b.hidden) || tabs.find(b => !b.hidden); vis(t ? t.dataset.del : "noter"); }
+
+// tabeller kan scrolles på mobil
+document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+
+// quiz
+let gemt = {};
+try { gemt = JSON.parse(localStorage.getItem(NOGLE) || "{}"); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+// Danske og engelske skrivemåder virker begge: "85.200", "85200", "1.150,5", "0,86", "0.86".
+// Et enkelt punktum efterfulgt af tre cifre kan både være tusindtal og decimal, så begge tolkninger prøves.
+const tolk = s => { s = String(s).replace(/[\s\u00a0]/g, "").replace("−", "-");
+  if (!/^-?[\d.,]+$/.test(s)) return [];
+  if (s.includes(",")) return [parseFloat(s.replace(/\./g, "").replace(",", "."))];
+  if ((s.match(/\./g) || []).length > 1) return [parseFloat(s.replace(/\./g, ""))];
+  const ud = [parseFloat(s)];
+  if (/^-?\d+\.\d{3}$/.test(s)) ud.push(parseFloat(s.replace(".", "")));
+  return ud; };
+const fmt = x => x.toLocaleString("da-DK", { maximumFractionDigits: 4 });
+
+function bygQuiz() {
+  const rod = document.getElementById("quiz"); rod.innerHTML = "";
+  QUIZ.forEach((s, i) => {
+    const el = document.createElement("div"); el.className = "q";
+    el.innerHTML = `<div class="nr">Spørgsmål ${i + 1} af ${QUIZ.length}${SAMLET ? `<span class="emnetag">${s.emne}</span>` : ""}</div><div class="tekst">${s.q}</div>`;
+    const g = gemt[i];
+    if (s.valg) {
+      const v = document.createElement("div"); v.className = "valg";
+      s.valg.forEach((t, j) => {
+        const b = document.createElement("button"); b.innerHTML = t;
+        b.addEventListener("click", () => { gemt[i] = { valgt: j, ok: j === s.rigtig }; gem(); bygQuiz(); });
+        v.append(b);
+      });
+      el.append(v);
+      if (g) {
+        [...v.children].forEach((b, j) => { b.disabled = true; if (j === s.rigtig) b.classList.add("ok"); else if (j === g.valgt) b.classList.add("bad"); });
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Ikke helt."}</b>${s.f || ""}</div>`);
+      }
+    } else {
+      const f = document.createElement("div"); f.className = "tal";
+      f.innerHTML = `<input inputmode="decimal" aria-label="Dit svar" placeholder="Dit svar"> <span class="enhed">${s.enhed || ""}</span> <button class="knap">Tjek</button> <button class="knap stille">Vis facit</button>`;
+      const [inp, , tjek, opgiv] = f.children;
+      el.append(f);
+      const faerdig = g && (g.ok || g.forsog >= 2 || g.opgivet);
+      if (g && g.svar != null) inp.value = g.svar;
+      if (faerdig) {
+        inp.disabled = tjek.disabled = opgiv.disabled = true;
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Facit: " + fmt(s.tal) + " " + (s.enhed || "")}</b>${s.losning ? s.losning + "<br>" : ""}${s.f || ""}</div>`);
+      } else if (g && g.forsog === 1) {
+        el.insertAdjacentHTML("beforeend", `<div class="svar hint"><b>Ikke helt. Tjek din opstilling og prøv igen.</b>Du har ét forsøg tilbage.</div>`);
+      }
+      const svar = () => {
+        const xs = tolk(inp.value); if (!xs.length || xs.some(isNaN)) { inp.focus(); return; }
+        const ok = xs.some(x => Math.abs(x - s.tal) <= Math.max(s.tol, Math.abs(s.tal) * 1e-9));
+        const forsog = ((g && g.forsog) || 0) + 1;
+        gemt[i] = { svar: inp.value, ok, forsog }; gem(); bygQuiz();
+      };
+      tjek.addEventListener("click", svar);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") svar(); });
+      opgiv.addEventListener("click", () => { gemt[i] = { svar: inp.value, ok: false, forsog: 2, opgivet: true }; gem(); bygQuiz(); });
+    }
+    rod.append(el);
+  });
+  // score
+  const faerdige = QUIZ.map((s, i) => gemt[i] && (s.valg || gemt[i].ok || gemt[i].forsog >= 2));
+  const antal = faerdige.filter(Boolean).length, rigtige = QUIZ.filter((s, i) => gemt[i] && gemt[i].ok).length;
+  const forkerte = QUIZ.map((s, i) => faerdige[i] && !gemt[i].ok ? `<li>${s.q.replace(/<[^>]+>/g, "")}${SAMLET ? ` <em>(${s.emne})</em>` : ""}</li>` : "").join("");
+  document.getElementById("score").innerHTML = antal === 0 ? "" : `<div class="score">
+    <h2>${rigtige} af ${QUIZ.length} rigtige${antal < QUIZ.length ? ` · ${QUIZ.length - antal} mangler` : ""}</h2>
+    ${forkerte ? `<p>Tag med i repetitionen:</p><ul>${forkerte}</ul>` : antal === QUIZ.length ? "<p>Alle rigtige. Tag quizzen igen om et par uger.</p>" : ""}
+    <button class="knap stille" id="nulstil">Start forfra</button></div>`;
+  const n = document.getElementById("nulstil");
+  if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
+}
+if (QUIZ.length) bygQuiz();
+</script>
+<script src="modeller.js"></script>
+</body>
+</html>

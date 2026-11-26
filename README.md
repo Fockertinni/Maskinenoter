@@ -26,6 +26,12 @@ Mine noter og interaktive modeller fra maskinmesteruddannelsen. Siden er ren HTM
 - EL2-noterne har interaktive modeller inde i teksten. I markdown skrives fx `<div class="m" data-m="stjerne"></div>`, og `noter/el2/modeller.js` tegner modellen. Listen over modeller står i den fil.
 - Genvejen `emne("drift", "budget")` i `index.html` giver alle tre dele. Skriv `emne("forb", "smoering", false)`, hvis emnet ikke har formler.
 
+## Studiekompetence og metode (M4)
+
+- `noter/stud/` bygges af `byg.py` fra `noter/kilde/stud/` på samme måde som EL2: 13 emner, hver med en eksamensside (`<id>-eksamen.html`), noter, quiz og formler hvor det giver mening (kun `opgave3` og `maaling`). `noter/stud/quiz.html` er den samlede quiz.
+- Modellerne ligger i `noter/stud/modeller.js` (hatte, skive, sorter, raekkefolge, belbin, instrument, wcgk). `sorter` vælger sæt med `data-s="kvkl"`, `"indded"` eller `"posher"`.
+- Materialet havde ingen prøvespørgsmål, så der er ikke noget "Eksamen"-emne med kort.
+
 ## Tilføj et emne
 
 Find faget i `SEMESTRE`, og tilføj én post til dets `emner`:
@@ -70,6 +76,7 @@ Tilføj én post til `SEMESTRE`, fx `{ n: 10, quiz: null, fag: [ ... ] }`. `NU` 
 
 Brug en af nøglerne i `IKON`:
 
+- Studiekompetence: `opgave`, `rapport`, `metode`, `viden`, `data`, `maal`, `synopsis`, `hat`
 - Fag: `el`, `energi`, `motoranlaeg`, `auto`, `oekonomi`, `ledelse`, `studie`, `vaerksted`, `praktik`, `koel`
 - Emner: `trefase`, `generator`, `motor`, `jord`, `transformer`, `kortslutning`, `synkron`, `frekvens`, `plc`, `relae`, `ladder`, `sekvens`, `timer`, `sikkerhed`
 
