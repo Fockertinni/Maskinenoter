@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Relæteknik og boolsk logik · PA1 · Maskinenoter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="pa1.css">
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="kicker">M5 · Procesanalyse og automation 1 · Emne 2 af 6</div>
+  <h1>Relæteknik og boolsk logik</h1>
+  <p>NO- og NC-kontakter, relæer, hoved- og styrestrøm, holdekreds, gensidig spærring og boolsk logik. Lektion 2.</p>
+</header>
+<nav class="tabs" aria-label="Dele">
+  <button type="button" data-tab="noter">Noter</button>
+  <button type="button" data-tab="forstaa">Forståelse</button>
+  <button type="button" data-tab="test">Quiz</button>
+</nav>
+<section class="pane" id="p-noter">
+
+<article id="kontakter">
+<h2>1 · Kontakter og relæer</h2>
+<p class="src">Lektion 2</p>
+<p>Alle styringer starter med to slags kontakter. Hvad de gør i hvile, er det vigtigste at huske.</p>
+<div class="tw"><table>
+<tr><th>Type</th><th>Dansk navn</th><th>I hvile</th><th>Når den aktiveres</th></tr>
+<tr><td>NO · Normally Open</td><td>Sluttekontakt</td><td>Åben, ingen strøm</td><td>Slutter</td></tr>
+<tr><td>NC · Normally Closed</td><td>Brydekontakt</td><td>Sluttet, strøm</td><td>Bryder</td></tr>
+</table></div>
+<p>Et <b>relæ</b> er en spole, der trækker et anker, når den får strøm. Ankeret skifter et eller flere kontaktsæt. På den måde kan en lille styrestrøm styre en anden og evt. meget større strøm. En <b>kontaktor</b> er et kraftigt relæ til motorer.</p>
+<h3>Hovedstrøm og styrestrøm</h3>
+<div class="tw"><table>
+<tr><th></th><th>Hovedstrøm</th><th>Styrestrøm</th></tr>
+<tr><td>Hvad</td><td>Den "tunge" strøm til forbrugeren</td><td>Logikken, der bestemmer hvornår</td></tr>
+<tr><td>Typisk</td><td>3×400 V til motor via kontaktorens hovedkontakter og motorværn</td><td>24 V til trykknapper, relæspoler og hjælpekontakter</td></tr>
+<tr><td>Tegnes i</td><td>Hovedstrømsskema</td><td>Styrestrømsskema</td></tr>
+</table></div>
+<p>Styrestrømsskemaet bestemmer, hvornår kontaktoren trækker. Hovedstrømsskemaet viser, hvad den så slutter for.</p>
+</article>
+
+<article id="holdekreds">
+<h2>2 · Holdekreds (selvhold)</h2>
+<p class="src">Lektion 2</p>
+<p>En holdekreds får en motor til at blive ved med at køre, når start-knappen slippes. Start (NO) aktiverer spolen K1. En hjælpekontakt fra K1 sidder parallelt med start-knappen og holder K1 inde, når knappen slippes. Stop (NC) sidder i serie og bryder kredsen.</p>
+<p>I ladder ser det sådan ud. Bemærk at stop-tagget læses med XIC, selvom knappen er NC:</p>
+<div class="ladder" id="hk-static"></div>
+<div class="box key"><b class="t">Faldgrube: NC-stop i PLC'en</b>
+En fysisk NC-stopknap giver signal = 1 på PLC-indgangen, når den <b>ikke</b> er trykket. Derfor bruges XIC <code>] [</code> i programmet, ikke XIO. Det er fail-safe: knækker ledningen, falder signalet til 0, og maskinen stopper.</div>
+
+<div class="model" id="m-holdekreds">
+<h4>Model: holdekreds og fail-safe</h4>
+<p class="sub">Hold knapperne nede med musen eller fingeren. Skift knaptype og instruktion, og prøv et ledningsbrud på stop-kredsen.</p>
+<div class="ctrl">
+  <label>Stopknap <select id="hk-type"><option value="nc">NC (brydekontakt)</option><option value="no">NO (sluttekontakt)</option></select></label>
+  <label>Instruktion <select id="hk-ins"><option value="xic">XIC ] [</option><option value="xio">XIO ]/[</option></select></label>
+</div>
+<div class="ctrl"><button class="btn start" id="hk-start" type="button">START (hold)</button><button class="btn stop" id="hk-stop" type="button">STOP (hold)</button><button class="btn" id="hk-brud" type="button">Ledningsbrud på stop: nej</button></div>
+<div class="readout" id="hk-out"></div>
+<div class="ladder" id="hk-lad"></div>
+<details class="predict"><summary>Med NO-stopknap og XIO virker stop fint. Hvad er så problemet?</summary>
+<p>Prøv det: vælg NO og XIO, start motoren og klik "Ledningsbrud". Motoren kører videre, og stop-knappen virker ikke længere, fordi signalet aldrig kan blive 1. Med NC og XIC stopper motoren i det øjeblik ledningen knækker. Derfor bruger man altid NC til stop.</p></details>
+</div>
+</article>
+
+<article id="spaerring">
+<h2>3 · Gensidig spærring (interlock)</h2>
+<p class="src">Lektion 2</p>
+<p>Nogle udgange må aldrig være aktive samtidig, fx motor højre og motor venstre (ellers kortslutter man to faser i hovedstrømmen). Hver udgang får derfor en XIO-betingelse på den anden udgang. Her har hver rung også sin egen holdekreds.</p>
+<div class="model" id="m-spaerring">
+<h4>Model: højre/venstre med spærring</h4>
+<p class="sub">Start højre, og prøv så at starte venstre uden at stoppe først.</p>
+<div class="ctrl"><button class="btn start" id="sp-h" type="button">START HØJRE</button><button class="btn start" id="sp-v" type="button">START VENSTRE</button><button class="btn stop" id="sp-stop" type="button">STOP</button></div>
+<div class="readout" id="sp-out"></div>
+<div class="ladder" id="sp-lad"></div>
+</div>
+<div class="box key"><b class="t">I praksis</b>Softwarespærring alene er ikke nok ved vendekontaktorer. Man laver også en elektrisk spærring med NC-hjælpekontakter i styrestrømmen og ofte en mekanisk spærring mellem kontaktorerne. <span class="ud">Uddybet</span></div>
+</article>
+
+<article id="logik">
+<h2>4 · Boolske variable og logik</h2>
+<p class="src">Lektion 2</p>
+<p>En boolsk variabel har kun to tilstande: 0 eller 1, falsk eller sand, slukket eller tændt. Alle ladder-betingelser er boolske, og de tre grundfunktioner tegnes sådan:</p>
+<div class="tw"><table>
+<tr><th>Funktion</th><th>I ladder</th><th>Udgang = 1 når</th></tr>
+<tr><td>AND</td><td>Kontakter i serie</td><td>A og B begge er 1</td></tr>
+<tr><td>OR</td><td>Kontakter i parallel</td><td>A eller B (eller begge) er 1</td></tr>
+<tr><td>NOT</td><td>XIO-kontakt <code>]/[</code></td><td>A er 0</td></tr>
+</table></div>
+<div class="tw"><table id="sandhed">
+<tr><th>A</th><th>B</th><th>A AND B</th><th>A OR B</th><th>NOT A</th></tr>
+<tr><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+<tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+<tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+<tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+</table></div>
+<div class="model" id="m-logik">
+<h4>Model: AND, OR og NOT i ladder</h4>
+<p class="sub">Slå A og B til og fra. Den aktuelle række i sandhedstabellen fremhæves.</p>
+<div class="ctrl"><button class="btn" id="lg-a" type="button">A = 0</button><button class="btn" id="lg-b" type="button">B = 0</button></div>
+<div class="ladder" id="lg-lad"></div>
+</div>
+<h3>Kombinatorisk eller sekventiel styring</h3>
+<div class="tw"><table>
+<tr><th></th><th>Kombinatorisk</th><th>Sekventiel</th></tr>
+<tr><td>Udgangene afhænger af</td><td>Kun indgangenes værdi lige nu</td><td>Indgangene <b>og</b> hvor i forløbet man er</td></tr>
+<tr><td>Hukommelse</td><td>Nej, ren logik</td><td>Ja, tilstande (steps)</td></tr>
+<tr><td>Eksempel</td><td>Lampe lyser når dør er åben OG alarm er aktiv</td><td>Fyld tank → vent 3 s → tøm tank</td></tr>
+</table></div>
+<div class="box info"><b class="t">Bemærk</b>Holdekredsen er faktisk den simpleste form for hukommelse: K1 "husker", at der blev trykket start. Derfor er den første skridt fra kombinatorisk mod sekventiel styring.</div>
+</article>
+</section>
+
+<section class="pane" id="p-forstaa"><div id="fq"></div></section>
+<section class="pane" id="p-test"><div id="qz"></div></section>
+<footer class="f">Martins noter til Procesanalyse og automation 1 · Maskinenoter.dk · Kilder: modulbeskrivelsen, slides og "PLC styring med Ladder Diagram (LD)".</footer>
+</div>
+<script src="pa1.js"></script>
+<script>
+const HK = (stopIns) => [{ n: "0", c: [{ k: stopIns, tag: "Stop" }, { k: "xic", tag: "Start" }], b: [{ from: 1, to: 2, c: [{ k: "xic", tag: "K1" }] }], o: [{ k: "ote", tag: "K1" }] }];
+PA.ladder(document.getElementById("hk-static"), HK("xic"), { Stop: true });
+(function(){
+  const st = { start: false, stopTrykket: false, brud: false, K1: false };
+  const $ = id => document.getElementById(id);
+  function scan(){
+    const type = $("hk-type").value, ins = $("hk-ins").value;
+    let sig = type === "nc" ? !st.stopTrykket : st.stopTrykket;
+    if (st.brud) sig = false;
+    const bits = { Stop: sig, Start: st.start, K1: st.K1 };
+    const p = PA.power(HK(ins)[0], bits);
+    st.K1 = p; bits.K1 = p;
+    PA.ladder($("hk-lad"), HK(ins), bits);
+    $("hk-out").innerHTML = `<span class="${sig ? "t" : ""}">Indgang Stop = ${sig ? 1 : 0}</span><span class="${st.start ? "t" : ""}">Indgang Start = ${st.start ? 1 : 0}</span><span><i class="lamp g ${st.K1 ? "t" : ""}"></i>K1 / motor ${st.K1 ? "kører" : "står"}</span>`;
+    $("hk-brud").textContent = "Ledningsbrud på stop: " + (st.brud ? "ja" : "nej"); $("hk-brud").classList.toggle("on", st.brud);
+  }
+  PA.hold($("hk-start"), () => { st.start = true; scan(); }, () => { st.start = false; scan(); });
+  PA.hold($("hk-stop"), () => { st.stopTrykket = true; scan(); }, () => { st.stopTrykket = false; scan(); });
+  $("hk-brud").addEventListener("click", () => { st.brud = !st.brud; scan(); });
+  $("hk-type").addEventListener("change", () => { st.K1 = false; scan(); });
+  $("hk-ins").addEventListener("change", () => { st.K1 = false; scan(); });
+  scan();
+})();
+(function(){
+  const st = { h: false, v: false, stop: false, MH: false, MV: false };
+  const $ = id => document.getElementById(id);
+  const rungs = () => [
+    { n: "0", c: [{ k: "xic", tag: "Start_H" }, { k: "xic", tag: "Stop" }, { k: "xio", tag: "Motor_V" }], b: [{ from: 0, to: 1, c: [{ k: "xic", tag: "Motor_H" }] }], o: [{ k: "ote", tag: "Motor_H" }] },
+    { n: "1", c: [{ k: "xic", tag: "Start_V" }, { k: "xic", tag: "Stop" }, { k: "xio", tag: "Motor_H" }], b: [{ from: 0, to: 1, c: [{ k: "xic", tag: "Motor_V" }] }], o: [{ k: "ote", tag: "Motor_V" }] } ];
+  function scan(){
+    const bits = { Start_H: st.h, Start_V: st.v, Stop: !st.stop, Motor_H: st.MH, Motor_V: st.MV };
+    const r = rungs();
+    st.MH = bits.Motor_H = PA.power(r[0], bits);
+    st.MV = bits.Motor_V = PA.power(r[1], bits);
+    PA.ladder($("sp-lad"), r, bits);
+    $("sp-out").innerHTML = `<span><i class="lamp g ${st.MH ? "t" : ""}"></i>Motor højre</span><span><i class="lamp g ${st.MV ? "t" : ""}"></i>Motor venstre</span><span>Stop er NC → Stop = ${bits.Stop ? 1 : 0}</span>`;
+  }
+  PA.hold($("sp-h"), () => { st.h = true; scan(); }, () => { st.h = false; scan(); });
+  PA.hold($("sp-v"), () => { st.v = true; scan(); }, () => { st.v = false; scan(); });
+  PA.hold($("sp-stop"), () => { st.stop = true; scan(); }, () => { st.stop = false; scan(); });
+  scan();
+})();
+(function(){
+  const st = { A: false, B: false }; const $ = id => document.getElementById(id);
+  function vis(){
+    PA.ladder($("lg-lad"), [
+      { n: "AND", c: [{ k: "xic", tag: "A" }, { k: "xic", tag: "B" }], o: [{ k: "ote", tag: "Q_AND" }] },
+      { n: "OR", c: [{ k: "xic", tag: "A" }], b: [{ from: 0, to: 1, c: [{ k: "xic", tag: "B" }] }], o: [{ k: "ote", tag: "Q_OR" }] },
+      { n: "NOT", c: [{ k: "xio", tag: "A" }], o: [{ k: "ote", tag: "Q_NOT" }] } ], st);
+    ["A", "B"].forEach(k => { const b = $("lg-" + k.toLowerCase()); b.textContent = `${k} = ${st[k] ? 1 : 0}`; b.classList.toggle("on", st[k]); });
+    const row = 1 + (st.A ? 2 : 0) + (st.B ? 1 : 0);
+    document.querySelectorAll("#sandhed tr").forEach((tr, i) => tr.style.background = i === row ? "var(--accent-soft)" : "");
+  }
+  $("lg-a").addEventListener("click", () => { st.A = !st.A; vis(); });
+  $("lg-b").addEventListener("click", () => { st.B = !st.B; vis(); });
+  vis();
+})();
+PA.forstaa(document.getElementById("fq"), [
+  { q: "Hvorfor bruges XIC og ikke XIO til en fysisk NC-stopknap?", s: "En NC-knap er sluttet i hvile, så PLC-indgangen er 1, når ingen trykker. Programmet skal tillade drift, når signalet er 1, og det gør XIC. Trykkes knappen, eller knækker ledningen, bliver signalet 0, XIC bliver falsk, og maskinen stopper. Det er fail-safe." },
+  { q: "Tegn en holdekreds med start og stop i ladder, og forklar hvorfor hjælpekontakten skal sidde parallelt med start.", s: "Stop (XIC, NC-knap) i serie med Start (XIC), og en XIC K1 parallelt med Start, udgang OTE K1. Hjælpekontakten skal være parallel med start, fordi den skal kunne føre strømmen i stedet for start, når start slippes. Sad den i serie, skulle både start og K1 være sande, og K1 kunne aldrig starte." },
+  { q: "Hvad er forskellen på hovedstrøm og styrestrøm? Giv et eksempel på hver i en motorstyring.", s: "Hovedstrømmen er den tunge strøm til forbrugeren, fx 3×400 V gennem kontaktorens hovedkontakter og motorværnet til motoren. Styrestrømmen er logikken, fx 24 V gennem start- og stopknap til kontaktorens spole. Styrestrømmen bestemmer, hvornår hovedstrømmen sluttes." },
+  { q: "Hvorfor skal en vendemotor have gensidig spærring, og hvorfor er spærring i PLC-programmet ikke nok alene?", s: "Trækker højre- og venstrekontaktor samtidig, bytter man to faser og laver en fase-fase-kortslutning. Programmet kan fejle, eller en kontaktor kan hænge (svejsede kontakter), så man supplerer med elektrisk spærring (NC-hjælpekontakter i styrestrømmen) og gerne mekanisk spærring." },
+  { q: "Er en holdekreds kombinatorisk eller sekventiel? Begrund svaret.", s: "Den er reelt sekventiel, fordi udgangen ikke kun afhænger af indgangene lige nu. Med start sluppet og stop ikke trykket kan K1 både være 0 og 1, afhængigt af om der tidligere blev trykket start. Den husker en tilstand." },
+]);
+PA.quiz(document.getElementById("qz"), [
+  { q: "En NC-kontakt i hvile er …", a: ["Åben", "Sluttet", "Halvt sluttet", "Afhænger af spolen"], r: 1, f: "Normally Closed er sluttet i hvile og bryder, når den aktiveres." },
+  { q: "Hvad holder K1 inde i en holdekreds, når start slippes?", a: ["Stop-knappen", "En hjælpekontakt fra K1 parallelt med start", "En timer", "Motorværnet"], r: 1, f: "Hjælpekontakten K1 sidder parallelt med start og fører strømmen videre, når start slippes." },
+  { q: "Stopknappen er NC. Ledningen til PLC-indgangen knækker, mens motoren kører. Programmet bruger XIC Stop. Hvad sker der?", a: ["Motoren kører videre", "Motoren stopper", "Motoren skifter retning", "PLC'en går i fejl"], r: 1, f: "Signalet falder til 0, XIC bliver falsk, og rungen bryder. Det er netop fail-safe." },
+  { q: "Kontakter i parallel svarer til …", a: ["AND", "OR", "NOT", "XOR"], r: 1, f: "Strømmen kan gå gennem den ene eller den anden gren. Det er OR." },
+  { q: "A = 1 og B = 0. Hvad er A AND B, A OR B og NOT A?", a: ["1, 1, 0", "0, 1, 0", "0, 0, 1", "0, 1, 1"], r: 1, f: "AND kræver begge = 0. OR kræver mindst én = 1. NOT A = NOT 1 = 0." },
+  { q: "Hvordan laves gensidig spærring i ladder?", a: ["XIC på den anden udgang", "XIO på den anden udgang i hver rung", "En timer mellem udgangene", "OTL på begge udgange"], r: 1, f: "Hver udgang må kun tænde, når den anden er 0. Det er en XIO på den anden udgang." },
+  { q: "Hvilken spænding er typisk for styrestrøm til PLC'en?", a: ["24 V DC", "3×400 V AC", "10 kV", "230 V DC"], r: 0, f: "24 V DC er standard for sensorer, knapper og PLC-I/O. Den tunge strøm er hovedstrømmen." },
+]);
+PA.tabs();
+</script>
+</body>
+</html>

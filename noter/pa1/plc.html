@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>PLC og Studio 5000 · PA1 · Maskinenoter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="pa1.css">
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="kicker">M5 · Procesanalyse og automation 1 · Emne 1 af 6</div>
+  <h1>PLC og Studio 5000</h1>
+  <p>Om faget, PC'en og den virtuelle maskine, hvad en PLC er, scan-cyklussen, emulatoren og Studio 5000. Lektion 1–2.</p>
+</header>
+<nav class="tabs" aria-label="Dele">
+  <button type="button" data-tab="noter">Noter</button>
+  <button type="button" data-tab="forstaa">Forståelse</button>
+  <button type="button" data-tab="test">Quiz</button>
+</nav>
+<section class="pane" id="p-noter">
+
+<div class="box info"><b class="t">Sådan læser du noterne</b>
+Noterne bygger på modulbeskrivelsen og slides. Afsnit mærket <span class="ud">Uddybet</span> er udfyldt med generel PLC- og Studio 5000-viden, fordi der ikke var slides til dem. Tjek dem mod LD-bogen (Tom Mejer Antonsen) og dine egne lektionsnoter.</div>
+
+<article id="faget">
+<h2>0 · Om faget</h2>
+<p class="src">Modulbeskrivelse (TeknikaQMS) · M5 · 5 ECTS</p>
+<p><b>Formål:</b> Du får grundlæggende viden om procestekniske komponenter og om, hvordan man bygger kontrolsystemer til styringsopgaver. Du skal kunne opbygge og programmere styringer, analysere en problemstilling og vælge en relevant løsning.</p>
+<h3>Læringsmål, og hvor de dækkes</h3>
+<div class="tw"><table class="over">
+<tr><th>Læringsmål</th><th>Hvad du skal kunne</th><th>Emne</th></tr>
+<tr><td>Opbygge kontrolsystemer</td><td>Forbinde sensorer, aktuatorer og PLC. Læse og tegne styrestrømsskema.</td><td>1, 2, 6</td></tr>
+<tr><td>Analysere et PLC-program</td><td>Forklare hvad hver rung gør, begrunde løsninger og driftsoptimere.</td><td>3, 4</td></tr>
+<tr><td>Kombinatorisk og sekventiel styring</td><td>Designe begge typer og vide hvornår hvilken bruges.</td><td>2, 4</td></tr>
+<tr><td>Programmere i LD og SFC</td><td>Skrive ladder og SFC i Studio 5000 efter IEC 61131-3.</td><td>3, 4, 5</td></tr>
+<tr><td>Idriftsætte en proces</td><td>Teste med testcases, først i emulator og så på rigtig PLC.</td><td>6</td></tr>
+</table></div>
+<h3>Eksamen</h3>
+<div class="tw"><table>
+<tr><th>Prøveform</th><td>Skriftlig opgavebesvarelse, bestået/ikke bestået (helhedsvurdering)</td></tr>
+<tr><th>Forudsætning</th><td>Den obligatoriske semesteropgave skal være godkendt</td></tr>
+<tr><th>Form</th><td>Individuel</td></tr>
+<tr><th>Omfang</th><td>Semesteropgave på højst 25 sider á 2600 anslag</td></tr>
+<tr><th>Hjælpemidler</th><td>Egne noter på PC. Internet kun til CampusNet, OneDrive, fagets YouTube-playliste og Wiseflow. Ingen mobil.</td></tr>
+<tr><th>Bedømmelse</th><td>Intern, eksaminator alene</td></tr>
+</table></div>
+<p><b>Litteratur:</b> "PLC styring med Ladder Diagram (LD)", Tom Mejer Antonsen (ISBN 978-87-4303-288-5), plus materiale fra underviseren. <b>Lab:</b> lokale 405, Process Lab A.</p>
+<p><b>STCW:</b> A-III/1.4 og 1.6 (betjene maskineri og el- og kontrolsystemer), A-III/1.7 og 6.8 (vedligehold), A-III/2.5–2.6 (lede drift og fejlfinding), A-III/6.1 (overvåge drift), samt engelsk og intern kommunikation.</p>
+<h3>Forløbsplan</h3>
+<div class="tw"><table>
+<tr><th>Lektion</th><th>Emne</th><th>Her på siden</th></tr>
+<tr><td>1</td><td>Intro, PC'en, virtuel maskine (VMware + IMAGE)</td><td>Emne 1</td></tr>
+<tr><td>2</td><td>SPU-metoden, relæteknik, boolske variable, hvad er en PLC, emulator, Studio 5000, første ladder-program</td><td>Emne 1, 2, 3</td></tr>
+<tr><td>3</td><td>Flere ladder-opgaver, intro til sekvensstyringer</td><td>Emne 3, 4</td></tr>
+<tr><td>4</td><td>Fasediagram-metoden, sekvensdiagrammer, on/off-sensorer og aktuatorer, TON-timere</td><td>Emne 4, 5</td></tr>
+<tr><td>5</td><td>GRAFCET, SFC, dokumentation af sekventiel styring</td><td>Emne 4, 6</td></tr>
+<tr><td>6</td><td>Forgreninger, løkker, parallelforløb</td><td>Emne 4</td></tr>
+<tr><td>7</td><td>Timere og tællere, kvalitetssikring, testsuites og testcases</td><td>Emne 5, 6</td></tr>
+<tr><td>8</td><td>Flere sekvenseksempler</td><td>Emne 4</td></tr>
+<tr><td>9</td><td>Maskinsikkerhed, nødstop og nødstopsrelæ</td><td>Emne 6</td></tr>
+<tr><td>10</td><td>Avancerede sekventielle styringer, kvalitetssikring, tællere (CTU/CTD/CTUD)</td><td>Emne 5, 6</td></tr>
+<tr><td>11–12</td><td>Afsluttende projekt og repetition</td><td>Emne 6</td></tr>
+</table></div>
+</article>
+
+<article id="pc">
+<h2>1 · PC'en og den virtuelle maskine <span class="ud">Uddybet</span></h2>
+<p class="src">Lektion 1</p>
+<p>Studio 5000 er tungt software med licenser, så alle på holdet kører det i den samme virtuelle maskine. Derfor skal du kende de dele af PC'en, der bestemmer, hvor godt den virtuelle maskine kører.</p>
+<div class="tw"><table>
+<tr><th>Del</th><th>Hvad den gør</th><th>Betydning for VM'en</th></tr>
+<tr><td>CPU</td><td>Udfører instruktionerne. Kerner er antal parallelle regneenheder. Clockfrekvensen (GHz) er cyklusser pr. sekund.</td><td>Du tildeler VM'en et antal kerner. Giv den ikke alle, for værts-PC'en skal også køre.</td></tr>
+<tr><td>Cache</td><td>Lille og meget hurtig hukommelse tæt på CPU'en (L1, L2, L3).</td><td>Kan ikke indstilles, men forklarer hvorfor to CPU'er med samme GHz kan være forskellige.</td></tr>
+<tr><td>RAM</td><td>Arbejdshukommelse. Hurtig, men flygtig: den tømmes når strømmen går.</td><td>VM'en får en fast del af RAM. For lidt gør Studio 5000 langsom.</td></tr>
+<tr><td>HDD/SSD</td><td>Permanent lager. SSD er markant hurtigere end HDD.</td><td>IMAGE-filen fylder meget og kører klart bedst fra SSD.</td></tr>
+</table></div>
+<p>En <b>virtuel maskine (VM)</b> er en computer, der er simuleret i software (her VMware). Fordelen er, at alle kører samme IMAGE med Studio 5000 og licenser, uden at det roder i din egen PC.</p>
+<p>Vigtige VM-indstillinger: antal CPU-kerner, RAM, skærmopløsning, <i>shared folders</i> (deling af filer mellem din PC og VM'en) og en fornuftig mappestruktur, så du kan finde dine projekter igen.</p>
+<div class="box key"><b class="t">Husk</b>Gem dine projektfiler i en delt mappe eller tag backup ud af VM'en. Går IMAGE'et i stykker, er filerne inde i det væk.</div>
+</article>
+
+<article id="plc">
+<h2>2 · Hvad er en PLC?</h2>
+<p class="src">Lektion 2</p>
+<p>En PLC er en robust industricomputer, der læser indgange, kører et program og styrer udgange. Indgangene er sensorer og knapper. Udgangene er ventiler, kontaktorer og lamper. PLC'en erstatter fortrådet relælogik med software, så man kan ændre styringen uden at trække nye ledninger.</p>
+<h3>PLC eller PC? <span class="ud">Uddybet</span></h3>
+<div class="tw"><table>
+<tr><th>PLC</th><th>PC</th></tr>
+<tr><td>Bygget til industrimiljø: støj, vibration, temperatur</td><td>Bygget til kontormiljø</td></tr>
+<tr><td>Deterministisk real-time scan: samme svartid hver gang</td><td>Ingen garanteret svartid</td></tr>
+<tr><td>Direkte I/O-kort til sensorer og aktuatorer</td><td>Ingen industri-I/O</td></tr>
+<tr><td>Kører ét styringsprogram i mange år</td><td>Mange programmer og hyppige opdateringer</td></tr>
+</table></div>
+</article>
+
+<article id="scan">
+<h2>3 · Scan-cyklussen <span class="ud">Uddybet</span></h2>
+<p class="src">Lektion 2 · LD-bogen</p>
+<p>PLC'en kører programmet i en uendelig løkke, der kaldes et scan. Et scan tager typisk få millisekunder og har tre trin:</p>
+<ol><li><b>Læs alle indgange</b> og gem dem i et input-billede (en kopi i hukommelsen).</li>
+<li><b>Kør programmet</b> rung for rung, oppefra og ned. Programmet ser kun input-billedet, ikke de fysiske indgange.</li>
+<li><b>Skriv alle udgange</b> fra output-billedet ud til de fysiske udgange.</li></ol>
+<p>Det har to vigtige følger. For det første ser programmet ikke en indgang, der skifter midt i et scan, før næste scan. For det andet bliver en udgang først fysisk tændt i trin 3, så hvis den samme udgang skrives i to rungs, er det kun den sidste, der "vinder".</p>
+
+<div class="model" id="m-scan">
+<h4>Model: ét scan ad gangen</h4>
+<p class="sub">Programmet er én rung: <code>XIC B1 → OTE H1</code>. Tryk på B1 midt i et scan og se, hvornår lampen reagerer.</p>
+<div class="ctrl"><button class="btn" id="sc-b1" type="button">B1: slip</button><button class="btn prim" id="sc-step" type="button">Næste trin ›</button><button class="btn" id="sc-auto" type="button">Kør automatisk</button></div>
+<div class="readout" id="sc-out"></div>
+<div class="ladder" id="sc-lad"></div>
+<details class="predict"><summary>B1 trykkes ned, mens PLC'en er i trin 2. Hvornår lyser H1?</summary>
+<p>Først i trin 3 i det <b>næste</b> scan. Input-billedet blev læst i trin 1, før du trykkede, så programmet ser stadig B1 = 0 i dette scan. I næste scan læses B1 = 1, rungen bliver sand, og H1 skrives ud i trin 3. Med et scan på få ms mærker man det ikke, men korte impulser kan blive overset.</p></details>
+</div>
+
+<h3>I/O</h3>
+<p>Digitale indgange og udgange er on/off. Analoge er fx 4–20 mA fra en tryk- eller niveautransmitter. I Studio 5000 adresserer du dem via tags, der er knyttet til modul og kanal, fx <code>Local:1:I.Data.0</code>. Giv dem et alias med et sigende navn, så programmet kan læses.</p>
+</article>
+
+<article id="studio">
+<h2>4 · Emulator og Studio 5000</h2>
+<p class="src">Lektion 2</p>
+<p>En <b>emulator</b> er software, der efterligner en PLC på din PC (Studio 5000 Logix Emulate). Du bruger den til at teste programmet uden fysisk hardware. Forskellen til en rigtig PLC er, at der ikke er rigtig I/O, og at timingen ikke er helt den samme som på en fysisk controller.</p>
+<p><b>Studio 5000</b> (Rockwell / Allen-Bradley) er udviklingsmiljøet. Projektet er bygget op i lag:</p>
+<div class="formel">Controller
+ └ Tasks          (fx MainTask, kører kontinuerligt)
+    └ Programs    (fx MainProgram)
+       └ Routines (MainRoutine i ladder kalder de øvrige med JSR)</div>
+<h3>Programmeringssprog (IEC 61131-3) <span class="ud">Uddybet</span></h3>
+<div class="tw"><table>
+<tr><th>Sprog</th><th>Ligner</th><th>Bruges til</th></tr>
+<tr><td>Ladder Diagram (LD)</td><td>Et relæskema drejet 90°</td><td>Logik og outputs. Fagets hovedsprog.</td></tr>
+<tr><td>Sequential Function Chart (SFC)</td><td>Et flowdiagram med steps og transitions</td><td>Sekvenser. Fagets andet sprog.</td></tr>
+<tr><td>Function Block Diagram (FBD)</td><td>Et blokdiagram med forbundne funktioner</td><td>Regulering og analog behandling</td></tr>
+<tr><td>Structured Text (ST)</td><td>Pascal-lignende tekstkode</td><td>Beregninger og komplekse algoritmer</td></tr>
+</table></div>
+</article>
+</section>
+
+<section class="pane" id="p-forstaa"><div id="fq"></div></section>
+<section class="pane" id="p-test"><div id="qz"></div></section>
+<footer class="f">Martins noter til Procesanalyse og automation 1 · Maskinenoter.dk · Kilder: modulbeskrivelsen, slides og "PLC styring med Ladder Diagram (LD)".</footer>
+</div>
+<script src="pa1.js"></script>
+<script>
+(function(){
+  const st = { phys: false, inImg: false, outImg: false, lamp: false, fase: 0, scan: 1 };
+  const navn = ["1 · Læs indgange", "2 · Kør programmet", "3 · Skriv udgange"];
+  const b1 = document.getElementById("sc-b1");
+  function vis(){
+    const t = (k, v) => `<span class="${v ? "t" : ""}">${k} = ${v ? 1 : 0}</span>`;
+    document.getElementById("sc-out").innerHTML =
+      `<span>Scan ${st.scan} · næste: ${navn[st.fase]}</span>` + t("Fysisk B1", st.phys) + t("Input-billede B1", st.inImg) + t("Output-billede H1", st.outImg) +
+      `<span><i class="lamp ${st.lamp ? "t" : ""}"></i>Fysisk lampe H1</span>`;
+    PA.ladder(document.getElementById("sc-lad"), [{ n: "0", c: [{ k: "xic", tag: "B1" }], o: [{ k: "ote", tag: "H1" }] }], { B1: st.inImg });
+    b1.textContent = st.phys ? "B1: trykket" : "B1: slip"; b1.classList.toggle("on", st.phys);
+  }
+  function trin(){
+    if (st.fase === 0) st.inImg = st.phys;
+    else if (st.fase === 1) st.outImg = st.inImg;
+    else { st.lamp = st.outImg; st.scan++; }
+    st.fase = (st.fase + 1) % 3; vis();
+  }
+  b1.addEventListener("click", () => { st.phys = !st.phys; vis(); });
+  document.getElementById("sc-step").addEventListener("click", trin);
+  let tmr = null; const auto = document.getElementById("sc-auto");
+  auto.addEventListener("click", () => { if (tmr) { clearInterval(tmr); tmr = null; auto.textContent = "Kør automatisk"; } else { tmr = setInterval(trin, 700); auto.textContent = "Stop"; } });
+  vis();
+})();
+PA.forstaa(document.getElementById("fq"), [
+  { q: "Hvorfor kører holdet Studio 5000 i en virtuel maskine i stedet for at installere det direkte?", s: "Alle får præcis samme IMAGE med samme version og licenser, så opgaver og projektfiler virker ens for alle. Det roder heller ikke i din egen PC, og går noget galt, kan IMAGE'et bare lægges på igen." },
+  { q: "Beskriv PLC'ens scan-cyklus med dine egne ord. Hvorfor må et output kun skrives i én rung?", s: "1) Alle indgange læses ind i et input-billede. 2) Programmet køres rung for rung oppefra og ned og skriver til et output-billede. 3) Output-billedet skrives til de fysiske udgange. Skrives samme OTE i to rungs, overskriver den sidste rung den første i output-billedet, før noget når ud. Den første rung har altså ingen virkning, og det giver fejl der er svære at finde." },
+  { q: "Hvad er forskellen på at teste i emulatoren og på den rigtige PLC?", s: "Emulatoren har ingen rigtig I/O, så du må selv sætte input-bits, og timingen er ikke den samme som på en fysisk controller. Den er god til at teste logikken. Ledningsføring, sensorer og reel timing kan først testes på den rigtige PLC." },
+  { q: "Hvorfor siger man, at en PLC er deterministisk, og hvorfor er det vigtigt i en styring?", s: "Scan-tiden er kendt og næsten konstant, så man ved hvor hurtigt PLC'en reagerer. En PC kan pludselig bruge tid på opdateringer eller andre programmer. I en maskine skal fx et stop altid ske inden for samme tid." },
+]);
+PA.quiz(document.getElementById("qz"), [
+  { q: "Hvad sker der i trin 1 af scan-cyklussen?", a: ["Programmet køres oppefra og ned", "Alle indgange læses ind i input-billedet", "Alle udgange skrives ud", "PLC'en tjekker licensen"], r: 1, f: "Trin 1 læser alle fysiske indgange ind i et input-billede. Programmet i trin 2 arbejder kun med den kopi." },
+  { q: "Samme udgang H1 er skrevet med OTE i rung 2 (sand) og i rung 7 (falsk). Hvad bliver H1?", a: ["1, fordi rung 2 er sand", "0, fordi rung 7 kommer sidst", "Den blinker", "PLC'en går i fejl"], r: 1, f: "Rung 7 overskriver output-billedet efter rung 2, og først i trin 3 skrives værdien ud. Derfor: én rung pr. OTE." },
+  { q: "Hvilken hukommelse tømmes, når PC'en slukkes?", a: ["SSD", "HDD", "RAM", "Ingen af dem"], r: 2, f: "RAM er flygtig. SSD og HDD er permanent lager." },
+  { q: "I Studio 5000 kalder MainRoutine de øvrige routines med …", a: ["JSR", "OTL", "GOTO", "CALL"], r: 0, f: "JSR (Jump to Subroutine) kalder en anden routine i samme program." },
+  { q: "Hvilke to IEC 61131-3-sprog bruges mest i faget?", a: ["ST og FBD", "LD og SFC", "LD og ST", "FBD og SFC"], r: 1, f: "Ladder Diagram til logik og outputs, Sequential Function Chart til sekvenser." },
+  { q: "Hvad er hovedformålet med emulatoren?", a: ["At gøre PLC'en hurtigere", "At teste programmet uden fysisk hardware", "At lave styrestrømsskemaet", "At erstatte PLC'en i drift"], r: 1, f: "Emulatoren efterligner en controller på PC'en, så logikken kan testes uden hardware. Den har ingen rigtig I/O." },
+  { q: "Hvad er semesteropgavens maksimale omfang?", a: ["10 sider", "15 sider", "25 sider á 2600 anslag", "Ingen grænse"], r: 2, f: "Modulbeskrivelsen siger højst 25 sider á 2600 anslag, og opgaven skal være godkendt før eksamen." },
+]);
+PA.tabs();
+</script>
+</body>
+</html>

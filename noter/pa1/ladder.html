@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Ladder og SPU-metoden · PA1 · Maskinenoter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="pa1.css">
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="kicker">M5 · Procesanalyse og automation 1 · Emne 3 af 6</div>
+  <h1>Ladder og SPU-metoden</h1>
+  <p>Ladder-instruktionerne i Studio 5000, tommelfingerregler for gode programmer og SPU-metoden fra opgave til færdigt program. Lektion 2–3.</p>
+</header>
+<nav class="tabs" aria-label="Dele">
+  <button type="button" data-tab="noter">Noter</button>
+  <button type="button" data-tab="forstaa">Forståelse</button>
+  <button type="button" data-tab="test">Quiz</button>
+</nav>
+<section class="pane" id="p-noter">
+
+<article id="ladder">
+<h2>1 · Sådan er et ladder-program bygget</h2>
+<p class="src">Lektion 2–3 · LD-bogen</p>
+<p>Et ladder-program ligner et relæskema, der er drejet 90 grader. Der er to lodrette skinner, og imellem dem vandrette rungs. Betingelserne står til venstre, udgangen til højre. En rung er sand, når der er en sammenhængende vej af sande instruktioner fra venstre skinne til udgangen.</p>
+<div class="tw"><table>
+<tr><th>Instruktion</th><th>Symbol</th><th>Betydning</th></tr>
+<tr><td>XIC · Examine If Closed</td><td><code>] [</code></td><td>Sand når bitten er 1</td></tr>
+<tr><td>XIO · Examine If Open</td><td><code>]/[</code></td><td>Sand når bitten er 0</td></tr>
+<tr><td>OTE · Output Energize</td><td><code>( )</code></td><td>Bitten er 1, så længe rungen er sand, og 0 når den er falsk</td></tr>
+<tr><td>OTL · Output Latch</td><td><code>(L)</code></td><td>Sætter bitten til 1 og lader den blive der</td></tr>
+<tr><td>OTU · Output Unlatch</td><td><code>(U)</code></td><td>Nulstiller bitten til 0</td></tr>
+<tr><td>ONS · One Shot <span class="ud">Uddybet</span></td><td><code>[ONS]</code></td><td>Sand i kun ét scan, når rungen går fra 0 til 1</td></tr>
+<tr><td>RES · Reset</td><td><code>(RES)</code></td><td>Nulstiller en timer eller tæller</td></tr>
+</table></div>
+<div class="box key"><b class="t">Faldgrube: XIC og XIO handler om bitten, ikke om knappen</b>
+XIC betyder "sand hvis bitten er 1", ikke "NO-kontakt". Om den fysiske knap er NO eller NC, afgør bare hvornår bitten er 1. Se emne 2 om NC-stopknappen.</div>
+</article>
+
+<article id="regler">
+<h2>2 · Tommelfingerregler</h2>
+<p class="src">Lektion 2–3</p>
+<ul>
+<li><b>Kun én rung pr. OTE.</b> Skriver du samme udgang flere steder, er det kun den sidste rung i scannet, der vinder. Prøv det i modellen herunder.</li>
+<li><b>Sigende tag-navne</b>, fx <code>light_1</code>, <code>limit_switch_2</code>, <code>Pumpe_P1</code>, og en kommentar på hver rung.</li>
+<li><b>OTL og OTU bruges i par.</b> En latchet bit bliver ved med at være 1, også når betingelsen forsvinder, indtil en OTU nulstiller den. Det bruges typisk til step-bits i sekvenser (emne 4).</li>
+</ul>
+
+<div class="model" id="m-dobbelt">
+<h4>Model: samme OTE i to rungs</h4>
+<p class="sub">Lampen H1 er skrevet i både rung 0 (A) og rung 1 (B). Slå A og B til og fra.</p>
+<div class="ctrl"><button class="btn" id="d-a" type="button">A = 0</button><button class="btn" id="d-b" type="button">B = 0</button></div>
+<div class="readout" id="d-out"></div>
+<div class="ladder" id="d-lad"></div>
+<details class="predict"><summary>A = 1 og B = 0. Lyser H1?</summary>
+<p>Nej. Rung 0 sætter H1 = 1 i output-billedet, men rung 1 overskriver den med 0 i samme scan, før udgangene skrives ud. Den rigtige løsning er én rung med A og B i parallel (OR).</p></details>
+<div class="ctrl"><label><input type="checkbox" id="d-fix"> Vis den rigtige løsning (A OR B i én rung)</label></div>
+</div>
+
+<div class="model" id="m-latch">
+<h4>Model: OTE, OTL og OTU</h4>
+<p class="sub">Hold knapperne nede. OTE følger knappen. OTL husker, indtil OTU nulstiller.</p>
+<div class="ctrl"><button class="btn" id="l-ote" type="button">Knap S1 (hold)</button><button class="btn start" id="l-set" type="button">Sæt S2 (hold)</button><button class="btn stop" id="l-reset" type="button">Nulstil S3 (hold)</button></div>
+<div class="readout" id="l-out"></div>
+<div class="ladder" id="l-lad"></div>
+<details class="predict"><summary>Du holder både S2 og S3 nede samtidig. Hvad bliver Lampe_2?</summary>
+<p>0. OTL-rungen sætter bitten, men OTU-rungen kommer bagefter i samme scan og nulstiller den. Den sidste rung vinder, ligesom ved dobbelt OTE. Vil du have, at "sæt" vinder, skal OTL-rungen stå sidst.</p></details>
+</div>
+</article>
+
+<article id="spu">
+<h2>3 · SPU-metoden <span class="ud">Uddybet</span></h2>
+<p class="src">Lektion 2 · Struktureret Program-Udvikling</p>
+<p>SPU er en fast arbejdsgang fra opgavetekst til færdigt program. Pointen er, at du tænker og tegner, før du programmerer. Det sparer tid og giver den dokumentation, semesteropgaven kræver.</p>
+<div class="tw"><table>
+<tr><th>Trin</th><th>Hvad du gør</th><th>Resultat</th></tr>
+<tr><td>1 · Analyse</td><td>Find ud af, hvad anlægget skal gøre, også ved stop og fejl</td><td>Funktionsbeskrivelse</td></tr>
+<tr><td>2 · I/O-liste</td><td>Alle sensorer og aktuatorer med tag, beskrivelse og adresse</td><td>I/O-liste</td></tr>
+<tr><td>3 · Design</td><td>Tegn forløbet, før du koder</td><td>Funktions-/fasediagram, GRAFCET eller SFC</td></tr>
+<tr><td>4 · Implementering</td><td>Skriv SFC og ladder i Studio 5000</td><td>Program</td></tr>
+<tr><td>5 · Test</td><td>Testcases i emulator og på rigtig PLC</td><td>Testsuite med resultater</td></tr>
+<tr><td>6 · Dokumentation</td><td>Saml det hele (se emne 6)</td><td>Rapport</td></tr>
+</table></div>
+<h3>Eksempel på I/O-liste</h3>
+<div class="tw"><table>
+<tr><th>Tag</th><th>Type</th><th>Beskrivelse</th><th>Adresse</th><th>Signal</th></tr>
+<tr><td><code>S0_Stop</code></td><td>DI</td><td>Stopknap</td><td>Local:1:I.Data.0</td><td>NC, 1 = ikke trykket</td></tr>
+<tr><td><code>S1_Start</code></td><td>DI</td><td>Startknap</td><td>Local:1:I.Data.1</td><td>NO</td></tr>
+<tr><td><code>B1_Cyl_inde</code></td><td>DI</td><td>Reed-kontakt, cylinder inde</td><td>Local:1:I.Data.2</td><td>1 = inde</td></tr>
+<tr><td><code>Y1_Cyl_ud</code></td><td>DO</td><td>Magnetventil, cylinder ud</td><td>Local:2:O.Data.0</td><td>Monostabil</td></tr>
+</table></div>
+<p style="font-size:15px;color:var(--muted)">Adresserne er eksempler. Brug dem, I/O-kortene i labbet faktisk har.</p>
+</article>
+</section>
+
+<section class="pane" id="p-forstaa"><div id="fq"></div></section>
+<section class="pane" id="p-test"><div id="qz"></div></section>
+<footer class="f">Martins noter til Procesanalyse og automation 1 · Maskinenoter.dk · Kilder: modulbeskrivelsen, slides og "PLC styring med Ladder Diagram (LD)".</footer>
+</div>
+<script src="pa1.js"></script>
+<script>
+(function(){
+  const st = { A: false, B: false }; const $ = id => document.getElementById(id);
+  function vis(){
+    const fix = $("d-fix").checked;
+    const rungs = fix
+      ? [{ n: "0", c: [{ k: "xic", tag: "A" }], b: [{ from: 0, to: 1, c: [{ k: "xic", tag: "B" }] }], o: [{ k: "ote", tag: "H1" }] }]
+      : [{ n: "0", c: [{ k: "xic", tag: "A" }], o: [{ k: "ote", tag: "H1" }] }, { n: "1", c: [{ k: "xic", tag: "B" }], o: [{ k: "ote", tag: "H1" }] }];
+    let H1 = false; rungs.forEach(r => (H1 = PA.power(r, st)));
+    PA.ladder($("d-lad"), rungs, st);
+    $("d-out").innerHTML = `<span><i class="lamp ${H1 ? "t" : ""}"></i>H1 efter scannet = ${H1 ? 1 : 0}</span>` + (fix ? "" : `<span>rung 0 skriver ${st.A ? 1 : 0}, rung 1 skriver ${st.B ? 1 : 0}</span>`);
+    ["A", "B"].forEach(k => { const b = $("d-" + k.toLowerCase()); b.textContent = `${k} = ${st[k] ? 1 : 0}`; b.classList.toggle("on", st[k]); });
+  }
+  $("d-a").addEventListener("click", () => { st.A = !st.A; vis(); });
+  $("d-b").addEventListener("click", () => { st.B = !st.B; vis(); });
+  $("d-fix").addEventListener("change", vis);
+  vis();
+})();
+(function(){
+  const st = { S1: false, S2: false, S3: false, Lampe_1: false, Lampe_2: false }; const $ = id => document.getElementById(id);
+  const rungs = [
+    { n: "0", c: [{ k: "xic", tag: "S1" }], o: [{ k: "ote", tag: "Lampe_1" }] },
+    { n: "1", c: [{ k: "xic", tag: "S2" }], o: [{ k: "otl", tag: "Lampe_2" }] },
+    { n: "2", c: [{ k: "xic", tag: "S3" }], o: [{ k: "otu", tag: "Lampe_2" }] } ];
+  function scan(){
+    st.Lampe_1 = st.S1;
+    if (st.S2) st.Lampe_2 = true;
+    if (st.S3) st.Lampe_2 = false;
+    PA.ladder($("l-lad"), rungs, st);
+    $("l-out").innerHTML = `<span><i class="lamp ${st.Lampe_1 ? "t" : ""}"></i>Lampe_1 (OTE)</span><span><i class="lamp ${st.Lampe_2 ? "t" : ""}"></i>Lampe_2 (OTL/OTU)</span>`;
+  }
+  [["l-ote", "S1"], ["l-set", "S2"], ["l-reset", "S3"]].forEach(([id, k]) => PA.hold($(id), () => { st[k] = true; scan(); }, () => { st[k] = false; scan(); }));
+  scan();
+})();
+PA.forstaa(document.getElementById("fq"), [
+  { q: "Hvad er forskellen på OTE og OTL? Hvornår vil du bruge hver?", s: "OTE følger rungen: 1 når rungen er sand, 0 når den er falsk. OTL sætter bitten og lader den blive 1, også når rungen bliver falsk, indtil en OTU nulstiller den. OTE bruges til de fleste udgange (én rung pr. output). OTL/OTU bruges til tilstande der skal huskes, fx step-bits i en sekvens." },
+  { q: "Forklar med scan-cyklussen, hvorfor samme OTE ikke må stå i to rungs.", s: "Programmet skriver til output-billedet rung for rung, og først når hele programmet er kørt, sendes output-billedet ud. Rung nr. 2 overskriver altså rung nr. 1, så den første rung har ingen virkning. Løsningen er at samle betingelserne i én rung med parallelle grene (OR)." },
+  { q: "Hvorfor tegner man fasediagram eller SFC, før man programmerer (SPU-trin 3)?", s: "Så forløbet er gennemtænkt, før man sidder fast i detaljer. Man opdager manglende sensorer, uklare overgange og fejlsituationer tidligt, og tegningen bliver samtidig dokumentation og grundlag for testcases." },
+  { q: "Hvad skal en god I/O-liste indeholde?", s: "Tag-navn, om det er indgang eller udgang (DI/DO/AI/AO), en beskrivelse af komponenten, adressen på I/O-kortet (modul og kanal) og signalets betydning, fx om en knap er NC så 1 betyder 'ikke trykket'." },
+]);
+PA.quiz(document.getElementById("qz"), [
+  { q: "XIO-instruktionen er sand, når …", a: ["Bitten er 1", "Bitten er 0", "Knappen er NC", "Rungen er falsk"], r: 1, f: "XIO = Examine If Open: sand når bitten er 0. Den har intet med knaptypen at gøre." },
+  { q: "En OTL-rung bliver falsk igen. Hvad sker der med bitten?", a: ["Den bliver 0", "Den forbliver 1", "Den blinker", "Den skifter tilstand"], r: 1, f: "Latch betyder, at bitten holdes, indtil en OTU nulstiller den." },
+  { q: "Hvilken instruktion nulstiller en timer eller tæller?", a: ["OTU", "RES", "XIO", "ONS"], r: 1, f: "RES nulstiller ACC og statusbits på en timer eller tæller." },
+  { q: "Rung 3: XIC S2 → OTL Y1. Rung 4: XIC S3 → OTU Y1. S2 og S3 er begge 1. Hvad bliver Y1?", a: ["1", "0", "Den skifter hvert scan", "Uændret"], r: 1, f: "OTU står sidst i scannet og vinder." },
+  { q: "Hvilket SPU-trin giver en liste over alle sensorer og aktuatorer med adresser?", a: ["Analyse", "I/O-liste", "Design", "Test"], r: 1, f: "Trin 2 er I/O-listen." },
+  { q: "Hvad gør ONS?", a: ["Holder en bit sand for altid", "Er sand i ét scan, når rungen går fra 0 til 1", "Tæller pulser", "Nulstiller rungen"], r: 1, f: "One Shot giver en puls på ét scan ved den stigende flanke. Den bruges fx så et tryk kun tæller én gang." },
+  { q: "Hvad er det bedste tag-navn til en endestopkontakt på en cylinder?", a: ["I_0_3", "x", "B2_Cyl_ude", "Input"], r: 2, f: "Sigende navne med komponentnummer og funktion gør programmet læsbart og nemt at fejlfinde." },
+]);
+PA.tabs();
+</script>
+</body>
+</html>

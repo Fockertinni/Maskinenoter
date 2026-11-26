@@ -153,6 +153,13 @@ const el2Lab = n => ({
   quiz:        `modeller/el2/lab${n}-noter.html?vis=test`,
 });
 
+// Genvej til PA1-emner: noter (med modeller), forståelse og quiz i noter/pa1/<id>.html
+const pa1 = id => ({
+  noter:       `noter/pa1/${id}.html?vis=noter`,
+  forstaaelse: `noter/pa1/${id}.html?vis=forstaa`,
+  quiz:        `noter/pa1/${id}.html?vis=test`,
+});
+
 const SEMESTRE = [
   { n: 1, fag: [
     { id: "vaerksted", navn: "Værkstedsskole", ikon: "vaerksted", emner: [] } ] },
@@ -194,8 +201,28 @@ const SEMESTRE = [
           intro: "Frekvensomformer med reluktansmotor: strømmens harmoniske og virkningsgrader ved forskellig last og hastighed.",
           dele: el2Lab(8) },
       ] },
-    { id: "pa1", navn: "Procesanalyse og automation 1", ikon: "auto", emner: [],
-      laeringsmaal: "https://www.teknikaqms.dk/showpage.php?pageid=485841" },
+    { id: "pa1", navn: "Procesanalyse og automation 1", ikon: "auto", quiz: null,
+      laeringsmaal: "https://www.teknikaqms.dk/showpage.php?pageid=485841",
+      emner: [
+        { id: "plc", navn: "PLC og Studio 5000", ikon: "plc",
+          intro: "Om faget og eksamen, PC'en og den virtuelle maskine, hvad en PLC er, scan-cyklussen, emulatoren og Studio 5000.",
+          dele: pa1("plc") },
+        { id: "relae", navn: "Relæteknik og boolsk logik", ikon: "relae",
+          intro: "NO- og NC-kontakter, hoved- og styrestrøm, holdekreds, gensidig spærring og AND, OR og NOT i ladder.",
+          dele: pa1("relae") },
+        { id: "ladder", navn: "Ladder og SPU-metoden", ikon: "ladder",
+          intro: "XIC, XIO, OTE, OTL, OTU og de andre instruktioner, reglen om én rung pr. output, og SPU-metoden fra opgave til program.",
+          dele: pa1("ladder") },
+        { id: "sekvens", navn: "Sekvenser, GRAFCET og SFC", ikon: "sekvens",
+          intro: "Steps og transitions, fasediagrammet, sekvenser i ladder med OTL/OTU, sensorer og aktuatorer, og forgreninger i SFC.",
+          dele: pa1("sekvens") },
+        { id: "timere", navn: "Timere og tællere", ikon: "timer",
+          intro: "TON, TOF og RTO med EN, TT og DN, og tællerne CTU, CTD og CTUD med kasse-eksemplet fra LD-bogen.",
+          dele: pa1("timere") },
+        { id: "sikkerhed", navn: "Sikkerhed, test og dokumentation", ikon: "sikkerhed",
+          intro: "Nødstop og sikkerhedsrelæ, stopkategorier, testcases og testsuites, og de syv dele af en fuld dokumentation.",
+          dele: pa1("sikkerhed") },
+      ] },
     { id: "forb", navn: "Forbrændingsmotoranlæg", ikon: "motoranlaeg", emner: [],
       laeringsmaal: "https://www.teknikaqms.dk/showpage.php?pageid=485875" },
     { id: "drift", navn: "Driftsøkonomi", ikon: "oekonomi", emner: [],
@@ -247,6 +274,12 @@ const IKON = {
   kortslutning: '<path d="M2.5 12h5l2-5.5 4.5 11 2-5.5h5.5"/>',
   synkron: '<path d="M2.5 12c1.6-4.5 3.2-4.5 4.8 0s3.2 4.5 4.8 0 3.2-4.5 4.8 0 3.2 4.5 4.8 0"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/>',
   frekvens: '<path d="M2.5 16V8h4.75v8H12V8h4.75v8h4.75"/>',
+  plc: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h2.5M8 14.5h2.5M8 18h2.5M13.5 11H16M13.5 14.5H16M13.5 18H16"/>',
+  relae: '<path d="M2.5 12h6M15.5 12h6M8.5 6v12M15.5 6v12"/>',
+  ladder: '<path d="M4 3v18M20 3v18M4 8.5h16M4 15.5h16"/>',
+  sekvens: '<rect x="8" y="2.5" width="8" height="6"/><rect x="8" y="15.5" width="8" height="6"/><path d="M12 8.5v7M8.5 12h7"/>',
+  timer: '<circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.6 2.6M9.5 2.5h5"/>',
+  sikkerhed: '<path d="M12 2.5 4.5 5.5v6c0 4.8 3.2 8.4 7.5 10 4.3-1.6 7.5-5.2 7.5-10v-6Z"/><path d="M12 8v5M12 16.2v.3"/>',
   noter: '<path d="M7 2.5h7.5l4.5 4.5v14.5H7Z"/><path d="M14.5 2.5V7H19M10 12h6M10 16h6"/>',
   formler: '<path d="M17 4.5H7l6 7.5-6 7.5h10"/>',
   simulation: '<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>',

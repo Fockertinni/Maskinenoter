@@ -15,6 +15,7 @@ Mine noter og interaktive modeller fra maskinmesteruddannelsen. Siden er ren HTM
   - `lab1-noter.html` til `lab8-noter.html` indeholder noter (med modellerne inde i teksten), forståelse og quiz. Med `?vis=noter`, `?vis=forstaa` eller `?vis=test` vises kun den del.
   - Gamle links som `lab1.html#noter` eller `lab1.html?vis=test` sendes automatisk videre til noter-filen.
   - `index.html` er oversigten over alle otte øvelser.
+- `noter/pa1/` indeholder emnerne til Procesanalyse og automation 1. Hver fil (fx `plc.html`) har tre dele: Noter (med modellerne inde i teksten), Forståelse og Quiz. Med `?vis=noter`, `?vis=forstaa` eller `?vis=test` vises kun den del. Fælles stil og værktøjer ligger i `pa1.css` og `pa1.js`. Genvejen `pa1("plc")` i `index.html` giver alle tre dele.
 
 ## Tilføj et emne
 
@@ -60,6 +61,6 @@ Tilføj én post til `SEMESTRE`, fx `{ n: 10, quiz: null, fag: [ ... ] }`. `NU` 
 Brug en af nøglerne i `IKON`:
 
 - Fag: `el`, `energi`, `motoranlaeg`, `auto`, `oekonomi`, `ledelse`, `studie`, `vaerksted`, `praktik`, `koel`
-- Emner: `trefase`, `generator`, `motor`, `jord`, `transformer`, `kortslutning`, `synkron`, `frekvens`
+- Emner: `trefase`, `generator`, `motor`, `jord`, `transformer`, `kortslutning`, `synkron`, `frekvens`, `plc`, `relae`, `ladder`, `sekvens`, `timer`, `sikkerhed`
 
 Vil du have et nyt ikon, så tilføj en linje til `IKON` med SVG-stier i et 24×24-gitter.

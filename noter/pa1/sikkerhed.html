@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Sikkerhed, test og dokumentation · PA1 · Maskinenoter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="pa1.css">
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="kicker">M5 · Procesanalyse og automation 1 · Emne 6 af 6</div>
+  <h1>Sikkerhed, test og dokumentation</h1>
+  <p>Maskinsikkerhed og nødstop, testcases og testsuites, de syv dele af en fuld dokumentation, og fagets labøvelser og projekter. Lektion 5, 7, 9–12.</p>
+</header>
+<nav class="tabs" aria-label="Dele">
+  <button type="button" data-tab="noter">Noter</button>
+  <button type="button" data-tab="forstaa">Forståelse</button>
+  <button type="button" data-tab="test">Quiz</button>
+</nav>
+<section class="pane" id="p-noter">
+
+<article id="noedstop">
+<h2>1 · Maskinsikkerhed og nødstop <span class="ud">Uddybet</span></h2>
+<p class="src">Lektion 9</p>
+<ul>
+<li><b>Nødstop</b> skal stoppe farlige bevægelser hurtigst muligt og må ikke kunne genstarte maskinen af sig selv. Reset skal være en bevidst handling.</li>
+<li><b>Nødstopknappen</b> er NC og fastlåsende: rød svamp på gul baggrund. NC gør den fail-safe ved ledningsbrud.</li>
+<li><b>Nødstopsrelæ (sikkerhedsrelæ)</b> overvåger nødstopkredsen, ofte tokanalet, og bryder strømmen til aktuatorerne i hardware. Nødstop må ikke kun afhænge af PLC-programmet.</li>
+<li><b>I programmet</b>: nødstop-indgangen (XIC på NC-signalet) bør nulstille sekvensen og alle outputs.</li>
+</ul>
+<div class="tw"><table>
+<tr><th>Stopkategori (EN 60204-1)</th><th>Hvad sker der</th><th>Eksempel</th></tr>
+<tr><td>0</td><td>Strømmen fjernes straks (ukontrolleret stop)</td><td>Klassisk nødstop på en simpel maskine</td></tr>
+<tr><td>1</td><td>Kontrolleret stop, derefter fjernes strømmen</td><td>Frekvensomformer bremser motoren ned, så slås den fra</td></tr>
+<tr><td>2</td><td>Kontrolleret stop, strømmen bevares</td><td>Driftsstop, hvor motoren holder positionen. Ikke til nødstop.</td></tr>
+</table></div>
+
+<div class="model" id="m-noedstop">
+<h4>Model: hvorfor nødstop skal være i hardware</h4>
+<p class="sub">Motoren får kun strøm, hvis både PLC-udgangen og sikkerhedsrelæet er sluttet. Tryk RESET og START, og prøv så nødstop, også mens PLC-udgangen hænger fast.</p>
+<div class="ctrl"><button class="btn start" id="n-start" type="button">START (hold)</button><button class="btn" id="n-reset" type="button">RESET sikkerhedsrelæ</button><button class="btn stop" id="n-estop" type="button">NØDSTOP</button></div>
+<div class="ctrl"><label><input type="checkbox" id="n-fejl"> PLC-fejl: udgang Q_Motor hænger fast i 1</label><label><input type="checkbox" id="n-kun"> Nødstop kun i PLC-software (intet sikkerhedsrelæ)</label></div>
+<div class="readout" id="n-out"></div>
+<details class="predict"><summary>Q_Motor hænger fast, og nødstop er kun lavet i softwaren. Hvad sker der, når du trykker nødstop?</summary>
+<p>Ingenting. Programmet ser nødstoppet og prøver at slå udgangen fra, men udgangen hænger (fx en svejset relækontakt eller defekt udgangskort). Med et sikkerhedsrelæ brydes strømmen til motoren direkte i hardware, uanset hvad PLC'en gør. Bemærk også: når du slipper nødstop igen, starter motoren ikke, før der er trykket RESET og START.</p></details>
+</div>
+</article>
+
+<article id="test">
+<h2>2 · Kvalitetssikring og test</h2>
+<p class="src">Lektion 7 og 10</p>
+<ul>
+<li><b>Testcase</b>: én konkret test med forudsætning, handling (fx "aktiver B1"), forventet resultat ("Y1 tænder"), faktisk resultat og bestået/ikke bestået.</li>
+<li><b>Testsuite</b>: en samling testcases, der tilsammen dækker hele styringen: normalforløb, alle grene, stop og nødstop, og fejl.</li>
+<li><span class="ud">Uddybet</span> Test først i emulatoren, derefter på den rigtige PLC. Test hver transition og hvert output mindst én gang, og test grænsetilfælde, fx tælleren ved 9, 10 og 11.</li>
+</ul>
+<h3>Eksempel: testsuite til "lampen lyser efter 10 kasser"</h3>
+<div class="tw"><table>
+<tr><th>Nr.</th><th>Forudsætning</th><th>Handling</th><th>Forventet</th><th>Faktisk</th><th>OK</th></tr>
+<tr><td>1</td><td>ACC = 0</td><td>9 kasser forbi sensoren</td><td>ACC = 9, light_1 slukket</td><td></td><td>☐</td></tr>
+<tr><td>2</td><td>ACC = 9</td><td>1 kasse mere</td><td>ACC = 10, light_1 tænder</td><td></td><td>☐</td></tr>
+<tr><td>3</td><td>ACC = 10</td><td>1 kasse mere</td><td>ACC = 11, light_1 stadig tændt</td><td></td><td>☐</td></tr>
+<tr><td>4</td><td>ACC = 3</td><td>Sensoren holdes høj i 10 s</td><td>ACC = 4 (kun én tælling)</td><td></td><td>☐</td></tr>
+<tr><td>5</td><td>light_1 tændt</td><td>Tryk S1 (limit_switch_2)</td><td>ACC = 0, light_1 slukker</td><td></td><td>☐</td></tr>
+</table></div>
+</article>
+
+<article id="dok">
+<h2>3 · Dokumentation af en sekventiel PLC-styring</h2>
+<p class="src">Lektion 5 · Krav fra Lab 2</p>
+<p>Lab 2 stiller syv krav til dokumentationen. Det er også et godt mønster til semester- og eksamensopgaven.</p>
+<ol>
+<li><b>IO-konfiguration</b>: PLC'en og de input- og outputkort, der findes.</li>
+<li><b>I/O-liste</b>: tagnumre, og hvilken ind- eller udgang på IO-kortet hver sensor og aktuator er forbundet til.</li>
+<li><b>Styrestrømsskema</b>: hvordan PLC'en er forbundet til sensorer og aktuatorer.</li>
+<li><b>Funktionsdiagram</b>: tidsforløbet af input- og outputsignaler med steps og transitions.</li>
+<li><b>SFC-program</b>: steps og transitions med en kommentarboks til hvert step (overskrift og hvilke outputs der er sat).</li>
+<li><b>Ladder-program</b>: hvornår outputs er sat. Kun én rung pr. output.</li>
+<li><b>Main-program</b>: hvordan de øvrige routines kaldes.</li>
+</ol>
+<div class="box key"><b class="t">Huskeregel</b>Hardware først (1–3), så forløbet (4–5), så koden (6–7). Det er samme rækkefølge som SPU-metoden, og læseren kan følge signalet fra knap til udgang.</div>
+</article>
+
+<article id="lab">
+<h2>4 · Labøvelser og projekter</h2>
+<p class="src">Forløbsplan</p>
+<div class="tw"><table>
+<tr><th>Opgave</th><th>Indhold</th><th>Se emne</th></tr>
+<tr><td>Lab 1 (uge 10)</td><td>Counter CTU: "Sådan bruges den"</td><td>5</td></tr>
+<tr><td>Lab 2 (uge 10)</td><td>Fylde vand på dunke, med fuld dokumentation efter afsnit 3</td><td>4, 5, 6</td></tr>
+<tr><td>Eksamenseksempel (2025)</td><td>Sortering på transportbånd</td><td>4 (selection branch), 5</td></tr>
+<tr><td>Semesterprojekt</td><td>Pneumatisk boremaskine-celle i Studio 5000, ladder og sekvensdiagrammer</td><td>Alle</td></tr>
+</table></div>
+<div class="box info"><b class="t">Mangler</b>Opgaveteksterne til Lab 1, Lab 2, eksamenseksemplet og semesterprojektet ligger ikke i materialet her. Send dem, så kan der laves forberedelse og løsningsskitser til hver.</div>
+</article>
+</section>
+
+<section class="pane" id="p-forstaa"><div id="fq"></div></section>
+<section class="pane" id="p-test"><div id="qz"></div></section>
+<footer class="f">Martins noter til Procesanalyse og automation 1 · Maskinenoter.dk · Kilder: modulbeskrivelsen, slides og "PLC styring med Ladder Diagram (LD)".</footer>
+</div>
+<script src="pa1.js"></script>
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const st = { start: false, estop: false, safe: false, Q: false };
+  function scan(){
+    const kun = $("n-kun").checked, fejl = $("n-fejl").checked;
+    if (st.estop) st.safe = false;
+    const safeOK = kun ? true : st.safe;
+    const estopSig = !st.estop;          // NC: 1 når ikke trykket
+    // PLC: holdekreds med nødstop-signal og sikkerhedsrelæets kvittering
+    const kør = estopSig && safeOK && (st.start || st.Q);
+    st.Q = fejl ? true : kør;
+    const motor = st.Q && safeOK;
+    const t = (k, v, c) => `<span class="${v ? "t" : ""}"><i class="lamp ${c || ""} ${v ? "t" : ""}"></i>${k}</span>`;
+    $("n-out").innerHTML = t("Nødstop trykket", st.estop, "r") + `<span>E_Stop-signal = ${estopSig ? 1 : 0}</span>` +
+      (kun ? `<span>Intet sikkerhedsrelæ</span>` : t("Sikkerhedsrelæ sluttet", st.safe, "g")) + t("Q_Motor (PLC-udgang)", st.Q, "g") + t("MOTOR KØRER", motor, "g");
+    $("n-estop").textContent = st.estop ? "NØDSTOP (låst, klik for at frigøre)" : "NØDSTOP";
+  }
+  PA.hold($("n-start"), () => { st.start = true; scan(); }, () => { st.start = false; scan(); });
+  $("n-reset").addEventListener("click", () => { if (!st.estop) st.safe = true; scan(); });
+  $("n-estop").addEventListener("click", () => { st.estop = !st.estop; scan(); });
+  $("n-fejl").addEventListener("change", () => { if (!$("n-fejl").checked) st.Q = false; scan(); });
+  $("n-kun").addEventListener("change", scan);
+  scan();
+})();
+PA.forstaa(document.getElementById("fq"), [
+  { q: "Hvorfor må nødstop ikke kun være løst i PLC-softwaren?", s: "PLC'en kan fejle: programfejl, en udgang der hænger, et svejset relæ eller et defekt udgangskort. Så hjælper det ikke, at programmet ser nødstoppet. Et sikkerhedsrelæ (ofte tokanalet og selvovervågende) bryder strømmen til aktuatorerne i hardware, uanset hvad PLC'en gør." },
+  { q: "Hvorfor skal nødstop kræve en bevidst reset, før maskinen kan starte igen?", s: "Ellers ville maskinen starte af sig selv, når nogen trækker svampen ud igen, måske mens en anden person stadig er inde ved maskinen. Reset og en ny start sikrer, at operatøren har tjekket, at det er sikkert." },
+  { q: "Nævn de 7 dele, en fuld dokumentation af en sekventiel styring skal indeholde.", s: "1) IO-konfiguration, 2) I/O-liste, 3) styrestrømsskema, 4) funktionsdiagram, 5) SFC-program med kommentarbokse, 6) ladder-program med én rung pr. output, 7) main-program der kalder routines." },
+  { q: "Lav en testcase til 'lampen lyser efter 10 kasser'.", s: "Forudsætning: tæller nulstillet, ACC = 0, light_1 slukket. Handling: kør 10 kasser forbi box_sensor, én ad gangen. Forventet: ACC = 10, box_count.DN = 1, light_1 tænder ved kasse nr. 10 og ikke før. Faktisk: (noteres). Bestået/ikke bestået. Suppler med grænsetilfælde 9 og 11 og en test af reset." },
+  { q: "Hvad er forskellen på stopkategori 0 og 1, og hvornår vælger man 1?", s: "Kategori 0 fjerner strømmen straks, så maskinen løber ud ukontrolleret. Kategori 1 bremser kontrolleret ned (fx via frekvensomformer) og fjerner så strømmen. Man vælger 1, når et ukontrolleret udløb ville være farligt eller tage for lang tid, fx tunge roterende masser." },
+]);
+PA.quiz(document.getElementById("qz"), [
+  { q: "Hvilken farve har en nødstopknap?", a: ["Grøn på hvid", "Rød svamp på gul baggrund", "Sort på gul", "Blå"], r: 1, f: "Rød svamp på gul baggrund, fastlåsende og NC." },
+  { q: "Hvilken stopkategori fjerner strømmen straks?", a: ["0", "1", "2", "3"], r: 0, f: "Kategori 0 er ukontrolleret stop: strømmen fjernes straks." },
+  { q: "Hvad gør et sikkerhedsrelæ?", a: ["Gør PLC'en hurtigere", "Overvåger nødstopkredsen og bryder strømmen til aktuatorerne i hardware", "Tæller nødstop", "Erstatter PLC'en"], r: 1, f: "Det sikrer, at nødstop virker uafhængigt af PLC-programmet." },
+  { q: "En samling testcases, der dækker hele styringen, kaldes …", a: ["Et testscript", "En testsuite", "En I/O-liste", "Et funktionsdiagram"], r: 1, f: "Testsuite = alle testcases tilsammen: normalforløb, grene, stop, nødstop og fejl." },
+  { q: "Hvilke tællerværdier er gode grænsetilfælde, når PRE = 10?", a: ["0 og 100", "9, 10 og 11", "Kun 10", "1 og 2"], r: 1, f: "Lige før, på og lige efter grænsen. Det er der, fejl som > i stedet for ≥ viser sig." },
+  { q: "Hvilken del af dokumentationen viser, hvordan PLC'en er forbundet til sensorer og aktuatorer?", a: ["I/O-listen", "Styrestrømsskemaet", "SFC-programmet", "Main-programmet"], r: 1, f: "Styrestrømsskemaet viser ledningsføringen. I/O-listen viser tags og adresser." },
+  { q: "Hvad bør nødstop-indgangen gøre i PLC-programmet?", a: ["Ingenting, det klarer relæet", "Nulstille sekvensen og alle outputs", "Pause sekvensen og fortsætte bagefter", "Tælle en tæller op"], r: 1, f: "Hardware bryder strømmen, men programmet skal også nulstille, så intet starter uventet efter reset." },
+]);
+PA.tabs();
+</script>
+</body>
+</html>

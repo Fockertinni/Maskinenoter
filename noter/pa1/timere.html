@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Timere og tællere · PA1 · Maskinenoter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="pa1.css">
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="kicker">M5 · Procesanalyse og automation 1 · Emne 5 af 6</div>
+  <h1>Timere og tællere</h1>
+  <p>TON, TOF og RTO med EN-, TT- og DN-bits, og tællerne CTU, CTD og CTUD med eksemplet fra LD-bogen. Lektion 4, 7 og 10.</p>
+</header>
+<nav class="tabs" aria-label="Dele">
+  <button type="button" data-tab="noter">Noter</button>
+  <button type="button" data-tab="forstaa">Forståelse</button>
+  <button type="button" data-tab="test">Quiz</button>
+</nav>
+<section class="pane" id="p-noter">
+
+<article id="ton">
+<h2>1 · TON – Timer On Delay</h2>
+<p class="src">Lektion 4 og 7 · LD-bogen</p>
+<p>En TON begynder at tælle, når rungen bliver sand. Når den akkumulerede tid ACC når preset PRE, bliver DN sand. Bliver rungen falsk undervejs, nulstilles timeren helt.</p>
+<div class="tw"><table>
+<tr><th>Bit / værdi</th><th>Betydning</th></tr>
+<tr><td><code>.EN</code></td><td>Enable: rungen er sand</td></tr>
+<tr><td><code>.TT</code></td><td>Timer timing: tæller lige nu (EN = 1 og DN = 0)</td></tr>
+<tr><td><code>.DN</code></td><td>Done: tiden er gået (ACC ≥ PRE)</td></tr>
+<tr><td><code>.PRE</code></td><td>Preset: den ønskede tid. I Studio 5000 i millisekunder.</td></tr>
+<tr><td><code>.ACC</code></td><td>Akkumuleret tid i ms</td></tr>
+</table></div>
+<div class="formel">PRE [ms] = tid [s] × 1000
+5 s   → PRE = 5000
+2,5 s → PRE = 2500</div>
+<p>Typisk brug i en sekvens: transitionen er <code>Timer.DN</code>, fx "vent 3 s i step 4". Timeren aktiveres af step-bitten, så den nulstiller sig selv, når sekvensen forlader steppet.</p>
+<h3>TOF og RTO <span class="ud">Uddybet</span></h3>
+<div class="tw"><table>
+<tr><th>Timer</th><th>Starter når</th><th>DN</th><th>Når rungen falder</th></tr>
+<tr><td>TON</td><td>Rungen bliver sand</td><td>Bliver 1, når tiden er gået</td><td>Alt nulstilles</td></tr>
+<tr><td>TOF · Off Delay</td><td>Rungen bliver falsk</td><td>Er 1, mens rungen er sand, og falder først, når tiden er gået efter rungen blev falsk</td><td>Starter tællingen</td></tr>
+<tr><td>RTO · Retentive</td><td>Rungen bliver sand</td><td>Bliver 1, når den samlede tid er gået</td><td>ACC huskes. Skal nulstilles med RES.</td></tr>
+</table></div>
+<p>TOF bruges til efterløb, fx en ventilator der kører 30 s efter, at motoren er stoppet. RTO bruges til at summere driftstid, fx "skift filter efter 500 timers drift".</p>
+
+<div class="model" id="m-timer">
+<h4>Model: timerens bits over tid</h4>
+<p class="sub">Hold rung-knappen nede (eller lås den) og se EN, TT, DN og ACC. Skift timertype.</p>
+<div class="ctrl">
+  <label>Type <select id="t-type"><option>TON</option><option>TOF</option><option>RTO</option></select></label>
+  <label>PRE <input type="range" id="t-pre" min="1000" max="6000" step="500" value="3000"> <span id="t-prev" class="mono">3000 ms</span></label>
+</div>
+<div class="ctrl"><button class="btn prim" id="t-in" type="button">Rung sand (hold)</button><label><input type="checkbox" id="t-lock"> Lås rungen sand</label><button class="btn" id="t-res" type="button">RES</button></div>
+<canvas class="scope" id="t-cv" width="900" height="260" aria-label="Timerens signaler over tid"></canvas>
+<div class="legend"><span><i style="background:#8fb4ff"></i>Rung</span><span><i style="background:#ffd33d"></i>EN</span><span><i style="background:#ff9f43"></i>TT</span><span><i style="background:#46e08a"></i>DN</span><span><i style="background:#d58cff"></i>ACC/PRE</span></div>
+<div class="readout" id="t-out"></div>
+<details class="predict"><summary>TON med PRE = 3000. Du holder rungen sand i 2 s, slipper og holder den igen i 2 s. Bliver DN nogensinde 1?</summary>
+<p>Nej. TON nulstiller ACC, når rungen falder, så den når kun 2000 ms hver gang. Med RTO ville ACC huske de første 2000 ms og nå 3000 ms efter 1 s mere. Prøv begge i modellen.</p></details>
+</div>
+</article>
+
+<article id="taeller">
+<h2>2 · Tællere (counters)</h2>
+<p class="src">Lektion 10 · LD-bogen s. 106–109</p>
+<p>Der findes tre indbyggede tællefunktioner. De bruges fx til at tælle emner, en maskine har produceret, eller hvor mange gange en maskine er startet.</p>
+<div class="tw"><table>
+<tr><th>Tæller</th><th>Hvad den gør</th></tr>
+<tr><td>CTU · Count Up</td><td>ACC tæller én op, hver gang rungen går fra falsk til sand (en flanke). Når rungen er sand og <code>.CU</code> er falsk, øges ACC med 1, og CU sættes. Når rungen er falsk, cleares <code>.CU</code>.</td></tr>
+<tr><td>CTD · Count Down</td><td>ACC tæller én ned ved hver flanke fra falsk til sand.</td></tr>
+<tr><td>CTUD · Count Up/Down</td><td>Når CUEnable er sand, tælles én op. Når CDEnable er sand, tælles én ned. <span class="ud">Uddybet</span> I Studio 5000 er CTUD en funktionsblok til FBD og ST, ikke en ladder-instruktion.</td></tr>
+</table></div>
+<div class="tw"><table>
+<tr><th>Bit / værdi</th><th>Betydning</th></tr>
+<tr><td><code>.CU</code> / <code>.CD</code></td><td>Enable-bit for op / ned</td></tr>
+<tr><td><code>.DN</code></td><td>Done: ACC ≥ PRE</td></tr>
+<tr><td><code>.PRE</code></td><td>Det antal, der skal nås</td></tr>
+<tr><td><code>.ACC</code></td><td>Det akkumulerede antal</td></tr>
+<tr><td><code>.OV</code> / <code>.UN</code> <span class="ud">Uddybet</span></td><td>Overflow / underflow</td></tr>
+</table></div>
+<div class="box key"><b class="t">To ting man glemmer</b>
+Tælleren bruger internt en 32-bit variabel (DINT), så den kan højst tælle til 2.147.483.647.<br>
+<span class="ud">Uddybet</span> ACC stopper ikke ved PRE. Den tæller videre, og DN bliver bare ved med at være 1. Nulstil med RES.</div>
+<h3>Eksempel: lampe efter 10 kasser</h3>
+<p>Når 10 kasser er kørt forbi sensoren, skal lampen L1 (<code>light_1</code>) lyse. Operatøren nulstiller med S1 (<code>limit_switch_2</code>). Tre rungs: tæl, vis, nulstil.</p>
+<div class="model" id="m-ctu">
+<h4>Model: CTU fra LD-bogen</h4>
+<p class="sub">Klik på kasse-sensoren for hver kasse. Prøv også at lade sensoren stå konstant høj.</p>
+<div class="ctrl"><button class="btn prim" id="c-box" type="button">Kasse forbi sensor (hold)</button><label><input type="checkbox" id="c-lock"> Sensoren står konstant høj</label><button class="btn stop" id="c-res" type="button">S1 nulstil (hold)</button>
+<label>PRE <input type="range" id="c-pre" min="2" max="15" value="10"> <span id="c-prev" class="mono">10</span></label></div>
+<div class="readout" id="c-out"></div>
+<div class="ladder" id="c-lad"></div>
+<details class="predict"><summary>PRE = 5. Sensoren står konstant høj i 10 sekunder. Hvad er ACC?</summary>
+<p>ACC = 1. CTU tæller kun på flanken fra falsk til sand. Så længe sensoren står høj, er CU = 1, og der tælles ikke mere. Det er derfor, en blokeret fotocelle ikke tæller hele lageret op.</p></details>
+</div>
+</article>
+</section>
+
+<section class="pane" id="p-forstaa"><div id="fq"></div></section>
+<section class="pane" id="p-test"><div id="qz"></div></section>
+<footer class="f">Martins noter til Procesanalyse og automation 1 · Maskinenoter.dk · Kilder: modulbeskrivelsen, slides og "PLC styring med Ladder Diagram (LD)".</footer>
+</div>
+<script src="pa1.js"></script>
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const cv = $("t-cv"), ctx = cv.getContext("2d"), N = 240, DT = 50;
+  const st = { inp: false, EN: false, TT: false, DN: false, ACC: 0 }, hist = [];
+  const pre = () => +$("t-pre").value;
+  function tick(){
+    const type = $("t-type").value, P = pre(), inn = st.inp || $("t-lock").checked;
+    if (type === "TON") {
+      if (inn) { st.EN = true; st.ACC = Math.min(st.ACC + DT, P); st.DN = st.ACC >= P; st.TT = !st.DN; }
+      else { st.EN = st.TT = st.DN = false; st.ACC = 0; }
+    } else if (type === "TOF") {
+      if (inn) { st.EN = true; st.DN = true; st.TT = false; st.ACC = 0; }
+      else { st.EN = false; if (st.DN) { st.ACC = Math.min(st.ACC + DT, P); st.TT = st.ACC < P; if (st.ACC >= P) { st.DN = false; st.TT = false; } } }
+    } else {
+      if (inn) { st.EN = true; st.ACC = Math.min(st.ACC + DT, P); st.DN = st.ACC >= P; st.TT = !st.DN; }
+      else { st.EN = false; st.TT = false; }
+    }
+    hist.push([inn, st.EN, st.TT, st.DN, st.ACC / P]); if (hist.length > N) hist.shift();
+    draw(inn, P, type);
+  }
+  function draw(inn, P, type){
+    const dpr = window.devicePixelRatio || 1, W = cv.clientWidth || 600, H = cv.clientHeight || 220;
+    if (cv.width !== Math.round(W * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const rows = [["Rung", "#8fb4ff"], ["EN", "#ffd33d"], ["TT", "#ff9f43"], ["DN", "#46e08a"]];
+    ctx.clearRect(0, 0, W, H); ctx.font = "12px JetBrains Mono, monospace";
+    const x0 = 46, xw = W - x0 - 10, rh = 36;
+    ctx.strokeStyle = "#1f3238"; ctx.lineWidth = 1;
+    for (let s = 0; s <= 12; s++) { const x = x0 + xw * s / 12; ctx.beginPath(); ctx.moveTo(x, 6); ctx.lineTo(x, H - 6); ctx.stroke(); }
+    rows.forEach(([n, c], r) => {
+      const yb = 14 + r * rh + 26, yt = yb - 20;
+      ctx.fillStyle = "#d8f3ef"; ctx.fillText(n, 8, yb - 4);
+      ctx.strokeStyle = c; ctx.lineWidth = 2.4; ctx.beginPath();
+      hist.forEach((h, i) => { const x = x0 + xw * (i + N - hist.length) / N, y = h[r] ? yt : yb; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+      ctx.stroke();
+    });
+    const yb = H - 12, yt = 14 + 4 * rh + 6;
+    ctx.fillStyle = "#d8f3ef"; ctx.fillText("ACC", 8, yb - 10);
+    ctx.strokeStyle = "#58707a"; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(x0, yt); ctx.lineTo(W - 10, yt); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = "#58707a"; ctx.fillText("PRE", W - 46, yt - 4);
+    ctx.strokeStyle = "#d58cff"; ctx.lineWidth = 2.4; ctx.beginPath();
+    hist.forEach((h, i) => { const x = x0 + xw * (i + N - hist.length) / N, y = yb - (yb - yt) * h[4]; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+    ctx.stroke();
+    const t = (k, v) => `<span class="${v ? "t" : ""}">.${k} = ${v ? 1 : 0}</span>`;
+    $("t-out").innerHTML = `<span>${type} · PRE ${P}</span>` + t("EN", st.EN) + t("TT", st.TT) + t("DN", st.DN) + `<span>.ACC = ${st.ACC}</span>`;
+  }
+  PA.hold($("t-in"), () => (st.inp = true), () => (st.inp = false));
+  $("t-res").addEventListener("click", () => { st.ACC = 0; st.DN = false; st.TT = false; });
+  $("t-type").addEventListener("change", () => { st.ACC = 0; st.EN = st.TT = st.DN = false; });
+  $("t-pre").addEventListener("input", () => ($("t-prev").textContent = pre() + " ms"));
+  setInterval(tick, DT);
+})();
+(function(){
+  const $ = id => document.getElementById(id);
+  const st = { sensor: false, res: false, CU: false, ACC: 0 };
+  const pre = () => +$("c-pre").value;
+  function scan(){
+    const s = st.sensor || $("c-lock").checked, P = pre();
+    if (s && !st.CU) st.ACC++;
+    st.CU = s;
+    if (st.res) { st.ACC = 0; }
+    const DN = st.ACC >= P;
+    const bits = { box_sensor: s, "box_count.DN": DN, limit_switch_2: st.res };
+    PA.ladder($("c-lad"), [
+      { n: "0", c: [{ k: "xic", tag: "box_sensor" }], o: [{ k: "box", title: "CTU  box_count", lines: [`Preset ${P}`, `Accum  ${st.ACC}`] }] },
+      { n: "1", c: [{ k: "xic", tag: "box_count.DN" }], o: [{ k: "ote", tag: "light_1" }] },
+      { n: "2", c: [{ k: "xic", tag: "limit_switch_2" }], o: [{ k: "res", tag: "box_count" }] } ], bits);
+    const t = (k, v) => `<span class="${v ? "t" : ""}">${k} = ${v ? 1 : 0}</span>`;
+    $("c-out").innerHTML = t("box_sensor", s) + t(".CU", st.CU) + t(".DN", DN) + `<span>.ACC = ${st.ACC}</span><span><i class="lamp ${DN ? "t" : ""}"></i>light_1</span>`;
+  }
+  PA.hold($("c-box"), () => { st.sensor = true; scan(); }, () => { st.sensor = false; scan(); });
+  PA.hold($("c-res"), () => { st.res = true; scan(); }, () => { st.res = false; scan(); });
+  $("c-lock").addEventListener("change", scan);
+  $("c-pre").addEventListener("input", () => { $("c-prev").textContent = pre(); scan(); });
+  scan();
+})();
+PA.forstaa(document.getElementById("fq"), [
+  { q: "Hvad betyder .EN, .TT og .DN på en TON? Hvad skal PRE være for 2,5 s?", s: "EN er sand, når rungen er sand. TT er sand, mens timeren tæller (EN = 1 og DN = 0). DN bliver sand, når ACC ≥ PRE. PRE er i ms, så 2,5 s giver PRE = 2500." },
+  { q: "En CTU har PRE = 5. Sensoren står konstant høj i 10 sekunder. Hvad er ACC? Forklar.", s: "ACC = 1. CTU tæller kun på den stigende flanke (falsk → sand). Efter første scan er CU = 1, og så længe rungen bliver ved med at være sand, tælles der ikke mere." },
+  { q: "Hvad sker der med ACC på en CTU, når den passerer PRE?", s: "Den tæller videre (11, 12, …). DN bliver bare ved med at være 1. Tælleren stopper ikke selv, så man skal nulstille den med RES, når man vil starte forfra." },
+  { q: "Hvornår vil du vælge TOF eller RTO frem for TON? Giv et eksempel på hver.", s: "TOF når noget skal fortsætte et stykke tid efter, at signalet er væk, fx en køleventilator der kører 30 s efter, at motoren er stoppet. RTO når tiden skal summeres over flere perioder, fx samlet driftstid til et serviceinterval. RTO skal nulstilles med RES." },
+  { q: "Hvorfor aktiverer man en sekvens-timer med step-bitten i stedet for med OTL/OTU?", s: "Når timeren er en TON på step-bitten, starter den automatisk, når steppet bliver aktivt, og nulstiller sig selv, når sekvensen går videre. Så er den klar næste gang, uden en ekstra RES." },
+]);
+PA.quiz(document.getElementById("qz"), [
+  { q: "Hvad skal PRE være på en TON for 5 s i Studio 5000?", a: ["5", "50", "500", "5000"], r: 3, f: "Studio 5000 tæller i millisekunder: 5 s = 5000 ms." },
+  { q: "En TON tæller, men rungen falder efter 2 af 3 sekunder. Hvad sker der?", a: ["ACC huskes", "ACC nulstilles", "DN bliver 1", "Timeren tæller videre"], r: 1, f: "TON nulstiller, når rungen falder. Det er RTO, der husker ACC." },
+  { q: "Hvornår er .TT sand?", a: ["Når tiden er gået", "Når rungen er sand og DN er 0", "Altid når EN er 1", "Når ACC = 0"], r: 1, f: "Timer Timing: timeren tæller lige nu, altså EN = 1 og endnu ikke DN." },
+  { q: "En CTU har PRE = 10 og ACC = 10. Der kommer en kasse mere. Hvad sker der?", a: ["ACC bliver ved med at være 10", "ACC bliver 11, DN er stadig 1", "ACC nulstilles til 0", "DN bliver 0"], r: 1, f: "ACC stopper ikke ved PRE. DN er 1, så længe ACC ≥ PRE." },
+  { q: "Hvilken instruktion nulstiller tælleren box_count?", a: ["OTU box_count", "RES box_count", "CTD box_count", "XIO box_count"], r: 1, f: "RES nulstiller ACC og statusbits på timere og tællere." },
+  { q: "Hvad tæller en CTU på?", a: ["Hvert scan rungen er sand", "Flanken fra falsk til sand", "Flanken fra sand til falsk", "Hvert sekund"], r: 1, f: "Én op pr. stigende flanke. Derfor tæller en sensor, der står høj, kun én gang." },
+  { q: "Hvilken timer passer til 'ventilatoren skal køre 30 s efter at motoren stopper'?", a: ["TON", "TOF", "RTO", "CTU"], r: 1, f: "Off Delay: DN er 1, mens motoren kører, og falder først 30 s efter, at rungen blev falsk." },
+  { q: "Hvad er den største værdi, en tæller kan nå i Studio 5000?", a: ["255", "32.767", "65.535", "2.147.483.647"], r: 3, f: "ACC er en 32-bit DINT med fortegn: højst 2.147.483.647." },
+]);
+PA.tabs();
+</script>
+</body>
+</html>

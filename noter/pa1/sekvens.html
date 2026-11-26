@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Sekvenser, GRAFCET og SFC · PA1 · Maskinenoter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="pa1.css">
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="kicker">M5 · Procesanalyse og automation 1 · Emne 4 af 6</div>
+  <h1>Sekvenser, GRAFCET og SFC</h1>
+  <p>Steps og transitions, fasediagram-metoden, on/off-sensorer og aktuatorer, sekvenser i ladder med OTL/OTU, GRAFCET og SFC med forgreninger og løkker. Lektion 3–6 og 8.</p>
+</header>
+<nav class="tabs" aria-label="Dele">
+  <button type="button" data-tab="noter">Noter</button>
+  <button type="button" data-tab="forstaa">Forståelse</button>
+  <button type="button" data-tab="test">Quiz</button>
+</nav>
+<section class="pane" id="p-noter">
+
+<article id="sekvens">
+<h2>1 · Hvad er en sekvens?</h2>
+<p class="src">Lektion 3–4</p>
+<p>En sekvens er et forløb, der går fra tilstand til tilstand. Hver tilstand hedder et <b>step</b>, og betingelsen for at gå videre hedder en <b>transition</b>. Kun ét step er aktivt ad gangen, medmindre der er parallelforløb.</p>
+<p>Til forskel fra kombinatorisk styring kan samme indgang betyde noget forskelligt i forskellige steps. "Cylinder ude" betyder "stop med at køre ud" i ét step og ingenting i et andet.</p>
+<h3>Fasediagram (funktionsdiagram)</h3>
+<p>Et fasediagram er et tidsdiagram over alle input- og outputsignaler, opdelt i steps med transitions imellem. Det tegnes <b>før</b> man programmerer. Her er eksemplet, som modellen længere nede kører: en cylinder skal køre ud, vente 3 s og køre ind igen.</p>
+<div class="ladder" id="fase" style="padding:10px"></div>
+<p style="font-size:15px;color:var(--muted)">Læs det lodret: i hvert step kan du se, hvilke signaler der er høje, og hvilket signal der skifter, når sekvensen går videre (transitionen).</p>
+</article>
+
+<article id="ladderseq">
+<h2>2 · Sekvens i ladder med OTL/OTU <span class="ud">Uddybet</span></h2>
+<p class="src">Lektion 3–4 · LD-bogen</p>
+<p>Fasediagrammet kan oversættes direkte til ladder efter en fast opskrift:</p>
+<ol>
+<li>Hvert step får en intern bit: <code>Step_0</code>, <code>Step_1</code>, …</li>
+<li>En skift-rung pr. transition: <code>Step_n</code> AND transition → OTL <code>Step_n+1</code> og OTU <code>Step_n</code>.</li>
+<li>Output-rungs til sidst: én rung pr. output, hvor outputtet er OR af de steps, hvor det skal være tændt.</li>
+<li>Initialsteppet sættes ved opstart, fx med first scan-bitten <code>S:FS</code>.</li>
+</ol>
+<div class="model" id="m-seq">
+<h4>Model: cylinder ud, vent 3 s, cylinder ind</h4>
+<p class="sub">Tryk START. Følg det aktive step i SFC'en og de grønne rungs. Monostabil ventil Y1 skal være høj i både Step_1 og Step_2.</p>
+<div class="ctrl"><button class="btn start" id="sq-start" type="button">S1 START (hold)</button><button class="btn" id="sq-reset" type="button">Genstart PLC (first scan)</button><label><input type="checkbox" id="sq-fejl"> Fejl: Y1 sidder kun i Step_1</label></div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:start" class="seqgrid">
+  <div class="ladder" id="sq-cyl" style="margin:0"></div>
+  <div class="ladder" id="sq-sfc" style="margin:0"></div>
+</div>
+<div class="readout" id="sq-out"></div>
+<div class="ladder" id="sq-lad"></div>
+<details class="predict"><summary>Hvad sker der, hvis Y1 kun er tændt i Step_1, og ikke i Step_2?</summary>
+<p>Y1 er monostabil (fjeder-retur). Når sekvensen går til Step_2, falder Y1, og cylinderen begynder at køre ind med det samme i stedet for at vente 3 s ude. Slå fejlen til i modellen og se det. Derfor er outputtet OR af alle de steps, hvor det skal være tændt.</p></details>
+</div>
+</article>
+
+<article id="io">
+<h2>3 · On/off-sensorer og aktuatorer <span class="ud">Uddybet</span></h2>
+<p class="src">Lektion 4</p>
+<div class="tw"><table>
+<tr><th>Sensor (digital indgang)</th><th>Registrerer</th><th>Typisk brug</th></tr>
+<tr><td>Mekanisk endestop / limit switch</td><td>Fysisk berøring</td><td>Endepositioner, låger</td></tr>
+<tr><td>Induktiv nærhedsføler</td><td>Metal, uden berøring</td><td>Emner på bånd, akselposition</td></tr>
+<tr><td>Kapacitiv nærhedsføler</td><td>De fleste materialer</td><td>Væskeniveau, plast, granulat</td></tr>
+<tr><td>Fotocelle</td><td>At en lysstråle brydes</td><td>Kasser på transportbånd</td></tr>
+<tr><td>Reed-kontakt / magnetføler</td><td>Magnet i cylinderstemplet</td><td>Cylinder inde/ude</td></tr>
+<tr><td>Niveauvippe, tryk- og termostatkontakt</td><td>Grænseværdi nået</td><td>Tank fuld, tryk for højt</td></tr>
+</table></div>
+<div class="tw"><table>
+<tr><th>Aktuator (digital udgang)</th><th>Bemærkning</th></tr>
+<tr><td>Magnetventil, monostabil</td><td>Fjeder-retur. Udgangen skal holdes høj, så længe cylinderen skal være ude.</td></tr>
+<tr><td>Magnetventil, bistabil</td><td>To spoler. En kort puls er nok, ventilen bliver i positionen. Begge spoler må ikke være aktive samtidig (gensidig spærring).</td></tr>
+<tr><td>Pneumatisk cylinder</td><td>Styres via ventilen. Positionen meldes med reed-kontakter.</td></tr>
+<tr><td>Motor via kontaktor</td><td>Udgangen trækker kontaktorens spole.</td></tr>
+<tr><td>Lamper, horn, pumper</td><td>Direkte eller via relæ.</td></tr>
+</table></div>
+<div class="box key"><b class="t">Husk i labbet</b>Spørg altid: er ventilen mono- eller bistabil? Det afgør, om output-rungen skal være OR af flere steps (monostabil) eller kun en puls i ét step (bistabil).</div>
+</article>
+
+<article id="sfc">
+<h2>4 · GRAFCET og SFC</h2>
+<p class="src">Lektion 5–6</p>
+<p><b>GRAFCET</b> er en standard (IEC 60848) til at beskrive en sekvens grafisk. <b>SFC</b> er programmeringssproget (IEC 61131-3), der bygger på samme idé og kan køres direkte i PLC'en.</p>
+<div class="tw"><table>
+<tr><th>Element</th><th>Tegnes som</th><th>Betydning</th></tr>
+<tr><td>Initialstep</td><td>Kasse med dobbelt ramme</td><td>Aktivt ved opstart</td></tr>
+<tr><td>Step</td><td>Kasse med nummer</td><td>En tilstand med tilhørende handlinger</td></tr>
+<tr><td>Transition</td><td>Vandret streg på forbindelseslinjen</td><td>Sekvensen går videre, når forrige step er aktivt OG betingelsen er sand</td></tr>
+<tr><td>Action</td><td>Kasse til højre for steppet</td><td>Hvad der sker i steppet, fx sæt en bit der bruges i ladder</td></tr>
+</table></div>
+<h3>Forgreninger og løkker</h3>
+<div class="ladder" id="grene" style="padding:12px"></div>
+<div class="tw"><table>
+<tr><th></th><th>Selection branch</th><th>Simultaneous branch</th></tr>
+<tr><td>Logik</td><td>OR: én af flere veje vælges</td><td>AND: alle veje kører samtidig (parallelforløb)</td></tr>
+<tr><td>Tegnes med</td><td>Enkelt vandret streg</td><td>Dobbelt vandret streg</td></tr>
+<tr><td>Transitions</td><td>Én pr. gren, <b>under</b> forgreningen</td><td>Én fælles <b>over</b> den dobbelte streg</td></tr>
+<tr><td>Samles når</td><td>Den valgte gren er færdig</td><td>Alle grene er færdige</td></tr>
+<tr><td>Eksempel</td><td>Emne er metal → sortér til venstre, ellers højre</td><td>Fyld tank og varm op samtidig</td></tr>
+</table></div>
+<p>En <b>løkke</b> er en transition, der fører tilbage til et tidligere step, fx "gentag indtil tæller = 10".</p>
+<div class="box key"><b class="t">God praksis (lab-krav)</b>Giv hvert step en kommentarboks med en overskrift og hvilke outputs der er sat. Selve outputs styres i ladder, én rung pr. output.</div>
+</article>
+</section>
+
+<section class="pane" id="p-forstaa"><div id="fq"></div></section>
+<section class="pane" id="p-test"><div id="qz"></div></section>
+<footer class="f">Martins noter til Procesanalyse og automation 1 · Maskinenoter.dk · Kilder: modulbeskrivelsen, slides og "PLC styring med Ladder Diagram (LD)".</footer>
+</div>
+<script src="pa1.js"></script>
+<script>
+/* Fasediagram (statisk) */
+(function(){
+  const steps = ["Step_0", "Step_1", "Step_2", "Step_3", "Step_0"];
+  const rows = [["S1_Start", [0.3, 0, 0, 0, 0]], ["B1_Cyl_inde", [1, 0.2, 0, 0.97, 1]], ["B2_Cyl_ude", [0, 0.97, 1, 0.2, 0]], ["Y1 (ventil)", [0, 1, 1, 0, 0]], ["T1.DN", [0, 0, 0.99, 0, 0]]];
+  const x0 = 130, cw = 110, rh = 40, W = x0 + cw * steps.length + 10, H = 34 + rows.length * rh + 10;
+  let s = `<svg viewBox="0 0 ${W} ${H}" style="max-width:${W}px;min-width:${Math.min(W,560)}px;width:100%;display:block;margin:0 auto">`;
+  steps.forEach((t, i) => { s += `<text x="${x0 + i * cw + cw / 2}" y="18" text-anchor="middle" style="font-weight:700">${t}</text><line x1="${x0 + i * cw}" x2="${x0 + i * cw}" y1="26" y2="${H - 6}" stroke="var(--scope-grid)" stroke-width="1.5"/>`; });
+  rows.forEach(([n, v], r) => {
+    const yb = 34 + r * rh + 30, yt = yb - 20;
+    s += `<text x="6" y="${yb - 6}">${n}</text>`;
+    let d = "";
+    v.forEach((f, i) => {
+      // f: 1 = høj hele steppet, 0 = lav, 0<f<1: skifter undervejs (f = andel høj ved start for faldende / slut for stigende)
+      const xa = x0 + i * cw, xb = xa + cw;
+      let seg;
+      if (f === 1) seg = [[xa, yt], [xb, yt]]; else if (f === 0) seg = [[xa, yb], [xb, yb]];
+      else if (n === "S1_Start") seg = [[xa, yb], [xa + cw * .55, yb], [xa + cw * .55, yt], [xb - 6, yt], [xb - 6, yb], [xb, yb]];
+      else if (n === "T1.DN") seg = [[xa, yb], [xb - 6, yb], [xb - 6, yt], [xb, yt]];
+      else if (f < .5) seg = [[xa, yt], [xa + cw * f, yt], [xa + cw * f, yb], [xb, yb]];
+      else seg = [[xa, yb], [xa + cw * f, yb], [xa + cw * f, yt], [xb, yt]];
+      d += (d ? "L" : "M") + seg.map(p => p.join(" ")).join("L");
+    });
+    s += `<path d="${d}" fill="none" stroke="var(--live)" stroke-width="2.4"/>`;
+  });
+  document.getElementById("fase").innerHTML = s + "</svg>";
+})();
+/* Forgreninger (statisk) */
+(function(){
+  const box = (x, y, n, init) => `<rect x="${x - 22}" y="${y}" width="44" height="34" fill="none" stroke="var(--scope-fg)" stroke-width="2"/>` + (init ? `<rect x="${x - 18}" y="${y + 4}" width="36" height="26" fill="none" stroke="var(--scope-fg)" stroke-width="1.5"/>` : "") + `<text x="${x}" y="${y + 22}" text-anchor="middle">${n}</text>`;
+  const tr = (x, y, t) => `<line x1="${x - 12}" x2="${x + 12}" y1="${y}" y2="${y}" stroke="var(--live)" stroke-width="3"/><text x="${x + 16}" y="${y + 4}" style="font-size:11px">${t}</text>`;
+  const ln = (x1, y1, x2, y2) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--scope-fg)" stroke-width="2"/>`;
+  let s = `<svg viewBox="0 0 620 330" style="max-width:640px;min-width:520px;width:100%;display:block;margin:0 auto">`;
+  // selection
+  s += `<text x="150" y="16" text-anchor="middle" style="font-weight:700">Selection branch (OR)</text>`;
+  s += box(150, 28, "1", true) + ln(150, 62, 150, 86) + ln(80, 86, 220, 86);
+  s += ln(80, 86, 80, 120) + ln(220, 86, 220, 120) + tr(80, 104, "Metal") + tr(220, 104, "IKKE metal");
+  s += box(80, 120, "2") + box(220, 120, "3") + ln(80, 154, 80, 196) + ln(220, 154, 220, 196);
+  s += tr(80, 178, "B4") + tr(220, 178, "B5") + ln(80, 196, 220, 196) + ln(150, 196, 150, 220) + box(150, 220, "4");
+  // simultaneous
+  s += `<text x="460" y="16" text-anchor="middle" style="font-weight:700">Simultaneous branch (AND)</text>`;
+  s += box(460, 28, "1", true) + ln(460, 62, 460, 92) + tr(460, 78, "Start");
+  s += ln(390, 92, 530, 92) + ln(390, 97, 530, 97) + ln(390, 97, 390, 120) + ln(530, 97, 530, 120);
+  s += box(390, 120, "2") + box(530, 120, "3") + `<text x="416" y="142" style="font-size:11px">Fyld</text><text x="556" y="142" style="font-size:11px">Varm op</text>`;
+  s += ln(390, 154, 390, 196) + ln(530, 154, 530, 196) + ln(390, 196, 530, 196) + ln(390, 201, 530, 201);
+  s += ln(460, 201, 460, 254) + tr(460, 228, "Fuld AND varm") + box(460, 254, "4");
+  s += `<text x="310" y="318" text-anchor="middle" style="font-size:11.5px;fill:var(--dead)">Enkelt streg = OR, transitions under. Dobbelt streg = AND, fælles transition.</text>`;
+  document.getElementById("grene").innerHTML = s + "</svg>";
+})();
+/* Sekvens-model */
+(function(){
+  const $ = id => document.getElementById(id);
+  const st = { FS: true, S0: false, S1: false, S2: false, S3: false, start: false, pos: 0, acc: 0, Y1: false };
+  const PRE = 3000, DT = 100;
+  const bits = () => ({ "S:FS": st.FS, Step_0: st.S0, Step_1: st.S1, Step_2: st.S2, Step_3: st.S3, S1_Start: st.start,
+    B1_Cyl_inde: st.pos <= 0.01, B2_Cyl_ude: st.pos >= 0.99, "T1.DN": st.acc >= PRE, Y1: st.Y1 });
+  function rungs(){
+    const fejl = $("sq-fejl").checked;
+    return [
+      { n: "0", c: [{ k: "xic", tag: "S:FS" }], o: [{ k: "otl", tag: "Step_0" }, { k: "otu", tag: "Step_1" }, { k: "otu", tag: "Step_2" }, { k: "otu", tag: "Step_3" }] },
+      { n: "1", c: [{ k: "xic", tag: "Step_0" }, { k: "xic", tag: "S1_Start" }, { k: "xic", tag: "B1_Cyl_inde" }], o: [{ k: "otl", tag: "Step_1" }, { k: "otu", tag: "Step_0" }] },
+      { n: "2", c: [{ k: "xic", tag: "Step_1" }, { k: "xic", tag: "B2_Cyl_ude" }], o: [{ k: "otl", tag: "Step_2" }, { k: "otu", tag: "Step_1" }] },
+      { n: "3", c: [{ k: "xic", tag: "Step_2" }, { k: "xic", tag: "T1.DN" }], o: [{ k: "otl", tag: "Step_3" }, { k: "otu", tag: "Step_2" }] },
+      { n: "4", c: [{ k: "xic", tag: "Step_3" }, { k: "xic", tag: "B1_Cyl_inde" }], o: [{ k: "otl", tag: "Step_0" }, { k: "otu", tag: "Step_3" }] },
+      { n: "5", c: [{ k: "xic", tag: "Step_2" }], o: [{ k: "box", title: "TON  T1", lines: ["PRE 3000", `ACC ${Math.min(st.acc, PRE)}`] }] },
+      fejl ? { n: "6", c: [{ k: "xic", tag: "Step_1" }], o: [{ k: "ote", tag: "Y1" }] }
+           : { n: "6", c: [{ k: "xic", tag: "Step_1" }], b: [{ from: 0, to: 1, c: [{ k: "xic", tag: "Step_2" }] }], o: [{ k: "ote", tag: "Y1" }] } ];
+  }
+  function scan(){
+    const r = rungs(); let b = bits();
+    // kør rungs i rækkefølge, opdater bits løbende (som i PLC'en)
+    const set = (tag, v) => { const m = { Step_0: "S0", Step_1: "S1", Step_2: "S2", Step_3: "S3" }[tag]; if (m) st[m] = v; };
+    for (let i = 0; i < 5; i++) { if (PA.power(r[i], b)) r[i].o.forEach(o => set(o.tag, o.k === "otl")); b = bits(); }
+    st.acc = st.S2 ? Math.min(st.acc + DT, PRE) : 0;
+    b = bits(); st.Y1 = PA.power(r[6], b);
+    st.FS = false;
+    // fysik: cylinder kører 1,5 s hver vej
+    st.pos = Math.max(0, Math.min(1, st.pos + (st.Y1 ? 1 : -1) * DT / 1500));
+    tegn();
+  }
+  function tegn(){
+    const b = bits(), r = rungs(); b["S:FS"] = false;
+    PA.ladder($("sq-lad"), r, b);
+    const px = 28 + st.pos * 130;
+    $("sq-cyl").innerHTML = `<svg viewBox="0 0 340 150" style="width:100%;display:block">
+      <rect x="20" y="50" width="150" height="44" fill="#1b2e35" stroke="var(--scope-fg)" stroke-width="2"/>
+      <rect x="${px}" y="54" width="12" height="36" fill="var(--scope-fg)"/>
+      <rect x="${px + 12}" y="67" width="150" height="10" fill="#9aa9b0"/>
+      <rect x="${px + 162}" y="58" width="14" height="28" fill="#9aa9b0"/>
+      <circle cx="44" cy="40" r="7" fill="${b.B1_Cyl_inde ? "#46e08a" : "#3a4246"}"/><text x="56" y="44">B1 inde</text>
+      <circle cx="150" cy="40" r="7" fill="${b.B2_Cyl_ude ? "#46e08a" : "#3a4246"}"/><text x="162" y="44">B2 ude</text>
+      <rect x="30" y="110" width="70" height="26" fill="${st.Y1 ? "#1f8a4c" : "#2a3a40"}" stroke="var(--scope-fg)"/><text x="65" y="128" text-anchor="middle">Y1 ${st.Y1 ? "ON" : "OFF"}</text>
+      <path d="M100 123 H130" stroke="var(--scope-fg)" stroke-dasharray="3 3"/><text x="136" y="128" style="font-size:11px">monostabil, fjeder-retur</text></svg>`;
+    const steps = [["0", st.S0, "Vent på start"], ["1", st.S1, "Y1: cylinder ud"], ["2", st.S2, "Y1, vent 3 s (T1)"], ["3", st.S3, "Cylinder ind"]];
+    const trs = ["S1 · B1", "B2", "T1.DN", "B1"];
+    let s = `<svg viewBox="0 0 300 300" style="width:100%;display:block">`;
+    steps.forEach(([n, a, t], i) => {
+      const y = 10 + i * 70;
+      s += `<rect x="20" y="${y}" width="40" height="32" fill="${a ? "#1f8a4c" : "none"}" stroke="var(--scope-fg)" stroke-width="2"/>`;
+      if (i === 0) s += `<rect x="24" y="${y + 4}" width="32" height="24" fill="none" stroke="var(--scope-fg)" stroke-width="1.4"/>`;
+      s += `<text x="40" y="${y + 21}" text-anchor="middle" style="font-weight:700">${n}</text><line x1="60" x2="78" y1="${y + 16}" y2="${y + 16}" stroke="var(--scope-fg)"/><rect x="78" y="${y + 4}" width="150" height="24" fill="none" stroke="var(--dead)"/><text x="84" y="${y + 21}" style="font-size:11.5px">${t}</text>`;
+      s += `<line x1="40" x2="40" y1="${y + 32}" y2="${y + 70}" stroke="var(--scope-fg)" stroke-width="2"/><line x1="30" x2="50" y1="${y + 51}" y2="${y + 51}" stroke="var(--live)" stroke-width="3"/><text x="56" y="${y + 55}" style="font-size:11px">${trs[i]}</text>`;
+    });
+    s += `<path d="M40 290 H260 V2 H40 V10" fill="none" stroke="var(--scope-fg)" stroke-width="1.5"/></svg>`;
+    $("sq-sfc").innerHTML = s;
+    $("sq-out").innerHTML = `<span>Aktivt: ${["Step_0", "Step_1", "Step_2", "Step_3"].filter((k, i) => [st.S0, st.S1, st.S2, st.S3][i]).join(", ") || "intet"}</span><span>T1.ACC = ${(st.acc / 1000).toFixed(1)} s</span>`;
+  }
+  PA.hold($("sq-start"), () => (st.start = true), () => (st.start = false));
+  $("sq-reset").addEventListener("click", () => { st.FS = true; st.acc = 0; });
+  $("sq-fejl").addEventListener("change", tegn);
+  setInterval(scan, DT); scan();
+})();
+PA.forstaa(document.getElementById("fq"), [
+  { q: "Hvorfor tegner man fasediagrammet, før man programmerer?", s: "Det viser alle signaler i alle steps på én gang, så man ser præcis hvilke transitions der findes, og i hvilke steps hvert output skal være tændt. Det oversættes næsten mekanisk til skift-rungs og output-rungs, og det bruges igen til testcases og dokumentation." },
+  { q: "Skriv skiftet fra Step_3 til Step_4 med OTL/OTU, når Timer1.DN er sand. Forklar hvorfor begge udgange er nødvendige.", s: "Én rung: XIC Step_3, XIC Timer1.DN → OTL Step_4 og OTU Step_3 (parallelle udgange). OTL sætter det nye step. OTU nulstiller det gamle, ellers ville to steps være aktive på én gang, og outputs fra Step_3 ville blive ved." },
+  { q: "Hvad er forskellen på en mono- og en bistabil magnetventil, og hvad betyder det for ladder-programmet?", s: "Monostabil har fjeder-retur og falder tilbage, når spolen mister strøm. Udgangen skal derfor være høj i alle de steps, hvor cylinderen skal være ude (OR af steps). Bistabil har to spoler og bliver i sin position, så en kort puls er nok, men begge spoler må aldrig være aktive samtidig." },
+  { q: "Forklar forskellen på selection branch og simultaneous branch, og hvordan de tegnes.", s: "Selection (OR): sekvensen vælger én af flere veje alt efter hvilken transition der bliver sand først. Enkelt vandret streg, transitions under stregen på hver gren. Simultaneous (AND): alle grene startes samtidig og kører parallelt, og sekvensen går først videre, når alle grene er færdige. Dobbelt vandret streg, fælles transition over forgreningen og efter samlingen." },
+  { q: "Hvorfor sætter man initialsteppet med S:FS, og hvad kan gå galt, hvis man glemmer det?", s: "S:FS er sand i det første scan efter opstart, så Step_0 bliver aktivt, og alle andre steps nulstilles. Uden den kan sekvensen starte uden aktivt step (der sker ingenting), eller fortsætte fra et tilfældigt step, der var latchet før strømsvigtet." },
+]);
+PA.quiz(document.getElementById("qz"), [
+  { q: "Hvad skal der til, før en transition fører sekvensen videre?", a: ["Betingelsen er sand", "Forrige step er aktivt OG betingelsen er sand", "Næste step er aktivt", "En timer er udløbet"], r: 1, f: "En transition kan kun 'fyre', når steppet over den er aktivt. Ellers ville sensorer kunne hoppe rundt i sekvensen." },
+  { q: "Y1 er en monostabil ventil, der skal være tændt i Step_1, Step_2 og Step_5. Hvordan skrives output-rungen?", a: ["Tre rungs med OTE Y1", "OTL Y1 i Step_1 og OTU i Step_6", "Én rung: Step_1 OR Step_2 OR Step_5 → OTE Y1", "XIC Y1 → OTE Y1"], r: 2, f: "Én rung pr. output, med de steps der skal tænde den i parallel." },
+  { q: "Hvilken sensor vælger du til at registrere vandniveau gennem en plastbeholder?", a: ["Induktiv", "Kapacitiv", "Reed-kontakt", "Mekanisk endestop"], r: 1, f: "Kapacitive følere registrerer de fleste materialer, også væske. Induktive registrerer kun metal." },
+  { q: "En dobbelt vandret streg i SFC betyder …", a: ["Selection branch", "Simultaneous branch", "Løkke", "Initialstep"], r: 1, f: "Dobbelt streg = parallelforløb (AND). Enkelt streg = valg (OR)." },
+  { q: "Hvordan tegnes initialsteppet?", a: ["Kasse med dobbelt ramme", "Rund ring", "Fed streg", "Stiplet kasse"], r: 0, f: "Initialsteppet har dobbelt ramme og er aktivt ved opstart." },
+  { q: "Hvad er et parallelforløb samlet, når …", a: ["Den første gren er færdig", "Alle grene er færdige", "Operatøren trykker start", "Timeren er udløbet"], r: 1, f: "En simultaneous branch samles først, når alle grene er nået til deres sidste step, og den fælles transition er sand." },
+  { q: "Hvilken standard beskriver GRAFCET?", a: ["IEC 61131-3", "IEC 60848", "EN 60204-1", "ISO 9001"], r: 1, f: "GRAFCET er IEC 60848. SFC er et af sprogene i IEC 61131-3." },
+]);
+PA.tabs();
+</script>
+</body>
+</html>
