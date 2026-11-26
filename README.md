@@ -19,11 +19,11 @@ Mine noter og interaktive modeller fra maskinmesteruddannelsen. Siden er ren HTM
 
 ## Driftsøkonomi, Forbrændingsmotoranlæg og Elektroteknik 2
 
-- `noter/drift/`, `noter/forb/` og `noter/el2/` er bygget af scriptet `noter/kilde/byg.py` ud fra markdown-filerne i `noter/kilde/drift/`, `noter/kilde/forb/` og `noter/kilde/el2/`. Ret altid i markdown-filen og kør `python3 noter/kilde/byg.py` (kræver `pip install markdown`). De færdige HTML-filer ligger i repoet, så siden stadig ikke har noget build-trin.
+- `noter/drift/`, `noter/forb/`, `noter/el1/` og `noter/el2/` er bygget af scriptet `noter/kilde/byg.py` ud fra markdown-filerne i `noter/kilde/drift/`, `noter/kilde/forb/`, `noter/kilde/el1/` og `noter/kilde/el2/`. Ret altid i markdown-filen og kør `python3 noter/kilde/byg.py` (kræver `pip install markdown`). De færdige HTML-filer ligger i repoet, så siden stadig ikke har noget build-trin.
 - Hver emnefil har tre dele: Noter, Formler og Quiz. Med `?vis=noter`, `?vis=formler` eller `?vis=quiz` vises den del. `noter/<fag>/quiz.html` er en samlet quiz for hele faget.
 - Øverst i hver markdown-fil står `id`, `navn`, `ikon` og `intro`. Under `# Quiz` står spørgsmålene i et lille format, der er forklaret øverst i `byg.py`.
 - En kildefil med `# Kort` i stedet for Noter/Formler/Quiz bliver en side med ét spørgsmål ad gangen og svaret bag et tryk (skabelon `noter/kilde/kort.html`). Det bruges til "Eksamen 2026" i Forbrændingsmotoranlæg: `noter/kilde/forb/14-eksamen2026.md`, med siderne fra prøvespørgsmålene som billeder i `noter/forb/eksamen2026/`. Svar markeret `> **Usikker**` vises med gul boks. På emnesiden hedder delen `kort` ("Prøvespørgsmål med svar").
-- EL2-noterne har interaktive modeller inde i teksten. I markdown skrives fx `<div class="m" data-m="stjerne"></div>`, og `noter/el2/modeller.js` tegner modellen. Listen over modeller står i den fil.
+- EL1- og EL2-noterne har interaktive modeller inde i teksten. I markdown skrives fx `<div class="m" data-m="stjerne"></div>`, og `noter/el1/modeller.js` eller `noter/el2/modeller.js` tegner modellen. Listen over modeller står i filerne.
 - Genvejen `emne("drift", "budget")` i `index.html` giver alle tre dele. Skriv `emne("forb", "smoering", false)`, hvis emnet ikke har formler.
 
 ## Tilføj et emne
@@ -47,6 +47,7 @@ Find faget i `SEMESTRE`, og tilføj én post til dets `emner`:
 - Kun de dele, der har et link, bliver vist som felter. `null` betyder, at delen ikke findes endnu.
 - Et emne uden nogen dele vises som et nedtonet felt.
 - Delen `eksamen` ("Alt du skal bruge til eksamen") er en eksamensside for emnet, fx `noter/el2/trefaset-eksamen.html`, bygget af byg.py fra `noter/kilde/el2/01b-trefaset-eksamen.md`. Den vises først på emnesiden.
+- Til EL1-emner (M4) findes genvejen `el1("id")`. Den giver eksamenssiden, noter, formler og quiz fra `noter/el1/<id>-eksamen.html` og `noter/el1/<id>.html`. "Eksamen 2026" i EL1 er de 13 eksamenstemaer som kort (`noter/kilde/el1/15-eksamen2026.md`).
 - Til EL2-emner med labøvelse findes genvejen `el2Lab(n, "id")`. Den giver teorinoter, formler og quiz fra `noter/el2/<id>.html` og labnoter, simulation og forståelse fra lab nr. n.
 
 ## Tilføj et fag

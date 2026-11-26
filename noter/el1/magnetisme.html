@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Magnetisme · Elektroteknik 1 · Maskinenoter</title>
+<link rel="stylesheet" href="../../hav.css"><script>document.documentElement.dataset.theme="dark"</script>
+<!-- Bygget af noter/kilde/byg.py. Ret i kildefilen i noter/kilde/, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #1d6fa5; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #6db8ec; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #6db8ec; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.tabs { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--hover); flex-shrink: 0; }
+.tabs button { font: 600 .9rem/1 var(--sans); color: var(--muted); background: none; border: 0; padding: .5rem .8rem; border-radius: 8px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.8rem, 5vw, 3.2rem) max(16px, env(safe-area-inset-left, 0px)) 5rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .8rem 0 0; font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.del { margin-top: 2.2rem; }
+.del > :first-child { margin-top: 0; }
+.del h2 { margin: 2.6rem 0 .6rem; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; }
+.del h3 { margin: 1.8rem 0 .4rem; font-size: 1.12rem; letter-spacing: -.01em; }
+.del p, .del li { max-width: 68ch; }
+.del ul, .del ol { padding-left: 1.3rem; }
+.del li { margin: .25rem 0; }
+.del li::marker { color: var(--muted); }
+.del code { font: .92em var(--mono); background: var(--hover); padding: .08em .35em; border-radius: 5px; }
+.del strong { font-weight: 650; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: .94rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .8rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .92rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; }
+details { margin: .9rem 0; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: .1rem 1.1rem; }
+details > summary { cursor: pointer; font-weight: 600; padding: .75rem 0; color: var(--accent); list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "▸ "; }
+details[open] > summary::before { content: "▾ "; }
+details[open] { padding-bottom: .8rem; }
+.genkald { margin-top: 2.6rem; padding: 1.1rem 1.3rem; border: 2px solid var(--accent); border-radius: 16px; background: var(--surface); }
+.genkald h2, .genkald h3 { margin-top: 0 !important; font-size: .82rem !important; letter-spacing: .08em !important; text-transform: uppercase; color: var(--accent); }
+.genkald details { box-shadow: none; border: 1px solid var(--line); }
+
+/* quiz */
+.q { margin: 1rem 0; padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); }
+.q .nr { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q .tekst { margin: .3rem 0 .8rem; font-weight: 600; }
+.q .valg { display: grid; gap: 8px; }
+.q .valg button { text-align: left; font: inherit; font-size: .98rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: .65rem .9rem; cursor: pointer; }
+.q .valg button:hover:not(:disabled) { border-color: var(--accent); }
+.q .valg button:disabled { cursor: default; }
+.q .valg button.ok { background: var(--ok-bg); border-color: var(--ok); }
+.q .valg button.bad { background: var(--bad-bg); border-color: var(--bad); }
+.q .tal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q input { font: 1rem var(--mono); width: 11rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.q .enhed { color: var(--muted); }
+.knap { font: 600 .95rem var(--sans); padding: .6rem 1rem; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.svar { margin-top: .8rem; padding: .7rem .9rem; border-radius: 10px; font-size: .96rem; }
+.svar.ok { background: var(--ok-bg); } .svar.bad { background: var(--bad-bg); } .svar.hint { background: var(--key); }
+.svar b { display: block; margin-bottom: .15rem; }
+.score { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border-radius: 16px; background: var(--soft); border-left: 3px solid var(--accent); }
+.score h2 { margin: 0 0 .3rem !important; font-size: 1.2rem !important; }
+.score ul { margin: .4rem 0; }
+.emnetag { font-size: .76rem; font-weight: 600; color: var(--accent); margin-left: .4rem; text-transform: none; letter-spacing: 0; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .bar .in { gap: 8px; }
+  .tabs button { padding: .48rem .6rem; font-size: .85rem; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .8rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+}
+@media print { .bar { display: none; } .del[hidden] { display: block !important; } details { box-shadow: none; border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m4-el1">‹ Elektroteknik 1</a>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-del="noter">Noter</button>
+    <button role="tab" data-del="formler">Formler</button>
+    <button role="tab" data-del="quiz">Quiz</button>
+  </div>
+</div></header>
+<main>
+  <p class="kicker">Elektroteknik 1</p>
+  <h1>Magnetisme</h1>
+  <p class="intro">Magnetisk flux og fluxtæthed, feltstyrke og permeabilitet, magnetiske kredse med og uden luftgab, jerntab og AC-spolen med jernkerne.</p>
+  <section class="del" id="d-noter" role="tabpanel"><blockquote>
+<p><strong>Kilder</strong>
+PP4 Magnetisme · Lab 4 (spole med jernkerne) · Obligatorisk opgavesæt 2, opgave 3 og 9</p>
+</blockquote>
+<p>En strøm gennem en spole skaber et magnetfelt. Hvor stærkt feltet bliver, afhænger af amperevindingerne N · I og af, hvor let fluxen kan løbe gennem kernen. Det regnes på samme måde som en DC-kreds: N · I er "spændingen", fluxen Φ er "strømmen", og reluktansen R_m er "modstanden".</p>
+<h2>Flux, fluxtæthed og feltstyrke</h2>
+<pre class="formel">Φ                    [Wb]       magnetisk flux (antal feltlinjer)
+B = Φ / A            [T = Wb/m²] fluxtæthed
+H = N · I / l        [A/m]      magnetisk feltstyrke
+B = μ · H = μ₀ · μ_r · H        μ₀ = 4π·10⁻⁷ H/m</pre>
+
+<ul>
+<li><strong>μ_r</strong> er materialets relative permeabilitet. Luft har 1, elektroblik typisk 1.000–5.000.</li>
+<li><strong>B-H-kurven</strong> for jern er ikke lineær. Over ca. 1,2–1,6 T går jernet i <strong>mætning</strong>: μ_r falder, og mere strøm giver næsten ikke mere flux. Det ses på slide 2.</li>
+</ul>
+<h2>Magnetiske kredse</h2>
+<table>
+<thead>
+<tr>
+<th>Elektrisk kreds</th>
+<th>Magnetisk kreds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spænding U</td>
+<td>Magnetomotorisk kraft F_m = N · I [A]</td>
+</tr>
+<tr>
+<td>Strøm I</td>
+<td>Flux Φ [Wb]</td>
+</tr>
+<tr>
+<td>Modstand R = l / (γ · A)</td>
+<td>Reluktans R_m = l / (μ · A) [1/H]</td>
+</tr>
+<tr>
+<td>U = R · I</td>
+<td>N · I = Φ · R_m</td>
+</tr>
+</tbody>
+</table>
+<p>Består kredsen af flere dele (jern og luftgab), sidder reluktanserne i serie:</p>
+<pre class="formel">N · I = Φ · (l_Fe / (μ₀ μ_r A_Fe) + δ / (μ₀ A_δ))</pre>
+
+<p><strong>Luftgabet dominerer.</strong> Et luftgab på 1 mm har samme reluktans som 2 m jern med μ_r = 2.000. Derfor bruger en motor med luftgab meget af sin magnetiseringsstrøm på at drive fluxen over gabet.</p>
+<blockquote>
+<p><strong>Trykfejl på slides (PP4, slide 3)</strong>
+Formlen er skrevet I = Φ · l₁/(μ₁A₁) + Φ · l₂/(μ₂A₂). Venstre side skal være N · I (amperevindinger), ikke I. Ved A_L = A_Fe · σ er σ fyldfaktoren for den lamellerede kerne (andelen af tværsnittet, der er jern). Den sidste tolkning er <strong>usikker</strong>, da sliden ikke forklarer σ.</p>
+</blockquote>
+<details>
+<summary>Forudsig først: kernen har μ_r = 2.000, 400 mm jernvej og et luftgab på 1 mm. Hvor stor en del af amperevindingerne bruges i luftgabet?</summary>
+<p>Jernet svarer til 400 / 2.000 = 0,2 mm luft. Gabet er 1 mm. Så gabet bruger 1 / 1,2 ≈ 83 %. Prøv i modellen, og se hvad der sker, når du sætter δ til 0.</p>
+</details>
+<div class="m" data-m="luftgab"></div>
+
+<h3>Gennemregnet eksempel</h3>
+<p>En kerne har jernvej 400 mm, A = 4 cm², μ_r = 2.000 og et luftgab på 1 mm. Hvor mange amperevindinger skal der til for B = 1 T?</p>
+<details>
+<summary>Vis udregning</summary>
+<table>
+<thead>
+<tr>
+<th>Del</th>
+<th>Udregning</th>
+<th>Resultat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H i jernet</td>
+<td>1 / (4π·10⁻⁷ · 2.000)</td>
+<td>398 A/m</td>
+</tr>
+<tr>
+<td>N·I i jernet</td>
+<td>398 · 0,399 m</td>
+<td>159 A</td>
+</tr>
+<tr>
+<td>H i luftgabet</td>
+<td>1 / (4π·10⁻⁷)</td>
+<td>795.800 A/m</td>
+</tr>
+<tr>
+<td>N·I i luftgabet</td>
+<td>795.800 · 0,001 m</td>
+<td>796 A</td>
+</tr>
+<tr>
+<td>I alt</td>
+<td>159 + 796</td>
+<td>955 A, fx 500 vindinger og 1,91 A</td>
+</tr>
+<tr>
+<td>L</td>
+<td>N² / R_m = 500² / (0,399/(μ₀·2000·4·10⁻⁴) + 0,001/(μ₀·4·10⁻⁴))</td>
+<td>0,105 H</td>
+</tr>
+</tbody>
+</table>
+</details>
+<h3>Spolens selvinduktion (opgavesæt 2, opgave 3)</h3>
+<pre class="formel">L = μ · A · N² / l = N² / R_m</pre>
+
+<p>L følger N². En ringkerne med 800 vindinger har L = 1,40 H. Bruges et udtag med 500 vindinger, bliver L = 1,40 · (500/800)² = <strong>0,547 H</strong>. Kobbertråden (0,12 mm, 60 mm pr. vinding) har R = 0,0175 · 500 · 0,06 / 0,01131 = 46,4 Ω, så ved 50 Hz er X_L = 171,8 Ω og cos φ = 46,4 / 178 = <strong>0,26</strong>.</p>
+<h2>Jerntab</h2>
+<p>Jerntabet P_Fe er varme i kernen og består af to dele:</p>
+<table>
+<thead>
+<tr>
+<th>Tab</th>
+<th>Årsag</th>
+<th>Afhænger af f</th>
+<th>Mindskes ved</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hysteresetab P_hy</td>
+<td>Domænerne i jernet vendes 2 gange pr. periode, og det koster energi (arealet af hysteresesløjfen)</td>
+<td>P_hy ∝ f</td>
+<td>Blødt magnetisk materiale med smal sløjfe (siliciumjern, kornorienteret blik)</td>
+</tr>
+<tr>
+<td>Hvirvelstrømstab P_hv</td>
+<td>Den skiftende flux inducerer strømme rundt i selve kernen</td>
+<td>P_hv ∝ f²</td>
+<td>Lamellering (tynde, isolerede plader) og silicium, der øger jernets resistivitet</td>
+</tr>
+</tbody>
+</table>
+<pre class="formel">P_Fe = P_hy + P_hv        P_hy = k₂ · f        P_hv = k₁ · f²     (ved samme B)</pre>
+
+<ul>
+<li><strong>B_r (remanens)</strong> er den flux, der bliver tilbage, når H = 0. <strong>H_c (koercitivkraft)</strong> er den H, der skal til for at fjerne den.</li>
+<li>Fra 50 til 60 Hz (samme B) stiger hysteresetabet 20 % og hvirvelstrømstabet 44 %.</li>
+</ul>
+<blockquote>
+<p><strong>Bemærk</strong>
+P_hv ∝ f² og P_hy ∝ f gælder kun ved konstant fluxtæthed. Holder du spændingen fast og hæver f, falder B (U ≈ 4,44 · f · N · B · A), og så falder jerntabet i stedet. Dette går ud over slides.</p>
+</blockquote>
+<h2>AC-spolen med jernkerne</h2>
+<p>En spole med jernkerne har både kobbertab og jerntab. Wattmeteret måler summen:</p>
+<pre class="formel">P = P_Cu + P_Fe = I² · R_Cu + I² · R_Fe = I² · R_eff
+Z = U / I        X_L,eff = √(Z² − R_eff²)        tan α = R_Fe / X_L,eff</pre>
+
+<ul>
+<li><strong>φ</strong> er vinklen mellem U og I.</li>
+<li><strong>α</strong> er vinklen mellem fluxen Φ og strømmen I. Uden jerntab ligger Φ i fase med I. Hysteresen får Φ til at halte α efter I.</li>
+</ul>
+<div class="m" data-m="jernspole"></div>
+
+<h3>Gennemregnet eksempel (opgavesæt 2, opgave 9)</h3>
+<p>230 V, 50 Hz, I = 1,25 A, P = 250 W og R_Cu = 130 Ω.</p>
+<details>
+<summary>Vis udregning</summary>
+<table>
+<thead>
+<tr>
+<th>Størrelse</th>
+<th>Udregning</th>
+<th>Resultat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P_Cu</td>
+<td>1,25² · 130</td>
+<td>203,1 W</td>
+</tr>
+<tr>
+<td>P_Fe</td>
+<td>250 − 203,1</td>
+<td>46,9 W</td>
+</tr>
+<tr>
+<td>φ (U mod I)</td>
+<td>cos⁻¹(250 / (230 · 1,25))</td>
+<td>29,6°</td>
+</tr>
+<tr>
+<td>Z og R_eff</td>
+<td>230 / 1,25 og 250 / 1,25²</td>
+<td>184 Ω og 160 Ω</td>
+</tr>
+<tr>
+<td>R_Fe</td>
+<td>160 − 130</td>
+<td>30 Ω</td>
+</tr>
+<tr>
+<td>X_L,eff</td>
+<td>√(184² − 160²)</td>
+<td>90,9 Ω</td>
+</tr>
+<tr>
+<td>α (Φ mod I)</td>
+<td>tan⁻¹(30 / 90,9)</td>
+<td>18,3°</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Usikkert i besvarelsen</strong>
+Opgave 9.2 spørger efter vinklen mellem feltet og strømmen. Den indsendte besvarelse regnede φ = 29,5° (U mod I). Vinklen mellem Φ og I er α ≈ 18,3°.</p>
+</blockquote>
+</details>
+<div class="genkald">
+<h3>Test dig selv</h3>
+<ol>
+<li>Hvad svarer til spænding, strøm og modstand i en magnetisk kreds?</li>
+<li>Hvorfor kræver et luftgab så mange amperevindinger?</li>
+<li>Hvorfor lamellerer man en jernkerne?</li>
+<li>Hvad er forskellen på vinklen φ og vinklen α i en jernspole?</li>
+</ol>
+<details>
+<summary>Svar</summary>
+<ol>
+<li>N · I, fluxen Φ og reluktansen R_m = l/(μA).</li>
+<li>Luft har μ_r = 1, så reluktansen pr. mm er 1.000–5.000 gange større end i jern.</li>
+<li>Tynde, isolerede plader afbryder hvirvelstrømmenes vej og mindsker hvirvelstrømstabet.</li>
+<li>φ er mellem U og I. α er mellem Φ og I og skyldes jerntabet.</li>
+</ol>
+</details>
+</div></section>
+  <section class="del" id="d-formler" role="tabpanel"><h3>Grundbegreber</h3>
+<pre class="formel">B = Φ / A                 [T]
+H = N · I / l             [A/m]
+B = μ₀ · μ_r · H          μ₀ = 4π·10⁻⁷ H/m</pre>
+
+<h3>Magnetisk kreds</h3>
+<pre class="formel">R_m = l / (μ₀ · μ_r · A)        [1/H]
+F_m = N · I = Φ · R_m           [A]
+N · I = Φ · (R_m,Fe + R_m,δ)    (serie)
+L = μ · A · N² / l = N² / R_m   [H]</pre>
+
+<h3>Jerntab</h3>
+<pre class="formel">P_Fe = P_hy + P_hv
+P_hy = k₂ · f       P_hv = k₁ · f²      (ved samme B)</pre>
+
+<h3>AC-spole med jernkerne</h3>
+<pre class="formel">P = I² · (R_Cu + R_Fe)     Z = U / I
+X_L,eff = √(Z² − R_eff²)   tan α = R_Fe / X_L,eff</pre></section>
+  <section class="del" id="d-quiz" role="tabpanel">
+    <p>Svar på spørgsmålene, før du kigger i noterne. Ved talopgaver har du to forsøg, og komma og punktum virker begge.</p>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </section>
+</main>
+<script>
+const QUIZ = [{"q": "En flux på 0,4 mWb går gennem et tværsnit på 4 cm². Hvad er B? (T)", "tal": 1.0, "tol": 0.01, "enhed": "T", "losning": "B = Φ / A = 0,4·10⁻³ / 4·10⁻⁴ = 1,0 T.", "f": "B = Φ / A.", "emne": "Magnetisme"}, {"valg": ["Spændingen", "Strømmen", "Modstanden", "Effekten"], "rigtig": 2, "q": "Hvad svarer reluktansen R_m til i en elektrisk kreds?", "f": "N · I = Φ · R_m svarer til U = I · R.", "emne": "Magnetisme"}, {"valg": ["Luft har μ_r = 1, så reluktansen pr. længde er tusinder af gange større end i jern", "Luftgabet har stor elektrisk modstand", "Fluxen er større i luftgabet", "Der opstår hvirvelstrømme i luftgabet"], "rigtig": 0, "q": "Hvorfor bruger et lille luftgab det meste af amperevindingerne?", "f": "R_m = l/(μA). Med μ_r = 1 i luft svarer 1 mm luft til 1–5 m jern.", "emne": "Magnetisme"}, {"q": "En spole med 800 vindinger har L = 1,40 H. Hvad bliver L med 500 vindinger på samme kerne? (H)", "tal": 0.547, "tol": 0.005, "enhed": "H", "losning": "L ∝ N², så L = 1,40 · (500/800)² = 1,40 · 0,3906 = 0,547 H.", "f": "L = N² / R_m, og R_m er den samme kerne.", "emne": "Magnetisme"}, {"valg": ["Hysteresetabet", "Hvirvelstrømstabet", "Kobbertabet", "Det mekaniske tab"], "rigtig": 1, "q": "Hvilket tab mindskes ved at lamellere jernkernen?", "f": "De isolerede plader afbryder hvirvelstrømmenes vej i kernen.", "emne": "Magnetisme"}, {"q": "Frekvensen hæves fra 50 til 60 Hz ved samme B. Hvor meget stiger hvirvelstrømstabet? (%)", "tal": 44.0, "tol": 1.0, "enhed": "%", "losning": "P_hv ∝ f², så (60/50)² = 1,44, altså 44 % mere.", "f": "Hysteresetabet stiger kun 20 %, fordi det er proportionalt med f.", "emne": "Magnetisme"}, {"q": "En jernspole på 230 V trækker 1,25 A og 250 W, og R_Cu = 130 Ω. Hvor stort er jerntabet? (W)", "tal": 46.9, "tol": 0.5, "enhed": "W", "losning": "P_Cu = 1,25² · 130 = 203,1 W. P_Fe = 250 − 203,1 = 46,9 W.", "f": "Wattmeteret måler kobbertab og jerntab tilsammen.", "emne": "Magnetisme"}, {"valg": ["Vinklen mellem U og I", "Vinklen mellem fluxen Φ og strømmen I, som skyldes jerntabet", "Vinklen mellem U og Φ", "Spolens effektfaktor"], "rigtig": 1, "q": "Hvad viser vinklen α i vektordiagrammet for en jernspole?", "f": "Uden jerntab ville Φ ligge i fase med I. tan α = R_Fe / X_L,eff.", "emne": "Magnetisme"}, {"valg": ["μ_r stiger kraftigt", "μ_r falder, så mere strøm næsten ikke giver mere flux", "Jerntabet forsvinder", "B falder til nul"], "rigtig": 1, "q": "Hvad sker der, når jernet går i mætning?", "f": "Over ca. 1,2–1,6 T flader B-H-kurven ud.", "emne": "Magnetisme"}];
+const NOGLE = "mn-el1-magnetisme", SAMLET = "" === "1";
+const q = new URLSearchParams(location.search);
+
+// tilbage-link til den side man kom fra
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+
+// faner
+const tabs = [...document.querySelectorAll("#tabs button")];
+function vis(del) {
+  if (!document.getElementById("d-" + del)) del = "noter";
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.del === del));
+  document.querySelectorAll(".del").forEach(s => s.hidden = s.id !== "d-" + del);
+}
+tabs.forEach(b => b.addEventListener("click", () => {
+  vis(b.dataset.del);
+  const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
+  window.scrollTo(0, 0);
+}));
+// tomme dele skjules i fanerne
+["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+if (!QUIZ.length) tabs.find(b => b.dataset.del === "quiz").hidden = true;
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else { const v = q.get("vis") || "noter", t = tabs.find(b => b.dataset.del === v && !b.hidden) || tabs.find(b => !b.hidden); vis(t ? t.dataset.del : "noter"); }
+
+// tabeller kan scrolles på mobil
+document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+
+// quiz
+let gemt = {};
+try { gemt = JSON.parse(localStorage.getItem(NOGLE) || "{}"); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+// Danske og engelske skrivemåder virker begge: "85.200", "85200", "1.150,5", "0,86", "0.86".
+// Et enkelt punktum efterfulgt af tre cifre kan både være tusindtal og decimal, så begge tolkninger prøves.
+const tolk = s => { s = String(s).replace(/[\s\u00a0]/g, "").replace("−", "-");
+  if (!/^-?[\d.,]+$/.test(s)) return [];
+  if (s.includes(",")) return [parseFloat(s.replace(/\./g, "").replace(",", "."))];
+  if ((s.match(/\./g) || []).length > 1) return [parseFloat(s.replace(/\./g, ""))];
+  const ud = [parseFloat(s)];
+  if (/^-?\d+\.\d{3}$/.test(s)) ud.push(parseFloat(s.replace(".", "")));
+  return ud; };
+const fmt = x => x.toLocaleString("da-DK", { maximumFractionDigits: 4 });
+
+function bygQuiz() {
+  const rod = document.getElementById("quiz"); rod.innerHTML = "";
+  QUIZ.forEach((s, i) => {
+    const el = document.createElement("div"); el.className = "q";
+    el.innerHTML = `<div class="nr">Spørgsmål ${i + 1} af ${QUIZ.length}${SAMLET ? `<span class="emnetag">${s.emne}</span>` : ""}</div><div class="tekst">${s.q}</div>`;
+    const g = gemt[i];
+    if (s.valg) {
+      const v = document.createElement("div"); v.className = "valg";
+      s.valg.forEach((t, j) => {
+        const b = document.createElement("button"); b.innerHTML = t;
+        b.addEventListener("click", () => { gemt[i] = { valgt: j, ok: j === s.rigtig }; gem(); bygQuiz(); });
+        v.append(b);
+      });
+      el.append(v);
+      if (g) {
+        [...v.children].forEach((b, j) => { b.disabled = true; if (j === s.rigtig) b.classList.add("ok"); else if (j === g.valgt) b.classList.add("bad"); });
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Ikke helt."}</b>${s.f || ""}</div>`);
+      }
+    } else {
+      const f = document.createElement("div"); f.className = "tal";
+      f.innerHTML = `<input inputmode="decimal" aria-label="Dit svar" placeholder="Dit svar"> <span class="enhed">${s.enhed || ""}</span> <button class="knap">Tjek</button> <button class="knap stille">Vis facit</button>`;
+      const [inp, , tjek, opgiv] = f.children;
+      el.append(f);
+      const faerdig = g && (g.ok || g.forsog >= 2 || g.opgivet);
+      if (g && g.svar != null) inp.value = g.svar;
+      if (faerdig) {
+        inp.disabled = tjek.disabled = opgiv.disabled = true;
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Facit: " + fmt(s.tal) + " " + (s.enhed || "")}</b>${s.losning ? s.losning + "<br>" : ""}${s.f || ""}</div>`);
+      } else if (g && g.forsog === 1) {
+        el.insertAdjacentHTML("beforeend", `<div class="svar hint"><b>Ikke helt. Tjek din opstilling og prøv igen.</b>Du har ét forsøg tilbage.</div>`);
+      }
+      const svar = () => {
+        const xs = tolk(inp.value); if (!xs.length || xs.some(isNaN)) { inp.focus(); return; }
+        const ok = xs.some(x => Math.abs(x - s.tal) <= Math.max(s.tol, Math.abs(s.tal) * 1e-9));
+        const forsog = ((g && g.forsog) || 0) + 1;
+        gemt[i] = { svar: inp.value, ok, forsog }; gem(); bygQuiz();
+      };
+      tjek.addEventListener("click", svar);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") svar(); });
+      opgiv.addEventListener("click", () => { gemt[i] = { svar: inp.value, ok: false, forsog: 2, opgivet: true }; gem(); bygQuiz(); });
+    }
+    rod.append(el);
+  });
+  // score
+  const faerdige = QUIZ.map((s, i) => gemt[i] && (s.valg || gemt[i].ok || gemt[i].forsog >= 2));
+  const antal = faerdige.filter(Boolean).length, rigtige = QUIZ.filter((s, i) => gemt[i] && gemt[i].ok).length;
+  const forkerte = QUIZ.map((s, i) => faerdige[i] && !gemt[i].ok ? `<li>${s.q.replace(/<[^>]+>/g, "")}${SAMLET ? ` <em>(${s.emne})</em>` : ""}</li>` : "").join("");
+  document.getElementById("score").innerHTML = antal === 0 ? "" : `<div class="score">
+    <h2>${rigtige} af ${QUIZ.length} rigtige${antal < QUIZ.length ? ` · ${QUIZ.length - antal} mangler` : ""}</h2>
+    ${forkerte ? `<p>Tag med i repetitionen:</p><ul>${forkerte}</ul>` : antal === QUIZ.length ? "<p>Alle rigtige. Tag quizzen igen om et par uger.</p>" : ""}
+    <button class="knap stille" id="nulstil">Start forfra</button></div>`;
+  const n = document.getElementById("nulstil");
+  if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
+}
+if (QUIZ.length) bygQuiz();
+</script>
+<script src="modeller.js"></script>
+</body>
+</html>

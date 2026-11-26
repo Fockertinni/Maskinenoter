@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>3-faset symmetrisk belastning · Elektroteknik 1 · Maskinenoter</title>
+<link rel="stylesheet" href="../../hav.css"><script>document.documentElement.dataset.theme="dark"</script>
+<!-- Bygget af noter/kilde/byg.py. Ret i kildefilen i noter/kilde/, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #1d6fa5; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #6db8ec; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #6db8ec; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.tabs { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--hover); flex-shrink: 0; }
+.tabs button { font: 600 .9rem/1 var(--sans); color: var(--muted); background: none; border: 0; padding: .5rem .8rem; border-radius: 8px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.8rem, 5vw, 3.2rem) max(16px, env(safe-area-inset-left, 0px)) 5rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .8rem 0 0; font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.del { margin-top: 2.2rem; }
+.del > :first-child { margin-top: 0; }
+.del h2 { margin: 2.6rem 0 .6rem; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; }
+.del h3 { margin: 1.8rem 0 .4rem; font-size: 1.12rem; letter-spacing: -.01em; }
+.del p, .del li { max-width: 68ch; }
+.del ul, .del ol { padding-left: 1.3rem; }
+.del li { margin: .25rem 0; }
+.del li::marker { color: var(--muted); }
+.del code { font: .92em var(--mono); background: var(--hover); padding: .08em .35em; border-radius: 5px; }
+.del strong { font-weight: 650; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: .94rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .8rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .92rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; }
+details { margin: .9rem 0; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: .1rem 1.1rem; }
+details > summary { cursor: pointer; font-weight: 600; padding: .75rem 0; color: var(--accent); list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "▸ "; }
+details[open] > summary::before { content: "▾ "; }
+details[open] { padding-bottom: .8rem; }
+.genkald { margin-top: 2.6rem; padding: 1.1rem 1.3rem; border: 2px solid var(--accent); border-radius: 16px; background: var(--surface); }
+.genkald h2, .genkald h3 { margin-top: 0 !important; font-size: .82rem !important; letter-spacing: .08em !important; text-transform: uppercase; color: var(--accent); }
+.genkald details { box-shadow: none; border: 1px solid var(--line); }
+
+/* quiz */
+.q { margin: 1rem 0; padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); }
+.q .nr { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q .tekst { margin: .3rem 0 .8rem; font-weight: 600; }
+.q .valg { display: grid; gap: 8px; }
+.q .valg button { text-align: left; font: inherit; font-size: .98rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: .65rem .9rem; cursor: pointer; }
+.q .valg button:hover:not(:disabled) { border-color: var(--accent); }
+.q .valg button:disabled { cursor: default; }
+.q .valg button.ok { background: var(--ok-bg); border-color: var(--ok); }
+.q .valg button.bad { background: var(--bad-bg); border-color: var(--bad); }
+.q .tal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q input { font: 1rem var(--mono); width: 11rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.q .enhed { color: var(--muted); }
+.knap { font: 600 .95rem var(--sans); padding: .6rem 1rem; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.svar { margin-top: .8rem; padding: .7rem .9rem; border-radius: 10px; font-size: .96rem; }
+.svar.ok { background: var(--ok-bg); } .svar.bad { background: var(--bad-bg); } .svar.hint { background: var(--key); }
+.svar b { display: block; margin-bottom: .15rem; }
+.score { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border-radius: 16px; background: var(--soft); border-left: 3px solid var(--accent); }
+.score h2 { margin: 0 0 .3rem !important; font-size: 1.2rem !important; }
+.score ul { margin: .4rem 0; }
+.emnetag { font-size: .76rem; font-weight: 600; color: var(--accent); margin-left: .4rem; text-transform: none; letter-spacing: 0; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .bar .in { gap: 8px; }
+  .tabs button { padding: .48rem .6rem; font-size: .85rem; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .8rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+}
+@media print { .bar { display: none; } .del[hidden] { display: block !important; } details { box-shadow: none; border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m4-el1">‹ Elektroteknik 1</a>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-del="noter">Noter</button>
+    <button role="tab" data-del="formler">Formler</button>
+    <button role="tab" data-del="quiz">Quiz</button>
+  </div>
+</div></header>
+<main>
+  <p class="kicker">Elektroteknik 1</p>
+  <h1>3-faset symmetrisk belastning</h1>
+  <p class="intro">Stjerne og trekant, fase- og netstrømme, effekt i 3-fasede systemer, 1-, 2- og 3-wattmetermetoden, vektordiagrammer og fasekompensering med kondensatorbatteri.</p>
+  <section class="del" id="d-noter" role="tabpanel"><blockquote>
+<p><strong>Kilder</strong>
+PP6 3-faset symmetrisk belastning · Lab 6 (symmetrisk Y og Δ, 1- og 2-wattmeter) · Obligatorisk opgavesæt 3, opgave 1, 4, 7 og 9</p>
+</blockquote>
+<p>Et 3 × 400/230 V net har tre fasespændinger på 230 V med 120° imellem. Spændingen mellem to faser (netspændingen) er √3 · 230 = 400 V. Ved symmetrisk last trækker alle tre faser lige meget strøm, og summen af strømmene er nul.</p>
+<h2>Stjerne (Y) og trekant (Δ)</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Stjerne (Y)</th>
+<th>Trekant (Δ)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spænding over hver last</td>
+<td>U_f = U_n / √3 = 230 V</td>
+<td>U_f = U_n = 400 V</td>
+</tr>
+<tr>
+<td>Netstrøm</td>
+<td>I_n = I_f</td>
+<td>I_n = √3 · I_f</td>
+</tr>
+<tr>
+<td>Samme last flyttet fra Y til Δ</td>
+<td>P_Y</td>
+<td>P_Δ = 3 · P_Y</td>
+</tr>
+</tbody>
+</table>
+<p>Effekten følger U². Flyttes en modstand fra 230 V til 400 V, bliver effekten (400/230)² = 3 gange større.</p>
+<p><strong>Mærkepladen:</strong> "230/400 V Δ/Y" betyder, at hver vikling tåler 230 V. På et 400 V-net kobles motoren i <strong>Y</strong> (opgavesæt 3, opgave 4). "400/690 V Δ/Y" kobles i <strong>Δ</strong> på 400 V.</p>
+<h2>Effekt</h2>
+<pre class="formel">P = √3 · U_n · I_n · cos φ = 3 · U_f · I_f · cos φ
+Q = √3 · U_n · I_n · sin φ        S = √3 · U_n · I_n        S² = P² + Q²</pre>
+
+<p>Formlen med √3 bruger <strong>netværdier</strong> og gælder både for Y og Δ, fordi √3 · U_n · I_n = 3 · U_f · I_f i begge koblinger.</p>
+<h2>Vektordiagrammet</h2>
+<ul>
+<li>Tegn de tre fasespændinger U_1N, U_2N og U_3N fra nulpunktet med 120° imellem. Netspændingerne U_12, U_23 og U_31 er siderne i trekanten mellem spidserne.</li>
+<li>I Y: hver strøm ligger φ efter sin fasespænding.</li>
+<li>I Δ: grenstrømmene I_12, I_23 og I_31 ligger φ efter deres netspænding. Netstrømmen er forskellen mellem to grenstrømme, fx I_L1 = I_12 − I_31. Derfor er den √3 gange større og drejet 30°.</li>
+</ul>
+<h2>Wattmetermetoderne</h2>
+<table>
+<thead>
+<tr>
+<th>Metode</th>
+<th>Kræver</th>
+<th>Last</th>
+<th>Samlet effekt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 wattmeter</td>
+<td>Adgang til N (eller kunstigt nulpunkt)</td>
+<td>Kun symmetrisk</td>
+<td>P = 3 · W</td>
+</tr>
+<tr>
+<td>2 wattmetre (Aron)</td>
+<td>3-ledernet</td>
+<td>Vilkårlig</td>
+<td>P = W1 + W2 (med fortegn)</td>
+</tr>
+<tr>
+<td>3 wattmetre</td>
+<td>4-ledernet</td>
+<td>Vilkårlig</td>
+<td>P = W1 + W2 + W3</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Aron-koblingen:</strong> strømspolerne sidder i to faser, og spændingsspolerne måler mellem hver af dem og den tredje fase. Den virker, fordi I1 + I2 + I3 = 0 i et 3-ledernet. Ved symmetrisk last:</p>
+<pre class="formel">W1 = U_n · I_n · cos(30° + φ)       W2 = U_n · I_n · cos(30° − φ)
+P = W1 + W2                          Q = √3 · (W2 − W1)</pre>
+
+<p>Ved cos φ under 0,5 (φ &gt; 60°) bliver W1 negativ. Det er ikke en fejl. Læg visningerne sammen med fortegn.</p>
+<details>
+<summary>Forudsig først: en ubelastet motor har cos φ = 0,3. Hvad viser de to wattmetre?</summary>
+<p>φ = 72,5°. W1 ∝ cos(102,5°) er negativ, W2 ∝ cos(42,5°) er positiv og større. Summen er den lille P. Prøv i modellen.</p>
+</details>
+<div class="m" data-m="aron"></div>
+
+<h3>Gennemregnet eksempel (opgavesæt 3, opgave 9: pumpen på coasteren)</h3>
+<p>Et 3 × 115 V, 60 Hz net. Aron-koblingen viser 1.880 W og −280 W. Pumpen flytter 100 m³ søvand (1.027 kg/m³) 5,5 m op på 1 time og 22 minutter. Motorens η = 92 %.</p>
+<details>
+<summary>Vis udregning</summary>
+<table>
+<thead>
+<tr>
+<th>Størrelse</th>
+<th>Udregning</th>
+<th>Resultat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>1.880 + (−280)</td>
+<td>1.600 W</td>
+</tr>
+<tr>
+<td>Q</td>
+<td>√3 · (1.880 − (−280))</td>
+<td>3.741 var</td>
+</tr>
+<tr>
+<td>S</td>
+<td>√(1.600² + 3.741²)</td>
+<td>4.069 VA</td>
+</tr>
+<tr>
+<td>cos φ</td>
+<td>1.600 / 4.069</td>
+<td>0,39 (derfor negativt wattmeter)</td>
+</tr>
+<tr>
+<td>I_n</td>
+<td>4.069 / (√3 · 115)</td>
+<td>20,4 A</td>
+</tr>
+<tr>
+<td>P2 (akselen)</td>
+<td>0,92 · 1.600</td>
+<td>1.472 W</td>
+</tr>
+<tr>
+<td>Hydraulisk effekt</td>
+<td>(100 · 1.027 / 4.920 s) · 9,82 · 5,5</td>
+<td>1.127 W</td>
+</tr>
+<tr>
+<td>η pumpe</td>
+<td>1.127 / 1.472</td>
+<td>76,6 %</td>
+</tr>
+<tr>
+<td>η motor og pumpe</td>
+<td>1.127 / 1.600</td>
+<td>70,5 %</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Usikkert i besvarelsen</strong>
+Den indsendte besvarelse regnede S = P1 / η = 1.739 VA. S har intet med virkningsgraden at gøre: S = √(P² + Q²) = 4.069 VA, og Q findes direkte fra Aron-visningerne. Opgaven spørger efter pumpens virkningsgrad, som er 76,6 % for pumpen alene. 70,5 % er motor og pumpe tilsammen.</p>
+</blockquote>
+</details>
+<h2>Tangamperemeter (opgavesæt 3, opgave 1)</h2>
+<p>En motor trækker 37 A pr. fase. Hvad viser tangen?</p>
+<table>
+<thead>
+<tr>
+<th>Tangen omslutter</th>
+<th>Visning</th>
+<th>Hvorfor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Én fase</td>
+<td>37 A</td>
+<td>Fasestrømmen</td>
+</tr>
+<tr>
+<td>To faser</td>
+<td>37 A</td>
+<td>Summen af to strømme med 120° imellem er lige så stor som den tredje</td>
+</tr>
+<tr>
+<td>Tre faser</td>
+<td>0 A</td>
+<td>Symmetrisk: summen er nul</td>
+</tr>
+<tr>
+<td>Én fase og PE</td>
+<td>37 A</td>
+<td>Ingen strøm i PE i en fejlfri installation</td>
+</tr>
+</tbody>
+</table>
+<h2>To symmetriske belastninger på samme net</h2>
+<p>Strømme fra flere laster lægges sammen vektorielt i hver fase. Del dem op i wattstrøm (I · cos φ) og wattløs strøm (I · sin φ), læg delene sammen hver for sig, og brug Pythagoras.</p>
+<h3>Gennemregnet eksempel</h3>
+<p>Varmelegemer 3 × 23 Ω i Y og en Δ-koblet motor, der trækker 9,3 A med cos φ = 0,8, på 3 × 400/230 V.</p>
+<details>
+<summary>Vis udregning</summary>
+<table>
+<thead>
+<tr>
+<th>Størrelse</th>
+<th>Udregning</th>
+<th>Resultat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Varme: I_n = I_f</td>
+<td>230 / 23</td>
+<td>10,0 A (cos φ = 1)</td>
+</tr>
+<tr>
+<td>Varme: P</td>
+<td>3 · 230 · 10</td>
+<td>6.900 W</td>
+</tr>
+<tr>
+<td>Motor: fasestrøm i viklingen</td>
+<td>9,3 / √3</td>
+<td>5,37 A</td>
+</tr>
+<tr>
+<td>Motor: P</td>
+<td>√3 · 400 · 9,3 · 0,8</td>
+<td>5.155 W</td>
+</tr>
+<tr>
+<td>Wattstrøm pr. fase</td>
+<td>10 + 9,3 · 0,8</td>
+<td>17,44 A</td>
+</tr>
+<tr>
+<td>Wattløs strøm pr. fase</td>
+<td>9,3 · 0,6</td>
+<td>5,58 A</td>
+</tr>
+<tr>
+<td>Samlet netstrøm</td>
+<td>√(17,44² + 5,58²)</td>
+<td>18,3 A</td>
+</tr>
+<tr>
+<td>Samlet cos φ</td>
+<td>17,44 / 18,3</td>
+<td>0,95</td>
+</tr>
+</tbody>
+</table>
+<p>Netstrømmen er 18,3 A, ikke 10 + 9,3 = 19,3 A.</p>
+</details>
+<h2>Fasekompensering i 3-fasede net</h2>
+<p>Kondensatorbatteriet består af tre kondensatorer i Y eller Δ.</p>
+<pre class="formel">Q_C = P · (tan φ₁ − tan φ₂)
+Y:  C = (Q_C / 3) / (ω · U_f²)        Δ:  C = (Q_C / 3) / (ω · U_n²)   (3 gange mindre)</pre>
+
+<div class="m" data-m="kompensering"></div>
+
+<h3>Gennemregnet eksempel (opgavesæt 3, opgave 7: færgen Rødby–Puttgarden)</h3>
+<p>En thrustermotor på 6,6 kV, 50 Hz optager 2,78 MW ved 246 A. Uden kompensering er cos φ = 0,86.</p>
+<details>
+<summary>Vis udregning</summary>
+<table>
+<thead>
+<tr>
+<th>Størrelse</th>
+<th>Udregning</th>
+<th>Resultat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cos φ efter</td>
+<td>2,78·10⁶ / (√3 · 6.600 · 246)</td>
+<td>0,989 (φ = 8,7°)</td>
+</tr>
+<tr>
+<td>I før</td>
+<td>2,78·10⁶ / (√3 · 6.600 · 0,86)</td>
+<td>283 A</td>
+</tr>
+<tr>
+<td>Q_C</td>
+<td>2,78·10⁶ · (tan 30,7° − tan 8,7°)</td>
+<td>1,23 Mvar</td>
+</tr>
+<tr>
+<td>C i Δ</td>
+<td>(1,23·10⁶ / 3) / (314,16 · 6.600²)</td>
+<td>29,9 µF</td>
+</tr>
+<tr>
+<td>C i Y</td>
+<td>(1,23·10⁶ / 3) / (314,16 · 3.811²)</td>
+<td>89,6 µF</td>
+</tr>
+</tbody>
+</table>
+<p>Q_C er den samme i begge koblinger. Det er kun C, der ændrer sig.</p>
+</details>
+<blockquote>
+<p><strong>Lab 6</strong>
+Symmetrisk resistiv last i Y og Δ, målt med 1 og 2 wattmetre. P i Δ blev ca. 3 gange P i Y. Med rent resistiv last viser de to wattmetre i Aron-koblingen det samme (cos(±30°)). Modstandene blev varme undervejs og ændrede værdi, og skydemodstandene var ikke helt ens.</p>
+</blockquote>
+<div class="genkald">
+<h3>Test dig selv</h3>
+<ol>
+<li>Hvorfor gælder P = √3 · U_n · I_n · cos φ både for Y og Δ?</li>
+<li>Hvornår må du bruge 1-wattmetermetoden?</li>
+<li>Hvorfor viser tangen 37 A om to faser?</li>
+<li>Hvorfor bliver C 3 gange mindre i Δ?</li>
+</ol>
+<details>
+<summary>Svar</summary>
+<ol>
+<li>I Y er I_f = I_n og U_f = U_n/√3, i Δ er U_f = U_n og I_f = I_n/√3. I begge tilfælde er 3 · U_f · I_f = √3 · U_n · I_n.</li>
+<li>Kun ved symmetrisk last med adgang til et nulpunkt.</li>
+<li>I1 + I2 = −I3, og |I3| = 37 A.</li>
+<li>Kondensatoren får 400 V i stedet for 230 V, og Q = U²/X_C. (400/230)² = 3.</li>
+</ol>
+</details>
+</div></section>
+  <section class="del" id="d-formler" role="tabpanel"><h3>Y og Δ</h3>
+<pre class="formel">Y:  U_n = √3 · U_f      I_n = I_f
+Δ:  U_n = U_f           I_n = √3 · I_f
+P_Δ = 3 · P_Y  (samme impedans)</pre>
+
+<h3>Effekt</h3>
+<pre class="formel">P = √3 · U_n · I_n · cos φ = 3 · U_f · I_f · cos φ
+Q = √3 · U_n · I_n · sin φ
+S = √3 · U_n · I_n         S² = P² + Q²</pre>
+
+<h3>Wattmetre</h3>
+<pre class="formel">1 W:  W = U_f · I_f · cos φ        P = 3 · W
+2 W:  W1 = U_n·I_n·cos(30° + φ)    W2 = U_n·I_n·cos(30° − φ)
+      P = W1 + W2                  Q = √3 · (W2 − W1)
+3 W:  P = W1 + W2 + W3</pre>
+
+<h3>Fasekompensering</h3>
+<pre class="formel">Q_C = P · (tan φ₁ − tan φ₂)
+C_Y = Q_C / (3 · ω · U_f²)        C_Δ = Q_C / (3 · ω · U_n²)</pre></section>
+  <section class="del" id="d-quiz" role="tabpanel">
+    <p>Svar på spørgsmålene, før du kigger i noterne. Ved talopgaver har du to forsøg, og komma og punktum virker begge.</p>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </section>
+</main>
+<script>
+const QUIZ = [{"q": "En motor på 3 × 400 V trækker 9,3 A med cos φ = 0,8. Hvad er P1? (W)", "tal": 5155.0, "tol": 10.0, "enhed": "W", "losning": "P1 = √3 · 400 · 9,3 · 0,8 = 5.155 W.", "f": "Brug netværdier i √3-formlen.", "emne": "3-faset symmetrisk belastning"}, {"valg": ["Trekant", "Stjerne", "Det er lige meget", "Den kan ikke bruges"], "rigtig": 1, "q": "Mærkepladen siger 230/400 V Δ/Y. Hvordan kobles motoren på 3 × 400 V?", "f": "Hver vikling tåler 230 V. I Y får den 400/√3 = 230 V.", "emne": "3-faset symmetrisk belastning"}, {"q": "Tre ens modstande giver 2 kW i stjerne. Hvad giver de i trekant? (kW)", "tal": 6.0, "tol": 0.05, "enhed": "kW", "losning": "P_Δ = 3 · P_Y = 3 · 2 = 6 kW.", "f": "Spændingen over hver modstand stiger fra 230 til 400 V, og P ∝ U².", "emne": "3-faset symmetrisk belastning"}, {"valg": ["37 A", "64 A", "0 A", "111 A"], "rigtig": 2, "q": "En symmetrisk motor trækker 37 A. Tangen omslutter tre af fasederne. Hvad viser den?", "f": "Ved symmetrisk last er summen af de tre fasestrømme nul.", "emne": "3-faset symmetrisk belastning"}, {"q": "Aron-koblingen viser 1.880 W og −280 W. Hvad er den samlede P? (W)", "tal": 1600.0, "tol": 1.0, "enhed": "W", "losning": "P = W1 + W2 = 1.880 + (−280) = 1.600 W.", "f": "Visningerne lægges sammen med fortegn.", "emne": "3-faset symmetrisk belastning"}, {"q": "Samme Aron-visninger (1.880 W og −280 W). Hvad er Q? (var)", "tal": 3741.0, "tol": 10.0, "enhed": "var", "losning": "Q = √3 · (1.880 − (−280)) = √3 · 2.160 = 3.741 var.", "f": "Q = √3 · (W2 − W1) gælder ved symmetrisk last.", "emne": "3-faset symmetrisk belastning"}, {"valg": ["cos φ = 1", "cos φ = 0,866", "cos φ = 0,5", "cos φ = 0"], "rigtig": 2, "q": "Ved hvilken effektfaktor viser det ene wattmeter i Aron-koblingen 0?", "f": "cos(30° + 60°) = cos 90° = 0. Under 0,5 bliver visningen negativ.", "emne": "3-faset symmetrisk belastning"}, {"valg": ["Kun ved symmetrisk last med adgang til et nulpunkt", "Ved al last i et 4-ledernet", "Ved al last i et 3-ledernet", "Kun ved rent resistiv last"], "rigtig": 0, "q": "Hvornår må 1-wattmetermetoden bruges?", "f": "P = 3 · W forudsætter, at alle faser trækker samme effekt.", "emne": "3-faset symmetrisk belastning"}, {"q": "Varmelegemer trækker 10 A (cos φ = 1), og en motor trækker 9,3 A (cos φ = 0,8) i samme fase. Hvad er netstrømmen? (A)", "tal": 18.3, "tol": 0.1, "enhed": "A", "losning": "I_w = 10 + 9,3 · 0,8 = 17,44 A. I_wl = 9,3 · 0,6 = 5,58 A. I = √(17,44² + 5,58²) = 18,3 A.", "f": "Strømme med forskellig vinkel lægges sammen vektorielt.", "emne": "3-faset symmetrisk belastning"}];
+const NOGLE = "mn-el1-symmetrisk", SAMLET = "" === "1";
+const q = new URLSearchParams(location.search);
+
+// tilbage-link til den side man kom fra
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+
+// faner
+const tabs = [...document.querySelectorAll("#tabs button")];
+function vis(del) {
+  if (!document.getElementById("d-" + del)) del = "noter";
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.del === del));
+  document.querySelectorAll(".del").forEach(s => s.hidden = s.id !== "d-" + del);
+}
+tabs.forEach(b => b.addEventListener("click", () => {
+  vis(b.dataset.del);
+  const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
+  window.scrollTo(0, 0);
+}));
+// tomme dele skjules i fanerne
+["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+if (!QUIZ.length) tabs.find(b => b.dataset.del === "quiz").hidden = true;
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else { const v = q.get("vis") || "noter", t = tabs.find(b => b.dataset.del === v && !b.hidden) || tabs.find(b => !b.hidden); vis(t ? t.dataset.del : "noter"); }
+
+// tabeller kan scrolles på mobil
+document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+
+// quiz
+let gemt = {};
+try { gemt = JSON.parse(localStorage.getItem(NOGLE) || "{}"); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+// Danske og engelske skrivemåder virker begge: "85.200", "85200", "1.150,5", "0,86", "0.86".
+// Et enkelt punktum efterfulgt af tre cifre kan både være tusindtal og decimal, så begge tolkninger prøves.
+const tolk = s => { s = String(s).replace(/[\s\u00a0]/g, "").replace("−", "-");
+  if (!/^-?[\d.,]+$/.test(s)) return [];
+  if (s.includes(",")) return [parseFloat(s.replace(/\./g, "").replace(",", "."))];
+  if ((s.match(/\./g) || []).length > 1) return [parseFloat(s.replace(/\./g, ""))];
+  const ud = [parseFloat(s)];
+  if (/^-?\d+\.\d{3}$/.test(s)) ud.push(parseFloat(s.replace(".", "")));
+  return ud; };
+const fmt = x => x.toLocaleString("da-DK", { maximumFractionDigits: 4 });
+
+function bygQuiz() {
+  const rod = document.getElementById("quiz"); rod.innerHTML = "";
+  QUIZ.forEach((s, i) => {
+    const el = document.createElement("div"); el.className = "q";
+    el.innerHTML = `<div class="nr">Spørgsmål ${i + 1} af ${QUIZ.length}${SAMLET ? `<span class="emnetag">${s.emne}</span>` : ""}</div><div class="tekst">${s.q}</div>`;
+    const g = gemt[i];
+    if (s.valg) {
+      const v = document.createElement("div"); v.className = "valg";
+      s.valg.forEach((t, j) => {
+        const b = document.createElement("button"); b.innerHTML = t;
+        b.addEventListener("click", () => { gemt[i] = { valgt: j, ok: j === s.rigtig }; gem(); bygQuiz(); });
+        v.append(b);
+      });
+      el.append(v);
+      if (g) {
+        [...v.children].forEach((b, j) => { b.disabled = true; if (j === s.rigtig) b.classList.add("ok"); else if (j === g.valgt) b.classList.add("bad"); });
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Ikke helt."}</b>${s.f || ""}</div>`);
+      }
+    } else {
+      const f = document.createElement("div"); f.className = "tal";
+      f.innerHTML = `<input inputmode="decimal" aria-label="Dit svar" placeholder="Dit svar"> <span class="enhed">${s.enhed || ""}</span> <button class="knap">Tjek</button> <button class="knap stille">Vis facit</button>`;
+      const [inp, , tjek, opgiv] = f.children;
+      el.append(f);
+      const faerdig = g && (g.ok || g.forsog >= 2 || g.opgivet);
+      if (g && g.svar != null) inp.value = g.svar;
+      if (faerdig) {
+        inp.disabled = tjek.disabled = opgiv.disabled = true;
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Facit: " + fmt(s.tal) + " " + (s.enhed || "")}</b>${s.losning ? s.losning + "<br>" : ""}${s.f || ""}</div>`);
+      } else if (g && g.forsog === 1) {
+        el.insertAdjacentHTML("beforeend", `<div class="svar hint"><b>Ikke helt. Tjek din opstilling og prøv igen.</b>Du har ét forsøg tilbage.</div>`);
+      }
+      const svar = () => {
+        const xs = tolk(inp.value); if (!xs.length || xs.some(isNaN)) { inp.focus(); return; }
+        const ok = xs.some(x => Math.abs(x - s.tal) <= Math.max(s.tol, Math.abs(s.tal) * 1e-9));
+        const forsog = ((g && g.forsog) || 0) + 1;
+        gemt[i] = { svar: inp.value, ok, forsog }; gem(); bygQuiz();
+      };
+      tjek.addEventListener("click", svar);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") svar(); });
+      opgiv.addEventListener("click", () => { gemt[i] = { svar: inp.value, ok: false, forsog: 2, opgivet: true }; gem(); bygQuiz(); });
+    }
+    rod.append(el);
+  });
+  // score
+  const faerdige = QUIZ.map((s, i) => gemt[i] && (s.valg || gemt[i].ok || gemt[i].forsog >= 2));
+  const antal = faerdige.filter(Boolean).length, rigtige = QUIZ.filter((s, i) => gemt[i] && gemt[i].ok).length;
+  const forkerte = QUIZ.map((s, i) => faerdige[i] && !gemt[i].ok ? `<li>${s.q.replace(/<[^>]+>/g, "")}${SAMLET ? ` <em>(${s.emne})</em>` : ""}</li>` : "").join("");
+  document.getElementById("score").innerHTML = antal === 0 ? "" : `<div class="score">
+    <h2>${rigtige} af ${QUIZ.length} rigtige${antal < QUIZ.length ? ` · ${QUIZ.length - antal} mangler` : ""}</h2>
+    ${forkerte ? `<p>Tag med i repetitionen:</p><ul>${forkerte}</ul>` : antal === QUIZ.length ? "<p>Alle rigtige. Tag quizzen igen om et par uger.</p>" : ""}
+    <button class="knap stille" id="nulstil">Start forfra</button></div>`;
+  const n = document.getElementById("nulstil");
+  if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
+}
+if (QUIZ.length) bygQuiz();
+</script>
+<script src="modeller.js"></script>
+</body>
+</html>

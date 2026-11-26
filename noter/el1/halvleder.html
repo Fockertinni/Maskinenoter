@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Halvledere, dioder og solceller · Elektroteknik 1 · Maskinenoter</title>
+<link rel="stylesheet" href="../../hav.css"><script>document.documentElement.dataset.theme="dark"</script>
+<!-- Bygget af noter/kilde/byg.py. Ret i kildefilen i noter/kilde/, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #1d6fa5; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #6db8ec; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #6db8ec; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.tabs { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--hover); flex-shrink: 0; }
+.tabs button { font: 600 .9rem/1 var(--sans); color: var(--muted); background: none; border: 0; padding: .5rem .8rem; border-radius: 8px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.8rem, 5vw, 3.2rem) max(16px, env(safe-area-inset-left, 0px)) 5rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .8rem 0 0; font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.del { margin-top: 2.2rem; }
+.del > :first-child { margin-top: 0; }
+.del h2 { margin: 2.6rem 0 .6rem; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; }
+.del h3 { margin: 1.8rem 0 .4rem; font-size: 1.12rem; letter-spacing: -.01em; }
+.del p, .del li { max-width: 68ch; }
+.del ul, .del ol { padding-left: 1.3rem; }
+.del li { margin: .25rem 0; }
+.del li::marker { color: var(--muted); }
+.del code { font: .92em var(--mono); background: var(--hover); padding: .08em .35em; border-radius: 5px; }
+.del strong { font-weight: 650; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: .94rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .8rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .92rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; }
+details { margin: .9rem 0; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: .1rem 1.1rem; }
+details > summary { cursor: pointer; font-weight: 600; padding: .75rem 0; color: var(--accent); list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "▸ "; }
+details[open] > summary::before { content: "▾ "; }
+details[open] { padding-bottom: .8rem; }
+.genkald { margin-top: 2.6rem; padding: 1.1rem 1.3rem; border: 2px solid var(--accent); border-radius: 16px; background: var(--surface); }
+.genkald h2, .genkald h3 { margin-top: 0 !important; font-size: .82rem !important; letter-spacing: .08em !important; text-transform: uppercase; color: var(--accent); }
+.genkald details { box-shadow: none; border: 1px solid var(--line); }
+
+/* quiz */
+.q { margin: 1rem 0; padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); }
+.q .nr { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q .tekst { margin: .3rem 0 .8rem; font-weight: 600; }
+.q .valg { display: grid; gap: 8px; }
+.q .valg button { text-align: left; font: inherit; font-size: .98rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: .65rem .9rem; cursor: pointer; }
+.q .valg button:hover:not(:disabled) { border-color: var(--accent); }
+.q .valg button:disabled { cursor: default; }
+.q .valg button.ok { background: var(--ok-bg); border-color: var(--ok); }
+.q .valg button.bad { background: var(--bad-bg); border-color: var(--bad); }
+.q .tal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q input { font: 1rem var(--mono); width: 11rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.q .enhed { color: var(--muted); }
+.knap { font: 600 .95rem var(--sans); padding: .6rem 1rem; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.svar { margin-top: .8rem; padding: .7rem .9rem; border-radius: 10px; font-size: .96rem; }
+.svar.ok { background: var(--ok-bg); } .svar.bad { background: var(--bad-bg); } .svar.hint { background: var(--key); }
+.svar b { display: block; margin-bottom: .15rem; }
+.score { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border-radius: 16px; background: var(--soft); border-left: 3px solid var(--accent); }
+.score h2 { margin: 0 0 .3rem !important; font-size: 1.2rem !important; }
+.score ul { margin: .4rem 0; }
+.emnetag { font-size: .76rem; font-weight: 600; color: var(--accent); margin-left: .4rem; text-transform: none; letter-spacing: 0; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .bar .in { gap: 8px; }
+  .tabs button { padding: .48rem .6rem; font-size: .85rem; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .8rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+}
+@media print { .bar { display: none; } .del[hidden] { display: block !important; } details { box-shadow: none; border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m4-el1">‹ Elektroteknik 1</a>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-del="noter">Noter</button>
+    <button role="tab" data-del="formler">Formler</button>
+    <button role="tab" data-del="quiz">Quiz</button>
+  </div>
+</div></header>
+<main>
+  <p class="kicker">Elektroteknik 1</p>
+  <h1>Halvledere, dioder og solceller</h1>
+  <p class="intro">PN-overgangen, dioden, LED og fotodioden, friløbsdioden, solcellens ækvivalentmodel, solindstråling, AM, STC og NOCT, IV-kurven og virkningsgrad.</p>
+  <section class="del" id="d-noter" role="tabpanel"><blockquote>
+<p><strong>Kilder</strong>
+PP12 Halvlederen, dioder, lysdioder og solceller · Lab 5 (tyndfilm-solpanel) · Obligatorisk opgavesæt 3, opgave 8</p>
+</blockquote>
+<p>En halvleder er hverken en god leder eller en god isolator. Ved at tilsætte små mængder af andre stoffer (doping) kan man styre, hvordan den leder. Sætter man to forskellige lag sammen, får man en PN-overgang, og den er grundlaget for dioden, lysdioden og solcellen.</p>
+<h2>PN-overgangen</h2>
+<table>
+<thead>
+<tr>
+<th>Lag</th>
+<th>Dopes med</th>
+<th>Valenselektroner</th>
+<th>Frie ladningsbærere</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Silicium (rent)</td>
+<td>—</td>
+<td>4</td>
+<td>Næsten ingen</td>
+</tr>
+<tr>
+<td>P-type</td>
+<td>Bor (B)</td>
+<td>3</td>
+<td>Huller (mangler en elektron), positive</td>
+</tr>
+<tr>
+<td>N-type</td>
+<td>Fosfor (P)</td>
+<td>5</td>
+<td>Frie elektroner, negative</td>
+</tr>
+</tbody>
+</table>
+<p>Når P og N lægges sammen, vandrer frie elektroner fra N over og fylder huller i P. Tilbage står faste ioner: negative borioner på P-siden og positive fosforioner på N-siden. Det område kaldes <strong>rumladningszonen</strong> (spærrelaget). Ionerne laver et <strong>indbygget elektrisk felt</strong>, der stopper yderligere vandring.</p>
+<h2>Dioden</h2>
+<ul>
+<li><strong>Lederetning:</strong> plus på anoden (P), minus på katoden (N). Den ydre spænding presser spærrelaget sammen. Over ca. <strong>0,7 V</strong> (silicium) leder dioden, og strømmen stiger stejlt.</li>
+<li><strong>Spærreretning:</strong> plus på katoden. Spærrelaget bliver bredere, og kun en lille lækstrøm løber. Ved gennembrudsspændingen (på slides ca. −100 V) bryder den igennem.</li>
+<li>Symbolet: pilen viser lederetningen fra anode til katode. Stregen er katoden.</li>
+</ul>
+<h3>Friløbsdioden over en DC-relæspole</h3>
+<p>Det er en af eksamensopgaverne under temaet. Dioden sættes <strong>i spærreretning</strong> over spolen (katoden mod plus).</p>
+<ol>
+<li>Under drift spærrer den, så al strøm går gennem spolen.</li>
+<li>Når kontakten eller transistoren afbryder, vil spolen holde strømmen i gang (e = −L · di/dt). Spændingen over spolen vender.</li>
+<li>Nu er dioden i lederetning. Strømmen løber rundt gennem spole og diode og dør ud med τ = L/R.</li>
+<li>Spændingen over spolen begrænses til ca. 0,7 V, i stedet for flere hundrede volt. Det beskytter kontakt eller transistor mod gnister og overspænding.</li>
+</ol>
+<p>Ulempen er, at relæet slipper lidt langsommere. Se også ind- og udkoblingsmodellen under <a href="haandregler.html">håndregler og induktion</a>.</p>
+<h2>LED og fotodiode</h2>
+<pre class="formel">E_foton = h · c / λ        [J]  (÷ 1,602·10⁻¹⁹ for eV)
+λ = h · c / E_foton        [m]  (× 10⁹ for nm)
+h = 6,626·10⁻³⁴ Js     c = 3·10⁸ m/s</pre>
+
+<ul>
+<li><strong>LED:</strong> i lederetning falder elektroner fra lederbåndet ned i huller i valensbåndet (rekombination). Energien sendes ud som en foton. Båndgabet bestemmer farven: stort båndgab giver kort bølgelængde (blåt), lille giver langt (rødt).</li>
+<li><strong>Fotodiode:</strong> omvendt. En foton med nok energi slår en elektron fri i spærrelaget, og feltet trækker den væk. Det giver en strøm, der er proportional med lyset. Bruges i spærreretning som lyssensor.</li>
+</ul>
+<blockquote>
+<p><strong>Trykfejl på slides (PP12, slide 4)</strong>
+E_foton = h · c / λ står med enheden [eV]. Med h i Js giver formlen joule. Del med 1,602·10⁻¹⁹ for at få eV. Tilsvarende giver λ = h · c / E meter, ikke nm, medmindre du omregner.</p>
+</blockquote>
+<details>
+<summary>Forudsig først: hvor lang en bølgelængde kan lige netop frigøre en elektron i silicium (båndgab 1,12 eV)?</summary>
+<p>E = 1,12 · 1,602·10⁻¹⁹ = 1,79·10⁻¹⁹ J. λ = 6,626·10⁻³⁴ · 3·10⁸ / 1,79·10⁻¹⁹ = 1,11·10⁻⁶ m = 1.110 nm (infrarødt). Lys med længere bølgelængde går igennem uden at gøre noget.</p>
+</details>
+<h2>Solcellen</h2>
+<p>En solcelle er en stor fotodiode uden ydre spænding. Fotonerne laver elektron-hul-par, det indbyggede felt skiller dem, og cellen bliver en strømkilde (ca. 0,5–0,6 V pr. siliciumcelle).</p>
+<h3>Ækvivalentmodellen</h3>
+<pre class="formel">I_sc (strømkilde, ∝ lyset) ∥ D (dioden) ∥ R_p (lækmodstand)  →  R_s i serie  →  belastning</pre>
+
+<table>
+<thead>
+<tr>
+<th>Del</th>
+<th>Betyder</th>
+<th>Ideelt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I_sc</td>
+<td>Lysstrømmen, proportional med indstrålingen</td>
+<td>—</td>
+</tr>
+<tr>
+<td>D</td>
+<td>PN-overgangen. Begrænser spændingen til U_oc</td>
+<td>—</td>
+</tr>
+<tr>
+<td>R_p</td>
+<td>Lækstrøm i cellen</td>
+<td>Uendelig</td>
+</tr>
+<tr>
+<td>R_s</td>
+<td>Modstand i kontakter og materiale</td>
+<td>Nul</td>
+</tr>
+</tbody>
+</table>
+<h3>Indstråling, pyranometer, AM, STC og NOCT</h3>
+<pre class="formel">asr = U_målt [mV] / K [mV/(kW/m²)]     [kW/m²]
+AM = 1 / cos θ       (θ = solens vinkel fra lodret)</pre>
+
+<table>
+<thead>
+<tr>
+<th>Betingelse</th>
+<th>Indstråling</th>
+<th>Temperatur</th>
+<th>Andet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>STC</strong> (datablad)</td>
+<td>1.000 W/m²</td>
+<td><strong>Celle</strong> 25 °C</td>
+<td>AM 1,5</td>
+</tr>
+<tr>
+<td><strong>NOCT</strong> (mere realistisk)</td>
+<td>800 W/m²</td>
+<td><strong>Omgivelser</strong> 20 °C</td>
+<td>Vind 1 m/s</td>
+</tr>
+</tbody>
+</table>
+<p>AM 1 er solen lige over hovedet. AM 1,5 svarer til θ ≈ 48°, og lyset går gennem 1,5 gange så meget luft.</p>
+<h3>IV-kurven, R_optimal og P_m</h3>
+<ul>
+<li><strong>U_oc:</strong> tomgangsspænding (I = 0). <strong>I_sc:</strong> kortslutningsstrøm (U = 0).</li>
+<li>Panelet leverer mest effekt i knækket på IV-kurven: <strong>MPP</strong> (U_mpp, I_mpp).</li>
+<li><strong>Indstråling</strong> flytter strømmen (I_sc ∝ asr). <strong>Temperatur</strong> flytter spændingen: højere temperatur giver lavere U og lavere P (ca. −0,4 %/°C).</li>
+</ul>
+<pre class="formel">R_optimal ≈ U_oc / I_sc                         (grov, til valg af skydemodstand)
+R_optimal = U_mpp,nominel / I_mpp,nominel · 1000 / asr    (bedre)
+η = P_m / (asr · A)</pre>
+
+<blockquote>
+<p><strong>Bemærk om slides (PP12, slide 8)</strong>
+R = U_oc / I_sc er kun et groft bud. MPP ligger ved lavere spænding og strøm, så den rigtige R_optimal er typisk 25 % lavere. For panelet i opgavesæt 3 er U_oc/I_sc = 4,9 Ω, mens U_mpp/I_mpp = 27,4/7,3 = 3,75 Ω.</p>
+</blockquote>
+<div class="m" data-m="solcelle"></div>
+
+<h3>Serie, parallel og bypass-dioder</h3>
+<ul>
+<li>Paneler i <strong>serie</strong> lægger spændingerne sammen. Strømmen er den samme.</li>
+<li>Strenge i <strong>parallel</strong> lægger strømmene sammen.</li>
+<li>En skygget celle i en serieforbindelse begrænser hele strengens strøm. <strong>Bypass-dioden</strong> over panelet (eller en del af det) leder strømmen udenom, så strengen kun mister det skyggede panels spænding plus ca. 0,7 V.</li>
+<li><strong>Lab 5:</strong> dækkes tyndfilmpanelet til på den ene led, falder effekten næsten med det samme til nul (alle cellerne i serie skygges). På den anden led falder effekten i takt med, hvor meget der dækkes.</li>
+</ul>
+<h3>Gennemregnet eksempel (opgavesæt 3, opgave 8: Axitec AC-260)</h3>
+<p>Datablad: P_mpp = 260 W, η = 15,98 % ved STC, α_Pmpp = −0,42 %/°C. Målt: U_oc = 37,6 V, I_sc = 7,66 A, pyranometer 125,8 mV (K = 148 mV/(kW/m²)), MPP ved 27,4 V og 7,3 A. Anlæg: 4 strenge parallelt, 22 paneler i serie.</p>
+<details>
+<summary>Vis udregning</summary>
+<table>
+<thead>
+<tr>
+<th>Størrelse</th>
+<th>Udregning</th>
+<th>Resultat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Areal</td>
+<td>260 / (1.000 · 0,1598)</td>
+<td>1,627 m²</td>
+</tr>
+<tr>
+<td>asr</td>
+<td>125,8 / 148</td>
+<td>0,85 kW/m² = 850 W/m²</td>
+</tr>
+<tr>
+<td>P_m</td>
+<td>27,4 · 7,3</td>
+<td>200 W</td>
+</tr>
+<tr>
+<td>η aktuelt</td>
+<td>200 / (850 · 1,627)</td>
+<td>14,46 %</td>
+</tr>
+<tr>
+<td>Relativt fald</td>
+<td>14,46 / 15,98 − 1</td>
+<td>−9,5 %</td>
+</tr>
+<tr>
+<td>T_x</td>
+<td>25 + (−9,5) / (−0,42)</td>
+<td>ca. 47,6 °C</td>
+</tr>
+<tr>
+<td>Anlæg U</td>
+<td>22 · 27,4</td>
+<td>602,8 V</td>
+</tr>
+<tr>
+<td>Anlæg I</td>
+<td>4 · 7,3</td>
+<td>29,2 A</td>
+</tr>
+<tr>
+<td>Anlæg P</td>
+<td>602,8 · 29,2</td>
+<td>17,6 kW</td>
+</tr>
+<tr>
+<td>Ét panel skygget pr. streng</td>
+<td>21 · 27,4 − 0,7 = 574,7 V, · 29,2 A</td>
+<td>16,8 kW</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Usikker: afviger fra besvarelsen</strong>
+I afleveringen blev T_x = 28,6 °C. Der blev regnet med forskellen i procentpoint (14,46 − 15,98 = −1,52) delt med 0,42. Men α_Pmpp er et <strong>relativt</strong> fald pr. grad, så faldet skal regnes som 14,46/15,98 − 1 = −9,5 %. Det giver ca. 47,6 °C, hvilket passer bedre med et panel i sol. Det forudsætter, at virkningsgraden ellers er den samme ved 850 og 1.000 W/m².</p>
+</blockquote>
+</details>
+<div class="genkald">
+<h3>Test dig selv</h3>
+<ol>
+<li>Hvad dopes P-laget og N-laget med, og hvorfor?</li>
+<li>Hvilken vej skal en friløbsdiode vende over en relæspole?</li>
+<li>Hvad er forskellen på STC og NOCT?</li>
+<li>Hvad sker der med U_oc og I_sc, når panelet bliver varmt?</li>
+</ol>
+<details>
+<summary>Svar</summary>
+<ol>
+<li>P: bor (3 valenselektroner, giver huller). N: fosfor (5 valenselektroner, giver frie elektroner).</li>
+<li>I spærreretning, katoden mod plus. Den leder kun, når spolens spænding vender ved afbrydelse.</li>
+<li>STC: 1.000 W/m², celletemperatur 25 °C, AM 1,5. NOCT: 800 W/m², omgivelsestemperatur 20 °C, vind 1 m/s.</li>
+<li>U_oc falder tydeligt. I_sc stiger en smule. Effekten falder ca. 0,4 % pr. grad.</li>
+</ol>
+</details>
+</div></section>
+  <section class="del" id="d-formler" role="tabpanel"><h3>Foton</h3>
+<pre class="formel">E = h · c / λ      [J]     1 eV = 1,602·10⁻¹⁹ J
+h = 6,626·10⁻³⁴ Js     c = 3·10⁸ m/s</pre>
+
+<h3>Solindstråling</h3>
+<pre class="formel">asr = U_målt / K        [kW/m²]
+AM = 1 / cos θ
+STC: 1.000 W/m², celle 25 °C, AM 1,5
+NOCT: 800 W/m², omgivelser 20 °C, vind 1 m/s</pre>
+
+<h3>Solpanel</h3>
+<pre class="formel">R_optimal ≈ U_oc / I_sc     (groft)
+R_optimal = U_mpp / I_mpp · 1000 / asr
+P_m = U_mpp · I_mpp
+η = P_m / (asr · A)
+T_x = 25 + (η_akt/η_STC − 1) / α_Pmpp
+Serie: U = n · U_panel    Parallel: I = m · I_streng</pre>
+
+<h3>Diode</h3>
+<pre class="formel">Silicium: ca. 0,7 V i lederetning
+Friløbsdiode: i spærreretning over spolen, τ = L / R ved udkobling</pre></section>
+  <section class="del" id="d-quiz" role="tabpanel">
+    <p>Svar på spørgsmålene, før du kigger i noterne. Ved talopgaver har du to forsøg, og komma og punktum virker begge.</p>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </section>
+</main>
+<script>
+const QUIZ = [{"valg": ["Fosfor, som har 5 valenselektroner", "Bor, som har 3 valenselektroner", "Kobber", "Germanium, som har 4 valenselektroner"], "rigtig": 0, "q": "Hvad dopes N-laget i en siliciumsolcelle med?", "f": "Den femte elektron er fri og bliver en negativ ladningsbærer. Bor i P-laget giver huller.", "emne": "Halvledere, dioder og solceller"}, {"q": "Hvor stor spænding skal der ca. til, før en siliciumdiode leder?", "tal": 0.7, "tol": 0.1, "enhed": "V", "losning": "Knæspændingen for silicium er ca. 0,6–0,7 V.", "f": "Under den spænding er strømmen næsten nul.", "emne": "Halvledere, dioder og solceller"}, {"valg": ["For at relæet trækker hurtigere", "For at begrænse spændingsspidsen, når strømmen til spolen afbrydes", "For at beskytte mod overstrøm i drift", "For at gøre spolen til en kondensator"], "rigtig": 1, "q": "Hvorfor sætter man en friløbsdiode over et DC-relæ?", "f": "Spolen vil holde strømmen i gang. Dioden giver den en vej, så spændingen kun bliver ca. 0,7 V.", "emne": "Halvledere, dioder og solceller"}, {"q": "Et pyranometer med K = 148 mV/(kW/m²) viser 125,8 mV. Hvad er indstrålingen? (W/m²)", "tal": 850.0, "tol": 5.0, "enhed": "W/m²", "losning": "asr = 125,8 / 148 = 0,85 kW/m² = 850 W/m².", "f": "Spændingen er proportional med indstrålingen.", "emne": "Halvledere, dioder og solceller"}, {"valg": ["1.000 W/m², celletemperatur 25 °C, AM 1,5", "800 W/m², omgivelsestemperatur 20 °C, vind 1 m/s", "1.000 W/m², omgivelsestemperatur 20 °C, AM 1", "Den højeste effekt panelet kan give"], "rigtig": 0, "q": "Hvad betyder STC?", "f": "Det andet svar er NOCT. Bemærk at STC er celletemperatur, NOCT er omgivelsestemperatur.", "emne": "Halvledere, dioder og solceller"}, {"q": "Et panel giver 27,4 V og 7,3 A ved 850 W/m². Arealet er 1,627 m². Hvad er virkningsgraden? (%)", "tal": 14.46, "tol": 0.1, "enhed": "%", "losning": "η = 27,4 · 7,3 / (850 · 1,627) = 200 / 1.383 = 0,1446 = 14,46 %.", "f": "Effekt ud delt med lysets effekt ind på hele arealet.", "emne": "Halvledere, dioder og solceller"}, {"q": "22 paneler i serie med 27,4 V hver og 4 strenge i parallel med 7,3 A pr. streng. Hvad er anlæggets effekt? (kW)", "tal": 17.6, "tol": 0.1, "enhed": "kW", "losning": "U = 22 · 27,4 = 602,8 V. I = 4 · 7,3 = 29,2 A. P = 17,6 kW.", "f": "Serie lægger spændinger sammen, parallel lægger strømme sammen.", "emne": "Halvledere, dioder og solceller"}, {"q": "Solen står 60° fra lodret. Hvad er AM?", "tal": 2.0, "tol": 0.01, "enhed": "", "losning": "AM = 1 / cos 60° = 1 / 0,5 = 2.", "f": "Lyset går gennem dobbelt så meget luft som ved lodret sol.", "emne": "Halvledere, dioder og solceller"}, {"valg": ["Den stiger, fordi strømmen stiger", "Den falder, fordi spændingen falder", "Den er uændret", "Den falder, fordi strømmen falder"], "rigtig": 1, "q": "Hvad sker der med panelets effekt, når celletemperaturen stiger?", "f": "Typisk ca. −0,4 % pr. grad. I_sc stiger lidt, men U_oc falder meget mere.", "emne": "Halvledere, dioder og solceller"}, {"q": "En foton har bølgelængden 650 nm (rødt lys). Hvad er energien? (eV)", "tal": 1.91, "tol": 0.03, "enhed": "eV", "losning": "E = 6,626·10⁻³⁴ · 3·10⁸ / 650·10⁻⁹ = 3,06·10⁻¹⁹ J. ÷ 1,602·10⁻¹⁹ = 1,91 eV.", "f": "Husk at regne nm om til meter og J om til eV.", "emne": "Halvledere, dioder og solceller"}];
+const NOGLE = "mn-el1-halvleder", SAMLET = "" === "1";
+const q = new URLSearchParams(location.search);
+
+// tilbage-link til den side man kom fra
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+
+// faner
+const tabs = [...document.querySelectorAll("#tabs button")];
+function vis(del) {
+  if (!document.getElementById("d-" + del)) del = "noter";
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.del === del));
+  document.querySelectorAll(".del").forEach(s => s.hidden = s.id !== "d-" + del);
+}
+tabs.forEach(b => b.addEventListener("click", () => {
+  vis(b.dataset.del);
+  const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
+  window.scrollTo(0, 0);
+}));
+// tomme dele skjules i fanerne
+["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+if (!QUIZ.length) tabs.find(b => b.dataset.del === "quiz").hidden = true;
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else { const v = q.get("vis") || "noter", t = tabs.find(b => b.dataset.del === v && !b.hidden) || tabs.find(b => !b.hidden); vis(t ? t.dataset.del : "noter"); }
+
+// tabeller kan scrolles på mobil
+document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+
+// quiz
+let gemt = {};
+try { gemt = JSON.parse(localStorage.getItem(NOGLE) || "{}"); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+// Danske og engelske skrivemåder virker begge: "85.200", "85200", "1.150,5", "0,86", "0.86".
+// Et enkelt punktum efterfulgt af tre cifre kan både være tusindtal og decimal, så begge tolkninger prøves.
+const tolk = s => { s = String(s).replace(/[\s\u00a0]/g, "").replace("−", "-");
+  if (!/^-?[\d.,]+$/.test(s)) return [];
+  if (s.includes(",")) return [parseFloat(s.replace(/\./g, "").replace(",", "."))];
+  if ((s.match(/\./g) || []).length > 1) return [parseFloat(s.replace(/\./g, ""))];
+  const ud = [parseFloat(s)];
+  if (/^-?\d+\.\d{3}$/.test(s)) ud.push(parseFloat(s.replace(".", "")));
+  return ud; };
+const fmt = x => x.toLocaleString("da-DK", { maximumFractionDigits: 4 });
+
+function bygQuiz() {
+  const rod = document.getElementById("quiz"); rod.innerHTML = "";
+  QUIZ.forEach((s, i) => {
+    const el = document.createElement("div"); el.className = "q";
+    el.innerHTML = `<div class="nr">Spørgsmål ${i + 1} af ${QUIZ.length}${SAMLET ? `<span class="emnetag">${s.emne}</span>` : ""}</div><div class="tekst">${s.q}</div>`;
+    const g = gemt[i];
+    if (s.valg) {
+      const v = document.createElement("div"); v.className = "valg";
+      s.valg.forEach((t, j) => {
+        const b = document.createElement("button"); b.innerHTML = t;
+        b.addEventListener("click", () => { gemt[i] = { valgt: j, ok: j === s.rigtig }; gem(); bygQuiz(); });
+        v.append(b);
+      });
+      el.append(v);
+      if (g) {
+        [...v.children].forEach((b, j) => { b.disabled = true; if (j === s.rigtig) b.classList.add("ok"); else if (j === g.valgt) b.classList.add("bad"); });
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Ikke helt."}</b>${s.f || ""}</div>`);
+      }
+    } else {
+      const f = document.createElement("div"); f.className = "tal";
+      f.innerHTML = `<input inputmode="decimal" aria-label="Dit svar" placeholder="Dit svar"> <span class="enhed">${s.enhed || ""}</span> <button class="knap">Tjek</button> <button class="knap stille">Vis facit</button>`;
+      const [inp, , tjek, opgiv] = f.children;
+      el.append(f);
+      const faerdig = g && (g.ok || g.forsog >= 2 || g.opgivet);
+      if (g && g.svar != null) inp.value = g.svar;
+      if (faerdig) {
+        inp.disabled = tjek.disabled = opgiv.disabled = true;
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Facit: " + fmt(s.tal) + " " + (s.enhed || "")}</b>${s.losning ? s.losning + "<br>" : ""}${s.f || ""}</div>`);
+      } else if (g && g.forsog === 1) {
+        el.insertAdjacentHTML("beforeend", `<div class="svar hint"><b>Ikke helt. Tjek din opstilling og prøv igen.</b>Du har ét forsøg tilbage.</div>`);
+      }
+      const svar = () => {
+        const xs = tolk(inp.value); if (!xs.length || xs.some(isNaN)) { inp.focus(); return; }
+        const ok = xs.some(x => Math.abs(x - s.tal) <= Math.max(s.tol, Math.abs(s.tal) * 1e-9));
+        const forsog = ((g && g.forsog) || 0) + 1;
+        gemt[i] = { svar: inp.value, ok, forsog }; gem(); bygQuiz();
+      };
+      tjek.addEventListener("click", svar);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") svar(); });
+      opgiv.addEventListener("click", () => { gemt[i] = { svar: inp.value, ok: false, forsog: 2, opgivet: true }; gem(); bygQuiz(); });
+    }
+    rod.append(el);
+  });
+  // score
+  const faerdige = QUIZ.map((s, i) => gemt[i] && (s.valg || gemt[i].ok || gemt[i].forsog >= 2));
+  const antal = faerdige.filter(Boolean).length, rigtige = QUIZ.filter((s, i) => gemt[i] && gemt[i].ok).length;
+  const forkerte = QUIZ.map((s, i) => faerdige[i] && !gemt[i].ok ? `<li>${s.q.replace(/<[^>]+>/g, "")}${SAMLET ? ` <em>(${s.emne})</em>` : ""}</li>` : "").join("");
+  document.getElementById("score").innerHTML = antal === 0 ? "" : `<div class="score">
+    <h2>${rigtige} af ${QUIZ.length} rigtige${antal < QUIZ.length ? ` · ${QUIZ.length - antal} mangler` : ""}</h2>
+    ${forkerte ? `<p>Tag med i repetitionen:</p><ul>${forkerte}</ul>` : antal === QUIZ.length ? "<p>Alle rigtige. Tag quizzen igen om et par uger.</p>" : ""}
+    <button class="knap stille" id="nulstil">Start forfra</button></div>`;
+  const n = document.getElementById("nulstil");
+  if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
+}
+if (QUIZ.length) bygQuiz();
+</script>
+<script src="modeller.js"></script>
+</body>
+</html>

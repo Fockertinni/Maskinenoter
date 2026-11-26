@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Blandede AC-kredse · Elektroteknik 1 · Maskinenoter</title>
+<link rel="stylesheet" href="../../hav.css"><script>document.documentElement.dataset.theme="dark"</script>
+<!-- Bygget af noter/kilde/byg.py. Ret i kildefilen i noter/kilde/, ikke her. -->
+<style>
+:root {
+  --bg: #f5f5f7; --surface: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #d9d9de; --hover: #ececf0;
+  --accent: #1d6fa5; --soft: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ok: #1f8a48; --ok-bg: #e6f4ea; --bad: #c4362c; --bad-bg: #fbe9e7; --key: #fff6d6; --key-line: #e7c44a;
+  --bar: rgba(245,245,247,.82); --focus: #0a66d8;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #6db8ec; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --surface: #17191d; --fg: #f5f5f7; --muted: #a1a1a8; --line: #2c2e34; --hover: #1f2227;
+  --accent: #6db8ec; --ok: #5cc884; --ok-bg: #15301f; --bad: #ff7b6e; --bad-bg: #3a1a17; --key: #2e2913; --key-line: #8a7424;
+  --bar: rgba(12,13,16,.78); --focus: #5ea2ff; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.bar .in { max-width: 820px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)); min-height: 52px; display: flex; align-items: center; gap: 12px; }
+.bar .tilbage { text-decoration: none; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar .tilbage:hover { text-decoration: underline; }
+.tabs { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--hover); flex-shrink: 0; }
+.tabs button { font: 600 .9rem/1 var(--sans); color: var(--muted); background: none; border: 0; padding: .5rem .8rem; border-radius: 8px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+main { max-width: 820px; margin: 0 auto; padding: clamp(1.8rem, 5vw, 3.2rem) max(16px, env(safe-area-inset-left, 0px)) 5rem; }
+.kicker { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: .3rem 0 0; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.intro { margin: .8rem 0 0; font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+.del { margin-top: 2.2rem; }
+.del > :first-child { margin-top: 0; }
+.del h2 { margin: 2.6rem 0 .6rem; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; }
+.del h3 { margin: 1.8rem 0 .4rem; font-size: 1.12rem; letter-spacing: -.01em; }
+.del p, .del li { max-width: 68ch; }
+.del ul, .del ol { padding-left: 1.3rem; }
+.del li { margin: .25rem 0; }
+.del li::marker { color: var(--muted); }
+.del code { font: .92em var(--mono); background: var(--hover); padding: .08em .35em; border-radius: 5px; }
+.del strong { font-weight: 650; }
+.tbl { overflow-x: auto; margin: 1rem 0; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: .94rem; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .8rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 650; background: var(--soft); }
+tr:last-child td { border-bottom: 0; }
+pre.formel { font: .92rem/1.6 var(--mono); background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: .9rem 1.1rem; margin: 1rem 0; overflow-x: auto; white-space: pre; }
+blockquote { margin: 1rem 0; padding: .8rem 1.1rem; background: var(--key); border-left: 3px solid var(--key-line); border-radius: 0 12px 12px 0; }
+blockquote p { margin: .3rem 0; }
+blockquote strong:first-child { display: block; font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; }
+details { margin: .9rem 0; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: .1rem 1.1rem; }
+details > summary { cursor: pointer; font-weight: 600; padding: .75rem 0; color: var(--accent); list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "▸ "; }
+details[open] > summary::before { content: "▾ "; }
+details[open] { padding-bottom: .8rem; }
+.genkald { margin-top: 2.6rem; padding: 1.1rem 1.3rem; border: 2px solid var(--accent); border-radius: 16px; background: var(--surface); }
+.genkald h2, .genkald h3 { margin-top: 0 !important; font-size: .82rem !important; letter-spacing: .08em !important; text-transform: uppercase; color: var(--accent); }
+.genkald details { box-shadow: none; border: 1px solid var(--line); }
+
+/* quiz */
+.q { margin: 1rem 0; padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); }
+.q .nr { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q .tekst { margin: .3rem 0 .8rem; font-weight: 600; }
+.q .valg { display: grid; gap: 8px; }
+.q .valg button { text-align: left; font: inherit; font-size: .98rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: .65rem .9rem; cursor: pointer; }
+.q .valg button:hover:not(:disabled) { border-color: var(--accent); }
+.q .valg button:disabled { cursor: default; }
+.q .valg button.ok { background: var(--ok-bg); border-color: var(--ok); }
+.q .valg button.bad { background: var(--bad-bg); border-color: var(--bad); }
+.q .tal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q input { font: 1rem var(--mono); width: 11rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.q .enhed { color: var(--muted); }
+.knap { font: 600 .95rem var(--sans); padding: .6rem 1rem; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.knap.stille { background: var(--hover); color: var(--fg); }
+.svar { margin-top: .8rem; padding: .7rem .9rem; border-radius: 10px; font-size: .96rem; }
+.svar.ok { background: var(--ok-bg); } .svar.bad { background: var(--bad-bg); } .svar.hint { background: var(--key); }
+.svar b { display: block; margin-bottom: .15rem; }
+.score { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border-radius: 16px; background: var(--soft); border-left: 3px solid var(--accent); }
+.score h2 { margin: 0 0 .3rem !important; font-size: 1.2rem !important; }
+.score ul { margin: .4rem 0; }
+.emnetag { font-size: .76rem; font-weight: 600; color: var(--accent); margin-left: .4rem; text-transform: none; letter-spacing: 0; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .bar .in { gap: 8px; }
+  .tabs button { padding: .48rem .6rem; font-size: .85rem; }
+  th, td { padding: .5rem .6rem; }
+  pre.formel { font-size: .8rem; padding: .8rem .9rem; }
+  h1 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+}
+@media print { .bar { display: none; } .del[hidden] { display: block !important; } details { box-shadow: none; border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="tilbage" id="tilbage" href="../../index.html#m4-el1">‹ Elektroteknik 1</a>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-del="noter">Noter</button>
+    <button role="tab" data-del="formler">Formler</button>
+    <button role="tab" data-del="quiz">Quiz</button>
+  </div>
+</div></header>
+<main>
+  <p class="kicker">Elektroteknik 1</p>
+  <h1>Blandede AC-kredse</h1>
+  <p class="intro">Parallelforbundne seriekredse og serieforbundne parallelkredse med R, X_L og X_C. Beregning trin for trin og strøm-spændingsvektordiagrammer med Thales-cirklen.</p>
+  <section class="del" id="d-noter" role="tabpanel"><blockquote>
+<p><strong>Kilder</strong>
+PP5 Parallelforbundne seriekredse / serieforbindelse med parallelkredse · Obligatorisk opgavesæt 2, opgave 2 og 7</p>
+</blockquote>
+<p>En blandet kreds løses ved at reducere den skridt for skridt, præcis som i DC: hver seriegren bliver én impedans, parallelle grene regnes sammen, og til sidst går du baglæns og finder strømme og spændinger i hver del. Forskellen er, at alt er vektorer.</p>
+<h2>Byggestenene</h2>
+<table>
+<thead>
+<tr>
+<th>Komponent</th>
+<th>Formel</th>
+<th>Kompleks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Resistans</td>
+<td>R = ρ · l / S</td>
+<td>R∠0°</td>
+</tr>
+<tr>
+<td>Spole</td>
+<td>X_L = ωL</td>
+<td>jX_L = X_L∠90°</td>
+</tr>
+<tr>
+<td>Kondensator</td>
+<td>X_C = 1/(ωC)</td>
+<td>−jX_C = X_C∠−90°</td>
+</tr>
+</tbody>
+</table>
+<h2>Parallelforbundne seriekredse</h2>
+<p>To seriegrene i parallel: Z1 = R1 + jX_L og Z2 = R2 − jX_C.</p>
+<pre class="formel">Z_kreds = (Z1⁻¹ + Z2⁻¹)⁻¹
+I1 = U / Z1        I2 = U / Z2        I = I1 + I2   (vektorielt)
+U_cd = U_ca − U_ad   (spændingen mellem midtpunkterne i de to grene)</pre>
+
+<p><strong>Vektordiagrammet:</strong> U er fælles og tegnes som reference. I hver gren står U_R og U_X vinkelret på hinanden og lægges sammen til U. Derfor ligger midtpunktet i hver gren (c og d) på en <strong>Thales-cirkel</strong> med U som diameter. Spændingen U_cd er korden mellem de to punkter.</p>
+<details>
+<summary>Forudsig først: hvad sker der med U_cd, når grenene er ens (samme R og samme X med samme fortegn)?</summary>
+<p>Så ligger c og d i samme punkt, og U_cd = 0. Broen er i balance. Med en spole i den ene gren og en kondensator i den anden ligger punkterne på hver sin side af U, og U_cd bliver stor. Prøv i modellen.</p>
+</details>
+<div class="m" data-m="blandet"></div>
+
+<h3>Gennemregnet eksempel (opgavesæt 2, opgave 7)</h3>
+<p>R1 = 100 Ω i serie med L = 0,25 H i den ene gren, R2 = 80 Ω i serie med C = 20 µF i den anden. U = 100 V, 50 Hz. Klemme c sidder mellem L og R1, klemme d mellem C og R2.</p>
+<details>
+<summary>Vis udregning</summary>
+<table>
+<thead>
+<tr>
+<th>Størrelse</th>
+<th>Udregning</th>
+<th>Resultat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X_L og X_C</td>
+<td>2π·50·0,25 og 1/(2π·50·20·10⁻⁶)</td>
+<td>78,5 Ω og 159,2 Ω</td>
+</tr>
+<tr>
+<td>Z1</td>
+<td>100 + j78,5</td>
+<td>127,2 Ω ∠ 38,2°</td>
+</tr>
+<tr>
+<td>Z2</td>
+<td>80 − j159,2</td>
+<td>178,1 Ω ∠ −63,3°</td>
+</tr>
+<tr>
+<td>I1</td>
+<td>100 / 127,2∠38,2°</td>
+<td>0,786 A ∠ −38,2°</td>
+</tr>
+<tr>
+<td>I2</td>
+<td>100 / 178,1∠−63,3°</td>
+<td>0,561 A ∠ 63,3°</td>
+</tr>
+<tr>
+<td>I = I1 + I2</td>
+<td>(0,618 − j0,486) + (0,252 + j0,502)</td>
+<td>0,871 A ∠ 1,0°</td>
+</tr>
+<tr>
+<td>Z_kreds</td>
+<td>100 / 0,871∠1,0°</td>
+<td>114,8 Ω ∠ −1,0°</td>
+</tr>
+<tr>
+<td>cos φ</td>
+<td>cos(−1,0°)</td>
+<td>1,00 (en anelse kapacitiv)</td>
+</tr>
+<tr>
+<td>U_cd = I1·R1 − I2·R2</td>
+<td>78,6∠−38,2° − 44,9∠63,3°</td>
+<td>98,0 V</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Usikkert i besvarelsen</strong>
+Den indsendte besvarelse skrev Z2 = 80 + 159,15 · i. Kondensatorens reaktans skal have minus. Med det rigtige fortegn er de to grene næsten i balance, så den samlede strøm ligger i fase med spændingen (cos φ ≈ 1,00), og I = 0,87 A, ikke 1,54 A.</p>
+</blockquote>
+</details>
+<h2>Serieforbundne parallelkredse</h2>
+<p>En parallelkreds (to grene mellem b og e) i serie med andre komponenter. Regn parallelkredsen om til én impedans Z_eb, og læg resten til i serie.</p>
+<pre class="formel">Z_eb = ((R2 + jX_L2)⁻¹ + (R3 − jX_C)⁻¹)⁻¹
+Z_fa = R1 + Z_eb + jX_L1
+I1 = U / Z_fa      U_eb = I1 · Z_eb      I2 = U_eb / (R2 + jX_L2)      I3 = U_eb / (R3 − jX_C)</pre>
+
+<p><strong>Vektordiagrammet:</strong> I serieleddene er I1 fælles. Start med I1 som reference, tegn U_R1, så U_eb, så U_L1. Parallelkredsens to grene tegnes ud fra U_eb med sin egen Thales-cirkel.</p>
+<blockquote>
+<p><strong>Trykfejl på slides (PP5, slide 4)</strong>
+Formlen skriver Z_fa = R1 + Z_eb + X_L1. Spolen skal med som jX_L1 (90° drejet). Lægges X_L1 til som et reelt tal, bliver både størrelse og vinkel forkert.</p>
+</blockquote>
+<h3>Gennemregnet eksempel (opgavesæt 2, opgave 2)</h3>
+<p>R1 = 145 Ω i serie med en parallelkreds af C = 75 µF og (R2 = 50 Ω + L = 0,11 H). Spændingen over kondensatoren er 70 V, 50 Hz.</p>
+<details>
+<summary>Vis udregning</summary>
+<table>
+<thead>
+<tr>
+<th>Størrelse</th>
+<th>Udregning</th>
+<th>Resultat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X_L og X_C</td>
+<td>2π·50·0,11 og 1/(2π·50·75·10⁻⁶)</td>
+<td>34,6 Ω og 42,4 Ω</td>
+</tr>
+<tr>
+<td>I_C</td>
+<td>70 / 42,4∠−90°</td>
+<td>1,65 A ∠ 90°</td>
+</tr>
+<tr>
+<td>Z for R2 + L</td>
+<td>50 + j34,6</td>
+<td>60,8 Ω ∠ 34,7°</td>
+</tr>
+<tr>
+<td>I_R2</td>
+<td>70 / 60,8∠34,7°</td>
+<td>1,15 A ∠ −34,7°</td>
+</tr>
+<tr>
+<td>I_R1 = I_C + I_R2</td>
+<td></td>
+<td>1,37 A ∠ 46,4°</td>
+</tr>
+<tr>
+<td>U_R1</td>
+<td>145 · 1,37∠46,4°</td>
+<td>199 V ∠ 46,4°</td>
+</tr>
+<tr>
+<td>U = U_R1 + U_C</td>
+<td></td>
+<td>252,6 V ∠ 34,8°</td>
+</tr>
+<tr>
+<td>φ = vinkel(U) − vinkel(I)</td>
+<td>34,8° − 46,4°</td>
+<td>−11,6° (kapacitiv)</td>
+</tr>
+<tr>
+<td>cos φ</td>
+<td></td>
+<td>0,98</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Usikkert i besvarelsen</strong>
+Den indsendte besvarelse brugte vinklen på U (34,8°) som φ og fik cos φ = 0,82. φ er vinklen mellem U og I, og strømmen ligger på 46,4°, så φ = −11,6° og cos φ = 0,98.</p>
+</blockquote>
+</details>
+<h2>Fremgangsmåde, der altid virker</h2>
+<ol>
+<li>Regn alle reaktanser ud.</li>
+<li>Skriv hver gren som et komplekst tal (R + jX_L eller R − jX_C).</li>
+<li>Reducer: serie lægges sammen, parallel med (Z1⁻¹ + Z2⁻¹)⁻¹.</li>
+<li>Find den samlede strøm I = U / Z.</li>
+<li>Gå baglæns: spænding over parallelkredsen, så strømmen i hver gren.</li>
+<li>Kontrollér med Kirchhoff: grenstrømmene skal summere vektorielt til I, og spændingerne rundt skal gå op.</li>
+<li>φ er altid vinklen fra I til U. cos φ = R_kreds / |Z|.</li>
+</ol>
+<div class="genkald">
+<h3>Test dig selv</h3>
+<ol>
+<li>Hvorfor ligger c og d på en cirkel i vektordiagrammet?</li>
+<li>Hvad er reference i en parallelforbundet seriekreds, og hvad i en serieforbundet parallelkreds?</li>
+<li>Hvordan finder du φ, når du kender U∠α og I∠β?</li>
+<li>Hvornår er U_cd = 0?</li>
+</ol>
+<details>
+<summary>Svar</summary>
+<ol>
+<li>U_R og U_X står vinkelret i hver gren. Toppunktet af en retvinklet trekant med U som hypotenuse ligger på Thales-cirklen.</li>
+<li>Parallelforbundne seriekredse: U (fælles for grenene). Serieforbundne parallelkredse: I1 (fælles for seriedelen).</li>
+<li>φ = α − β.</li>
+<li>Når de to grene deler spændingen ens, fx R1/X1 = R2/X2 med samme fortegn på X (en balanceret bro).</li>
+</ol>
+</details>
+</div></section>
+  <section class="del" id="d-formler" role="tabpanel"><h3>Grene og reduktion</h3>
+<pre class="formel">Z_RL = R + jX_L        Z_RC = R − jX_C
+Serie:     Z = Z1 + Z2
+Parallel:  Z = (Z1⁻¹ + Z2⁻¹)⁻¹</pre>
+
+<h3>Strømme og spændinger</h3>
+<pre class="formel">I = U / Z                  I = I1 + I2 (vektorielt)
+U_cd = U_ca − U_ad
+φ = vinkel(U) − vinkel(I)     cos φ = Re(Z) / |Z|</pre>
+
+<h3>Serieforbundet parallelkreds</h3>
+<pre class="formel">Z_eb = ((R2 + jX_L2)⁻¹ + (R3 − jX_C)⁻¹)⁻¹
+Z_fa = R1 + Z_eb + jX_L1
+U_eb = I1 · Z_eb</pre></section>
+  <section class="del" id="d-quiz" role="tabpanel">
+    <p>Svar på spørgsmålene, før du kigger i noterne. Ved talopgaver har du to forsøg, og komma og punktum virker begge.</p>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </section>
+</main>
+<script>
+const QUIZ = [{"q": "Z1 = 100 + j78,5 Ω. Hvad er |Z1|? (Ω)", "tal": 127.1, "tol": 0.3, "enhed": "Ω", "losning": "|Z1| = √(100² + 78,5²) = √(10000 + 6162) = √16162 = 127,1 Ω.", "f": "Pythagoras på real- og imaginærdel.", "emne": "Blandede AC-kredse"}, {"q": "Strømmen ligger på 46,4° og spændingen på 34,8°. Hvad er φ? (°)", "tal": -11.6, "tol": 0.2, "enhed": "°", "losning": "φ = vinkel(U) − vinkel(I) = 34,8 − 46,4 = −11,6°.", "f": "Negativ φ betyder kapacitiv: strømmen ligger før spændingen.", "emne": "Blandede AC-kredse"}, {"valg": ["Strømmen i den første gren", "Den fælles spænding U", "Den samlede strøm", "Spændingen over den første modstand"], "rigtig": 1, "q": "Hvad er reference i vektordiagrammet for to seriegrene, der sidder i parallel?", "f": "Grenene har samme spænding, så U er reference.", "emne": "Blandede AC-kredse"}, {"valg": ["I hver gren står U_R og U_X vinkelret på hinanden og summerer til U", "Fordi strømmene er lige store", "Fordi frekvensen er 50 Hz", "Det gør de kun ved resonans"], "rigtig": 0, "q": "Hvorfor ligger punkterne c og d på en Thales-cirkel?", "f": "En retvinklet trekant med U som hypotenuse har toppunktet på cirklen med U som diameter.", "emne": "Blandede AC-kredse"}, {"q": "Med R1 = 100 Ω, X_L = 78,5 Ω i den ene gren og R2 = 80 Ω, X_C = 159 Ω i den anden på 100 V: hvad er den samlede strøm? (A)", "tal": 0.871, "tol": 0.01, "enhed": "A", "losning": "I1 = 0,786∠−38,2° = 0,618 − j0,486. I2 = 0,561∠63,3° = 0,252 + j0,502. I = 0,870 + j0,016, |I| = 0,871 A.", "f": "Den induktive og den kapacitive strøm ophæver næsten hinanden, så I er næsten i fase med U.", "emne": "Blandede AC-kredse"}, {"valg": ["Kun vinklen bliver forkert", "Grenen opfører sig som en spole, så både strømme, Z og cos φ bliver forkerte", "Ingen, størrelsen er den samme", "Kun U_cd bliver forkert"], "rigtig": 1, "q": "Hvilken fejl giver det, hvis du skriver X_C med plus i en gren?", "f": "Fortegnet bestemmer, om strømmen ligger før eller efter. Hele vektorsummen ændrer sig.", "emne": "Blandede AC-kredse"}, {"q": "En parallelkreds har Z_eb = 30 + j10 Ω og sidder i serie med R1 = 20 Ω og X_L1 = 15 Ω. Hvad er |Z_fa|? (Ω)", "tal": 55.9, "tol": 0.3, "enhed": "Ω", "losning": "Z_fa = 20 + (30 + j10) + j15 = 50 + j25. |Z_fa| = √(50² + 25²) = √3125 = 55,9 Ω.", "f": "Serieled lægges sammen komplekst: realdele for sig, imaginærdele for sig.", "emne": "Blandede AC-kredse"}, {"valg": ["Med Kirchhoffs 1. lov: summen af grenstrømmene skal give den samlede strøm vektorielt", "Ved at lægge størrelserne sammen", "Ved at gange med cos φ", "Det kan man ikke"], "rigtig": 0, "q": "Hvordan kontrollerer du dine grenstrømme?", "f": "I = I1 + I2 som vektorer, ikke som tal.", "emne": "Blandede AC-kredse"}];
+const NOGLE = "mn-el1-blandet", SAMLET = "" === "1";
+const q = new URLSearchParams(location.search);
+
+// tilbage-link til den side man kom fra
+const fra = q.get("fra");
+if (fra && /^[a-z0-9-]+$/.test(fra)) {
+  const a = document.getElementById("tilbage");
+  a.href = "../../index.html#" + fra;
+  a.textContent = "‹ " + (q.get("navn") || "Tilbage");
+}
+
+// faner
+const tabs = [...document.querySelectorAll("#tabs button")];
+function vis(del) {
+  if (!document.getElementById("d-" + del)) del = "noter";
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.del === del));
+  document.querySelectorAll(".del").forEach(s => s.hidden = s.id !== "d-" + del);
+}
+tabs.forEach(b => b.addEventListener("click", () => {
+  vis(b.dataset.del);
+  const u = new URL(location.href); u.searchParams.set("vis", b.dataset.del); history.replaceState(null, "", u);
+  window.scrollTo(0, 0);
+}));
+// tomme dele skjules i fanerne
+["noter", "formler"].forEach(d => { if (!document.getElementById("d-" + d).textContent.trim()) tabs.find(b => b.dataset.del === d).hidden = true; });
+if (!QUIZ.length) tabs.find(b => b.dataset.del === "quiz").hidden = true;
+if (SAMLET) { document.getElementById("tabs").hidden = true; vis("quiz"); }
+else { const v = q.get("vis") || "noter", t = tabs.find(b => b.dataset.del === v && !b.hidden) || tabs.find(b => !b.hidden); vis(t ? t.dataset.del : "noter"); }
+
+// tabeller kan scrolles på mobil
+document.querySelectorAll(".del table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.before(w); w.append(t); });
+
+// quiz
+let gemt = {};
+try { gemt = JSON.parse(localStorage.getItem(NOGLE) || "{}"); } catch (e) {}
+const gem = () => { try { localStorage.setItem(NOGLE, JSON.stringify(gemt)); } catch (e) {} };
+// Danske og engelske skrivemåder virker begge: "85.200", "85200", "1.150,5", "0,86", "0.86".
+// Et enkelt punktum efterfulgt af tre cifre kan både være tusindtal og decimal, så begge tolkninger prøves.
+const tolk = s => { s = String(s).replace(/[\s\u00a0]/g, "").replace("−", "-");
+  if (!/^-?[\d.,]+$/.test(s)) return [];
+  if (s.includes(",")) return [parseFloat(s.replace(/\./g, "").replace(",", "."))];
+  if ((s.match(/\./g) || []).length > 1) return [parseFloat(s.replace(/\./g, ""))];
+  const ud = [parseFloat(s)];
+  if (/^-?\d+\.\d{3}$/.test(s)) ud.push(parseFloat(s.replace(".", "")));
+  return ud; };
+const fmt = x => x.toLocaleString("da-DK", { maximumFractionDigits: 4 });
+
+function bygQuiz() {
+  const rod = document.getElementById("quiz"); rod.innerHTML = "";
+  QUIZ.forEach((s, i) => {
+    const el = document.createElement("div"); el.className = "q";
+    el.innerHTML = `<div class="nr">Spørgsmål ${i + 1} af ${QUIZ.length}${SAMLET ? `<span class="emnetag">${s.emne}</span>` : ""}</div><div class="tekst">${s.q}</div>`;
+    const g = gemt[i];
+    if (s.valg) {
+      const v = document.createElement("div"); v.className = "valg";
+      s.valg.forEach((t, j) => {
+        const b = document.createElement("button"); b.innerHTML = t;
+        b.addEventListener("click", () => { gemt[i] = { valgt: j, ok: j === s.rigtig }; gem(); bygQuiz(); });
+        v.append(b);
+      });
+      el.append(v);
+      if (g) {
+        [...v.children].forEach((b, j) => { b.disabled = true; if (j === s.rigtig) b.classList.add("ok"); else if (j === g.valgt) b.classList.add("bad"); });
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Ikke helt."}</b>${s.f || ""}</div>`);
+      }
+    } else {
+      const f = document.createElement("div"); f.className = "tal";
+      f.innerHTML = `<input inputmode="decimal" aria-label="Dit svar" placeholder="Dit svar"> <span class="enhed">${s.enhed || ""}</span> <button class="knap">Tjek</button> <button class="knap stille">Vis facit</button>`;
+      const [inp, , tjek, opgiv] = f.children;
+      el.append(f);
+      const faerdig = g && (g.ok || g.forsog >= 2 || g.opgivet);
+      if (g && g.svar != null) inp.value = g.svar;
+      if (faerdig) {
+        inp.disabled = tjek.disabled = opgiv.disabled = true;
+        el.insertAdjacentHTML("beforeend", `<div class="svar ${g.ok ? "ok" : "bad"}"><b>${g.ok ? "Rigtigt." : "Facit: " + fmt(s.tal) + " " + (s.enhed || "")}</b>${s.losning ? s.losning + "<br>" : ""}${s.f || ""}</div>`);
+      } else if (g && g.forsog === 1) {
+        el.insertAdjacentHTML("beforeend", `<div class="svar hint"><b>Ikke helt. Tjek din opstilling og prøv igen.</b>Du har ét forsøg tilbage.</div>`);
+      }
+      const svar = () => {
+        const xs = tolk(inp.value); if (!xs.length || xs.some(isNaN)) { inp.focus(); return; }
+        const ok = xs.some(x => Math.abs(x - s.tal) <= Math.max(s.tol, Math.abs(s.tal) * 1e-9));
+        const forsog = ((g && g.forsog) || 0) + 1;
+        gemt[i] = { svar: inp.value, ok, forsog }; gem(); bygQuiz();
+      };
+      tjek.addEventListener("click", svar);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") svar(); });
+      opgiv.addEventListener("click", () => { gemt[i] = { svar: inp.value, ok: false, forsog: 2, opgivet: true }; gem(); bygQuiz(); });
+    }
+    rod.append(el);
+  });
+  // score
+  const faerdige = QUIZ.map((s, i) => gemt[i] && (s.valg || gemt[i].ok || gemt[i].forsog >= 2));
+  const antal = faerdige.filter(Boolean).length, rigtige = QUIZ.filter((s, i) => gemt[i] && gemt[i].ok).length;
+  const forkerte = QUIZ.map((s, i) => faerdige[i] && !gemt[i].ok ? `<li>${s.q.replace(/<[^>]+>/g, "")}${SAMLET ? ` <em>(${s.emne})</em>` : ""}</li>` : "").join("");
+  document.getElementById("score").innerHTML = antal === 0 ? "" : `<div class="score">
+    <h2>${rigtige} af ${QUIZ.length} rigtige${antal < QUIZ.length ? ` · ${QUIZ.length - antal} mangler` : ""}</h2>
+    ${forkerte ? `<p>Tag med i repetitionen:</p><ul>${forkerte}</ul>` : antal === QUIZ.length ? "<p>Alle rigtige. Tag quizzen igen om et par uger.</p>" : ""}
+    <button class="knap stille" id="nulstil">Start forfra</button></div>`;
+  const n = document.getElementById("nulstil");
+  if (n) n.addEventListener("click", () => { gemt = {}; gem(); bygQuiz(); window.scrollTo(0, document.getElementById("d-quiz").offsetTop - 70); });
+}
+if (QUIZ.length) bygQuiz();
+</script>
+<script src="modeller.js"></script>
+</body>
+</html>

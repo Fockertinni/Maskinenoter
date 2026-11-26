@@ -36,6 +36,7 @@ FAG = {
     "drift": {"navn": "Driftsøkonomi", "farve": "#6b57c9", "farve_m": "#9a88f0", "fra": "m5-drift"},
     "forb": {"navn": "Forbrændingsmotoranlæg", "farve": "#c8501d", "farve_m": "#f08a5a", "fra": "m5-forb"},
     # js: et script ved siden af siderne, der tegner modeller skrevet som <div class="m" data-m="..."></div>
+    "el1": {"navn": "Elektroteknik 1", "farve": "#1d6fa5", "farve_m": "#6db8ec", "fra": "m4-el1", "js": "modeller.js"},
     "el2": {"navn": "Elektroteknik 2", "farve": "#8a5f00", "farve_m": "#f2bd3d", "fra": "m5-el2", "js": "modeller.js"},
 }
 

@@ -194,6 +194,9 @@ const emne = (fag, id, formler = true) => ({
   quiz:    `noter/${fag}/${id}.html?vis=quiz`,
 });
 
+// Genvej til EL1-emner: eksamenssiden, noter (med modeller), formler og quiz fra noter/el1/<id>.html
+const el1 = id => ({ eksamen: `noter/el1/${id}-eksamen.html`, ...emne("el1", id) });
+
 const SEMESTRE = [
   { n: 1, fag: [
     { id: "vaerksted", navn: "Værkstedsskole", ikon: "vaerksted", emner: [] } ] },
@@ -203,7 +206,54 @@ const SEMESTRE = [
   { n: 3, fag: [
     { id: "praktik", navn: "Virksomhedspraktik", ikon: "praktik", emner: [] } ] },
   { n: 4, fag: [
-    { id: "el1", navn: "Elektroteknik 1", ikon: "el", emner: [] },
+    { id: "el1", navn: "Elektroteknik 1", ikon: "el", quiz: "noter/el1/quiz.html",
+      emner: [
+        { id: "dc", navn: "DC-kredse", ikon: "batteri",
+          intro: "Serie og parallel, Kirchhoffs love, spændings- og strømdeling, superposition, Thevenin, potentialdiagram og batterier.",
+          dele: el1("dc") },
+        { id: "ac", navn: "AC-kredse", ikon: "sinus",
+          intro: "Reaktans og impedans, R, L og C i serie og parallel, ækvivalentskema, resonans, kompleks regning og vektordiagrammer.",
+          dele: el1("ac") },
+        { id: "kondensator", navn: "Kondensatoren", ikon: "kondensator",
+          intro: "Elektrisk felt og kapacitans, dielektrikum, serie og parallel, op- og afladning, kabler og fasekompensering.",
+          dele: el1("kondensator") },
+        { id: "magnetisme", navn: "Magnetisme", ikon: "magnet",
+          intro: "Flux og fluxtæthed, magnetiske kredse med og uden luftgab, reluktans, jerntab og AC-spolen med jernkerne.",
+          dele: el1("magnetisme") },
+        { id: "blandet", navn: "Blandede forbindelser", ikon: "sinus",
+          intro: "Parallelforbundne seriekredse og serieforbindelse med parallelkredse, kompleks regning og strøm-spændingsdiagrammer.",
+          dele: el1("blandet") },
+        { id: "symmetrisk", navn: "3-faset symmetrisk belastning", ikon: "trefase",
+          intro: "Stjerne og trekant, fase- og netstrømme, effekt, 1-, 2- og 3-wattmetermetoden og fasekompensering.",
+          dele: el1("symmetrisk") },
+        { id: "stjerne", navn: "Y-Δ og stjerne uden nul", ikon: "trefase",
+          intro: "Stjerne-trekant-transformation, usymmetrisk Y-belastning uden nul og stjernepunktets forskydning.",
+          dele: el1("stjerne") },
+        { id: "usymmetrisk", navn: "Usymmetrisk belastning med nul", ikon: "trefase",
+          intro: "1-, 2- og 3-fasede laster på samme net, Kirchhoffs strømlov med vektorer og nulstrømmen.",
+          dele: el1("usymmetrisk") },
+        { id: "haandregler", navn: "Håndregler og induktion", ikon: "magnet",
+          intro: "Spole-, proptrækker-, motor- og generatorregel, Lenz' lov, induktion, selvinduktion og ind- og udkobling af spoler.",
+          dele: el1("haandregler") },
+        { id: "dcmotor", navn: "DC-motoren", ikon: "motor",
+          intro: "Opbygning, kommutering og ankerreaktion, serie, shunt og permanent magnet, spændingsligningen, tab og virkningsgrad.",
+          dele: el1("dcmotor") },
+        { id: "leder", navn: "Ledere, effekt og energi", ikon: "leder",
+          intro: "Lederens resistans og temperatur, strømtæthed og strømvarmetab, moment, effekt, energi, virkningsgrad og akkumulatoren.",
+          dele: el1("leder") },
+        { id: "halvleder", navn: "Halvledere, dioder og solceller", ikon: "solcelle",
+          intro: "PN-overgangen, diode, LED og fotodiode, friløbsdioden, solcellens model, STC og NOCT, IV-kurven og virkningsgrad.",
+          dele: el1("halvleder") },
+        { id: "vekselspaending", navn: "Vekselspænding og effekt (enfaset)", ikon: "sinus",
+          intro: "Fremstilling af vekselspænding, middel-, effektiv- og spidsværdi, formfaktor, S, P og Q og watt- og wattløs strøm.",
+          dele: el1("vekselspaending") },
+        { id: "formelsamling", navn: "Samlet formelsamling", ikon: "formler",
+          intro: "Alle formler fra Elektroteknik 1 samlet på ét sted og ordnet efter de 13 eksamenstemaer.",
+          dele: { formler: "noter/el1/formelsamling.html?vis=formler" } },
+        { id: "eksamen2026", navn: "Eksamen 2026", ikon: "kort",
+          intro: "De 13 eksamenstemaer med eksempelopgaven og alle punkterne som spørgsmål. Svar selv højt, og tryk så for at se svaret.",
+          dele: { kort: "noter/el1/eksamen2026.html" } },
+      ] },
     { id: "term", navn: "Grundlæggende termodynamik", ikon: "energi", emner: [] },
     { id: "stud", navn: "Studiekompetence og metode", ikon: "studie", emner: [] } ] },
   { n: 5, quiz: null, fag: [
@@ -437,6 +487,13 @@ const IKON = {
   lys: '<path d="M9 18h6M10 21.5h4"/><path d="M12 2.5a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 2.5Z"/><path d="M2.5 9H1M23 9h-1.5M4 3l1 1M20 3l-1 1"/>',
   vedligehold: '<path d="M14.7 6.3a4 4 0 0 1 5 5l-1.6-1.6-2.1.5-.5 2.1 1.6 1.6a4 4 0 0 1-5-5L4 16.6V20h3.4Z"/>',
   sikkerhed: '<path d="M12 2.5 4.5 5.5v6c0 4.8 3.2 8.4 7.5 10 4.3-1.6 7.5-5.2 7.5-10v-6Z"/><path d="M12 8v5M12 16.2v.3"/>',
+  // Elektroteknik 1
+  batteri: '<rect x="2.5" y="7" width="16.5" height="11" rx="1.5"/><path d="M19 10.5h2.5v4H19M6.5 12.5h4M8.5 10.5v4M13.5 12.5h3"/>',
+  sinus: '<path d="M2.5 12c1.6-5.5 4.7-5.5 6.3 0s4.7 5.5 6.3 0 4.7-5.5 6.4 0"/>',
+  kondensator: '<path d="M2.5 12h7M14.5 12h7M9.5 5.5v13M14.5 5.5v13"/>',
+  magnet: '<path d="M5 3.5h4.5V12a2.5 2.5 0 0 0 5 0V3.5H19V12a7 7 0 0 1-14 0Z"/><path d="M5 7.5h4.5M14.5 7.5H19"/>',
+  leder: '<path d="M2.5 12h3l1.5-4 3 8 3-8 3 8 1.5-4h4"/>',
+  solcelle: '<rect x="3" y="10" width="18" height="11" rx="1"/><path d="M3 15.5h18M9 10v11M15 10v11M12 2.5v3M6.5 4l1.5 2M17.5 4 16 6"/>',
   // Driftsøkonomi
   regnskab: '<path d="M12 4v16M7.5 20.5h9M4 7.5h16"/><path d="M6.5 7.5 3.8 13.5h5.4ZM17.5 7.5l-2.7 6h5.4Z"/>',
   omkostning: '<ellipse cx="12" cy="6" rx="7" ry="2.5"/><path d="M5 6v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V6M5 12v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-6"/>',
