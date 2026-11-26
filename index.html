@@ -494,47 +494,63 @@ function visApp(titel, html, crumbs) {
   setCrumbs(crumbs);
   const s = $("#screen"); s.innerHTML = html;
   s.style.animation = "none"; void s.offsetWidth; s.style.animation = "";
-  s.style.animationDelay = sejl ? "2.6s" : "";
+  s.style.animationDelay = sejl ? "3.9s" : "";
   document.title = titel + " · Maskinenoter";
   if (!sejl) { $("#landing").hidden = true; $("#landing").classList.remove("sejler"); $("#app").hidden = false; return; }
   sejlTur(fra);
 }
-/* Punkt og retning på en kvadratisk bezierkurve; skibets stævn peger i kursretningen */
-function bane(P0, P1, P2, n, skalaFra, skalaTil) {
-  const kf = [];
-  for (let i = 0; i <= n; i++) {
-    const t = i / n, u = 1 - t;
-    const x = u * u * P0[0] + 2 * u * t * P1[0] + t * t * P2[0], y = u * u * P0[1] + 2 * u * t * P1[1] + t * t * P2[1];
-    const dx = 2 * u * (P1[0] - P0[0]) + 2 * t * (P2[0] - P1[0]), dy = 2 * u * (P1[1] - P0[1]) + 2 * t * (P2[1] - P1[1]);
-    const vinkel = Math.atan2(-dx, dy) * 180 / Math.PI, sk = skalaFra + (skalaTil - skalaFra) * t;
-    kf.push({ x, y, vinkel, sk });
+/* Skibets rute: punkter med kurs (enhedsvektor). Mellem punkterne tegnes en blød kurve (Hermite),
+   og stævnen peger altid i sejlretningen. */
+function rute2kf(pkt, n, cx, cy) {
+  const pts = [];
+  for (let i = 0; i < pkt.length - 1; i++) {
+    const A = pkt[i], B = pkt[i + 1], d = Math.hypot(B.p[0] - A.p[0], B.p[1] - A.p[1]) * 1.1;
+    for (let j = (i ? 1 : 0); j <= n; j++) {
+      const t = j / n, t2 = t * t, t3 = t2 * t;
+      const h00 = 2 * t3 - 3 * t2 + 1, h10 = t3 - 2 * t2 + t, h01 = -2 * t3 + 3 * t2, h11 = t3 - t2;
+      const g00 = 6 * t2 - 6 * t, g10 = 3 * t2 - 4 * t + 1, g01 = -6 * t2 + 6 * t, g11 = 3 * t2 - 2 * t;
+      const x = h00 * A.p[0] + h10 * d * A.k[0] + h01 * B.p[0] + h11 * d * B.k[0];
+      const y = h00 * A.p[1] + h10 * d * A.k[1] + h01 * B.p[1] + h11 * d * B.k[1];
+      const dx = g00 * A.p[0] + g10 * d * A.k[0] + g01 * B.p[0] + g11 * d * B.k[0];
+      const dy = g00 * A.p[1] + g10 * d * A.k[1] + g01 * B.p[1] + g11 * d * B.k[1];
+      pts.push({ x, y, v: Math.atan2(-dx, dy) * 180 / Math.PI, sk: A.s + (B.s - A.s) * (t2 * (3 - 2 * t)) });
+    }
   }
-  return kf;
+  // gør vinklen sammenhængende, så skibet ikke snurrer rundt, og fordel tiden efter sejlet distance
+  let len = 0;
+  for (let i = 1; i < pts.length; i++) {
+    while (pts[i].v - pts[i - 1].v > 180) pts[i].v -= 360;
+    while (pts[i].v - pts[i - 1].v < -180) pts[i].v += 360;
+    len += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y); pts[i].l = len;
+  }
+  pts[0].l = 0;
+  return pts.map(q => ({ offset: q.l / len, transform: `translate(${q.x - cx}px, ${q.y - cy}px) rotate(${q.v}deg) scale(${q.sk})` }));
 }
 function sejlTur(fra) {
-  const L = $("#landing"), vw = innerWidth, vh = innerHeight;
+  const L = $("#landing"), A = $("#app"), vw = innerWidth, vh = innerHeight;
+  // mål headerens plads, før forsiden skjules
+  A.hidden = false; A.style.visibility = "hidden";
+  const maal = $("#hship .hship-inner"), r = maal.getBoundingClientRect(), a0 = A.getBoundingClientRect().top;
+  const tcx = r.left + r.width / 2, tcy = r.top - a0 + r.height / 2, slutSkala = maal.offsetHeight / fra.h;
+  A.hidden = true; A.style.visibility = "";
   L.classList.add("sejler"); $("#ship").style.visibility = "hidden";
   const f = document.createElement("div"); f.className = "flyship"; f.innerHTML = shipSVG(); document.body.appendChild(f);
-  const placer = (cx, cy, w, h) => Object.assign(f.style, { left: (cx - w / 2) + "px", top: (cy - h / 2) + "px", width: w + "px", height: h + "px" });
-  const tilKf = (pts, cx, cy) => pts.map(p => ({ transform: `translate(${p.x - cx}px, ${p.y - cy}px) rotate(${p.vinkel}deg) scale(${p.sk})` }));
-  // Skift til undersiden, mens skibet sejler (baggrunden er den samme, så det ses ikke)
-  setTimeout(() => { L.hidden = true; L.classList.remove("sejler"); $("#ship").style.visibility = ""; $("#app").hidden = false; $("#hship").style.visibility = "hidden"; }, 520);
-  // Etape 1: skibet sejler frem ad sin kurs, drejer og forsvinder ud til højre
-  const rad = 34 * Math.PI / 180, kurs = [Math.sin(rad), Math.cos(rad)];
-  const P0 = [fra.cx, fra.cy], P1 = [fra.cx + kurs[0] * vh * .45, fra.cy + kurs[1] * vh * .45], P2 = [vw + fra.h * .62, fra.cy + vh * .08];
-  placer(fra.cx, fra.cy, fra.w, fra.h);
-  const et1 = f.animate(tilKf(bane(P0, P1, P2, 30, 1, .8), fra.cx, fra.cy), { duration: 2000, easing: "cubic-bezier(.4, 0, .9, .6)", fill: "forwards" });
-  et1.onfinish = () => {
-    // Etape 2: skibet kommer ind fra venstre og lægger sig til rette som header
-    const maal = $("#hship .hship-inner"), r = maal.getBoundingClientRect();
-    const tcx = r.left + r.width / 2, tcy = r.top + r.height / 2, Lh = maal.offsetHeight, Tw = maal.offsetWidth;
-    placer(tcx, tcy, Tw, Lh);
-    const Q0 = [-Lh * .62, tcy + vh * .12], Q1 = [tcx - vw * .38, tcy], Q2 = [tcx, tcy];
-    const et2 = f.animate(tilKf(bane(Q0, Q1, Q2, 30, 1, 1), tcx, tcy), { duration: 2300, easing: "cubic-bezier(.1, .5, .25, 1)", fill: "forwards" });
-    const slut = () => { $("#hship").style.visibility = ""; f.remove(); };
-    et2.onfinish = slut; et2.oncancel = slut;
-  };
-  et1.oncancel = () => { $("#hship").style.visibility = ""; f.remove(); };
+  Object.assign(f.style, { left: (fra.cx - fra.w / 2) + "px", top: (fra.cy - fra.h / 2) + "px", width: fra.w + "px", height: fra.h + "px" });
+  setTimeout(() => { L.hidden = true; L.classList.remove("sejler"); $("#ship").style.visibility = ""; A.hidden = false; $("#hship").style.visibility = "hidden"; }, 520);
+  const lille = Math.min(.5, (vh * .55) / fra.h);   // så skibet kan vende på skærmen
+  const N = (x, y) => { const m = Math.hypot(x, y); return [x / m, y / m]; };
+  const rad = 34 * Math.PI / 180;
+  const rute = [
+    { p: [fra.cx, fra.cy], k: [Math.sin(rad), Math.cos(rad)], s: 1 },
+    { p: [vw * .80, vh * .74], k: N(-.45, 1), s: lille },
+    { p: [vw * .50, vh * .84], k: [-1, 0], s: lille },
+    { p: [vw * .17, vh * .58], k: [0, -1], s: lille },
+    { p: [vw * .26, vh * .30], k: N(.75, -.66), s: lille },
+    { p: [tcx, tcy], k: [1, 0], s: slutSkala },
+  ];
+  const anim = f.animate(rute2kf(rute, 24, fra.cx, fra.cy), { duration: 4600, easing: "cubic-bezier(.45, .05, .25, 1)", fill: "forwards" });
+  const slut = () => { $("#hship").style.visibility = ""; f.remove(); };
+  anim.onfinish = slut; anim.oncancel = slut;
 }
 function forside() {
   $("#app").hidden = true; $("#landing").hidden = false;
